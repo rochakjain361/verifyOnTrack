@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import signUp from './Components/signUp'
+import signIn from './Components/signIn'
+import LandingPage from './Components/LandingPage'
+import Addresses from './Components/DashBoardComponents/Addresses'
+import Identities from './Components/DashBoardComponents/Identities'
+import Phones from './Components/DashBoardComponents/Phones'
+import MyJobProfile from './Components/DashBoardComponents/MyJobProfile'
+import Messages from './Components/DashBoardComponents/Messages'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.PureComponent {
+  render() {
+    return (
+      <Router>
+        <div>
+          <Switch>
+            <Route exact path='/signUp' component={signUp} />
+            <Route exact path='/' component={signIn} />
+            <Route exact path='/Homepage' component={LandingPage} />
+            <Route exact path='/addresses' component={Addresses} />
+            <Route exact path='/Identities' component={Identities} />
+            <Route exact path='/Phones' component={Phones} />
+            <Route exact path='/MyJobProfile' component={MyJobProfile} />
+            <Route exact path='/messages' component={Messages} />
+            <Route exact path='/profiles' component={LandingPage} />
+          </Switch>
+        </div>
+      </Router>
+    );
+  }
 }
 
 export default App;
