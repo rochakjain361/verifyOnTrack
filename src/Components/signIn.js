@@ -37,7 +37,7 @@ class signIn extends Component {
             <Card style={{ padding: 50, marginLeft: 40, marginRight: 40 }} raised={true}>
               <form className={classes.form} noValidate>
 
-                <Typography variant="h4" gutterBottom color="primary">
+                <Typography style={{fontFamily: 'Montserrat', fontWeight: 'bold'}} variant="h4" gutterBottom color="primary">
                   Sign In
                 </Typography>
 
@@ -78,17 +78,6 @@ class signIn extends Component {
                       onChange={event => this.setState({ password: event.target.value })}
                     />
                   </Grid>
-
-                  {/* <Grid item xs={6}>
-                    <FormControlLabel
-                      control={<Checkbox onChange={this.handleChange} id="remember" value="remember" color="primary" />}
-                      label="Remember me"
-                    />
-                  </Grid>
-
-                  <Grid item xs={6} style={{marginTop: 8}}>
-                    <RouterLink title="Forgot Password?" to="/forgotpassword" color="primary" />
-                  </Grid> */}
                 </Grid>
 
                 <Grid container spacing={1} sm={12} md={12}>
@@ -97,7 +86,7 @@ class signIn extends Component {
                       onClick={this.onSignInButtonPress}
                       title={'Sign Up'}
                       center
-                      style={{ marginTop: 16, marginBottom: 16 }}
+                      style={{ marginTop: 16, marginBottom: 16, fontFamily: 'Montserrat', fontWeight: 'bold' }}
                       fullWidth
                     />
                   </Grid>

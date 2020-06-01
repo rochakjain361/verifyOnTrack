@@ -18,8 +18,8 @@ class App extends React.PureComponent {
             <Route exact path='/signUp' component={signUp} />
             <Route exact path='/' component={signIn} />
             <Route exact path='/Homepage' component={LandingPage} />
-            <Route exact path='/addresses' component={Addresses} />
-            <Route exact path='/Identities' component={Identities} />
+            <Route exact path='/addresses' component={LandingPage} />
+            <Route exact path='/Identities' component={LandingPage} />
             <Route exact path='/Phones' component={Phones} />
             <Route exact path='/MyJobProfile' component={MyJobProfile} />
             <Route exact path='/messages' component={Messages} />

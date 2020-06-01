@@ -25,7 +25,7 @@ const rows = [
         "fullname": "John Doe",
         "dob": "2000-09-01",
         "sex": "M",
-        "picture": "https://sampleimage.com/sample",
+        "picture": "https://vengreso.com/wp-content/uploads/2016/03/LinkedIn-Profile-Professional-Picture-Sample-Bernie-Borges.png",
         "verifier": "Verifier Name",
     },
     {
@@ -35,7 +35,7 @@ const rows = [
         "fullname": "John Doe 2",
         "dob": "2000-09-01",
         "sex": "M",
-        "picture": "https://sampleimage.com/sample",
+        "picture": "https://vengreso.com/wp-content/uploads/2016/03/LinkedIn-Profile-Professional-Picture-Sample-Bernie-Borges.png",
         "verifier": "Verifier Name",
     },
 ];
@@ -57,7 +57,7 @@ class MyProfile extends Component {
                     </Grid>
 
                     <Grid item>
-                        <Button variant="contained" color="secondary">Add Profile</Button>
+                        <Button variant="contained" color="secondary" style={{fontFamily: 'Montserrat', fontWeight: 'bold', background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'}}>Add Profile</Button>
                     </Grid>
 
                 </Grid>
@@ -69,37 +69,35 @@ class MyProfile extends Component {
 
     getTableOfEmployees() {
         return (
-            <TableContainer component={Paper}>
-                <Table>
+            <TableContainer component={Paper} elevation={16}>
+                <Table stickyHeader>
                     <TableHead>
-                        <TableRow>
-                            <TableCell>Date</TableCell>
-                            <TableCell align="right">Source</TableCell>
-                            <TableCell align="right">IdNumber</TableCell>
-                            <TableCell align="right">Fullname</TableCell>
-                            <TableCell align="right">Dob</TableCell>
-                            <TableCell align="right">Sex</TableCell>
-                            <TableCell align="right">Picture</TableCell>
-                            <TableCell align="right">Verifier</TableCell>
-                            <TableCell align="right">Update</TableCell>
-                            <TableCell align="right">History</TableCell>
+                        <TableRow style={{ backgroundColor: 'black' }}>
+                            <TableCell style={{ fontWeight: 'bolder', fontFamily: 'Montserrat' }} align="center">Picture</TableCell>
+                            <TableCell style={{ fontWeight: 'bolder', fontFamily: 'Montserrat' }} align="center">Date</TableCell>
+                            <TableCell style={{ fontWeight: 'bolder', fontFamily: 'Montserrat' }} align="center">Source</TableCell>
+                            <TableCell style={{ fontWeight: 'bolder', fontFamily: 'Montserrat' }} align="center">Fullname</TableCell>
+                            <TableCell style={{ fontWeight: 'bolder', fontFamily: 'Montserrat' }} align="center">Dob</TableCell>
+                            <TableCell style={{ fontWeight: 'bolder', fontFamily: 'Montserrat' }} align="center">Sex</TableCell>
+                            <TableCell style={{ fontWeight: 'bolder', fontFamily: 'Montserrat' }} align="center">Verifier</TableCell>
+                            <TableCell style={{ fontWeight: 'bolder', fontFamily: 'Montserrat' }} align="center">Update</TableCell>
+                            <TableCell style={{ fontWeight: 'bolder', fontFamily: 'Montserrat' }} align="center">History</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {rows.map((row, index) => (
                             <TableRow key={row.id}>
-                                <TableCell component="th" scope="row">
+                                <TableCell align="center"><Avatar src='https://vengreso.com/wp-content/uploads/2016/03/LinkedIn-Profile-Professional-Picture-Sample-Bernie-Borges.png'>Picture</Avatar></TableCell>
+                                <TableCell component="th" align="center">
                                     {row.date}
                                 </TableCell>
-                                <TableCell align="right">{row.source}</TableCell>
-                                <TableCell align="right">{row.id}</TableCell>
-                                <TableCell align="right">{row.fullname}</TableCell>
-                                <TableCell align="right">{row.dob}</TableCell>
-                                <TableCell align="right">{row.sex}</TableCell>
-                                <TableCell align="right"><Avatar>H</Avatar></TableCell>
-                                <TableCell align="right">{row.verifier}</TableCell>
-                                <TableCell align="right"><Button color="primary" onClick={() => this.setState({ updateDialogOpen: true, selectedIndex: index })}>Update</Button></TableCell>
-                                <TableCell align="right"><Button color="secondary">History</Button></TableCell>
+                                <TableCell align="center">{row.source}</TableCell>
+                                <TableCell align="center">{row.fullname}</TableCell>
+                                <TableCell align="center">{row.dob}</TableCell>
+                                <TableCell align="center">{row.sex}</TableCell>
+                                <TableCell align="center">{row.verifier}</TableCell>
+                                <TableCell align="center"><Button color="primary" variant="outlined" onClick={() => this.setState({ updateDialogOpen: true, selectedIndex: index })}>Update</Button></TableCell>
+                                <TableCell align="center"><Button variant="outlined" color="secondary">History</Button></TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -109,9 +107,29 @@ class MyProfile extends Component {
                         <DialogTitle id="form-dialog-title">Update Profile</DialogTitle>
                         <DialogContent>
                             <DialogContentText>
-                                To subscribe to this website, please enter your email address here. We will send updates
-                                occasionally.
+                                Enter the details of your profile to be updated
                         </DialogContentText>
+
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="source"
+                                label="Source"
+                                type="text"
+                                fullWidth
+                                value={rows[this.state.selectedIndex].source}
+                            />
+
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="id"
+                                label="ID"
+                                type="text"
+                                fullWidth
+                                value={rows[this.state.selectedIndex].id}
+                            />
+
                             <TextField
                                 autoFocus
                                 margin="dense"
@@ -121,6 +139,37 @@ class MyProfile extends Component {
                                 fullWidth
                                 value={rows[this.state.selectedIndex].fullname}
                             />
+
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="dob"
+                                label="DOB"
+                                type="text"
+                                fullWidth
+                                value={rows[this.state.selectedIndex].dob}
+                            />
+
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="sex"
+                                label="Sex"
+                                type="text"
+                                fullWidth
+                                value={rows[this.state.selectedIndex].sex}
+                            />
+
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="verifier"
+                                label="Verifier"
+                                type="text"
+                                fullWidth
+                                value={rows[this.state.selectedIndex].verifier}
+                            />
+
                         </DialogContent>
                         <DialogActions>
                             <Button color="primary">

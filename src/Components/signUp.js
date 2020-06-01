@@ -45,7 +45,7 @@ class signUp extends Component {
                         <Card style={{ padding: 50, marginLeft: 40, marginRight: 40 }} raised="true">
                             <form className={classes.form} noValidate>
 
-                                <Typography variant="h4" gutterBottom color="primary">
+                                <Typography variant="h4" gutterBottom color="primary" style={{fontFamily: 'Montserrat', fontWeight: 'bold'}}>
                                     Register
                                 </Typography>
 
@@ -229,7 +229,7 @@ class signUp extends Component {
                                             onClick={this.onRegisterButtonPress}
                                             title={'Sign Up'}
                                             center
-                                            style={{ marginTop: 16, marginBottom: 16 }}
+                                            style={{ marginTop: 16, marginBottom: 16, fontFamily: 'Montserrat', fontWeight: 'bold' }}
                                             fullWidth  
                                         />
                                     </Grid>

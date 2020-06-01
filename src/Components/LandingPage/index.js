@@ -23,10 +23,13 @@ import Messages from '../DashBoardComponents/Messages'
 import MyProfile from '../DashBoardComponents/MyProfile'
 
 const useStyles = makeStyles((theme) => ({
-  drawerPaper: { width: 'inherit'},
+  drawerPaper: { width: 'inherit',  background: 'linear-gradient(45deg, #764ba2 30%, #667eea 90%)'},
   link: {
     textDecoration: 'none',
     color: theme.palette.text.primary
+  },
+  nested: {
+    marginLeft: 32
   }
 }))
 
@@ -41,7 +44,7 @@ function Dashboard() {
     <Router>
       <div style={{ display: 'flex' }}>
         <Drawer
-          style={{ width: '220px' }}
+          style={{ width: '220px', }}
           variant="persistent"
           anchor="left"
           open={true}
@@ -52,16 +55,15 @@ function Dashboard() {
             aria-labelledby="nested-list-subheader"
             subheader={
               <ListSubheader component="div" id="nested-list-subheader" >
-                <img style={{width:"50%"}} src='/imgs/logo.png' />
               </ListSubheader>
             }
             className={classes.root}
           >
-            <ListItem button onClick={handleClick}>
+            <ListItem button onClick={handleClick} selected>
               <ListItemIcon>
-                <BusinessCenterIcon />
+                <BusinessCenterIcon style={{color: "white"}} />
               </ListItemIcon>
-              <ListItemText primary="My Info" />
+              <ListItemText primary="My Info" style={{color: "white", fontWeight: 'bold', fontFamily: 'Montserrat'}} />
               {open ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
 
@@ -71,9 +73,9 @@ function Dashboard() {
               <Link to="/profiles" className={classes.link}>
                   <ListItem button className={classes.nested}>
                     <ListItemIcon>
-                      <FormatListBulletedIcon />
+                      <FormatListBulletedIcon  style={{color: "white"}} />
                     </ListItemIcon>
-                    <ListItemText primary="Profiles" />
+                    <ListItemText primary="Profiles"  style={{color: "white"}} />
                   </ListItem>
                 </Link>
               </List>
@@ -82,9 +84,9 @@ function Dashboard() {
               <Link to="/addresses" className={classes.link}>
                   <ListItem button className={classes.nested}>
                     <ListItemIcon>
-                      <FormatListBulletedIcon />
+                      <FormatListBulletedIcon  style={{color: "white"}} />
                     </ListItemIcon>
-                    <ListItemText primary="Addresses" />
+                    <ListItemText primary="Addresses"  style={{color: "white"}} />
                   </ListItem>
                 </Link>
               </List>
@@ -93,9 +95,9 @@ function Dashboard() {
               <Link to="/identities" className={classes.link}>
                   <ListItem button className={classes.nested}>
                     <ListItemIcon>
-                      <OndemandVideoIcon />
+                      <OndemandVideoIcon style={{color: "white"}} />
                     </ListItemIcon>
-                    <ListItemText primary="Identities" />
+                    <ListItemText primary="Identities"  style={{color: "white"}} />
                   </ListItem>
                 </Link>
               </List>
@@ -104,9 +106,9 @@ function Dashboard() {
                 <Link to="/phones" className={classes.link}>
                   <ListItem button className={classes.nested}>
                     <ListItemIcon>
-                      <ListAltIcon />
+                      <ListAltIcon style={{color: "white"}} />
                     </ListItemIcon>
-                    <ListItemText primary="Phones" />
+                    <ListItemText primary="Phones"  style={{color: "white"}} />
                   </ListItem>
                 </Link>
               </List>
@@ -117,20 +119,20 @@ function Dashboard() {
 
           <List>
           <Link to="/myjobprofile" className={classes.link}>
-                  <ListItem button className={classes.nested}>
+                  <ListItem button>
                     <ListItemIcon>
-                      <ShoppingCartIcon />
+                      <ShoppingCartIcon style={{color: "white"}} />
                     </ListItemIcon>
-                    <ListItemText primary="My Job Profile" />
+                    <ListItemText primary="My Job Profile"  style={{color: "white"}} />
                   </ListItem>
                 </Link>
 
             <Link to="/messages" className={classes.link}>
               <ListItem button>
                 <ListItemIcon>
-                  <InfoIcon />
+                  <InfoIcon style={{color: "white"}} />
                 </ListItemIcon>
-                <ListItemText primary={"Messages"} />
+                <ListItemText primary={"Messages"}  style={{color: "white"}} />
               </ListItem>
             </Link>
 
