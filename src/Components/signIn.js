@@ -11,33 +11,87 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import 'typeface-roboto';
 import Typography from '@material-ui/core/Typography';
+import LandingPage from "../Components/LandingPage";
+import { BrowserRouter as Router, Route, Switch,Redirect } from "react-router-dom";
+import ValidationMessage from "./ValidationMessage";
+import Alert from "@material-ui/lab/Alert";
 
 class signIn extends Component {
-
   constructor(props) {
     super(props);
     this.onSignInButtonPress = this.onSignInButtonPress.bind(this);
   }
 
   state = {
-    username: '',
-    password: ''
+    username: "",
+    password: "",
+    usernamevalid: false,
+    passwordvalid: false,
+    submitDisabled: "disabled",
+    warning:false
+  };
+  UserGreeting(props) {
+  return <h1>Welcome back!</h1>;
+}
+  usernamevalidcheck = (event) => {
+    if (event.target.value.length > 0) {
+      //  console.log(event.target.value);
+      this.setState({ usernamevalid: true },this.formvalid);
+    }
+  };
+  passwordvalidcheck = (event) => {
+    if (event.target.value.length > 0) {
+      //  console.log(event.target.value);
+      this.setState({ passwordvalid: true },this.formvalid);
+    }
+  };
+  formvalid=()=>{
+if(this.state.usernamevalid&&this.state.passwordvalid){
+  // console.log("////////////////////////////////")
+  this.setState({submitDisabled:""})
+}
   }
-  
-  render() {
 
+  render() {
     const { classes } = this.props;
 
     return (
-      <Grid container component="main" className={classes.root} direction="row" justify="center">
+      <Grid
+        container
+        component="main"
+        className={classes.root}
+        direction="row"
+        justify="center"
+      >
         <CssBaseline />
-        <Grid container xs={false} sm={12} md={12} square className={classes.mainImage} direction="row" justify="center">
 
+        <Grid
+          container
+          xs={false}
+          sm={12}
+          md={12}
+          square
+          className={classes.mainImage}
+          direction="row"
+          justify="center"
+        >
           <Grid item style={{ marginTop: 40, marginBottom: 40 }} sm={6} md={6}>
-            <Card style={{ padding: 50, marginLeft: 40, marginRight: 40 }} raised={true}>
+            <Card
+              style={{ padding: 50, marginLeft: 40, marginRight: 40 }}
+              raised={true}
+            >
+              {this.state.warning ? (
+                <Alert severity="error">
+                  Wrong username or password
+                </Alert>
+              ) : null}
               <form className={classes.form} noValidate>
-
-                <Typography style={{fontFamily: 'Montserrat', fontWeight: 'bold'}} variant="h4" gutterBottom color="primary">
+                <Typography
+                  style={{ fontFamily: "Montserrat", fontWeight: "bold" }}
+                  variant="h4"
+                  gutterBottom
+                  color="primary"
+                >
                   Sign In
                 </Typography>
 
@@ -57,7 +111,12 @@ class signIn extends Component {
                       autoFocus
                       fullWidth
                       size="medium"
-                      onChange={event => this.setState({ username: event.target.value })}
+                      onChange={(event) =>
+                        this.setState(
+                          { username: event.target.value },
+                          this.usernamevalidcheck(event)
+                        )
+                      }
                     />
                   </Grid>
 
@@ -75,7 +134,12 @@ class signIn extends Component {
                       autoComplete="current-password"
                       fullWidth
                       size="small"
-                      onChange={event => this.setState({ password: event.target.value })}
+                      onChange={(event) =>
+                        this.setState(
+                          { password: event.target.value },
+                          this.passwordvalidcheck(event)
+                        )
+                      }
                     />
                   </Grid>
                 </Grid>
@@ -84,51 +148,73 @@ class signIn extends Component {
                   <Grid item xs={12}>
                     <GradientButton
                       onClick={this.onSignInButtonPress}
-                      title={'Sign Up'}
+                      title={"Sign IN"}
                       center
-                      style={{ marginTop: 16, marginBottom: 16, fontFamily: 'Montserrat', fontWeight: 'bold' }}
+                      disabled={this.state.submitDisabled}
+                      style={{
+                        marginTop: 16,
+                        marginBottom: 16,
+                        fontFamily: "Montserrat",
+                        fontWeight: "bold",
+                      }}
                       fullWidth
                     />
                   </Grid>
 
                   <Grid container xs={12} justify="center">
-                    <RouterLink title="Don't have an account? Sign Up" to="/signup" />
+                    <RouterLink
+                      title="Don't have an account? Sign Up"
+                      to="/signup"
+                    />
                   </Grid>
                 </Grid>
-
               </form>
             </Card>
           </Grid>
         </Grid>
       </Grid>
-    )
+    );
   }
 
-  async onSignInButtonPress() {
+  onSignInButtonPress = async () => {
     try {
-      let apiEndpoint = 'http://127.0.0.1:8000/api/v1/accounts/auth/login';
+      let apiEndpoint =
+        "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/accounts/auth/login";
 
       var requestBody = {
         username: this.state.username,
         password: this.state.password,
       };
-      console.log(requestBody);
 
+      console.log(requestBody);
       let response = await fetch(apiEndpoint, {
-        method: 'POST',
+        method: "POST",
+
         body: JSON.stringify(requestBody),
         headers: {
-          'Content-Type': 'application/json',
-          'Accept': '*/*'
+          "Content-Type": "application/json",
+          Authorization:
+            "1d9c773956b5b0ed50702f84a28d6bd03701cd465daf1519947adc660bb7615a",
+          Accept: "*/*",
         },
       });
       response = await response.json();
-      console.log(response);
-    } catch (error) {
-      console.log('[!ON_REGISTER] ' + error);
-    }
-  }
+      console.log("response:", response);
+      if (response.token) {
+        this.props.history.push({pathname: '/Homepage',
+  data: response });
+      }
+      else{
+        
+          this.setState({warning:true})
+      
 
+      }
+    } catch (error) {
+      console.log("[!ON_REGISTER] " + error);
+      // return <Route exact path="/Homepage" component={LandingPage} />;
+    }
+  };
 }
 signIn.propTypes = {
   classes: PropTypes.object.isRequired,

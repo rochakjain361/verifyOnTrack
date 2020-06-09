@@ -28,6 +28,7 @@ class GradientButton extends React.PureComponent {
                 onClick={this.props.onClick}
                 type={this.props.type}
                 style={this.props.style}
+                 disabled={this.props.disabled}
             >
                 { this.props.title }
             </Button>
