@@ -4,21 +4,45 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import RouterLink from '../../RouterLink';
 import GradientButton from '../../GradientButton';
+import { Button } from "@material-ui/core";
 import Card from '@material-ui/core/Card';
 import Box from "@material-ui/core/Box";
 import axios from "axios";
-
+import { CircularProgress } from "@material-ui/core";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+import Avatar from "@material-ui/core/Avatar";
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
+const id=17;
+let result=[];
+let state=[]
+let lga=[];
+let city=[];
+
 class Addresses extends Component {
+  
   constructor(props) {
     super(props);
-
+    //uncomment the below 2 lines after finishing address
+//     const data=props.data;
+// console.log("token data from address page",data.token);
     this.state = {
       location: {
         latitude: null,
         longtitude: null,
+        currentstate:"",
       },
+      isloading: true,
     };
+
+    let token =
+      "Token 13de58f05701dc7375aab5e15e478a0deb3b0431ad2076a944dae470e922afc3";
+
     this.onMarkerClick = this.onMarkerClick.bind(this);
   }
   onMarkerClick(props, marker, e) {
@@ -26,90 +50,241 @@ class Addresses extends Component {
       location: { latitude: e.latLng.lat(), longtitude: e.latLng.lng() },
     });
 
-    console.log(
-      "/////////////////",
-      this.state.location.latitude,
-      this.state.location.longtitude
-    );
+    console.log(this.state.location.latitude, this.state.location.longtitude);
   }
   async componentDidMount() {
-   await axios
-      .get("http://3.22.17.212:8000/api/v1/employees/3/all-addresses", {
+    await axios
+      .get("http://3.22.17.212:8000/api/v1/employees/17/all-addresses", {
         headers: {
           Authorization:
-            "80ff0370fcb0f8ef9388930131948409abf168811390bc79e36cc1c3b13e561a",
+            "Token 13de58f05701dc7375aab5e15e478a0deb3b0431ad2076a944dae470e922afc3 ",
         },
       })
       .then((res) => {
-        const result = res.data;  
-        this.setState({ result });
+        result = res.data;
+        console.table(result);
       });
+      // await axios
+      //   .get(
+      //     "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/address/states",
+      //     {
+      //       headers: {
+      //         Authorization:
+      //           "Token 13de58f05701dc7375aab5e15e478a0deb3b0431ad2076a944dae470e922afc3 ",
+      //       },
+      //     }
+      //   )
+      //   .then((res) => {
+      //      state = res.data;
+      //     console.table("statename",state[result[0].state].stateName);
+      //   });
+      //   await axios
+      //     .get(
+      //       "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/address/lgas",
+      //       {
+      //         headers: {
+      //           Authorization:
+      //             "Token 13de58f05701dc7375aab5e15e478a0deb3b0431ad2076a944dae470e922afc3 ",
+      //         },
+      //       }
+      //     )
+      //     .then((res) => {
+      //        lga = res.data;
+      //       console.table(lga[0].lgaName);
+      //     });
+      //      await axios
+      //        .get(
+      //          "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/address/cities",
+      //          {
+      //            headers: {
+      //              Authorization:
+      //                "Token 13de58f05701dc7375aab5e15e478a0deb3b0431ad2076a944dae470e922afc3 ",
+      //            },
+      //          }
+      //        )
+      //        .then((res) => {
+      //           city = res.data;
+      //          console.log(city[0].cityName);
+      //        });
+    this.setState({ isloading: false });
   }
-
-  render() {
+  isloading() {
+    return (
+      <>
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        display="flex"
+        style={{ minHeight: "100vh" }}
+        >
+        <CircularProgress />
+      </Grid>
+        </>
+    );
+  }
+  getaddress() {
+    var index=0;
     return (
       <>
         <Grid container justify="space-between" alignItems="center">
-          <Grid item xs={12}>
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justify="center"
+            display="flex"
+          >
             <h1>My Address</h1>
           </Grid>
 
-          <Grid item xs={12} sm={12} md={12}>
-            <Card style={{ padding: 20 }} raised={true}>
-              <form>
-                <Grid container spacing={1}>
-                  <Grid item xs={12}>
-                    <TextField
-                      variant="outlined"
-                      margin="normal"
-                      required
-                      style={{ marginRight: 10 }}
-                      margin="dense"
-                      id="address"
-                      label="Please Enter your Address"
-                      type="text"
-                      autoComplete="username"
-                      autoFocus
-                      fullWidth
-                      size="medium"
-                      multiline
-                      rows={4}
-                    />
-                  </Grid>
+          <TableContainer component={Paper} elevation={16} p={1}>
+            <Table stickyHeader>
+              <TableHead>
+                <TableRow style={{ backgroundColor: "white" }}>
+                  <TableCell
+                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    align="center"
+                    padding="none"
+                  >
+                    Startdate
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    align="center"
+                    size="small"
+                    padding="1"
+                  >
+                    Addresssource
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    align="center"
+                    size="small"
+                    padding="default"
+                  >
+                    Address
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    align="center"
+                    size="small"
+                    padding="default"
+                  >
+                    State/LGA/City
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    align="center"
+                    size="small"
+                    padding="default"
+                  >
+                    Address
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    align="center"
+                    size="small"
+                    padding="default"
+                  >
+                    GoogleLink
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    align="center"
+                    size="small"
+                    padding="default"
+                  >
+                    Image
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    align="center"
+                    size="small"
+                    padding="default"
+                  >
+                    Verifier
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    align="center"
+                    size="small"
+                    padding="default"
+                  >
+                    update
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    align="center"
+                    size="small"
+                    padding="none"
+                  >
+                    History
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {result.map((row, index) => (
+                  <TableRow key={row.id}  >
+                    <TableCell align="center" size="small">
+                      {row.since}
+                    </TableCell>
+                    <TableCell align="center" size="small" padding="none">
+                      {row.source_name_field}
+                    </TableCell>
+                    <TableCell align="center" size="small" padding="none">
+                      {row.default_address}
+                    </TableCell>
 
-                  <Grid container justify="space-between" alignItems="center">
-                    <Grid item xs={6}>
-                      <GradientButton
-                        onClick={this.onSignInButtonPress}
-                        title={"Submit Address"}
-                        center
-                        style={{
-                          marginTop: 16,
-                          marginBottom: 16,
-                          fontFamily: "Montserrat",
-                          fontWeight: "bold",
-                        }}
-                      />
-                    </Grid>
-
-                    <Grid item xs={6}>
-                      <GradientButton
-                        onClick={this.onSignInButtonPress}
-                        title={"Geolocation"}
-                        center
-                        style={{
-                          marginTop: 16,
-                          marginBottom: 16,
-                          fontFamily: "Montserrat",
-                          fontWeight: "bold",
-                        }}
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </form>
-            </Card>
-          </Grid>
+                   
+                    <TableCell align="center" size="small" padding="none">
+                {row.state}/{row.lga}/{row.city}
+                    </TableCell>
+                    <TableCell align="center" size="small" padding="none">
+                      {row.street_name},{row.house_number},{row.address_hint1},
+                      {row.address_hint2} {row.address_hint3}
+                    </TableCell>
+                    <TableCell align="center" size="small">
+                      <a
+                        href={`http://www.google.com/maps/place/${row.google_coordinate1}+,+${row.google_coordinate2}`}
+                        target=""
+                      >
+                        location
+                      </a>
+                    </TableCell>
+                    <TableCell align="center" size="small" padding="none">
+                      {}
+                    </TableCell>
+                    <TableCell align="center" size="small" padding="none">
+                      {row.owner_name_field}
+                    </TableCell>
+                    <TableCell align="center" size="small" padding="none">
+                      <Button
+                        color="primary"
+                        variant="outlined"
+                        onClick={() =>
+                          this.setState({
+                            updateDialogOpen: true,
+                            selectedIndex: index,
+                            // add the updatedstate elements here after passing the token and adding data
+                          })
+                        }
+                      >
+                        Update
+                      </Button>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button variant="outlined" color="secondary">
+                        History
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Grid>
         <Box pt={3} pl={10}>
           <Map
@@ -130,6 +305,9 @@ class Addresses extends Component {
         </Box>
       </>
     );
+  }
+  render() {
+    return <>{this.state.isloading ? this.isloading() : this.getaddress()} </>;
   }
 }
 

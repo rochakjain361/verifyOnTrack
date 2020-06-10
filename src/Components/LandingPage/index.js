@@ -33,18 +33,26 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-function Dashboard() {
+const Dashboard=(props)=> {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
-
+//uncomment the next 4 lines after finishing all the modules  
+//  const data = props.location.state.data; 
+//  console.log("response from landing page",data);
+//  if(data.length>0){
+//   this.state.data=data;
+//  }
   const handleClick = () => {
     setOpen(!open);
   };
   return (
+
+    <>
+  
     <Router>
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: "flex" }}>
         <Drawer
-          style={{ width: '220px', }}
+          style={{ width: "220px" }}
           variant="persistent"
           anchor="left"
           open={true}
@@ -54,50 +62,67 @@ function Dashboard() {
             component="nav"
             aria-labelledby="nested-list-subheader"
             subheader={
-              <ListSubheader component="div" id="nested-list-subheader" >
-              </ListSubheader>
+              <ListSubheader
+              component="div"
+              id="nested-list-subheader"
+              ></ListSubheader>
             }
             className={classes.root}
-          >
+            >
             <ListItem button onClick={handleClick} selected>
               <ListItemIcon>
-                <BusinessCenterIcon style={{color: "white"}} />
+                <BusinessCenterIcon style={{ color: "white" }} />
               </ListItemIcon>
-              <ListItemText primary="My Info" style={{color: "white", fontWeight: 'bold', fontFamily: 'Montserrat'}} />
+              <ListItemText
+                primary="My Info"
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontFamily: "Montserrat",
+                }}
+              />
               {open ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
 
             <Collapse in={open} timeout="auto" unmountOnExit>
-
               <List component="div" disablePadding>
-              <Link to="/profiles" className={classes.link}>
+                <Link to="/profiles" className={classes.link}>
                   <ListItem button className={classes.nested}>
                     <ListItemIcon>
-                      <FormatListBulletedIcon  style={{color: "white"}} />
+                      <FormatListBulletedIcon style={{ color: "white" }} />
                     </ListItemIcon>
-                    <ListItemText primary="Profiles"  style={{color: "white"}} />
+                    <ListItemText
+                      primary="Profiles"
+                      style={{ color: "white" }}
+                      />
                   </ListItem>
                 </Link>
               </List>
 
               <List component="div" disablePadding>
-              <Link to="/addresses" className={classes.link}>
+                <Link to="/addresses" className={classes.link}>
                   <ListItem button className={classes.nested}>
                     <ListItemIcon>
-                      <FormatListBulletedIcon  style={{color: "white"}} />
+                      <FormatListBulletedIcon style={{ color: "white" }} />
                     </ListItemIcon>
-                    <ListItemText primary="Addresses"  style={{color: "white"}} />
+                    <ListItemText
+                      primary="Addresses"
+                      style={{ color: "white" }}
+                      />
                   </ListItem>
                 </Link>
               </List>
 
               <List component="div" disablePadding>
-              <Link to="/identities" className={classes.link}>
+                <Link to="/identities" className={classes.link}>
                   <ListItem button className={classes.nested}>
                     <ListItemIcon>
-                      <OndemandVideoIcon style={{color: "white"}} />
+                      <OndemandVideoIcon style={{ color: "white" }} />
                     </ListItemIcon>
-                    <ListItemText primary="Identities"  style={{color: "white"}} />
+                    <ListItemText
+                      primary="Identities"
+                      style={{ color: "white" }}
+                      />
                   </ListItem>
                 </Link>
               </List>
@@ -106,50 +131,55 @@ function Dashboard() {
                 <Link to="/phones" className={classes.link}>
                   <ListItem button className={classes.nested}>
                     <ListItemIcon>
-                      <ListAltIcon style={{color: "white"}} />
+                      <ListAltIcon style={{ color: "white" }} />
                     </ListItemIcon>
-                    <ListItemText primary="Phones"  style={{color: "white"}} />
+                    <ListItemText primary="Phones" style={{ color: "white" }} />
                   </ListItem>
                 </Link>
               </List>
-
             </Collapse>
-
           </List>
 
           <List>
-          <Link to="/myjobprofile" className={classes.link}>
-                  <ListItem button>
-                    <ListItemIcon>
-                      <ShoppingCartIcon style={{color: "white"}} />
-                    </ListItemIcon>
-                    <ListItemText primary="My Job Profile"  style={{color: "white"}} />
-                  </ListItem>
-                </Link>
+            <Link to="/myjobprofile" className={classes.link}>
+              <ListItem button>
+                <ListItemIcon>
+                  <ShoppingCartIcon style={{ color: "white" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="My Job Profile"
+                  style={{ color: "white" }}
+                  />
+              </ListItem>
+            </Link>
 
             <Link to="/messages" className={classes.link}>
               <ListItem button>
                 <ListItemIcon>
-                  <InfoIcon style={{color: "white"}} />
+                  <InfoIcon style={{ color: "white" }} />
                 </ListItemIcon>
-                <ListItemText primary={"Messages"}  style={{color: "white"}} />
+                <ListItemText primary={"Messages"} style={{ color: "white" }} />
               </ListItem>
             </Link>
-
           </List>
-
         </Drawer>
         <Switch>
-
-        <Route exact path="/profiles">
+          <Route exact path="/profiles">
             <Container>
               <MyProfile />
             </Container>
           </Route>
 
-          <Route exact path="/addresses">
+          <Route
+            exact
+            path="/addresses"
+            
+            
+            >
+            {/* <Addresses data={this.state.data}/> */}
             <Container>
-              <Addresses />
+              {/* <Addresses data={data}/> */}
+              <Addresses/>
             </Container>
           </Route>
 
@@ -182,12 +212,15 @@ function Dashboard() {
               <Typography variant="h3" gutterBottom>
                 About
               </Typography>
-              <Typography variant="body1" gutterBottom>Blah Blah Blah</Typography>
+              <Typography variant="body1" gutterBottom>
+                Blah Blah Blah
+              </Typography>
             </Container>
           </Route>
         </Switch>
       </div>
     </Router>
+            </>
   );
 }
 

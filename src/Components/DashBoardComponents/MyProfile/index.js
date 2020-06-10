@@ -19,15 +19,19 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import axios from "axios";
 import Box from "@material-ui/core/Box";
 import { Typography } from "@material-ui/core";
-
+import { Select } from "@material-ui/core";
+import {MenuItem} from "@material-ui/core"                      
+import {InputLabel} from "@material-ui/core"
 import { CircularProgress } from "@material-ui/core";
-import './myprofile.css';
+import "./myprofile.css";
+const token =
+  "Token 13de58f05701dc7375aab5e15e478a0deb3b0431ad2076a944dae470e922afc3";
 const rows = [
   {
     date: "2016-12-01",
     source: "nkjsadnsand",
     id: "89yh12e",
-    fullname: "John Doe",
+    firstname: "John Doe",
     dob: "2000-09-01",
     sex: "M",
     picture:
@@ -38,7 +42,7 @@ const rows = [
     date: "2016-12-01",
     source: "nkjsadnsand",
     id: "89yh142e",
-    fullname: "John Doe 2",
+    firstname: "John Doe 2",
     dob: "2000-09-01",
     sex: "M",
     picture:
@@ -50,33 +54,49 @@ let result = [];
 class MyProfile extends Component {
   state = {
     updateDialogOpen: false,
+    addDialogOpen: false,
     selectedIndex: -1,
     result: null,
     isloading: true,
     updatedval: "",
-    updatedsource: "",
+    updatedfirstname: "",
+    firstname: "",
+    middlename: "",
+    lastname: "",
+    Dob: "",
+
+    initialfile: "",
+
+    updatedMiddlename: "",
+    updatedlastname: "",
     updatedReasonforupdating: "",
     updatedName: "",
     updatedDob: "",
-    updatedsex: "",
-    buttondisabled:"disabled",
-    id:"",
+    buttondisabled: "disabled",
+    id: "",
+    file: null,
+    gender: "",
   };
   async componentDidMount() {
+    console.log(token);
     await axios
-      .get("http://3.22.17.212:8000/api/v1/employees/9/all-profiles", {
+      .get("http://3.22.17.212:8000/api/v1/employees/17/all-profiles", {
         headers: {
-          Authorization:
-            "Token fc4efcc952e2f668197c1a2d5dd5be77236de1d3fb16c2a04adabac02d5f58e3",
+          Authorization: token,
         },
       })
       .then((res) => {
         result = res.data;
-        this.setState({id:result[0].id})
-        this.setState({ isloading: false });
+        // this.setState({ id: result[0].employee });
+        // this.setState({ updatedfirstname: result[0].firstname });
+        // this.setState({ updatedMiddlename: result[0].middlename });
+        // this.setState({ updatedlastname: result[0].surname });
+        // this.setState({ updatedDob: result[0].dob });
       });
-    console.table(result);
-    console.log(result[0].id);
+    this.setState({ isloading: false });
+
+    // console.table(result);
+    // console.log(result[0].id);
   }
   _handleChangeEvent(event) {
     this.setState({ updatedval: event.target.value });
@@ -87,56 +107,230 @@ class MyProfile extends Component {
     if (event.target.value.length > 0) {
       //  console.log(event.target.value);
       this.setState({ buttondisabled: "" });
-    }
-    else{
-      this.setState({buttondisabled:"disabled"})
+    } else {
+      this.setState({ buttondisabled: "disabled" });
     }
   };
-   
-async updatedetails(){
-  console.log("///////////////////////////////////////////////");
- let data = {
-    employee: this.state.id,
-    update_reason: this.state.updatedReasonforupdating,
-    sex: this.state.updatedsex,
-    dob: this.state.updatedDob,
-  };
-await axios
-  .post(
-    "http://3.22.17.212:8000/api/v1/employees/update-profile",{data},
-    {
+
+  async updatedetails() {
+    this.setState({
+      updateDialogOpen: false,
+    });
+    let headers = {
       headers: {
-        Authorization:
-          "Token fc4efcc952e2f668197c1a2d5dd5be77236de1d3fb16c2a04adabac02d5f58e3",
+        Authorization: token,
         "Content-Type": "multipart/form-data",
-      }
-    }
-    
-  )
-  .then((response) => {
-    console.log("response");
-    console.log(response);
-  });
-  console.log("******************************");
-}
-  render() {
+      },
+    };
+    let bodyFormData = new FormData();
+    bodyFormData.append("employee", this.state.id);
+    bodyFormData.append("update_reason", this.state.updatedReasonforupdating);
+    bodyFormData.append("picture", this.state.file);
+    bodyFormData.append("dob", this.state.updatedDob);
+    bodyFormData.append("firstname", this.state.updatedfirstname);
+    bodyFormData.append("middlename", this.state.updatedMiddlename);
+    bodyFormData.append("surname", this.state.updatedlastname);
+
+    await axios
+      .post(
+        "http://3.22.17.212:8000/api/v1/employees/update-profile",
+        bodyFormData,
+        headers
+      )
+      .then((response) => {
+        console.log(response);
+      });
+  }
+  async postprofile() {
+    let headers = {
+      headers: {
+        Authorization: token,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    let bodyFormData = new FormData();
+    bodyFormData.append("employee", 17);
+    bodyFormData.append("sex", this.state.gender);
+    bodyFormData.append("picture", this.state.initialfile);
+    bodyFormData.append("dob", this.state.Dob);
+    bodyFormData.append("firstname", this.state.firstname);
+    bodyFormData.append("middlename", this.state.middlename);
+    bodyFormData.append("surname", this.state.lastname);
+    await axios
+      .post(
+        "http://3.22.17.212:8000/api/v1/employees/post-profile",
+        bodyFormData,
+        headers
+      )
+      .then((response) => {
+        console.log(response);
+      });
+  }
+  isloading() {
+    return (
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        display="flex"
+        style={{ minHeight: "100vh" }}
+      >
+        <CircularProgress />
+      </Grid>
+    );
+  }
+
+  tabledata() {
     return (
       <>
-        {this.state.isloading ? (
-          <Grid
-            container
-            spacing={0}
-            direction="column"
-            alignItems="center"
-            justify="center"
-            display="flex"
-            style={{ minHeight: "100vh" }}
-          >
-            <CircularProgress />
-          </Grid>
+        {result.length == 0 ? (
+          <div>
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justify="center"
+            >
+              <Box m={12}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => this.setState({ addDialogOpen: true })}
+                  style={{
+                    fontFamily: "Montserrat",
+                    fontWeight: "bold",
+                    background:
+                      "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
+                  }}
+                >
+                  Add Profile
+                </Button>
+              </Box>
+              <h3> Add details to your profile </h3>
+            </Grid>
+            <Dialog
+              open={this.state.addDialogOpen}
+              onClose={() => this.setState({ addDialogOpen: true })}
+              aria-labelledby="form-dialog-title"
+            >
+              <DialogTitle id="form-dialog-title" justify="center">
+                Add Profile
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText justify="center">
+                  Enter the following details
+                </DialogContentText>
+
+                <div class="w3-container">
+                  <p>
+                    <label>firstname</label>
+                    <input
+                      class="w3-input"
+                      type="text"
+                      onChange={(event) => {
+                        this.setState({ firstname: event.target.value });
+                        console.log(this.state.firstname);
+                      }}
+                      // defaultValue={result[this.state.selectedIndex].firstname}
+                    />
+                  </p>
+
+                  <p>
+                    <label>MiddleName</label>
+                    <input
+                      class="w3-input"
+                      type="text"
+                      onChange={(event) => {
+                        this.setState({ middlename: event.target.value });
+                        console.log(this.state.middlename);
+                      }}
+                      // defaultValue={result[this.state.selectedIndex].middlename}
+                    />
+                  </p>
+                  <p>
+                    <label>lastname</label>
+
+                    <input
+                      class="w3-input"
+                      type="text"
+                      onChange={(event) => {
+                        this.setState({ lastname: event.target.value });
+                        console.log(this.state.lastname);
+                      }}
+                      // defaultValue={result[this.state.selectedIndex].surname}
+                    />
+                  </p>
+                  <p>
+                    <label>Dob</label>
+                    <input
+                      class="w3-input"
+                      type="date"
+                      onChange={(event) => {
+                        this.setState({ Dob: event.target.value });
+                        console.log(this.state.Dob);
+                      }}
+                      // defaultValue={result[this.state.selectedIndex].dob}
+                    />
+                  </p>
+                  <p>
+                    <label>Picture</label>
+                    <input
+                      class="w3-input"
+                      type="file"
+                      onChange={(event) => {
+                        this.setState({ initialfile: event.target.files[0] });
+                        console.log(this.state.initialfile);
+                      }}
+                    />
+                  </p>
+                  <p>
+                    <InputLabel id="demo-simple-select-label">sex</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      onChange={(event) => {
+                        this.setState({ gender: event.target.value });
+                        console.log(this.state.gender);
+                      }}
+                    >
+                      <MenuItem value={"Male"}>male</MenuItem>
+                      <MenuItem value={"Female"}>female</MenuItem>
+                    </Select>
+                  </p>
+                </div>
+              </DialogContent>{" "}
+              <DialogActions>
+                <Button
+                  color="primary"
+                  onClick={() => {
+                    this.setState(
+                      {
+                        addDialogOpen: false,
+                      },
+                      this.postprofile
+                    );
+                  }}
+                >
+                  Submit Profile
+                </Button>
+                <Button
+                  color="secondary"
+                  onClick={() =>
+                    this.setState({
+                      addDialogOpen: false,
+                    })
+                  }
+                >
+                  Cancel
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
         ) : (
           <div>
-            <Box p={6}>
+            <Box p={4}>
               <Grid
                 container
                 // style={{backgroundColor:"red"}}
@@ -180,21 +374,6 @@ await axios
                       Picture
                     </Avatar>
                   </Grid>
-                </Grid>
-
-                <Grid item>
-                  {/* <Button
-                  variant="contained"
-                  color="secondary"
-                  style={{
-                    fontFamily: "Montserrat",
-                    fontWeight: "bold",
-                    background:
-                    "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
-                  }}
-                  >
-                  Add Profile
-                </Button> */}
                 </Grid>
               </Grid>
             </Box>
@@ -292,6 +471,7 @@ await axios
                         this.setState({
                           updateDialogOpen: true,
                           selectedIndex: index,
+                          // add the updatedstate elements here after passing the token and adding data
                         })
                       }
                     >
@@ -323,16 +503,62 @@ await axios
 
                 <div class="w3-container">
                   <p>
-                    <label>Source</label>
+                    <label>firstname</label>
                     <input
                       class="w3-input"
                       type="text"
                       onChange={(event) =>
-                        this.setState({ updatedsource: event.target.value })
+                        this.setState({ updatedfirstname: event.target.value })
                       }
-                      defaultValue={
-                        result[this.state.selectedIndex].source_name_field
+                      defaultValue={result[this.state.selectedIndex].firstname}
+                    />
+                  </p>
+
+                  <p>
+                    <label>MiddleName</label>
+                    <input
+                      class="w3-input"
+                      type="text"
+                      onChange={(event) =>
+                        this.setState({ updatedMiddlename: event.target.value })
                       }
+                      defaultValue={result[this.state.selectedIndex].middlename}
+                    />
+                  </p>
+                  <p>
+                    <label>lastname</label>
+
+                    <input
+                      class="w3-input"
+                      type="text"
+                      onChange={(event) => {
+                        this.setState({ updatedlastname: event.target.value });
+                        console.log(this.state.updatedsex);
+                      }}
+                      defaultValue={result[this.state.selectedIndex].surname}
+                    />
+                  </p>
+                  <p>
+                    <label>Dob</label>
+                    <input
+                      class="w3-input"
+                      type="date"
+                      onChange={(event) => {
+                        this.setState({ updatedDob: event.target.value });
+                        console.log(event.target.value);
+                      }}
+                      defaultValue={result[this.state.selectedIndex].dob}
+                    />
+                  </p>
+                  <p>
+                    <label>choose file</label>
+                    <input
+                      class="w3-input"
+                      type="file"
+                      onChange={(event) => {
+                        this.setState({ file: event.target.files[0] });
+                        console.log(event.target.files[0]);
+                      }}
                     />
                   </p>
                   <p>
@@ -350,45 +576,16 @@ await axios
                       }
                     />
                   </p>
-                  <p>
-                    <label>Name</label>
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) =>
-                        this.setState({ updatedName: event.target.value })
-                      }
-                      defaultValue={result[this.state.selectedIndex].firstname}
-                    />
-                  </p>
-                  <p>
-                    <label>Dob</label>
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) =>
-                        this.setState({ updatedDob: event.target.value })
-                      }
-                      defaultValue={result[this.state.selectedIndex].dob}
-                    />
-                  </p>
-                  <p>
-                    <label>sex</label>
-
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) => {
-                        this.setState({ updatedsex: event.target.value });
-                        console.log(this.state.updatedsex);
-                      }}
-                      defaultValue={result[this.state.selectedIndex].sex}
-                    />
-                  </p>
                 </div>
               </DialogContent>
               <DialogActions>
-                <Button disabled={this.state.buttondisabled} color="primary" onClick={()=>this.updatedetails()}>
+                <Button
+                  disabled={this.state.buttondisabled}
+                  color="primary"
+                  onClick={() => {
+                    this.updatedetails();
+                  }}
+                >
                   Update
                 </Button>
                 <Button
@@ -409,6 +606,11 @@ await axios
       </>
     );
   }
+  render() {
+    return <>{this.state.isloading ? this.isloading() : this.tabledata()}</>;
+  }
 }
+ 
+
 
 export default MyProfile;
