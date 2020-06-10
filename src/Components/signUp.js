@@ -34,8 +34,8 @@ class signUp extends Component {
   state = {
     designation: "",
     companyName: "",
-    firstName: "",
-    middleName: "",
+    firstname: "",
+    middlename: "",
     surname: "",
     username: "",
     usernameValid: false,
@@ -228,14 +228,14 @@ class signUp extends Component {
                       required
                       style={{ marginRight: 10 }}
                       margin="dense"
-                      id="firstName"
+                      id="firstname"
                       label="First Name"
-                      value={this.state.firstName}
+                      value={this.state.firstname}
                       onChange={(event) =>
-                        this.setState({ firstName: event.target.value })
+                        this.setState({ firstname: event.target.value })
                       }
                       type="text"
-                      autoComplete="firstName"
+                      autoComplete="firstname"
                       autoFocus
                       fullWidth
                     />
@@ -248,14 +248,14 @@ class signUp extends Component {
                       required
                       style={{ marginRight: 10 }}
                       margin="dense"
-                      id="middleName"
+                      id="middlename"
                       label="Middle Name"
-                      value={this.state.middleName}
+                      value={this.state.middlename}
                       onChange={(event) =>
-                        this.setState({ middleName: event.target.value })
+                        this.setState({ middlename: event.target.value })
                       }
                       type="text"
-                      autoComplete="middleName"
+                      autoComplete="middlename"
                       autoFocus
                       fullWidth
                       size="medium"
@@ -401,7 +401,7 @@ class signUp extends Component {
                     <GradientButton
                       onClick={this.onRegisterButtonPress}
                       title={"Sign Up"}
-                      disabled={this.state.submitDisabled}
+                      disabled = {this.state.submitDisabled}
                       center
                       style={{
                         marginTop: 16,
@@ -426,24 +426,35 @@ class signUp extends Component {
 
   async onRegisterButtonPress() {
     try {
+      console.log(this.state.designation)
       let apiEndpoint =
-        "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/accounts/auth";
-      if (this.state.designation === "employee")
+        "http://3.22.17.212:8000/api/v1/accounts/auth";
+      var requestBody;
+      if (this.state.designation === "Employee"){
         apiEndpoint += "/employee/register";
-      else if (this.state.designation === "employer")
+        requestBody = {
+          firstname: this.state.firstname,
+          middlename: this.state.middlename,
+          surname: this.state.surname,
+          username: this.state.username,
+          email: this.state.email,
+          password: this.state.password,
+        };}
+      else if (this.state.designation === "Employer"){
         apiEndpoint += "/employer/register";
+        requestBody = {
+          designation: this.state.designation,
+          companyName: this.state.companyName,
+          firstname: this.state.firstname,
+          middlename: this.state.middlename,
+          surname: this.state.surname,
+          username: this.state.username,
+          email: this.state.email,
+          password: this.state.password,
+        };}
       else apiEndpoint += "/admin/register";
 
-      var requestBody = {
-        designation: this.state.designation,
-        companyName: this.state.companyName,
-        firstName: this.state.firstName,
-        middleName: this.state.middleName,
-        surname: this.state.surname,
-        username: this.state.username,
-        email: this.state.email,
-        password: this.state.password,
-      };
+      
 
       console.log("reqestBody", requestBody);
 
@@ -453,8 +464,7 @@ class signUp extends Component {
         headers: {
           "Content-Type": "application/json",
           Accept: "*/*",
-          Authorization:
-            "Token c78c2356ab9d5f349ef3ec5bc97c212a8b315a7821cf674f5cdf25e1ace41b76",
+         
         },
       });
       console.log("..................................................");

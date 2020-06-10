@@ -98,11 +98,13 @@ class MyProfile extends Component {
     // console.table(result);
     // console.log(result[0].id);
   }
+
   _handleChangeEvent(event) {
     this.setState({ updatedval: event.target.value });
     console.log(this.state.updatedval);
     return this.state.updatedval;
   }
+
   reasonforupdatevalidcheck = (event) => {
     if (event.target.value.length > 0) {
       //  console.log(event.target.value);
@@ -110,7 +112,18 @@ class MyProfile extends Component {
     } else {
       this.setState({ buttondisabled: "disabled" });
     }
+    
+    
   };
+   
+// async updatedetails(){
+//   console.log("///////////////////////////////////////////////");
+//  let data = {
+//     employee: this.state.id,
+//     update_reason: this.state.updatedReasonforupdating,
+//     sex: this.state.updatedsex,
+//     dob: this.state.updatedDob,
+//   };
 
   async updatedetails() {
     this.setState({
