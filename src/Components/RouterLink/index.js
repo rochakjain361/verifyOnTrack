@@ -13,7 +13,7 @@ class RouterLink extends React.PureComponent {
 
 const styles = {
     textStyle: {
-        fontSize: 16,
+        fontSize: 14,
         textDecoration: 'none',
         color: 'primary'
     }

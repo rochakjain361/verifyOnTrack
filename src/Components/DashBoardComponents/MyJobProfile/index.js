@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import { Typography, Grid, Paper } from '@material-ui/core'
 import GradientButton from '../../GradientButton'
 import { Button } from "@material-ui/core";
@@ -16,6 +16,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { CircularProgress } from "@material-ui/core";
+import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+
 import axios from "axios";
 
 const rows = [
@@ -46,7 +48,15 @@ class myJobProfile extends Component {
         tabularBoolean: false,
         isloading: false,
         selectedIndex: -1,
-        id: ""
+        id: "",
+        dialogBoxData: {
+            startDate: '',
+            endDate: '',
+            employer: '',
+            position: '',
+            vonStatus: '',
+            actions: '',
+        }
     }
 
     async componentDidMount() {
@@ -69,64 +79,157 @@ class myJobProfile extends Component {
     render() {
         return (
 
-            this.state.isloading ? 
-                (
-                    <Grid
-                        container
-                        spacing={0}
-                        direction="column"
-                        alignItems="center"
-                        justify="center"
-                        display="flex"
-                        style={{ minHeight: "100vh" }}
-                    >
-                        <CircularProgress />
-                    </Grid>
-                ) 
-                
-                : 
-                
-                (this.state.tabularBoolean ? 
-                
-                    (
-                        <Grid container spacing={3} justify='flex-end'>
-                            
-                            <Grid item xs={12}>
+            <div>
+                {
+                    <Dialog open={this.state.updateDialogOpen} onClose={() => this.setState({ updateDialogOpen: false })} aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">Add new job profile</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Enter the details of your Job profile to be added
+                        </DialogContentText>
 
-                                <Paper style={{ padding: 20 }} elevation={3}>
-                                    <Typography variant="h5" gutterBottom align='center'>
-                                        Add job profiles to improve ratings.
-                                    </Typography>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="startDate"
+                                label="Start Date"
+                                type="text"
+                                fullWidth
+                                value={this.state.dialogBoxData.startDate}
+                            />
 
-                                    <Grid item >
-                                        <Button color="primary" variant='outlined'>
-                                            Add New Job History
-                                        </Button>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="endDate"
+                                label="End Date"
+                                type="text"
+                                fullWidth
+                                value={this.state.dialogBoxData.endDate}
+                            />
 
-                                    </Grid>
-                                </Paper>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="employer"
+                                label="Employer"
+                                type="text"
+                                fullWidth
+                                value={this.state.dialogBoxData.employer}
+                            />
+
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="position"
+                                label="Position"
+                                type="text"
+                                fullWidth
+                                value={this.state.dialogBoxData.position}
+                            />
+
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="vonStatus"
+                                label="VON-Status"
+                                type="text"
+                                fullWidth
+                                value={this.state.dialogBoxData.vonStatus}
+                            />
+
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="actions"
+                                label="Actions"
+                                type="text"
+                                fullWidth
+                                value={this.state.dialogBoxData.actions}
+                            />
+
+                        </DialogContent>
+                        <DialogActions>
+                            <Button color="primary" variant="outlined">
+                                Update
+                            </Button>
+                            <Button color="secondary" variant="outlined" onClick={() => this.setState({ updateDialogOpen: false, selectedIndex: -1 })}>
+                                Cancel
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                }
+                {
+                    this.state.isloading ?
+                        (
+                            <Grid
+                                container
+                                spacing={0}
+                                direction="column"
+                                alignItems="center"
+                                justify="center"
+                                display="flex"
+                                style={{ minHeight: "100vh" }}
+                            >
+                                <CircularProgress />
                             </Grid>
+                        )
 
-                        </Grid>
-                    ) 
-                    : 
-                    (
-                    
-                    <Grid container spacing={3} justify='flex-end'>
-                        <Grid item xs={3}>
-                            <Button color="secondary" variant='outlined' >Add New Job History</Button>
-                        </Grid>
+                        :
 
-                        <Grid item xs={12} >
-                            {this.getTableOfEmployees()}
-                        </Grid>
-                    </Grid>
-                    
-                    )
-                    )
-                
-        ) 
-            
+                        (this.state.tabularBoolean ?
+
+                            (
+                                <Grid container spacing={3} justify="space-between" >
+                                    <Grid item xs={6}>
+                                        <h1>My Job Profile</h1>
+                                    </Grid>
+                                    <Grid item xs={12}>
+
+                                        <Paper style={{ padding: 20 }} elevation={3}>
+                                            <Typography variant="h5" gutterBottom align='center'>
+                                                Add job profiles to improve ratings.
+                    </Typography>
+
+                                            <Grid container justify='center' style={{ marginTop: 50 }}>
+                                                <Button color="primary" variant='outlined' onClick={() => this.setState({ updateDialogOpen: true })}>
+                                                    Add New Job History
+                        </Button>
+                                            </Grid>
+                                        </Paper>
+                                    </Grid>
+
+                                </Grid>
+                            )
+                            :
+                            (
+
+                                <Grid container spacing={3} justify="space-between" >
+                                    <Grid item xs={6}>
+                                        <h1>My Job Profile</h1>
+                                    </Grid>
+                                    <Grid item xs={3}>
+                                        <Button color="secondary" style={{ marginTop: 25 }} variant='outlined' onClick={() => this.setState({ updateDialogOpen: true })} >
+                                            Add New Job History
+            </Button>
+                                    </Grid>
+
+
+
+                                    <Grid item xs={12} >
+                                        {this.getTableOfEmployees()}
+                                    </Grid>
+                                </Grid>
+
+                            )
+                        )
+                }
+            </div>
+
+
+
+        )
+
     }
 
     getTableOfEmployees() {
@@ -135,107 +238,29 @@ class myJobProfile extends Component {
                 <Table stickyHeader>
                     <TableHead>
                         <TableRow style={{ backgroundColor: 'black' }}>
-                            <TableCell align="right">Start Date</TableCell>
-                            <TableCell align="right">End Date</TableCell>
-                            <TableCell align="right">Employer</TableCell>
-                            <TableCell align="right">Position</TableCell>
-                            <TableCell align="right">VON-Status</TableCell>
-                            <TableCell align="right">Actions</TableCell>
+                            <TableCell align="left">Start Date</TableCell>
+                            <TableCell align="left">End Date</TableCell>
+                            <TableCell align="left">Employer</TableCell>
+                            <TableCell align="left">Position</TableCell>
+                            <TableCell align="left">VON-Status</TableCell>
+                            <TableCell align="left">Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {rows.map((row, index) => (
                             <TableRow key={row.id}>
-                                <TableCell align="right">{row.startDate}</TableCell>
-                                <TableCell align="right">{row.endDate}</TableCell>
-                                <TableCell align="right">{row.employer}</TableCell>
-                                <TableCell align="right">{row.position}</TableCell>
-                                <TableCell align="right">{row.vonStatus}</TableCell>
-                                <TableCell align="right">{row.actions}</TableCell>
+                                <TableCell align="left">{row.startDate}</TableCell>
+                                <TableCell align="left">{row.endDate}</TableCell>
+                                <TableCell align="left">{row.employer}</TableCell>
+                                <TableCell align="left">{row.position}</TableCell>
+                                <TableCell align="left">{row.vonStatus}</TableCell>
+                                <TableCell align="left">{row.actions}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
 
-                {
-                    this.state.selectedIndex === -1 ? <div /> : <Dialog open={this.state.updateDialogOpen} onClose={() => this.setState({ updateDialogOpen: false })} aria-labelledby="form-dialog-title">
-                        <DialogTitle id="form-dialog-title">Update Identity</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                Enter the details of your profile to be updated
-                        </DialogContentText>
 
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="source"
-                                label="Source"
-                                type="text"
-                                fullWidth
-                                value={rows[this.state.selectedIndex].source}
-                            />
-
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="id"
-                                label="ID"
-                                type="text"
-                                fullWidth
-                                value={rows[this.state.selectedIndex].id}
-                            />
-
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="name"
-                                label="Full Name"
-                                type="text"
-                                fullWidth
-                                value={rows[this.state.selectedIndex].fullname}
-                            />
-
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="dob"
-                                label="DOB"
-                                type="text"
-                                fullWidth
-                                value={rows[this.state.selectedIndex].dob}
-                            />
-
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="sex"
-                                label="Sex"
-                                type="text"
-                                fullWidth
-                                value={rows[this.state.selectedIndex].sex}
-                            />
-
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="verifier"
-                                label="Verifier"
-                                type="text"
-                                fullWidth
-                                value={rows[this.state.selectedIndex].verifier}
-                            />
-
-                        </DialogContent>
-                        <DialogActions>
-                            <Button color="primary">
-                                Update
-                            </Button>
-                            <Button color="secondary" onClick={() => this.setState({ updateDialogOpen: false, selectedIndex: -1 })}>
-                                Cancel
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                }
             </TableContainer>
         );
     }

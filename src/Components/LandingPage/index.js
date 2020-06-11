@@ -15,6 +15,7 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
+import Dashboard from '../DashBoardComponents/Dashboard'
 import Addresses from '../DashBoardComponents/Addresses'
 import Identities from '../DashBoardComponents/Identities'
 import Phones from '../DashBoardComponents/Phones'
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-function Dashboard() {
+function LandingPage() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
 
@@ -59,6 +60,15 @@ function Dashboard() {
             }
             className={classes.root}
           >
+            <Link to="/dashboard" className={classes.link}>
+                  <ListItem button>
+                    <ListItemIcon>
+                      <ShoppingCartIcon style={{color: "white"}} />
+                    </ListItemIcon>
+                    <ListItemText primary="Dashboard"  style={{color: "white"}} />
+                  </ListItem>
+                </Link>
+
             <ListItem button onClick={handleClick} selected>
               <ListItemIcon>
                 <BusinessCenterIcon style={{color: "white"}} />
@@ -141,6 +151,12 @@ function Dashboard() {
         </Drawer>
         <Switch>
 
+        <Route exact path="/dashboard">
+            <Container>
+              <Dashboard/>
+            </Container>
+          </Route>
+
         <Route exact path="/profiles">
             <Container>
               <MyProfile />
@@ -191,4 +207,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default LandingPage;
