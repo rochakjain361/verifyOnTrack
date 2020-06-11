@@ -1,24 +1,26 @@
-import React, { Component, useState } from 'react'
-import { Typography, Grid, Paper } from '@material-ui/core'
-import GradientButton from '../../GradientButton'
-import { Button } from "@material-ui/core";
+import { Button, CircularProgress, Grid, Paper, Typography } from '@material-ui/core';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Avatar from '@material-ui/core/Avatar';
 import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { CircularProgress } from "@material-ui/core";
-import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-
 import axios from "axios";
+import Rating from '@material-ui/lab/Rating';
+import {
+    MuiPickersUtilsProvider,
+    KeyboardTimePicker,
+    KeyboardDatePicker,
+} from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+import React, { Component } from 'react';
+
 
 const rows = [
     {
@@ -50,13 +52,17 @@ class myJobProfile extends Component {
         selectedIndex: -1,
         id: "",
         dialogBoxData: {
-            startDate: '',
-            endDate: '',
+            startDate: new Date(),
+            endDate: new Date(),
             employer: '',
+            selectedCompany: '',
             position: '',
             vonStatus: '',
             actions: '',
-        }
+            jd: '',
+            rating: 0
+        },
+        availableCompanies: []
     }
 
     async componentDidMount() {
@@ -88,31 +94,68 @@ class myJobProfile extends Component {
                                 Enter the details of your Job profile to be added
                         </DialogContentText>
 
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="startDate"
-                                label="Start Date"
-                                type="text"
-                                fullWidth
-                                value={this.state.dialogBoxData.startDate}
-                            />
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <KeyboardDatePicker
+                                    disableToolbar
+                                    variant="inline"
+                                    format="yyyy/MM/dd"
+                                    margin="normal"
+                                    id="date-picker-inline"
+                                    label="Date picker inline"
+                                    value={this.state.dialogBoxData.startDate}
+                                    onChange={date => this.setState({ dialogBoxData: { startDate: date } })}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change date',
+                                    }}
+                                />
 
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="endDate"
-                                label="End Date"
-                                type="text"
-                                fullWidth
-                                value={this.state.dialogBoxData.endDate}
-                            />
+                            </MuiPickersUtilsProvider>
+
+
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+
+                                <KeyboardDatePicker
+                                    disableToolbar
+                                    variant="inline"
+                                    format="yyyy/MM/dd"
+                                    margin="normal"
+                                    id="date-picker-inline"
+                                    label="Date picker inline"
+                                    value={this.state.dialogBoxData.endDate}
+                                    style={{ marginLeft: 32 }}
+                                    onChange={date => this.setState({ dialogBoxData: { endDate: date } })}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change date',
+                                    }}
+                                />
+                            </MuiPickersUtilsProvider>
+
 
                             <TextField
                                 autoFocus
                                 margin="dense"
                                 id="employer"
                                 label="Employer"
+                                type="text"
+                                fullWidth
+                                value={this.state.dialogBoxData.employer}
+                            />
+
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="employer"
+                                label="Company Name"
+                                type="text"
+                                fullWidth
+                                value={this.state.dialogBoxData.employer}
+                            />
+
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="employer"
+                                label="Company Name (If Other)"
                                 type="text"
                                 fullWidth
                                 value={this.state.dialogBoxData.employer}
@@ -132,26 +175,35 @@ class myJobProfile extends Component {
                                 autoFocus
                                 margin="dense"
                                 id="vonStatus"
-                                label="VON-Status"
+                                label="Job description"
                                 type="text"
                                 fullWidth
-                                value={this.state.dialogBoxData.vonStatus}
+                                multiline={4}
+                                value={this.state.dialogBoxData.jd}
                             />
 
                             <TextField
                                 autoFocus
                                 margin="dense"
-                                id="actions"
-                                label="Actions"
+                                id="vonStatus"
+                                label="Reason for leaving"
                                 type="text"
                                 fullWidth
-                                value={this.state.dialogBoxData.actions}
+                                multiline={4}
+                                value={this.state.dialogBoxData.jd}
+                            />
+
+                            <span>How do you rate this Company?</span>
+                            <Rating
+                                name="simple-controlled"
+                                value={this.state.dialogBoxData.rating}
+                                onChange={(event, newValue) => this.setState({ dialogBoxData: { rating: newValue } })}
                             />
 
                         </DialogContent>
                         <DialogActions>
                             <Button color="primary" variant="outlined">
-                                Update
+                                Add
                             </Button>
                             <Button color="secondary" variant="outlined" onClick={() => this.setState({ updateDialogOpen: false, selectedIndex: -1 })}>
                                 Cancel
@@ -263,6 +315,14 @@ class myJobProfile extends Component {
 
             </TableContainer>
         );
+    }
+
+    componentDidMount() {
+
+    }
+
+    async fetchAllCompanies() {
+        let response = await fetch()
     }
 }
 
