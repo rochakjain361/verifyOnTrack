@@ -24,8 +24,10 @@ import {MenuItem} from "@material-ui/core"
 import {InputLabel} from "@material-ui/core"
 import { CircularProgress } from "@material-ui/core";
 import "./myprofile.css";
+const token1 = localStorage.getItem("Token");
 const token =
-  "Token 13de58f05701dc7375aab5e15e478a0deb3b0431ad2076a944dae470e922afc3";
+  "Token "+token1;
+  const id = localStorage.getItem("id");
 const rows = [
   {
     date: "2016-12-01",
@@ -80,7 +82,7 @@ class MyProfile extends Component {
   async componentDidMount() {
     console.log(token);
     await axios
-      .get("http://3.22.17.212:8000/api/v1/employees/17/all-profiles", {
+      .get("http://3.22.17.212:8000/api/v1/employees/"+id+"/profiles", {
         headers: {
           Authorization: token,
         },
@@ -136,7 +138,7 @@ class MyProfile extends Component {
       },
     };
     let bodyFormData = new FormData();
-    bodyFormData.append("employee", this.state.id);
+    bodyFormData.append("employee", id);
     bodyFormData.append("update_reason", this.state.updatedReasonforupdating);
     bodyFormData.append("picture", this.state.file);
     bodyFormData.append("dob", this.state.updatedDob);
@@ -162,7 +164,7 @@ class MyProfile extends Component {
       },
     };
     let bodyFormData = new FormData();
-    bodyFormData.append("employee", 17);
+    bodyFormData.append("employee", id);
     bodyFormData.append("sex", this.state.gender);
     bodyFormData.append("picture", this.state.initialfile);
     bodyFormData.append("dob", this.state.Dob);

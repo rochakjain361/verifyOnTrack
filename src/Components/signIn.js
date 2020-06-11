@@ -213,6 +213,9 @@ if(this.state.usernamevalid&&this.state.passwordvalid){
       console.log("response:", response);
       
       if (data.token) {
+        localStorage.setItem("Token",data.token);
+        localStorage.setItem("id", data.user.id);
+        
         this.setState({ response: data });
         this.props.history.push({
           pathname: "/Homepage",
