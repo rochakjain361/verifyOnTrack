@@ -73,10 +73,10 @@ class Identities extends Component {
                 <Table stickyHeader>
                     <TableHead>
                         <TableRow style={{ backgroundColor: 'black' }}>
-                        <TableCell align="right">IdNumber</TableCell>
-                            <TableCell align="right">Fullname</TableCell>
-                            <TableCell align="right">Dob</TableCell>
-                            <TableCell align="right">Sex</TableCell>
+                        <TableCell align="right">Date</TableCell>
+                            <TableCell align="right">Idsource</TableCell>
+                            <TableCell align="right">IdNumber</TableCell>
+                            <TableCell align="right">fullname</TableCell>
                             <TableCell align="right">Update</TableCell>
                         </TableRow>
                     </TableHead>

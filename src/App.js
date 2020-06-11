@@ -10,7 +10,7 @@ import MyJobProfile from './Components/DashBoardComponents/MyJobProfile'
 import Messages from './Components/DashBoardComponents/Messages'
 import Dashboard from './Components/DashBoardComponents/Dashboard'
 import PreRegistration from './Components/PreRegistration'
-import AdminLandingPage from './Components/AdminLandingPage';
+import AdminLandingPage from './Components/AdminLandingPage'
 
 class App extends React.PureComponent {
   render() {
@@ -33,7 +33,7 @@ class App extends React.PureComponent {
 
           {/* ADMIN PAGE PATHS */}
             <Route exact path='/admin' component={AdminLandingPage} />
-            <Route exact path='/manageStates' component={AdminLandingPage} />
+            <Route exact path='/managestates' component={AdminLandingPage} />
           </Switch>
         </div>
       </Router>

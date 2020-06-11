@@ -1,19 +1,26 @@
 import React from 'react';
-import { makeStyles } from "@material-ui/core/styles"
+import Drawer from '@material-ui/core/Drawer';
+import AppBar from '@material-ui/core/AppBar';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Toolbar from '@material-ui/core/Toolbar';
+import List from '@material-ui/core/List';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import MailIcon from '@material-ui/icons/Mail';
+import { withStyles } from '@material-ui/core/styles';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { Drawer, List, ListItem, ListItemIcon, ListItemText, Container, Typography, } from "@material-ui/core";
+import { Container, Button, Grid } from "@material-ui/core";
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import InfoIcon from '@material-ui/icons/Info';
 
-import ListSubheader from '@material-ui/core/ListSubheader';
-import Collapse from '@material-ui/core/Collapse';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-import OndemandVideoIcon from '@material-ui/icons/OndemandVideo';
-import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
-import ListAltIcon from '@material-ui/icons/ListAlt';
-import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import StarBorder from '@material-ui/icons/StarBorder';
+import Collapse from '@material-ui/core/Collapse';
 
 import Dashboard from '../DashBoardComponents/Dashboard'
 import Addresses from '../DashBoardComponents/Addresses'
@@ -23,188 +30,217 @@ import MyJobProfile from '../DashBoardComponents/MyJobProfile'
 import Messages from '../DashBoardComponents/Messages'
 import MyProfile from '../DashBoardComponents/MyProfile'
 
-const useStyles = makeStyles((theme) => ({
-  drawerPaper: { width: 'inherit',  background: 'linear-gradient(45deg, #764ba2 30%, #667eea 90%)'},
-  link: {
-    textDecoration: 'none',
-    color: theme.palette.text.primary
+const drawerWidth = 240;
+
+const styles = theme => ({
+  root: {
+    display: 'flex',
+    flexGrow: 1
+  },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  drawerContainer: {
+    overflow: 'auto',
+  },
+  content: {
+    flexGrow: 1,
+    padding: 10,
   },
   nested: {
-    marginLeft: 32
+    paddingLeft: 72,
+  },
+  link: {
+    textDecoration: 'none',
+    // color: theme.palette.text.primary
+  },
+  drawerPaper: {
+    width: 'inherit',
+    background: '#424242'
+  },
+  textColor: {
+    color: 'white',
+    fontFamily: "Montserrat"
   }
-}))
+});
 
-function LandingPage() {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
+class NewLandingPage extends React.PureComponent {
 
-  const handleClick = () => {
-    setOpen(!open);
-  };
-  return (
-    <Router>
-      <div style={{ display: 'flex' }}>
-        <Drawer
-          style={{ width: '220px', }}
-          variant="persistent"
-          anchor="left"
-          open={true}
-          classes={{ paper: classes.drawerPaper }}
+  state = {
+    open1: false,
+    open2: false,
+    open3: false,
+    open4: false,
+  }
+
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <Router>
+
+        <div className={classes.root}>
+          <CssBaseline />
+          <AppBar position="fixed" className={classes.appBar}>
+            <Toolbar>
+
+              <Grid container justify='space-between' >
+
+                <Grid item >
+                  <Typography variant="h6" noWrap>
+                    Verify OnTrack
+                    </Typography>
+                </Grid>
+
+                <Grid item >
+                  <Button color="inherit" variant='outlined'>Logout</Button>
+                </Grid>
+              </Grid>
+
+            </Toolbar>
+          </AppBar>
+          <Drawer
+            className={classes.drawer}
+            variant="permanent"
+            classes={{
+              paper: classes.drawerPaper,
+            }}
           >
-          <List
-            component="nav"
-            aria-labelledby="nested-list-subheader"
-            subheader={
-              <ListSubheader component="div" id="nested-list-subheader" >
-              </ListSubheader>
-            }
-            className={classes.root}
-          >
-            <Link to="/dashboard" className={classes.link}>
-                  <ListItem button>
-                    <ListItemIcon>
-                      <ShoppingCartIcon style={{color: "white"}} />
-                    </ListItemIcon>
-                    <ListItemText primary="Dashboard"  style={{color: "white"}} />
-                  </ListItem>
-                </Link>
+            <Toolbar />
+            <div className={classes.drawerContainer}>
 
-            <ListItem button onClick={handleClick} selected>
-              <ListItemIcon>
-                <BusinessCenterIcon style={{color: "white"}} />
-              </ListItemIcon>
-              <ListItemText primary="My Info" style={{color: "white", fontWeight: 'bold', fontFamily: 'Montserrat'}} />
-              {open ? <ExpandLess /> : <ExpandMore />}
-            </ListItem>
+              <Link to="/dashboard" className={classes.link}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <InfoIcon style={{ color: "white" }} />
+                  </ListItemIcon>
+                  <ListItemText primary={"Dashboard"} className={classes.textColor} />
+                </ListItem>
+              </Link>
 
-            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Divider />
 
-              <List component="div" disablePadding>
-              <Link to="/profiles" className={classes.link}>
-                  <ListItem button className={classes.nested}>
-                    <ListItemIcon>
-                      <FormatListBulletedIcon  style={{color: "white"}} />
-                    </ListItemIcon>
-                    <ListItemText primary="Profiles"  style={{color: "white"}} />
-                  </ListItem>
-                </Link>
-              </List>
-
-              <List component="div" disablePadding>
-              <Link to="/addresses" className={classes.link}>
-                  <ListItem button className={classes.nested}>
-                    <ListItemIcon>
-                      <FormatListBulletedIcon  style={{color: "white"}} />
-                    </ListItemIcon>
-                    <ListItemText primary="Addresses"  style={{color: "white"}} />
-                  </ListItem>
-                </Link>
-              </List>
-
-              <List component="div" disablePadding>
-              <Link to="/identities" className={classes.link}>
-                  <ListItem button className={classes.nested}>
-                    <ListItemIcon>
-                      <OndemandVideoIcon style={{color: "white"}} />
-                    </ListItemIcon>
-                    <ListItemText primary="Identities"  style={{color: "white"}} />
-                  </ListItem>
-                </Link>
-              </List>
-
-              <List component="div" disablePadding>
-                <Link to="/phones" className={classes.link}>
-                  <ListItem button className={classes.nested}>
-                    <ListItemIcon>
-                      <ListAltIcon style={{color: "white"}} />
-                    </ListItemIcon>
-                    <ListItemText primary="Phones"  style={{color: "white"}} />
-                  </ListItem>
-                </Link>
-              </List>
-
-            </Collapse>
-
-          </List>
-
-          <List>
-          <Link to="/myjobprofile" className={classes.link}>
-                  <ListItem button>
-                    <ListItemIcon>
-                      <ShoppingCartIcon style={{color: "white"}} />
-                    </ListItemIcon>
-                    <ListItemText primary="My Job Profile"  style={{color: "white"}} />
-                  </ListItem>
-                </Link>
-
-            <Link to="/messages" className={classes.link}>
-              <ListItem button>
+              <ListItem button onClick={() => this.setState({ open1: !this.state.open1 })}>
                 <ListItemIcon>
-                  <InfoIcon style={{color: "white"}} />
+                  <InboxIcon style={{ color: "white" }} />
                 </ListItemIcon>
-                <ListItemText primary={"Messages"}  style={{color: "white"}} />
+                <ListItemText primary="My Info" className={classes.textColor} />
+                {this.state.open1 ? <ExpandLess style={{ color: 'white' }} /> : <ExpandMore style={{ color: 'white' }} />}
               </ListItem>
-            </Link>
 
-          </List>
+              <Collapse in={this.state.open1} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <Link to="/profiles" className={classes.link} >
+                    <ListItem button className={classes.nested}>
+                      <ListItemText primary="Profiles" className={classes.textColor} />
+                    </ListItem>
+                  </Link>
 
-        </Drawer>
-        <Switch>
+                  <Link to="/addresses" className={classes.link}>
+                    <ListItem button className={classes.nested}>
+                      <ListItemText primary="Addresses" className={classes.textColor} />
+                    </ListItem>
+                  </Link>
 
-        <Route exact path="/dashboard">
-            <Container>
-              <Dashboard/>
-            </Container>
-          </Route>
+                  <Link to="/identities" className={classes.link}>
+                    <ListItem button className={classes.nested}>
+                      <ListItemText primary="Identities" className={classes.textColor} />
+                    </ListItem>
+                  </Link>
 
-        <Route exact path="/profiles">
-            <Container>
-              <MyProfile />
-            </Container>
-          </Route>
+                  <Link to="/phones" className={classes.link}>
+                    <ListItem button className={classes.nested}>
+                      <ListItemText primary="Phones" className={classes.textColor} />
+                    </ListItem>
+                  </Link>
+                </List>
+              </Collapse>
 
-          <Route exact path="/addresses">
-            <Container>
-              <Addresses />
-            </Container>
-          </Route>
+              <Divider />
 
-          <Route exact path="/identities">
-            <Container>
-              <Identities />
-            </Container>
-          </Route>
+              <Link to="/myjobprofile" className={classes.link}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <ShoppingCartIcon style={{ color: "white" }} />
+                  </ListItemIcon>
+                  <ListItemText primary="My Job Profile" className={classes.textColor} />
+                </ListItem>
+              </Link>
 
-          <Route exact path="/Phones">
-            <Container>
-              <Phones />
-            </Container>
-          </Route>
+              <Divider />
 
-          <Route exact path="/myjobprofile">
-            <Container>
-              <MyJobProfile />
-            </Container>
-          </Route>
+              <Link to="/messages" className={classes.link}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <InfoIcon style={{ color: "white" }} />
+                  </ListItemIcon>
+                  <ListItemText primary={"Messages"} className={classes.textColor} />
+                </ListItem>
+              </Link>
 
-          <Route exact path="/messages">
-            <Container>
-              <Messages />
-            </Container>
-          </Route>
+              <Divider />
 
-          <Route path="/dashboard/about">
-            <Container>
-              <Typography variant="h3" gutterBottom>
-                About
-              </Typography>
-              <Typography variant="body1" gutterBottom>Blah Blah Blah</Typography>
-            </Container>
-          </Route>
-        </Switch>
-      </div>
-    </Router>
-  );
-}
+            </div>
+          </Drawer>
+          <main className={classes.content}>
+            <Toolbar />
+            <Switch>
 
-export default LandingPage;
+              <Route exact path="/dashboard">
+                <Container>
+                  <Dashboard />
+                </Container>
+              </Route>
+
+              <Route exact path="/profiles">
+                <Container>
+                  <MyProfile />
+                </Container>
+              </Route>
+
+              <Route exact path="/addresses">
+                <Container>
+                  <Addresses />
+                </Container>
+              </Route>
+
+              <Route exact path="/identities">
+                <Container>
+                  <Identities />
+                </Container>
+              </Route>
+
+              <Route exact path="/Phones">
+                <Container>
+                  <Phones />
+                </Container>
+              </Route>
+
+              <Route exact path="/myjobprofile">
+                <Container>
+                  <MyJobProfile />
+                </Container>
+              </Route>
+
+              <Route exact path="/messages">
+                <Container>
+                  <Messages />
+                </Container>
+              </Route>
+            </Switch>
+          </main>
+        </div>
+
+      </Router>
+    );
+  }
+};
+
+export default withStyles(styles)(NewLandingPage);

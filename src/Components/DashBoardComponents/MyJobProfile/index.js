@@ -47,11 +47,23 @@ let result = [];
 class myJobProfile extends Component {
     state = {
         updateDialogOpen: false,
+        editActionsOpen: false,
         tabularBoolean: false,
         isloading: false,
         selectedIndex: -1,
         id: "",
         dialogBoxData: {
+            startDate: new Date(),
+            endDate: new Date(),
+            employer: '',
+            selectedCompany: '',
+            position: '',
+            vonStatus: '',
+            actions: '',
+            jd: '',
+            rating: 0
+        },
+        actionsEditDialog: {
             startDate: new Date(),
             endDate: new Date(),
             employer: '',
@@ -178,7 +190,8 @@ class myJobProfile extends Component {
                                 label="Job description"
                                 type="text"
                                 fullWidth
-                                multiline={4}
+                                multiline
+          rowsMax={4}
                                 value={this.state.dialogBoxData.jd}
                             />
 
@@ -189,23 +202,30 @@ class myJobProfile extends Component {
                                 label="Reason for leaving"
                                 type="text"
                                 fullWidth
-                                multiline={4}
+                                multiline
+          rowsMax={4}
                                 value={this.state.dialogBoxData.jd}
                             />
 
-                            <span>How do you rate this Company?</span>
-                            <Rating
-                                name="simple-controlled"
-                                value={this.state.dialogBoxData.rating}
-                                onChange={(event, newValue) => this.setState({ dialogBoxData: { rating: newValue } })}
-                            />
+                            <Grid container style={{ marginTop: 20 }}>
+                                <Grid item xs={6}>
+                                    <Typography>How do you rate this company?</Typography>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <Rating
+                                        name="simple-controlled"
+                                        value={this.state.dialogBoxData.rating}
+                                        onChange={(event, newValue) => this.setState({ dialogBoxData: { rating: newValue } })}
+                                    />
+                                </Grid>
+                            </Grid>
 
                         </DialogContent>
                         <DialogActions>
-                            <Button color="primary" variant="outlined">
+                            <Button style={{ width: 85}} color="primary" variant="contained">
                                 Add
                             </Button>
-                            <Button color="secondary" variant="outlined" onClick={() => this.setState({ updateDialogOpen: false, selectedIndex: -1 })}>
+                            <Button color="secondary" variant="contained" onClick={() => this.setState({ updateDialogOpen: false, selectedIndex: -1 })}>
                                 Cancel
                             </Button>
                         </DialogActions>
@@ -244,7 +264,7 @@ class myJobProfile extends Component {
                     </Typography>
 
                                             <Grid container justify='center' style={{ marginTop: 50 }}>
-                                                <Button color="primary" variant='outlined' onClick={() => this.setState({ updateDialogOpen: true })}>
+                                                <Button color="primary" variant='contained' onClick={() => this.setState({ updateDialogOpen: true })}>
                                                     Add New Job History
                         </Button>
                                             </Grid>
@@ -261,9 +281,9 @@ class myJobProfile extends Component {
                                         <h1>My Job Profile</h1>
                                     </Grid>
                                     <Grid item xs={3}>
-                                        <Button color="secondary" style={{ marginTop: 25 }} variant='outlined' onClick={() => this.setState({ updateDialogOpen: true })} >
+                                        <Button color="secondary" style={{ marginTop: 25, marginLeft: 32 }} variant='contained' onClick={() => this.setState({ updateDialogOpen: true })} >
                                             Add New Job History
-            </Button>
+                                        </Button>
                                     </Grid>
 
 
@@ -276,12 +296,142 @@ class myJobProfile extends Component {
                             )
                         )
                 }
+
+{
+                   <Dialog open={this.state.editActionsOpen} onClose={() => this.setState({ editActionsOpen: false })} aria-labelledby="form-dialog-title">
+                       <DialogTitle id="form-dialog-title">Edit my job history</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Enter the details of your job history to be edited
+                        </DialogContentText>
+
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <KeyboardDatePicker
+                                    disableToolbar
+                                    variant="inline"
+                                    format="yyyy/MM/dd"
+                                    margin="normal"
+                                    id="date-picker-inline"
+                                    label="Date picker inline"
+                                    value={this.state.actionsEditDialog.startDate}
+                                    onChange={date => this.setState({ actionsEditDialog: { startDate: date } })}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change date',
+                                    }}
+                                />
+
+                            </MuiPickersUtilsProvider>
+
+
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+
+                                <KeyboardDatePicker
+                                    disableToolbar
+                                    variant="inline"
+                                    format="yyyy/MM/dd"
+                                    margin="normal"
+                                    id="date-picker-inline"
+                                    label="Date picker inline"
+                                    value={this.state.actionsEditDialog.endDate}
+                                    style={{ marginLeft: 32 }}
+                                    onChange={date => this.setState({ actionsEditDialog: { endDate: date } })}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change date',
+                                    }}
+                                />
+                            </MuiPickersUtilsProvider>
+
+
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="employer"
+                                label="Employer"
+                                type="text"
+                                fullWidth
+                                value={this.state.actionsEditDialog.employer}
+                            />
+
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="employer"
+                                label="Company Name"
+                                type="text"
+                                fullWidth
+                                value={this.state.actionsEditDialog.employer}
+                            />
+
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="employer"
+                                label="Company Name (If Other)"
+                                type="text"
+                                fullWidth
+                                value={this.state.actionsEditDialog.employer}
+                            />
+
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="position"
+                                label="Position"
+                                type="text"
+                                fullWidth
+                                value={this.state.actionsEditDialog.position}
+                            />
+
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="vonStatus"
+                                label="Job description"
+                                type="text"
+                                fullWidth
+                                multiline
+                                rowsMax={4}
+                                value={this.state.actionsEditDialog.jd}
+                            />
+
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="vonStatus"
+                                label="Reason for leaving"
+                                type="text"
+                                fullWidth
+                                multiline
+                                rowsMax={4}
+                                value={this.state.actionsEditDialog.jd}
+                            />
+
+                            <Grid container style={{ marginTop: 20 }}>
+                                <Grid item xs={6}>
+                                    <Typography>How do you rate this company?</Typography>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <Rating
+                                        name="simple-controlled"
+                                        value={this.state.actionsEditDialog.rating}
+                                        onChange={(event, newValue) => this.setState({ actionsEditDialog: { rating: newValue } })}
+                                    />
+                                </Grid>
+                            </Grid>
+
+                        </DialogContent>
+                        <DialogActions>
+                            <Button style={{ width: 85}} color="primary" variant="contained">
+                                Update
+                            </Button>
+                            <Button color="secondary" variant="contained" onClick={() => this.setState({ editActionsOpen: false, selectedIndex: -1 })}>
+                                Cancel
+                            </Button>
+                        </DialogActions>
+                   </Dialog> 
+                }
             </div>
-
-
-
         )
-
     }
 
     getTableOfEmployees() {
@@ -295,7 +445,8 @@ class myJobProfile extends Component {
                             <TableCell align="left">Employer</TableCell>
                             <TableCell align="left">Position</TableCell>
                             <TableCell align="left">VON-Status</TableCell>
-                            <TableCell align="left">Actions</TableCell>
+                            <TableCell align="center">Actions</TableCell>
+                            
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -306,7 +457,26 @@ class myJobProfile extends Component {
                                 <TableCell align="left">{row.employer}</TableCell>
                                 <TableCell align="left">{row.position}</TableCell>
                                 <TableCell align="left">{row.vonStatus}</TableCell>
-                                <TableCell align="left">{row.actions}</TableCell>
+                                <TableCell align="left" >
+                                    <Button color="primary" variant="outlined">
+                                        View Details
+                                    </Button>
+                    
+                                    <Button 
+                                    style={{ marginLeft: 10}} 
+                                    variant="outlined" 
+                                    color="secondary"
+                                    onClick={() =>
+                                        this.setState({
+                                          editActionsOpen: true,
+                                          selectedIndex: index
+                                          // add the updatedstate elements here after passing the token and adding data
+                                        })
+                                      }
+                                    >
+                                        Edit
+                                    </Button>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

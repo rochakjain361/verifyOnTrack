@@ -11,7 +11,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import 'typeface-roboto';
 import Typography from '@material-ui/core/Typography';
-import LandingPage from "../Components/LandingPage";
+import LandingPage from "../Components/LandingPage/index";
 import { BrowserRouter as Router, Route, Switch,Redirect } from "react-router-dom";
 import ValidationMessage from "./ValidationMessage";
 import Alert from "@material-ui/lab/Alert";
@@ -28,7 +28,8 @@ class signIn extends Component {
     usernamevalid: false,
     passwordvalid: false,
     submitDisabled: "disabled",
-    warning:false
+    warning:false,
+    response:""
   };
   UserGreeting(props) {
   return <h1>Welcome back!</h1>;
@@ -56,130 +57,140 @@ if(this.state.usernamevalid&&this.state.passwordvalid){
     const { classes } = this.props;
 
     return (
-      <Grid
-        container
-        component="main"
-        className={classes.root}
-        direction="row"
-        justify="center"
-      >
-        <CssBaseline />
-
+      <>
         <Grid
           container
-          xs={false}
-          sm={12}
-          md={12}
-          square
-          className={classes.mainImage}
+          component="main"
+          className={classes.root}
           direction="row"
           justify="center"
         >
-          <Grid item style={{ marginTop: 40, marginBottom: 40 }} sm={6} md={6}>
-            <Card
-              style={{ padding: 50, marginLeft: 40, marginRight: 40 }}
-              raised={true}
+          <CssBaseline />
+
+          <Grid
+            container
+            xs={false}
+            sm={12}
+            md={12}
+            square
+            className={classes.mainImage}
+            direction="row"
+            justify="center"
+          >
+            <Grid
+              item
+              style={{ marginTop: 40, marginBottom: 40 }}
+              sm={6}
+              md={6}
             >
-              {this.state.warning ? (
-                <Alert severity="error">
-                  Wrong username or password
-                </Alert>
-              ) : null}
-              <form className={classes.form} noValidate>
-                <Typography
-                  style={{ fontFamily: "Montserrat", fontWeight: "bold" }}
-                  variant="h4"
-                  gutterBottom
-                  color="primary"
-                >
-                  Sign In
-                </Typography>
+              <Card
+                style={{ padding: 50, marginLeft: 40, marginRight: 40 }}
+                raised={true}
+              >
+                {this.state.warning ? (
+                  <Alert severity="error">Wrong username or password</Alert>
+                ) : null}
+                <form className={classes.form} noValidate>
+                  <Typography
+                    style={{ fontFamily: "Montserrat", fontWeight: "bold" }}
+                    variant="h4"
+                    gutterBottom
+                    color="primary"
+                  >
+                    Sign In
+                  </Typography>
 
-                <Grid container spacing={1}>
-                  <Grid item xs={12}>
-                    <TextField
-                      variant="outlined"
-                      margin="normal"
-                      required
-                      style={{ marginRight: 10 }}
-                      margin="dense"
-                      id="username"
-                      label="User Name"
-                      value={this.state.username}
-                      type="text"
-                      autoComplete="username"
-                      autoFocus
-                      fullWidth
-                      size="medium"
-                      onChange={(event) =>
-                        this.setState(
-                          { username: event.target.value },
-                          this.usernamevalidcheck(event)
-                        )
-                      }
-                    />
+                  <Grid container spacing={1}>
+                    <Grid item xs={12}>
+                      <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        style={{ marginRight: 10 }}
+                        margin="dense"
+                        id="username"
+                        label="User Name"
+                        value={this.state.username}
+                        type="text"
+                        autoComplete="username"
+                        autoFocus
+                        fullWidth
+                        size="medium"
+                        onChange={(event) =>
+                          this.setState(
+                            { username: event.target.value },
+                            this.usernamevalidcheck(event)
+                          )
+                        }
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        style={{ marginRight: 10 }}
+                        margin="dense"
+                        label="Password"
+                        value={this.state.password}
+                        type="password"
+                        id="password"
+                        autoComplete="current-password"
+                        fullWidth
+                        size="small"
+                        onChange={(event) =>
+                          this.setState(
+                            { password: event.target.value },
+                            this.passwordvalidcheck(event)
+                          )
+                        }
+                      />
+                    </Grid>
                   </Grid>
 
-                  <Grid item xs={12}>
-                    <TextField
-                      variant="outlined"
-                      margin="normal"
-                      required
-                      style={{ marginRight: 10 }}
-                      margin="dense"
-                      label="Password"
-                      value={this.state.password}
-                      type="password"
-                      id="password"
-                      autoComplete="current-password"
-                      fullWidth
-                      size="small"
-                      onChange={(event) =>
-                        this.setState(
-                          { password: event.target.value },
-                          this.passwordvalidcheck(event)
-                        )
-                      }
-                    />
-                  </Grid>
-                </Grid>
+                  <Grid container spacing={1} sm={12} md={12}>
+                    <Grid item xs={12}>
+                      <GradientButton
+                        onClick={this.onSignInButtonPress}
+                        title={"Sign IN"}
+                        center
+                        disabled={this.state.submitDisabled}
+                        style={{
+                          marginTop: 16,
+                          marginBottom: 16,
+                          fontFamily: "Montserrat",
+                          fontWeight: "bold",
+                        }}
+                        fullWidth
+                      />
+                    </Grid>
 
-                <Grid container spacing={1} sm={12} md={12}>
-                  <Grid item xs={12}>
-                    <GradientButton
-                      onClick={this.onSignInButtonPress}
-                      title={"Sign IN"}
-                      center
-                      disabled={this.state.submitDisabled}
-                      style={{
-                        marginTop: 16,
-                        marginBottom: 16,
-                        fontFamily: "Montserrat",
-                        fontWeight: "bold",
-                      }}
-                      fullWidth
-                    />
+                    <Grid container xs={12} justify="center">
+                      <RouterLink
+                        title="Don't have an account? Sign Up"
+                        to="/signup"
+                      />
+                    </Grid>
                   </Grid>
-
-                  <Grid container xs={12} justify="center">
-                    <RouterLink
-                      title="Don't have an account? Sign Up"
-                      to="/signup"
-                    />
-                  </Grid>
-                </Grid>
-              </form>
-            </Card>
+                </form>
+              </Card>
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
+        {/* {this.state.response ? (
+          <LandingPage data={this.state.response} />
+        ) : (
+          null
+        )} */}
+      </>
     );
   }
 
   onSignInButtonPress = async () => {
     try {
       let apiEndpoint =
-        "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/accounts/auth/login";
+        "http://3.22.17.212:8000/api/v1/accounts/auth/login";
 
       var requestBody = {
         username: this.state.username,
@@ -198,11 +209,19 @@ if(this.state.usernamevalid&&this.state.passwordvalid){
           Accept: "*/*",
         },
       });
-      response = await response.json();
+      const data = await response.json();
       console.log("response:", response);
-      if (response.token) {
-        this.props.history.push({pathname: '/Homepage',
-  data: response });
+      
+      if (data.token) {
+        localStorage.setItem("Token",data.token);
+        localStorage.setItem("id", data.user.id);
+        
+        this.setState({ response: data });
+        this.props.history.push({
+          pathname: "/Homepage",
+          state: { data: this.state.response },
+        });
+        
       }
       else{
         
