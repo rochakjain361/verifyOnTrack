@@ -406,7 +406,7 @@ class signUp extends Component {
                     <GradientButton
                       onClick={this.onRegisterButtonPress}
                       title={"Sign Up"}
-                      disabled={this.state.submitDisabled}
+                      disabled = {this.state.submitDisabled}
                       center
                       style={{
                         marginTop: 16,
@@ -431,10 +431,11 @@ class signUp extends Component {
 
   async onRegisterButtonPress() {
     try {
-      console.log(this.state.designation);
-      let apiEndpoint = "http://3.22.17.212:8000/api/v1/accounts/auth";
+      console.log(this.state.designation)
+      let apiEndpoint =
+        "http://3.22.17.212:8000/api/v1/accounts/auth";
       var requestBody;
-      if (this.state.designation === "Employee") {
+      if (this.state.designation === "Employee"){
         apiEndpoint += "/employee/register";
         requestBody = {
           firstname: this.state.firstname,
@@ -443,8 +444,8 @@ class signUp extends Component {
           username: this.state.username,
           email: this.state.email,
           password: this.state.password,
-        };
-      } else if (this.state.designation === "Employer") {
+        };}
+      else if (this.state.designation === "Employer"){
         apiEndpoint += "/employer/register";
         requestBody = {
           designation: this.state.designation,
@@ -455,8 +456,10 @@ class signUp extends Component {
           username: this.state.username,
           email: this.state.email,
           password: this.state.password,
-        };
-      } else apiEndpoint += "/admin/register";
+        };}
+      else apiEndpoint += "/admin/register";
+
+      
 
       console.log("reqestBody", requestBody);
 
@@ -466,6 +469,7 @@ class signUp extends Component {
         headers: {
           "Content-Type": "application/json",
           Accept: "*/*",
+         
         },
       });
       console.log("..................................................");
