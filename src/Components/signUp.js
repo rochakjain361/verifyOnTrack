@@ -1,22 +1,21 @@
-import React, { Component } from 'react'
-import { withStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import PropTypes from 'prop-types';
-import Card from '@material-ui/core/Card';
-import TextField from '@material-ui/core/TextField';
-import GradientButton from './GradientButton'
-import RouterLink from './RouterLink/index.js';
-import 'typeface-roboto';
-import Typography from '@material-ui/core/Typography';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import React, { Component } from "react";
+import { withStyles } from "@material-ui/core/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Grid from "@material-ui/core/Grid";
+import PropTypes from "prop-types";
+import Card from "@material-ui/core/Card";
+import TextField from "@material-ui/core/TextField";
+import GradientButton from "./GradientButton";
+import RouterLink from "./RouterLink/index.js";
+import "typeface-roboto";
+import Typography from "@material-ui/core/Typography";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 import { Button } from "@material-ui/core";
 import Input from "@material-ui/core/Input";
-
 
 // import ValidationMessage from './ValidationMessage';
 function ValidationMessage(props) {
@@ -131,10 +130,16 @@ class signUp extends Component {
       passwordConfirmValid,
     } = this.state;
     this.setState({
-      formValid:usernameValid && emailValid && passwordValid && passwordConfirmValid
+      formValid:
+        usernameValid && emailValid && passwordValid && passwordConfirmValid,
     });
-    if(this.state.username&&this.state.emailValid&&this.state.passwordValid&&this.state.passwordConfirmValid){
-        this.setState({ submitDisabled :''});
+    if (
+      this.state.username &&
+      this.state.emailValid &&
+      this.state.passwordValid &&
+      this.state.passwordConfirmValid
+    ) {
+      this.setState({ submitDisabled: "" });
     }
   };
   render() {
@@ -198,7 +203,7 @@ class signUp extends Component {
                       <FormHelperText>Select your designation:</FormHelperText>
                     </FormControl>
                   </Grid>
-                  {this.state.designation === "Employee" ? (
+                  {this.state.designation === "Employer" ? (
                     <Grid item xs={12}>
                       <TextField
                         variant="outlined"
@@ -401,7 +406,7 @@ class signUp extends Component {
                     <GradientButton
                       onClick={this.onRegisterButtonPress}
                       title={"Sign Up"}
-                      disabled = {this.state.submitDisabled}
+                      disabled={this.state.submitDisabled}
                       center
                       style={{
                         marginTop: 16,
@@ -426,11 +431,10 @@ class signUp extends Component {
 
   async onRegisterButtonPress() {
     try {
-      console.log(this.state.designation)
-      let apiEndpoint =
-        "http://3.22.17.212:8000/api/v1/accounts/auth";
+      console.log(this.state.designation);
+      let apiEndpoint = "http://3.22.17.212:8000/api/v1/accounts/auth";
       var requestBody;
-      if (this.state.designation === "Employee"){
+      if (this.state.designation === "Employee") {
         apiEndpoint += "/employee/register";
         requestBody = {
           firstname: this.state.firstname,
@@ -439,8 +443,8 @@ class signUp extends Component {
           username: this.state.username,
           email: this.state.email,
           password: this.state.password,
-        };}
-      else if (this.state.designation === "Employer"){
+        };
+      } else if (this.state.designation === "Employer") {
         apiEndpoint += "/employer/register";
         requestBody = {
           designation: this.state.designation,
@@ -451,10 +455,8 @@ class signUp extends Component {
           username: this.state.username,
           email: this.state.email,
           password: this.state.password,
-        };}
-      else apiEndpoint += "/admin/register";
-
-      
+        };
+      } else apiEndpoint += "/admin/register";
 
       console.log("reqestBody", requestBody);
 
@@ -464,7 +466,6 @@ class signUp extends Component {
         headers: {
           "Content-Type": "application/json",
           Accept: "*/*",
-         
         },
       });
       console.log("..................................................");
@@ -476,20 +477,23 @@ class signUp extends Component {
   }
 }
 signUp.propTypes = {
-    classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
 };
 
-const styles = theme => ({
-    root: {
-        height: '100vh',
-    },
-    mainImage: {
-        backgroundImage: 'url(/images/mainImage2.jpg)',
-        backgroundRepeat: 'no-repeat',
-        backgroundColor: theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-    }
+const styles = (theme) => ({
+  root: {
+    height: "100vh",
+  },
+  mainImage: {
+    backgroundImage: "url(/images/mainImage2.jpg)",
+    backgroundRepeat: "no-repeat",
+    backgroundColor:
+      theme.palette.type === "light"
+        ? theme.palette.grey[50]
+        : theme.palette.grey[900],
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  },
 });
 
 export default withStyles(styles)(signUp);
