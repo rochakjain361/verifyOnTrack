@@ -66,7 +66,7 @@ class Identities extends Component {
     await axios
       .get(
         "http://3.22.17.212:8000/api/v1/employees/" +
-          12 +
+          id +
           "/identities-by/" +
           id,
         {
