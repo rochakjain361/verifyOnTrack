@@ -9,13 +9,14 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import { withStyles } from '@material-ui/core/styles';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { Container, Button, Grid } from "@material-ui/core";
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import InfoIcon from '@material-ui/icons/Info';
+
+import PersonIcon from '@material-ui/icons/Person';
+import WorkIcon from '@material-ui/icons/Work';
+import MessageIcon from '@material-ui/icons/Message';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -119,7 +120,7 @@ class NewLandingPage extends React.PureComponent {
               <Link to="/dashboard" className={classes.link}>
                 <ListItem button>
                   <ListItemIcon>
-                    <InfoIcon style={{ color: "white" }} />
+                    <DashboardIcon style={{ color: "white" }} />
                   </ListItemIcon>
                   <ListItemText primary={"Dashboard"} className={classes.textColor} />
                 </ListItem>
@@ -129,7 +130,7 @@ class NewLandingPage extends React.PureComponent {
 
               <ListItem button onClick={() => this.setState({ open1: !this.state.open1 })}>
                 <ListItemIcon>
-                  <InboxIcon style={{ color: "white" }} />
+                  <PersonIcon style={{ color: "white" }} />
                 </ListItemIcon>
                 <ListItemText primary="My Info" className={classes.textColor} />
                 {this.state.open1 ? <ExpandLess style={{ color: 'white' }} /> : <ExpandMore style={{ color: 'white' }} />}
@@ -168,7 +169,7 @@ class NewLandingPage extends React.PureComponent {
               <Link to="/myjobprofile" className={classes.link}>
                 <ListItem button>
                   <ListItemIcon>
-                    <ShoppingCartIcon style={{ color: "white" }} />
+                    <WorkIcon style={{ color: "white" }} />
                   </ListItemIcon>
                   <ListItemText primary="My Job Profile" className={classes.textColor} />
                 </ListItem>
@@ -179,7 +180,7 @@ class NewLandingPage extends React.PureComponent {
               <Link to="/messages" className={classes.link}>
                 <ListItem button>
                   <ListItemIcon>
-                    <InfoIcon style={{ color: "white" }} />
+                    <MessageIcon style={{ color: "white" }} />
                   </ListItemIcon>
                   <ListItemText primary={"Messages"} className={classes.textColor} />
                 </ListItem>

@@ -1,4 +1,4 @@
-import { Button, CircularProgress, Grid, Paper, Typography } from '@material-ui/core';
+import { Button, CircularProgress, Grid, Paper, Typography, } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -12,6 +12,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import axios from "axios";
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 import Rating from '@material-ui/lab/Rating';
 import {
     MuiPickersUtilsProvider,
@@ -48,10 +53,11 @@ class myJobProfile extends Component {
     state = {
         updateDialogOpen: false,
         editActionsOpen: false,
-        tabularBoolean: false,
+        tabularBoolean: true,
         isloading: false,
         selectedIndex: -1,
         id: "",
+        companies: [],
         dialogBoxData: {
             startDate: new Date(),
             endDate: new Date(),
@@ -61,7 +67,8 @@ class myJobProfile extends Component {
             vonStatus: '',
             actions: '',
             jd: '',
-            rating: 0
+            rating: 0,
+            reasonForLeaving: ''
         },
         actionsEditDialog: {
             startDate: new Date(),
@@ -78,11 +85,13 @@ class myJobProfile extends Component {
     }
 
     async componentDidMount() {
+        this.fetchFromFakeApi();
+        this.fetchAllCompanies();
         await axios
             .get("http://3.22.17.212:8000/api/v1/employees/16/jobhistory", {
                 headers: {
                     Authorization:
-                        "Token fc4efcc952e2f668197c1a2d5dd5be77236de1d3fb16c2a04adabac02d5f58e3",
+                        "Token c83a0089d10de372e7fc5f4d08f257a3dcc22f09a7071fed2d5a45fdfe87c26e",
                 },
             })
             .then((res) => {
@@ -153,15 +162,23 @@ class myJobProfile extends Component {
                                 value={this.state.dialogBoxData.employer}
                             />
 
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="employer"
-                                label="Company Name"
-                                type="text"
-                                fullWidth
-                                value={this.state.dialogBoxData.employer}
-                            />
+                            <FormControl style={{width: window.innerWidth/3}}>
+                                <InputLabel shrink id="demo-simple-select-placeholder-label-label">
+                                    Company
+                                </InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-placeholder-label-label"
+                                    id="demo-simple-select-placeholder-label"
+                                    value={this.state.dialogBoxData.employer}
+                                    onChange={event => this.setState({ dialogBoxData: { employer: event.target.value } })}
+                                    displayEmpty
+                                >
+                                    <MenuItem value={10}>Ten</MenuItem>
+                                    <MenuItem value={20}>Twenty</MenuItem>
+                                    <MenuItem value={30}>Thirty</MenuItem>
+                                </Select>
+                                <FormHelperText>Company Name</FormHelperText>
+                            </FormControl>
 
                             <TextField
                                 autoFocus
@@ -191,21 +208,30 @@ class myJobProfile extends Component {
                                 type="text"
                                 fullWidth
                                 multiline
-          rowsMax={4}
+                                rowsMax={4}
                                 value={this.state.dialogBoxData.jd}
                             />
 
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="vonStatus"
-                                label="Reason for leaving"
-                                type="text"
-                                fullWidth
-                                multiline
-          rowsMax={4}
-                                value={this.state.dialogBoxData.jd}
-                            />
+                            <FormControl>
+                                <InputLabel shrink id="demo-simple-select-placeholder-label-label2">
+                                    Company
+                                </InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-placeholder-label-label2"
+                                    id="demo-simple-select-placeholder-label2"
+                                    value={this.state.dialogBoxData.reasonForLeaving}
+                                    onChange={event => this.setState({ dialogBoxData: { reasonForLeaving: event.target.value } })}
+                                    displayEmpty
+                                >
+                                    {
+                                        this.state.companies.map(companyName => <MenuItem value={companyName}>{companyName}</MenuItem>)
+                                    }
+                                    <MenuItem value={10}>Ten</MenuItem>
+                                    <MenuItem value={20}>Twenty</MenuItem>
+                                    <MenuItem value={30}>Thirty</MenuItem>
+                                </Select>
+                                <FormHelperText>Company Name</FormHelperText>
+                            </FormControl>
 
                             <Grid container style={{ marginTop: 20 }}>
                                 <Grid item xs={6}>
@@ -222,7 +248,7 @@ class myJobProfile extends Component {
 
                         </DialogContent>
                         <DialogActions>
-                            <Button style={{ width: 85}} color="primary" variant="contained">
+                            <Button style={{ width: 85 }} color="primary" variant="contained">
                                 Add
                             </Button>
                             <Button color="secondary" variant="contained" onClick={() => this.setState({ updateDialogOpen: false, selectedIndex: -1 })}>
@@ -261,12 +287,12 @@ class myJobProfile extends Component {
                                         <Paper style={{ padding: 20 }} elevation={3}>
                                             <Typography variant="h5" gutterBottom align='center'>
                                                 Add job profiles to improve ratings.
-                    </Typography>
+                                            </Typography>
 
                                             <Grid container justify='center' style={{ marginTop: 50 }}>
                                                 <Button color="primary" variant='contained' onClick={() => this.setState({ updateDialogOpen: true })}>
                                                     Add New Job History
-                        </Button>
+                                                </Button>
                                             </Grid>
                                         </Paper>
                                     </Grid>
@@ -297,9 +323,9 @@ class myJobProfile extends Component {
                         )
                 }
 
-{
-                   <Dialog open={this.state.editActionsOpen} onClose={() => this.setState({ editActionsOpen: false })} aria-labelledby="form-dialog-title">
-                       <DialogTitle id="form-dialog-title">Edit my job history</DialogTitle>
+                {
+                    <Dialog open={this.state.editActionsOpen} onClose={() => this.setState({ editActionsOpen: false })} aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">Edit my job history</DialogTitle>
                         <DialogContent>
                             <DialogContentText>
                                 Enter the details of your job history to be edited
@@ -352,15 +378,23 @@ class myJobProfile extends Component {
                                 value={this.state.actionsEditDialog.employer}
                             />
 
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="employer"
-                                label="Company Name"
-                                type="text"
-                                fullWidth
-                                value={this.state.actionsEditDialog.employer}
-                            />
+                            <FormControl>
+                                <InputLabel shrink id="demo-simple-select-placeholder-label-label">
+                                    Company
+                                </InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-placeholder-label-label"
+                                    id="demo-simple-select-placeholder-label"
+                                    value={this.state.dialogBoxData.employer}
+                                    onChange={event => this.setState({ dialogBoxData: { employer: event.target.value } })}
+                                    displayEmpty
+                                >
+                                    <MenuItem value={10}>Ten</MenuItem>
+                                    <MenuItem value={20}>Twenty</MenuItem>
+                                    <MenuItem value={30}>Thirty</MenuItem>
+                                </Select>
+                                <FormHelperText>Company Name</FormHelperText>
+                            </FormControl>
 
                             <TextField
                                 autoFocus
@@ -421,14 +455,14 @@ class myJobProfile extends Component {
 
                         </DialogContent>
                         <DialogActions>
-                            <Button style={{ width: 85}} color="primary" variant="contained">
+                            <Button style={{ width: 85 }} color="primary" variant="contained">
                                 Update
                             </Button>
                             <Button color="secondary" variant="contained" onClick={() => this.setState({ editActionsOpen: false, selectedIndex: -1 })}>
                                 Cancel
                             </Button>
                         </DialogActions>
-                   </Dialog> 
+                    </Dialog>
                 }
             </div>
         )
@@ -445,8 +479,8 @@ class myJobProfile extends Component {
                             <TableCell align="left">Employer</TableCell>
                             <TableCell align="left">Position</TableCell>
                             <TableCell align="left">VON-Status</TableCell>
-                            <TableCell align="center">Actions</TableCell>
-                            
+                            <TableCell align="left">Actions</TableCell>
+
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -461,18 +495,18 @@ class myJobProfile extends Component {
                                     <Button color="primary" variant="outlined">
                                         View Details
                                     </Button>
-                    
-                                    <Button 
-                                    style={{ marginLeft: 10}} 
-                                    variant="outlined" 
-                                    color="secondary"
-                                    onClick={() =>
-                                        this.setState({
-                                          editActionsOpen: true,
-                                          selectedIndex: index
-                                          // add the updatedstate elements here after passing the token and adding data
-                                        })
-                                      }
+
+                                    <Button
+                                        style={{ marginLeft: 10 }}
+                                        variant="outlined"
+                                        color="secondary"
+                                        onClick={() =>
+                                            this.setState({
+                                                editActionsOpen: true,
+                                                selectedIndex: index
+                                                // add the updatedstate elements here after passing the token and adding data
+                                            })
+                                        }
                                     >
                                         Edit
                                     </Button>
@@ -487,12 +521,26 @@ class myJobProfile extends Component {
         );
     }
 
-    componentDidMount() {
-
+    async fetchAllCompanies() {
+        let response = await fetch('http://3.22.17.212:8000/api/v1/employers',
+            {
+                headers: {
+                    'Authorization': 'Token c83a0089d10de372e7fc5f4d08f257a3dcc22f09a7071fed2d5a45fdfe87c26e'
+                }
+            });
+        console.log('http://3.22.17.212:8000/api/v1/employers');
+        response = await response.json();
+        let tempArr = [];
+        response.forEach(element => {
+            tempArr.push(element["companyName"]);
+        });
+        this.setState({ companies: tempArr });
     }
 
-    async fetchAllCompanies() {
-        let response = await fetch()
+    async fetchFromFakeApi() {
+        let response = await fetch('https://jsonplaceholder.typicode.com/todos/1');
+        response = await response.json();
+        console.log(response["title"]); 
     }
 }
 

@@ -34,6 +34,7 @@ class App extends React.PureComponent {
           {/* ADMIN PAGE PATHS */}
             <Route exact path='/admin' component={AdminLandingPage} />
             <Route exact path='/managestates' component={AdminLandingPage} />
+            <Route exact path='/manageslgas' component={AdminLandingPage} />
           </Switch>
         </div>
       </Router>

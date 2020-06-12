@@ -6,6 +6,7 @@ export class index extends Component {
         return (
             <Grid item>
                 <h1>Dashboard</h1>
+                <h3>Welcome...</h3>
             </Grid>
         )
     }

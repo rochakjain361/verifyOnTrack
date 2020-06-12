@@ -187,7 +187,7 @@ if(this.state.usernamevalid&&this.state.passwordvalid){
     );
   }
 
-  onSignInButtonPress = async () => {
+  async onSignInButtonPress() {
     try {
       let apiEndpoint =
         "http://3.22.17.212:8000/api/v1/accounts/auth/login";
@@ -204,13 +204,11 @@ if(this.state.usernamevalid&&this.state.passwordvalid){
         body: JSON.stringify(requestBody),
         headers: {
           "Content-Type": "application/json",
-          Authorization:
-            "1d9c773956b5b0ed50702f84a28d6bd03701cd465daf1519947adc660bb7615a",
-          Accept: "*/*",
         },
       });
       const data = await response.json();
-      console.log("response:", response);
+      const token = data["token"];
+      console.log("response:", token);
       
       if (data.token) {
         localStorage.setItem("Token",data.token);
