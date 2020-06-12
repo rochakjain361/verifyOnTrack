@@ -23,7 +23,6 @@ import { Select } from "@material-ui/core";
 import {MenuItem} from "@material-ui/core"                      
 import {InputLabel} from "@material-ui/core"
 import { CircularProgress } from "@material-ui/core";
-import "./myprofile.css";
 const token1 = localStorage.getItem("Token");
 const token =
   "Token "+token1;

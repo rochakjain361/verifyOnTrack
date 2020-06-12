@@ -25,7 +25,7 @@ class App extends React.PureComponent {
             <Route exact path='/Homepage' component={LandingPage} />
             <Route exact path='/addresses' component={LandingPage} />
             <Route exact path='/Identities' component={LandingPage} />
-            <Route exact path='/Phones' component={Phones} />
+            <Route exact path='/Phones' component={LandingPage} />
             <Route exact path='/MyJobProfile' component={LandingPage} />
             <Route exact path='/messages' component={Messages} />
             <Route exact path='/profiles' component={LandingPage} />
