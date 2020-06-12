@@ -1,4 +1,6 @@
 import { Button, CircularProgress, Grid, Paper, Typography, } from '@material-ui/core';
+import React, { Component } from 'react'
+import GradientButton from '../../GradientButton'
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -24,7 +26,7 @@ import {
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import React, { Component } from 'react';
+
 
 
 const rows = [
@@ -53,7 +55,7 @@ class myJobProfile extends Component {
     state = {
         updateDialogOpen: false,
         editActionsOpen: false,
-        tabularBoolean: true,
+        tabularBoolean: false,
         isloading: false,
         selectedIndex: -1,
         id: "",
@@ -542,6 +544,7 @@ class myJobProfile extends Component {
         response = await response.json();
         console.log(response["title"]); 
     }
+    
 }
 
 export default myJobProfile

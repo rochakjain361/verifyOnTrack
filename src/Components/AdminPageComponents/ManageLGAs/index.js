@@ -60,8 +60,8 @@ export class index extends Component {
         const { classes } = this.props;
 
         return (
-            <div >
-                <Paper style={{ padding: 20, height: '100vh' }}>
+            <div style={{ marginTop: 20}}>
+                {/* <Paper style={{ padding: 20, height: '100vh' }}> */}
                     <Grid container justify='space-between' alignItems='center' spacing={4}>
 
                         <Grid item>
@@ -135,7 +135,7 @@ export class index extends Component {
                         </TableContainer>
 
                     </Grid>
-                </Paper>
+                {/* </Paper> */}
 
                 {
                     <Dialog open={this.state.deleteDialogBox} onClose={() => this.setState({ deleteDialogBox: false })} aria-labelledby="form-dialog-title">

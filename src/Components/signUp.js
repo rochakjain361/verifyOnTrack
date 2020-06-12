@@ -1,22 +1,21 @@
-import React, { Component } from 'react'
-import { withStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import PropTypes from 'prop-types';
-import Card from '@material-ui/core/Card';
-import TextField from '@material-ui/core/TextField';
-import GradientButton from './GradientButton'
-import RouterLink from './RouterLink/index.js';
-import 'typeface-roboto';
-import Typography from '@material-ui/core/Typography';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import React, { Component } from "react";
+import { withStyles } from "@material-ui/core/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Grid from "@material-ui/core/Grid";
+import PropTypes from "prop-types";
+import Card from "@material-ui/core/Card";
+import TextField from "@material-ui/core/TextField";
+import GradientButton from "./GradientButton";
+import RouterLink from "./RouterLink/index.js";
+import "typeface-roboto";
+import Typography from "@material-ui/core/Typography";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 import { Button } from "@material-ui/core";
 import Input from "@material-ui/core/Input";
-
 
 // import ValidationMessage from './ValidationMessage';
 function ValidationMessage(props) {
@@ -131,10 +130,16 @@ class signUp extends Component {
       passwordConfirmValid,
     } = this.state;
     this.setState({
-      formValid:usernameValid && emailValid && passwordValid && passwordConfirmValid
+      formValid:
+        usernameValid && emailValid && passwordValid && passwordConfirmValid,
     });
-    if(this.state.username&&this.state.emailValid&&this.state.passwordValid&&this.state.passwordConfirmValid){
-        this.setState({ submitDisabled :''});
+    if (
+      this.state.username &&
+      this.state.emailValid &&
+      this.state.passwordValid &&
+      this.state.passwordConfirmValid
+    ) {
+      this.setState({ submitDisabled: "" });
     }
   };
   render() {
@@ -198,7 +203,7 @@ class signUp extends Component {
                       <FormHelperText>Select your designation:</FormHelperText>
                     </FormControl>
                   </Grid>
-                  {this.state.designation === "Employee" ? (
+                  {this.state.designation === "Employer" ? (
                     <Grid item xs={12}>
                       <TextField
                         variant="outlined"
@@ -476,20 +481,23 @@ class signUp extends Component {
   }
 }
 signUp.propTypes = {
-    classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
 };
 
-const styles = theme => ({
-    root: {
-        height: '100vh',
-    },
-    mainImage: {
-        backgroundImage: 'url(/images/mainImage2.jpg)',
-        backgroundRepeat: 'no-repeat',
-        backgroundColor: theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-    }
+const styles = (theme) => ({
+  root: {
+    height: "100vh",
+  },
+  mainImage: {
+    backgroundImage: "url(/images/mainImage2.jpg)",
+    backgroundRepeat: "no-repeat",
+    backgroundColor:
+      theme.palette.type === "light"
+        ? theme.palette.grey[50]
+        : theme.palette.grey[900],
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  },
 });
 
 export default withStyles(styles)(signUp);
