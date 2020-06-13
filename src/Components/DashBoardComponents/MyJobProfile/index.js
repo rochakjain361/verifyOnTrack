@@ -70,7 +70,8 @@ class myJobProfile extends Component {
             actions: '',
             jd: '',
             rating: 0,
-            reasonForLeaving: ''
+            reasonForLeaving: '',
+            comapny: ''
         },
         actionsEditDialog: {
             startDate: new Date(),
@@ -171,13 +172,16 @@ class myJobProfile extends Component {
                                 <Select
                                     labelId="demo-simple-select-placeholder-label-label"
                                     id="demo-simple-select-placeholder-label"
-                                    value={this.state.dialogBoxData.employer}
+                                    value={this.state.dialogBoxData.selectedCompany}
                                     onChange={event => this.setState({ dialogBoxData: { employer: event.target.value } })}
                                     displayEmpty
                                 >
-                                    <MenuItem value={10}>Ten</MenuItem>
+                                    {
+                                        // this.state.companies.map(comapny => <MenuItem value={company}>{company}</MenuItem>)
+                                    }
+                                    {/* <MenuItem value={10}>Ten</MenuItem>
                                     <MenuItem value={20}>Twenty</MenuItem>
-                                    <MenuItem value={30}>Thirty</MenuItem>
+                                    <MenuItem value={30}>Thirty</MenuItem> */}
                                 </Select>
                                 <FormHelperText>Company Name</FormHelperText>
                             </FormControl>
@@ -527,7 +531,7 @@ class myJobProfile extends Component {
         let response = await fetch('http://3.22.17.212:8000/api/v1/employers',
             {
                 headers: {
-                    'Authorization': 'Token c83a0089d10de372e7fc5f4d08f257a3dcc22f09a7071fed2d5a45fdfe87c26e'
+                    'Authorization': 'Token 300896c039a1e9513c44769461d9433beee5fd265ad258e38f39136600599671'
                 }
             });
         console.log('http://3.22.17.212:8000/api/v1/employers');
@@ -537,7 +541,23 @@ class myJobProfile extends Component {
             tempArr.push(element["companyName"]);
         });
         this.setState({ companies: tempArr });
+        console.log(tempArr)
     }
+
+    // async fetchMyJobProfiles() {
+    //     let response = await fetch('http://3.22.17.212:8000/api/v1/employees/3/jobs',
+    //     {
+    //         headers: {
+    //             'Authorization': 'Token 300896c039a1e9513c44769461d9433beee5fd265ad258e38f39136600599671'
+    //         }
+    //     });
+    //     console.log('http://3.22.17.212:8000/api/v1/employees/3/jobs');
+    //     response = await response.json();
+    //     let temArr2 = [];
+    //     response.foreacch(element=> {
+    //         tempArr2.push(element[""])
+    //     })
+    // }
 
     async fetchFromFakeApi() {
         let response = await fetch('https://jsonplaceholder.typicode.com/todos/1');

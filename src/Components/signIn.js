@@ -208,7 +208,7 @@ if(this.state.usernamevalid&&this.state.passwordvalid){
       });
       const data = await response.json();
       const token = data["token"];
-      console.log("response:", token);
+      console.log(data);
       
       if (data.token) {
         localStorage.setItem("Token",data.token);

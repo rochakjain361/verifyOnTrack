@@ -40,7 +40,7 @@ export class index extends Component {
         const { classes } = this.props;
 
         return (
-            <div atyle={{marginTop: 20}}>
+            <div style={{marginTop: 20}}>
                 {/* <Paper style={{ padding: 20, height: '100vh' }}> */}
                     <Grid container justify='space-between' alignItems='center' spacing={4}>
 
