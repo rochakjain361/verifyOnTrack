@@ -20,38 +20,14 @@ import axios from "axios";
 import Box from "@material-ui/core/Box";
 import { Typography } from "@material-ui/core";
 import { Select } from "@material-ui/core";
-import {MenuItem} from "@material-ui/core"                      
-import {InputLabel} from "@material-ui/core"
+import { MenuItem } from "@material-ui/core";
+import { InputLabel } from "@material-ui/core";
 import { CircularProgress } from "@material-ui/core";
 const token1 = localStorage.getItem("Token");
-const token =
-  "Token "+token1;
-  const id = localStorage.getItem("id");
-const rows = [
-  {
-    date: "2016-12-01",
-    source: "nkjsadnsand",
-    id: "89yh12e",
-    firstname: "John Doe",
-    dob: "2000-09-01",
-    sex: "M",
-    picture:
-      "https://vengreso.com/wp-content/uploads/2016/03/LinkedIn-Profile-Professional-Picture-Sample-Bernie-Borges.png",
-    verifier: "Verifier Name",
-  },
-  {
-    date: "2016-12-01",
-    source: "nkjsadnsand",
-    id: "89yh142e",
-    firstname: "John Doe 2",
-    dob: "2000-09-01",
-    sex: "M",
-    picture:
-      "https://vengreso.com/wp-content/uploads/2016/03/LinkedIn-Profile-Professional-Picture-Sample-Bernie-Borges.png",
-    verifier: "Verifier Name",
-  },
-];
+const token = "Token " + token1;
+const id = localStorage.getItem("id");
 let result = [];
+let history=[]
 class MyProfile extends Component {
   state = {
     updateDialogOpen: false,
@@ -65,9 +41,9 @@ class MyProfile extends Component {
     middlename: "",
     lastname: "",
     Dob: "",
-
+    historyDialougeOpen: false,
     initialfile: "",
-
+historyloading:true,
     updatedMiddlename: "",
     updatedlastname: "",
     updatedReasonforupdating: "",
@@ -81,7 +57,7 @@ class MyProfile extends Component {
   async componentDidMount() {
     console.log(token);
     await axios
-      .get("http://3.22.17.212:8000/api/v1/employees/"+id+"/profiles", {
+      .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/profiles", {
         headers: {
           Authorization: token,
         },
@@ -113,18 +89,16 @@ class MyProfile extends Component {
     } else {
       this.setState({ buttondisabled: "disabled" });
     }
-    
-    
   };
-   
-// async updatedetails(){
-//   console.log("///////////////////////////////////////////////");
-//  let data = {
-//     employee: this.state.id,
-//     update_reason: this.state.updatedReasonforupdating,
-//     sex: this.state.updatedsex,
-//     dob: this.state.updatedDob,
-//   };
+
+  // async updatedetails(){
+  //   console.log("///////////////////////////////////////////////");
+  //  let data = {
+  //     employee: this.state.id,
+  //     update_reason: this.state.updatedReasonforupdating,
+  //     sex: this.state.updatedsex,
+  //     dob: this.state.updatedDob,
+  //   };
 
   async updatedetails() {
     this.setState({
@@ -199,7 +173,7 @@ class MyProfile extends Component {
   tabledata() {
     return (
       <>
-        {result.length == 0 ? (
+        {result.length === 0 ? (
           <div>
             <Grid
               container
@@ -398,6 +372,27 @@ class MyProfile extends Component {
       </>
     );
   }
+  async fetchhistory(){
+await axios
+  .get(
+    "http://3.22.17.212:8000/api/v1/employees/" +
+      id +
+      "/profiles-by/" +
+      id +
+      "/history",
+    {
+      headers: {
+        Authorization: token,
+      },
+    }
+  )
+  .then((res) => {
+    history = res.data;
+    console.log("history", history);
+    this.setState({ historyloading: false });
+  });
+  }
+ 
 
   getTableOfEmployees() {
     return (
@@ -493,7 +488,16 @@ class MyProfile extends Component {
                     </Button>
                   </TableCell>
                   <TableCell align="center">
-                    <Button variant="outlined" color="secondary">
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      onClick={() =>
+                        this.setState(
+                          { historyDialougeOpen: true },
+                          this.fetchhistory
+                        )
+                      }
+                    >
                       History
                     </Button>
                   </TableCell>
@@ -617,6 +621,97 @@ class MyProfile extends Component {
             </Dialog>
           )}
         </TableContainer>
+
+        <Dialog
+          fullWidth={"md"}
+          maxWidth={"md"}
+          open={this.state.historyDialougeOpen}
+          onClose={() => this.setState({ historyDialougeOpen: false })}
+          aria-labelledby="responsive-dialog-title"
+        >
+          
+          <TableContainer component={Paper} elevation={16} p={3}>
+            <Table stickyHeader>
+              <TableHead>
+                <TableRow style={{ backgroundColor: "black" }}>
+                  <TableCell
+                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    align="center"
+                  >
+                    Fullname
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    align="center"
+                  >
+                    MiddleName
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    align="center"
+                  >
+                    SurName
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    align="center"
+                  >
+                    Dob
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    align="center"
+                  >
+                    Picture
+                  </TableCell>
+
+                  <TableCell
+                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    align="center"
+                  >
+                    Sex
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    align="center"
+                  >
+                    records updated date
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    align="center"
+                  >
+                    Update reason
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+
+              {this.state.historyloading ? (
+                this.isloading()
+              ) : (
+                <TableBody>
+                  {history.map((row, index) => (
+                    <TableRow key={row.id}>
+                      <TableCell align="center">{row.firstname}</TableCell>
+                      <TableCell align="center">{row.middlename}</TableCell>
+                      <TableCell align="center">{row.surname}</TableCell>
+                      <TableCell align="center">{row.dob}</TableCell>
+                      <TableCell align="center">
+                        <Avatar src={row.picture}>Picture</Avatar>
+                      </TableCell>
+                      {/* <TableCell align="center">{row.source_name_field}</TableCell> */}
+                      <TableCell align="center">{row.sex}</TableCell>{" "}
+                      <TableCell component="th" align="center">
+                        {row.created_on}
+                      </TableCell>
+                      <TableCell align="center">{row.update_reason}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              )}
+            </Table>
+          </TableContainer>
+        </Dialog>
       </>
     );
   }
@@ -624,7 +719,5 @@ class MyProfile extends Component {
     return <>{this.state.isloading ? this.isloading() : this.tabledata()}</>;
   }
 }
- 
-
 
 export default MyProfile;

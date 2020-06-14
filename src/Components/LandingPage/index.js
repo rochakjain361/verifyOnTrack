@@ -16,12 +16,11 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { Container, Button, Grid } from "@material-ui/core";
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import InfoIcon from '@material-ui/icons/Info';
-
+import axios from "axios";
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import StarBorder from '@material-ui/icons/StarBorder';
 import Collapse from '@material-ui/core/Collapse';
-
 import Dashboard from '../DashBoardComponents/Dashboard'
 import Addresses from '../DashBoardComponents/Addresses'
 import Identities from '../DashBoardComponents/Identities'
@@ -31,7 +30,10 @@ import Messages from '../DashBoardComponents/Messages'
 import MyProfile from '../DashBoardComponents/MyProfile'
 
 const drawerWidth = 240;
+const token1 = localStorage.getItem("Token");
 
+const token = "Token " + token1;
+const id = localStorage.getItem("id");
 const styles = theme => ({
   root: {
     display: 'flex',
@@ -79,7 +81,30 @@ class NewLandingPage extends React.PureComponent {
     open3: false,
     open4: false,
   }
+async logout(){
+  console.log(token);
+  let headers = {
+    headers: {
+      Authorization: token,
+      "Content-Type": "multipart/form-data",
+    },
+  };
+ await axios
+   .post(
+     "http://3.22.17.212:8000/api/v1/accounts/auth/logout",{},
 
+     headers
+   )
+   .then((response) => {
+     localStorage.clear(); 
+     console.log(response);
+   });
+   
+    console.log("////////////////////////////////////////");
+    this.props.history.push({
+      pathname: "/signin",
+    });
+}
   render() {
     const { classes } = this.props;
 
@@ -100,7 +125,7 @@ class NewLandingPage extends React.PureComponent {
                 </Grid>
 
                 <Grid item >
-                  <Button color="inherit" variant='outlined'>Logout</Button>
+                  <Button color="inherit" variant='outlined' onClick={()=>{this.logout()}}>Logout</Button>
                 </Grid>
               </Grid>
 
