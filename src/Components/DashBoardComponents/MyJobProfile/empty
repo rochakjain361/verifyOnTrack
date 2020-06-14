@@ -1,0 +1,168 @@
+<Grid container spacing={20} justify="flex-start">
+
+                                <Grid item xs={6}>
+                                    <FormControl style={{ width: window.innerWidth / 3 }}>
+                                        <InputLabel shrink id="demo-simple-select-placeholder-label-label">
+                                            Company
+                                </InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-placeholder-label-label"
+                                            id="demo-simple-select-placeholder-label"
+                                            value={this.state.addJobDialog.company}
+                                            onChange={event => this.setState({ addJobDialog: { company: event.target.value } })}
+                                            displayEmpty
+                                        >
+                                            {
+                                                this.state.companies.map(company => <MenuItem value={company}>{company}</MenuItem>)
+                                            }
+                                            {/* <MenuItem value={10}>Ten</MenuItem>
+                                                <MenuItem value={20}>Twenty</MenuItem>
+                                                <MenuItem value={30}>Thirty</MenuItem> */}
+                                        </Select>
+                                        <FormHelperText>Company Name</FormHelperText>
+                                    </FormControl>
+
+                                </Grid>
+
+                                <Grid item xs={6}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.setState.check}
+                                                // onChange={handleChange}
+                                                name="checkedB"
+                                                color="primary"
+                                            />
+                                        }
+                                        label="Other"
+                                    />
+                                </Grid>
+
+                                {
+                                    this.state.check === false ? (<TextField
+                                        autoFocus
+                                        margin="dense"
+                                        id="otherCompany"
+                                        label="Company Name (If Other)"
+                                        type="text"
+                                        fullWidth
+                                        value={this.state.addJobDialog.otherCompany}
+                                        onChange={event => this.setState({ addJobDialog: { otherCompany: event.target.value } })}
+                                    />) : null
+                                }
+
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                    <KeyboardDatePicker
+                                        disableToolbar
+                                        variant="inline"
+                                        format="yyyy/MM/dd"
+                                        margin="normal"
+                                        id="date-picker-inline"
+                                        label="Start Date"
+                                        value={this.state.addJobDialog.startDate}
+                                        onChange={date => this.setState({ addJobDialog: { startDate: date } })}
+                                        KeyboardButtonProps={{
+                                            'aria-label': 'change date',
+                                        }}
+                                    />
+
+                                </MuiPickersUtilsProvider>
+
+
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+
+                                    <KeyboardDatePicker
+                                        disableToolbar
+                                        variant="inline"
+                                        format="yyyy/MM/dd"
+                                        margin="normal"
+                                        id="date-picker-inline"
+                                        label="End Date"
+                                        value={this.state.addJobDialog.endDate}
+                                        style={{ marginLeft: 32 }}
+                                        onChange={date => this.setState({ addJobDialog: { endDate: date } })}
+                                        KeyboardButtonProps={{
+                                            'aria-label': 'change date',
+                                        }}
+                                    />
+                                </MuiPickersUtilsProvider>
+
+                                <FormControl style={{ width: window.innerWidth / 3 }}>
+                                    <InputLabel shrink id="demo-simple-select-placeholder-label-label">
+                                        Position
+                                </InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-placeholder-label-label"
+                                        id="demo-simple-select-placeholder-label"
+                                        value={this.state.addJobDialog.position}
+                                        onChange={event => this.setState({ addJobDialog: { position: event.target.value } })}
+                                        displayEmpty
+                                    >
+                                        {
+                                            this.state.positions.map(position => <MenuItem value={position}>{position}</MenuItem>)
+                                        }
+                                    </Select>
+                                    <FormHelperText> Select Position</FormHelperText>
+                                </FormControl>
+
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    id="jobTitle"
+                                    label="Job Title"
+                                    type="text"
+                                    fullWidth
+                                    value={this.state.addJobDialog.jobTitle}
+                                    onChange={event => this.setState({ addJobDialog: { jobTitle: event.target.value } })}
+                                />
+
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    id="jobDescription"
+                                    label="Job description"
+                                    type="text"
+                                    fullWidth
+                                    multiline
+                                    rows={4}
+                                    value={this.state.addJobDialog.jd}
+                                    onChange={event => this.setState({ addJobDialog: { jobDescription: event.target.value } })}
+                                />
+
+                                <FormControl style={{ width: window.innerWidth / 3 }}>
+                                    <InputLabel shrink id="demo-simple-select-placeholder-label-label">
+                                        Leaving reason
+                                </InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-placeholder-label-label"
+                                        id="demo-simple-select-placeholder-label"
+                                        value={this.state.addJobDialog.reasonForLeaving}
+                                        onChange={event => this.setState({ addJobDialog: { reasonForLeaving: event.target.value } })}
+                                        displayEmpty
+                                    >
+                                        {
+                                            this.state.leavingReasons.map(leavingReason => <MenuItem value={leavingReason}>{leavingReason}</MenuItem>)
+                                        }
+                                        {/* <MenuItem value={10}>Ten</MenuItem>
+                                                <MenuItem value={20}>Twenty</MenuItem>
+                                                <MenuItem value={30}>Thirty</MenuItem> */}
+                                    </Select>
+                                    <FormHelperText>Company Name</FormHelperText>
+                                </FormControl>
+
+
+                                <Grid container style={{ marginTop: 20 }}>
+                                    <Grid item xs={6}>
+                                        <Typography>How do you rate this company?</Typography>
+                                    </Grid>
+                                    <Grid item xs={3}>
+                                        <Rating
+                                            name="simple-controlled"
+                                            value={this.state.addJobDialog.rating}
+                                            onChange={(event, newValue) => this.setState({ addJobDialog: { rating: newValue } })}
+                                            max={10}
+                                        />
+                                    
+                                </Grid>
+
+                            </Grid>
