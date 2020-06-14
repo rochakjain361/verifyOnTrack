@@ -9,12 +9,17 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemtext from '@material-ui/core/ListItemtext';
+import ListItemtext from '@material-ui/core/ListItemText'
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import { withStyles } from '@material-ui/core/styles';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import {Container, Button, Grid} from "@material-ui/core";
+
+import PhoneIcon from '@material-ui/icons/Phone';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import CodeIcon from '@material-ui/icons/Code';
+import PinDropIcon from '@material-ui/icons/PinDrop';
 
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -22,6 +27,8 @@ import StarBorder from '@material-ui/icons/StarBorder';
 import Collapse from '@material-ui/core/Collapse';
 
 import ManageStates from './AdminPageComponents/ManageStates'
+import ManageLGAs from './AdminPageComponents/ManageLGAs'
+
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -110,7 +117,7 @@ class AdminLandingPage extends React.PureComponent {
 
                             <ListItem button onClick={() => this.setState({ open1: !this.state.open1 })}>
                                 <ListItemIcon>
-                                    <InboxIcon style={{ color: "white" }}/>
+                                    <PinDropIcon style={{ color: "white" }}/>
                                 </ListItemIcon>
                                 <ListItemtext className={classes.textColor} primary="Address Settings" />
                                 {this.state.open1 ? <ExpandLess className={classes.textColor} /> : <ExpandMore className={classes.textColor} />}
@@ -124,9 +131,11 @@ class AdminLandingPage extends React.PureComponent {
                                         </ListItem>
                                     </Link>
 
-                                    <ListItem button className={classes.nested}>
-                                        <ListItemtext className={classes.textColor} primary="Manage LGAs" />
-                                    </ListItem>
+                                    <Link to="/managelgas" className={classes.link} >
+                                        <ListItem button className={classes.nested}>
+                                            <ListItemtext className={classes.textColor} primary="Manage LGAs" />
+                                        </ListItem>
+                                    </Link>
 
                                     <ListItem button className={classes.nested}>
                                         <ListItemtext className={classes.textColor} primary="Cities" />
@@ -146,7 +155,7 @@ class AdminLandingPage extends React.PureComponent {
 
                             <ListItem button onClick={() => this.setState({ open2: !this.state.open2 })}>
                                 <ListItemIcon>
-                                    <InboxIcon style={{ color: "white" }}/>
+                                    <PhoneIcon style={{ color: "white" }}/>
                                 </ListItemIcon>
                                 <ListItemtext className={classes.textColor} primary="Phone Settings" />
                                 {this.state.open2 ? <ExpandLess className={classes.textColor} /> : <ExpandMore className={classes.textColor} />}
@@ -172,7 +181,7 @@ class AdminLandingPage extends React.PureComponent {
 
                             <ListItem button onClick={() => this.setState({ open3: !this.state.open3 })}>
                                 <ListItemIcon>
-                                    <InboxIcon style={{ color: "white" }}/>
+                                    <SupervisorAccountIcon style={{ color: "white" }}/>
                                 </ListItemIcon >
                                 <ListItemtext className={classes.textColor} primary="Administration" />
                                 {this.state.open2 ? <ExpandLess className={classes.textColor} /> : <ExpandMore className={classes.textColor} />}
@@ -190,7 +199,7 @@ class AdminLandingPage extends React.PureComponent {
 
                             <ListItem button onClick={() => this.setState({ open4: !this.state.open4 })}>
                                 <ListItemIcon>
-                                    <InboxIcon style={{ color: "white" }}/>
+                                    <CodeIcon style={{ color: "white" }}/>
                                 </ListItemIcon>
                                 <ListItemtext className={classes.textColor} primary="Manage Codes" />
                                 {this.state.open4 ? <ExpandLess className={classes.textColor} /> : <ExpandMore className={classes.textColor} />}
@@ -218,6 +227,12 @@ class AdminLandingPage extends React.PureComponent {
                             <Route exact path="/managestates">
                                 <Container>
                                     < ManageStates/>
+                                </Container>
+                            </Route>
+
+                            <Route exact path="/managelgas">
+                                <Container>
+                                    < ManageLGAs/>
                                 </Container>
                             </Route>
                         </Switch>

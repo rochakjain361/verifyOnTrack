@@ -34,7 +34,7 @@ class MyProfile extends Component {
     addDialogOpen: false,
     selectedIndex: -1,
     result: null,
-    isloading: true,
+    isloading: false,
     updatedval: "",
     updatedfirstname: "",
     firstname: "",
@@ -89,6 +89,8 @@ historyloading:true,
     } else {
       this.setState({ buttondisabled: "disabled" });
     }
+
+
   };
 
   // async updatedetails(){
@@ -221,7 +223,7 @@ historyloading:true,
                         this.setState({ firstname: event.target.value });
                         console.log(this.state.firstname);
                       }}
-                      // defaultValue={result[this.state.selectedIndex].firstname}
+                    // defaultValue={result[this.state.selectedIndex].firstname}
                     />
                   </p>
 
@@ -234,7 +236,7 @@ historyloading:true,
                         this.setState({ middlename: event.target.value });
                         console.log(this.state.middlename);
                       }}
-                      // defaultValue={result[this.state.selectedIndex].middlename}
+                    // defaultValue={result[this.state.selectedIndex].middlename}
                     />
                   </p>
                   <p>
@@ -247,7 +249,7 @@ historyloading:true,
                         this.setState({ lastname: event.target.value });
                         console.log(this.state.lastname);
                       }}
-                      // defaultValue={result[this.state.selectedIndex].surname}
+                    // defaultValue={result[this.state.selectedIndex].surname}
                     />
                   </p>
                   <p>
@@ -259,7 +261,7 @@ historyloading:true,
                         this.setState({ Dob: event.target.value });
                         console.log(this.state.Dob);
                       }}
-                      // defaultValue={result[this.state.selectedIndex].dob}
+                    // defaultValue={result[this.state.selectedIndex].dob}
                     />
                   </p>
                   <p>
@@ -317,8 +319,44 @@ historyloading:true,
             </Dialog>
           </div>
         ) : (
-          <div>
-            <Box p={4}>
+            <div>
+              <Paper elevation={2} style={{marginTop:20}}>
+
+                <Grid container style={{ padding: 20 }} spacing={3}
+                  direction="row"
+                  justify="flex-start"
+                  alignItems="center">
+                  <Grid item xs={3}>
+                    <Avatar
+                      src={result[0].picture}
+                      style={{ height: "12rem", width: "12rem" }}
+                    >
+                      <img src="/images/sampleuserphoto.jpg"  width="185" height="185"/>
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs={9}>
+                  <Typography variant='h2' style={{ fontFamily: "Montserrat", textTransform: 'capitalize' }}>
+                      {result[0].firstname} {result[0].middlename}
+                    </Typography>
+
+                    <Typography variant='h5' style={{ fontFamily: "Montserrat" }}>
+                      Dob:{result[0].dob}
+                    </Typography>
+
+                    <Typography variant='h5' style={{ fontFamily: "Montserrat" }}>
+                      Sex:{result[0].sex}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Paper>
+              <div style={{marginTop: 50}}>
+              {this.getTableOfEmployees()}
+              </div>
+              
+              
+
+
+              {/* <Box p={4}>
               <Grid
                 container
                 // style={{backgroundColor:"red"}}
@@ -364,11 +402,11 @@ historyloading:true,
                   </Grid>
                 </Grid>
               </Grid>
-            </Box>
+            </Box> */}
 
-            {this.getTableOfEmployees()}
-          </div>
-        )}
+              {/* {this.getTableOfEmployees()} */}
+            </div>
+          )}
       </>
     );
   }
@@ -462,10 +500,10 @@ await axios
               {result.map((row, index) => (
                 <TableRow key={row.id}>
                   <TableCell align="center">
-                    <Avatar src={row.picture}>Picture</Avatar>
+                    <Avatar src={row.picture}><img src="/images/sampleuserphoto.jpg"  width="40" height="40"/></Avatar>
                   </TableCell>
                   <TableCell component="th" align="center">
-                    {row.created_on}
+                    {new Date(row.created_on).toDateString()}
                   </TableCell>
                   <TableCell align="center">{row.source_name_field}</TableCell>
                   <TableCell align="center">{row.firstname}</TableCell>
@@ -508,118 +546,118 @@ await axios
           {this.state.selectedIndex === -1 ? (
             <div />
           ) : (
-            <Dialog
-              open={this.state.updateDialogOpen}
-              onClose={() => this.setState({ updateDialogOpen: false })}
-              aria-labelledby="form-dialog-title"
-            >
-              <DialogTitle id="form-dialog-title">Update Profile</DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  Enter the details of your profile to be updated
+              <Dialog
+                open={this.state.updateDialogOpen}
+                onClose={() => this.setState({ updateDialogOpen: false })}
+                aria-labelledby="form-dialog-title"
+              >
+                <DialogTitle id="form-dialog-title">Update Profile</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Enter the details of your profile to be updated
                 </DialogContentText>
 
-                <div class="w3-container">
-                  <p>
-                    <label>firstname</label>
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) =>
-                        this.setState({ updatedfirstname: event.target.value })
-                      }
-                      defaultValue={result[this.state.selectedIndex].firstname}
-                    />
-                  </p>
+                  <div class="w3-container">
+                    <p>
+                      <label>firstname</label>
+                      <input
+                        class="w3-input"
+                        type="text"
+                        onChange={(event) =>
+                          this.setState({ updatedfirstname: event.target.value })
+                        }
+                        defaultValue={result[this.state.selectedIndex].firstname}
+                      />
+                    </p>
 
-                  <p>
-                    <label>MiddleName</label>
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) =>
-                        this.setState({ updatedMiddlename: event.target.value })
-                      }
-                      defaultValue={result[this.state.selectedIndex].middlename}
-                    />
-                  </p>
-                  <p>
-                    <label>lastname</label>
+                    <p>
+                      <label>MiddleName</label>
+                      <input
+                        class="w3-input"
+                        type="text"
+                        onChange={(event) =>
+                          this.setState({ updatedMiddlename: event.target.value })
+                        }
+                        defaultValue={result[this.state.selectedIndex].middlename}
+                      />
+                    </p>
+                    <p>
+                      <label>lastname</label>
 
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) => {
-                        this.setState({ updatedlastname: event.target.value });
-                        console.log(this.state.updatedsex);
-                      }}
-                      defaultValue={result[this.state.selectedIndex].surname}
-                    />
-                  </p>
-                  <p>
-                    <label>Dob</label>
-                    <input
-                      class="w3-input"
-                      type="date"
-                      onChange={(event) => {
-                        this.setState({ updatedDob: event.target.value });
-                        console.log(event.target.value);
-                      }}
-                      defaultValue={result[this.state.selectedIndex].dob}
-                    />
-                  </p>
-                  <p>
-                    <label>choose file</label>
-                    <input
-                      class="w3-input"
-                      type="file"
-                      onChange={(event) => {
-                        this.setState({ file: event.target.files[0] });
-                        console.log(event.target.files[0]);
-                      }}
-                    />
-                  </p>
-                  <p>
-                    <label>Reason for updating</label>
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) =>
-                        this.setState(
-                          {
-                            updatedReasonforupdating: event.target.value,
-                          },
-                          this.reasonforupdatevalidcheck(event)
-                        )
-                      }
-                    />
-                  </p>
-                </div>
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  disabled={this.state.buttondisabled}
-                  color="primary"
-                  onClick={() => {
-                    this.updatedetails();
-                  }}
-                >
-                  Update
+                      <input
+                        class="w3-input"
+                        type="text"
+                        onChange={(event) => {
+                          this.setState({ updatedlastname: event.target.value });
+                          console.log(this.state.updatedsex);
+                        }}
+                        defaultValue={result[this.state.selectedIndex].surname}
+                      />
+                    </p>
+                    <p>
+                      <label>Dob</label>
+                      <input
+                        class="w3-input"
+                        type="date"
+                        onChange={(event) => {
+                          this.setState({ updatedDob: event.target.value });
+                          console.log(event.target.value);
+                        }}
+                        defaultValue={result[this.state.selectedIndex].dob}
+                      />
+                    </p>
+                    <p>
+                      <label>choose file</label>
+                      <input
+                        class="w3-input"
+                        type="file"
+                        onChange={(event) => {
+                          this.setState({ file: event.target.files[0] });
+                          console.log(event.target.files[0]);
+                        }}
+                      />
+                    </p>
+                    <p>
+                      <label>Reason for updating</label>
+                      <input
+                        class="w3-input"
+                        type="text"
+                        onChange={(event) =>
+                          this.setState(
+                            {
+                              updatedReasonforupdating: event.target.value,
+                            },
+                            this.reasonforupdatevalidcheck(event)
+                          )
+                        }
+                      />
+                    </p>
+                  </div>
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    disabled={this.state.buttondisabled}
+                    color="primary"
+                    onClick={() => {
+                      this.updatedetails();
+                    }}
+                  >
+                    Update
                 </Button>
-                <Button
-                  color="secondary"
-                  onClick={() =>
-                    this.setState({
-                      updateDialogOpen: false,
-                      selectedIndex: -1,
-                    })
-                  }
-                >
-                  Cancel
+                  <Button
+                    color="secondary"
+                    onClick={() =>
+                      this.setState({
+                        updateDialogOpen: false,
+                        selectedIndex: -1,
+                      })
+                    }
+                  >
+                    Cancel
                 </Button>
-              </DialogActions>
-            </Dialog>
-          )}
+                </DialogActions>
+              </Dialog>
+            )}
         </TableContainer>
 
         <Dialog
@@ -719,5 +757,7 @@ await axios
     return <>{this.state.isloading ? this.isloading() : this.tabledata()}</>;
   }
 }
+
+
 
 export default MyProfile;

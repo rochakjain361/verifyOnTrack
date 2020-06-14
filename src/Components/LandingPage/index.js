@@ -9,14 +9,19 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import { withStyles } from '@material-ui/core/styles';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { Container, Button, Grid } from "@material-ui/core";
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import InfoIcon from '@material-ui/icons/Info';
+// import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+// import InfoIcon from '@material-ui/icons/Info';
 import axios from "axios";
+
+import PersonIcon from '@material-ui/icons/Person';
+import WorkIcon from '@material-ui/icons/Work';
+import MessageIcon from '@material-ui/icons/Message';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import CodeIcon from '@material-ui/icons/Code';
+
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import StarBorder from '@material-ui/icons/StarBorder';
@@ -28,6 +33,8 @@ import Phones from '../DashBoardComponents/Phones'
 import MyJobProfile from '../DashBoardComponents/MyJobProfile'
 import Messages from '../DashBoardComponents/Messages'
 import MyProfile from '../DashBoardComponents/MyProfile'
+import AccessCodes from '../DashBoardComponents/MyCodes/AccessCodes'
+import EmployementCodes from '../DashBoardComponents/MyCodes/EmployementCodes'
 
 const drawerWidth = 240;
 const token1 = localStorage.getItem("Token");
@@ -78,8 +85,6 @@ class NewLandingPage extends React.PureComponent {
   state = {
     open1: false,
     open2: false,
-    open3: false,
-    open4: false,
   }
 async logout(){
   console.log(token);
@@ -144,7 +149,7 @@ async logout(){
               <Link to="/dashboard" className={classes.link}>
                 <ListItem button>
                   <ListItemIcon>
-                    <InfoIcon style={{ color: "white" }} />
+                    <DashboardIcon style={{ color: "white" }} />
                   </ListItemIcon>
                   <ListItemText primary={"Dashboard"} className={classes.textColor} />
                 </ListItem>
@@ -154,7 +159,7 @@ async logout(){
 
               <ListItem button onClick={() => this.setState({ open1: !this.state.open1 })}>
                 <ListItemIcon>
-                  <InboxIcon style={{ color: "white" }} />
+                  <PersonIcon style={{ color: "white" }} />
                 </ListItemIcon>
                 <ListItemText primary="My Info" className={classes.textColor} />
                 {this.state.open1 ? <ExpandLess style={{ color: 'white' }} /> : <ExpandMore style={{ color: 'white' }} />}
@@ -193,7 +198,7 @@ async logout(){
               <Link to="/myjobprofile" className={classes.link}>
                 <ListItem button>
                   <ListItemIcon>
-                    <ShoppingCartIcon style={{ color: "white" }} />
+                    <WorkIcon style={{ color: "white" }} />
                   </ListItemIcon>
                   <ListItemText primary="My Job Profile" className={classes.textColor} />
                 </ListItem>
@@ -204,11 +209,37 @@ async logout(){
               <Link to="/messages" className={classes.link}>
                 <ListItem button>
                   <ListItemIcon>
-                    <InfoIcon style={{ color: "white" }} />
+                    <MessageIcon style={{ color: "white" }} />
                   </ListItemIcon>
                   <ListItemText primary={"Messages"} className={classes.textColor} />
                 </ListItem>
               </Link>
+
+              <Divider />
+
+              <ListItem button onClick={() => this.setState({ open2: !this.state.open2 })}>
+                <ListItemIcon>
+                  <CodeIcon style={{ color: "white" }} />
+                </ListItemIcon>
+                <ListItemText primary="My Codes" className={classes.textColor} />
+                {this.state.open2 ? <ExpandLess style={{ color: 'white' }} /> : <ExpandMore style={{ color: 'white' }} />}
+              </ListItem>
+
+              <Collapse in={this.state.open2} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <Link to="/employeeAccessCodes" className={classes.link} >
+                    <ListItem button className={classes.nested}>
+                      <ListItemText primary="Access Codes" className={classes.textColor} />
+                    </ListItem>
+                  </Link>
+
+                  <Link to="/employeeEmployementCodes" className={classes.link}>
+                    <ListItem button className={classes.nested}>
+                      <ListItemText primary="Employement Codes" className={classes.textColor} />
+                    </ListItem>
+                  </Link>
+                </List>
+              </Collapse>
 
               <Divider />
 
@@ -259,6 +290,19 @@ async logout(){
                   <Messages />
                 </Container>
               </Route>
+
+              <Route exact path="/employeeAccessCodes">
+                <Container>
+                  <AccessCodes />
+                </Container>
+              </Route>
+
+              <Route exact path="/employeeEmployementCodes">
+                <Container>
+                  <EmployementCodes />
+                </Container>
+              </Route>
+
             </Switch>
           </main>
         </div>
