@@ -643,7 +643,7 @@ class myJobProfile extends Component {
                             <Button style={{ width: 85 }} onClick={this.editJobProfile} color="primary" variant="contained">
                                 Edit
                             </Button>
-                            <Button color="secondary" variant="contained" onClick={() => this.setState({ editJobDialog: false, selectedIndex: -1 })}>
+                            <Button color="secondary" variant="contained" onClick={() => this.setState({ editActionsOpen: false, selectedIndex: -1 })}>
                                 Cancel
                             </Button>
                         </DialogActions>
