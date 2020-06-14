@@ -17,6 +17,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import WorkIcon from '@material-ui/icons/Work';
 import MessageIcon from '@material-ui/icons/Message';
 import DashboardIcon from '@material-ui/icons/Dashboard';
+import CodeIcon from '@material-ui/icons/Code';
 
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -30,6 +31,8 @@ import Phones from '../DashBoardComponents/Phones'
 import MyJobProfile from '../DashBoardComponents/MyJobProfile'
 import Messages from '../DashBoardComponents/Messages'
 import MyProfile from '../DashBoardComponents/MyProfile'
+import AccessCodes from '../DashBoardComponents/MyCodes/AccessCodes'
+import EmployementCodes from '../DashBoardComponents/MyCodes/EmployementCodes'
 
 const drawerWidth = 240;
 
@@ -77,8 +80,6 @@ class NewLandingPage extends React.PureComponent {
   state = {
     open1: false,
     open2: false,
-    open3: false,
-    open4: false,
   }
 
   render() {
@@ -188,6 +189,32 @@ class NewLandingPage extends React.PureComponent {
 
               <Divider />
 
+              <ListItem button onClick={() => this.setState({ open2: !this.state.open2 })}>
+                <ListItemIcon>
+                  <CodeIcon style={{ color: "white" }} />
+                </ListItemIcon>
+                <ListItemText primary="My Codes" className={classes.textColor} />
+                {this.state.open2 ? <ExpandLess style={{ color: 'white' }} /> : <ExpandMore style={{ color: 'white' }} />}
+              </ListItem>
+
+              <Collapse in={this.state.open2} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <Link to="/employeeAccessCodes" className={classes.link} >
+                    <ListItem button className={classes.nested}>
+                      <ListItemText primary="Access Codes" className={classes.textColor} />
+                    </ListItem>
+                  </Link>
+
+                  <Link to="/employeeEmployementCodes" className={classes.link}>
+                    <ListItem button className={classes.nested}>
+                      <ListItemText primary="Employement Codes" className={classes.textColor} />
+                    </ListItem>
+                  </Link>
+                </List>
+              </Collapse>
+
+              <Divider />
+
             </div>
           </Drawer>
           <main className={classes.content}>
@@ -235,6 +262,19 @@ class NewLandingPage extends React.PureComponent {
                   <Messages />
                 </Container>
               </Route>
+
+              <Route exact path="/employeeAccessCodes">
+                <Container>
+                  <AccessCodes />
+                </Container>
+              </Route>
+
+              <Route exact path="/employeeEmployementCodes">
+                <Container>
+                  <EmployementCodes />
+                </Container>
+              </Route>
+
             </Switch>
           </main>
         </div>

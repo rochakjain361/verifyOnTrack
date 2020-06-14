@@ -48,7 +48,7 @@ const styles = theme => ({
 
 })
 
-export class index extends Component {
+class index extends Component {
 
     state = {
         states: "",
@@ -145,7 +145,7 @@ export class index extends Component {
                             All associated cities will also be deleted, do you want to continue?
                     </DialogContentText>
                     </DialogContent>
-                    <DialogActions style={{padding: 10}}>
+                    <DialogActions style={{padding: 15}}>
                         <Button style={{ width: 85 }} color="primary" variant="contained">
                             Agree
                         </Button>

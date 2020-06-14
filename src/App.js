@@ -22,14 +22,19 @@ class App extends React.PureComponent {
             <Route exact path='/' component={PreRegistration} />
             <Route exact path='/signUp' component={signUp} />
             <Route exact path='/signIn' component={signIn} />
+            
+            {/* Employee PAGE PATHS */}
             <Route exact path='/Homepage' component={LandingPage} />
             <Route exact path='/addresses' component={LandingPage} />
             <Route exact path='/Identities' component={LandingPage} />
             <Route exact path='/Phones' component={LandingPage} />
             <Route exact path='/MyJobProfile' component={LandingPage} />
-            <Route exact path='/messages' component={Messages} />
+            <Route exact path='/messages' component={LandingPage} />
             <Route exact path='/profiles' component={LandingPage} />
             <Route exact path='/dashboard' component={LandingPage} />
+            <Route exact path='/employeeAccessCodes' component={LandingPage} />
+            <Route exact path='/employeeAccessCodes' component={LandingPage} />
+            <Route exact path='/employeeEmployementCodes' component={LandingPage} />
 
           {/* ADMIN PAGE PATHS */}
             <Route exact path='/admin' component={AdminLandingPage} />
