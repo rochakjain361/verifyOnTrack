@@ -221,16 +221,14 @@ class myJobProfile extends Component {
 
                                 <Grid item xs={9}>
                                     <FormControl fullWidth size='small'>
-                                        <InputLabel id="company">
+                                        <InputLabel id="companyLabel">
                                             Company
                                         </InputLabel>
                                         <Select
-                                            labelId="company"
+                                            labelId="companyLabel"
                                             id="company"
                                             value={this.state.addJobDialog.company}
-                                            onChange={event => this.setState({ addJobDialog: { company: event.target.value } })}
-                                            label="company"
-                                            fullWidth
+                                            onChange={event => {this.setState({ addJobDialog: { company: event.target.value } }); console.log(this.state.addJobDialog)} }                                            fullWidth
                                         >
                                             {
                                                 this.state.companies.map(company => <MenuItem value={company}>{company}</MenuItem>)
@@ -308,16 +306,14 @@ class myJobProfile extends Component {
 
                                 <Grid item xs={12}>
                                     <FormControl fullWidth size='small'>
-                                        <InputLabel id="position">
+                                        <InputLabel id="positionLabel">
                                             Position
                                             </InputLabel>
                                         <Select
-                                            labelId="position"
+                                            labelId="positionLabel"
                                             id="position"
                                             value={this.state.addJobDialog.position}
-                                            onChange={event => this.setState({ addJobDialog: { position: event.target.value } })}
-                                            label="position"
-                                            fullWidth
+                                            onChange={event => {this.setState({ addJobDialog: { position: event.target.value } }); console.log(this.state.addJobDialog)}}                                            fullWidth
                                         >
                                             {
                                                 this.state.positions.map(position => <MenuItem value={position}>{position}</MenuItem>)
@@ -767,32 +763,28 @@ class myJobProfile extends Component {
 
     async addJobProfile() {
         try {
-            let headers = {
-                headers: {
-                  Authorization: token,
-                  "Content-Type": "multipart/form-data",
-                },
-              };
-              let bodyFormData = new FormData();
-              bodyFormData.append("employee", id);
-              bodyFormData.append("company", this.state.company);
-              bodyFormData.append("startDate", this.state.startDate);
-              bodyFormData.append("endDate", this.state.endDate);
-              bodyFormData.append("jobCategory", this.state.position);
-              bodyFormData.append("jobTitle", this.state.jobTitle);
-              bodyFormData.append("jobDescription", this.state.jobDescription);
-              bodyFormData.append("leavingReason", this.state.reasonForLeaving);
-              bodyFormData.append("companyRating", this.state.rating);
-
-              await axios
-                .post(
-                  "http://3.22.17.212:8000/api/v1/employees/post-jobhistory",
-                  bodyFormData,
-                  headers
-                )
-                .then((response) => {
-                  console.log(response);
-                });
+            let response = await fetch('http://3.22.17.212:8000/api/v1/employees/post-job',
+                {   
+                    method:'POST',
+                    headers: {
+                        'Authorization': 'Token '+token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'employee': id,
+                        'company': this.state.company,
+                        'startDate': this.state.startDate,
+                        'endDate': this.state.endDate,
+                        'jobCategory': this.state.position,
+                        'jobTitle': this.state.jobTitle,
+                        'jobDescription': this.state.jobDescription,
+                        'leavingReason': this.state.reasonForLeaving,
+                        'companyRating': this.state.rating,
+                    })
+                }
+            );
+            response = await response.json();
+            console.log(response);
         } catch (error) {
           console.log("[!ON_REGISTER] " + error);
         }
