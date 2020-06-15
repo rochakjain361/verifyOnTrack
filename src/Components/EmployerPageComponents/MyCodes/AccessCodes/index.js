@@ -25,14 +25,14 @@ const rows = [
     {
         "createdOn": "09/12/2020",
         "codeString": "testCodeString1",
-        "employerCompanyField": "testEmployerCompanyField1",
+        "employeeCompanyField": "testEmployeeCompanyField1",
         "codeStatus": "testCodeStatu1s",
         "statusChangeDate": "09/12/2020",
     },
     {
         "createdOn": "09/12/2020",
         "codeString": "testCodeString1",
-        "employerCompanyField": "testEmployerCompanyField1",
+        "employeeCompanyField": "testEmployeeCompanyField1",
         "codeStatus": "testCodeStatus2",
         "statusChangeDate": "09/12/2020",
     }
@@ -63,7 +63,7 @@ class index extends Component {
           };
 
         return (
-            <div style={{ marginTop: 20 }}>
+            <div style={{ marginTop: 20, marginRight: 20 }}>
                 {/* <Paper style={{ padding: 20, height: '100vh' }}> */}
                 <Grid container justify='space-between' alignItems='center' spacing={4}>
 
@@ -95,16 +95,17 @@ class index extends Component {
 
                 <Grid container justify='flex-start' alignItems='center' spacing={2}>
 
-                    <TableContainer component={Paper} style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }} elevation={5}>
+                    <TableContainer component={Paper} style={{ maxWidth: '94%' , marginTop: 20, marginLeft: 10, marginRight: 10 }} elevation={5}>
                         <Table stickyHeader>
                             <TableHead>
                                 <TableRow style={{ backgroundColor: 'black' }}>
                                     <TableCell align="left">Date</TableCell>
                                     <TableCell align="left">Code</TableCell>
-                                    <TableCell align="left">Employer</TableCell>
+                                    <TableCell align="left">Employee</TableCell>
                                     <TableCell align="left">Code Status</TableCell>
                                     <TableCell align="left">Last Updated</TableCell>
                                     <TableCell align="left">Details</TableCell>
+                                    <TableCell align="left"></TableCell>
                                     <TableCell align="left">Actions</TableCell>
                                     <TableCell align="left">Update</TableCell>
                                 </TableRow>
@@ -114,10 +115,11 @@ class index extends Component {
                                     <TableRow key={row.id}>
                                         <TableCell align="left">{row.createdOn}</TableCell>
                                         <TableCell align="left">{row.codeString}</TableCell>
-                                        <TableCell align="left">{row.employerCompanyField}</TableCell>
+                                        <TableCell align="left">{row.employeeCompanyField}</TableCell>
                                         <TableCell align="left">{row.codeStatus}</TableCell>
                                         <TableCell align="left">{row.statusChangeDate}</TableCell>
-                                        <TableCell align="left"><Button size='small' color="primary" variant="outlined">View Details</Button></TableCell>
+                                        <TableCell align="left"><Button size='small' color="primary" variant="outlined">View Code Details</Button></TableCell>
+                                        <TableCell align="left"><Button size='small' color="primary" variant="outlined">View Employee Details</Button></TableCell>
                                         <TableCell align="left"><FormControl style={{ minWidth: 85 }} variant="outlined" size='small' fullWidth>
                                             <InputLabel id="">Status</InputLabel>
                                             <Select
@@ -152,7 +154,7 @@ class index extends Component {
 
                                     <Grid item xs={12}>
                                         <FormControl component="fieldset">
-                                            <FormLabel component="legend">Search employer by:</FormLabel>
+                                            <FormLabel component="legend">Search employee by:</FormLabel>
                                             <RadioGroup
                                                 name="searchCategory"
                                             // value={value}
@@ -161,7 +163,6 @@ class index extends Component {
                                                 <Grid container direction='row' style={{ marginTop: 10 }}>
                                                     <FormControlLabel value="searchByEmail" control={<Radio />} label="Email" />
                                                     <FormControlLabel value="searchByUsername" control={<Radio />} label="Username" />
-                                                    <FormControlLabel value="searchByCompany" control={<Radio />} label="Company" />
                                                 </Grid>
                                             </RadioGroup>
                                         </FormControl>
