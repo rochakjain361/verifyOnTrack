@@ -79,7 +79,19 @@ class Addresses extends Component {
       addresshint2: "",
       addresshint3: "",
       historyloading: true,
-      historyDialougeOpen:false,
+      historyDialougeOpen: false,
+      selectedIndex: -1,
+      updatedaddressreason: "",
+      updateddefaultaddresses: "",
+      updatedstate: "",
+      updatedlga: "",
+      updatedcity: "",
+      updatedstreet: "",
+      updatehousenumber: "",
+      updatedaddresshint1: "",
+      updatedimage: "",
+      updatestartedlivinghere: "",
+      updatedaddressestype:"",
     };
 
     this.onMarkerClick = this.onMarkerClick.bind(this);
@@ -103,49 +115,62 @@ class Addresses extends Component {
         console.table("addresses", result);
       });
 
-    await axios
-      .get(
-        "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/address/states",
-        {
+      // await axios
+      // .get(
+      //   "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/address/states",
+      //   {
+      //     headers: {
+      //       Authorization: token,
+      //     },
+      //   }
+      //   )
+      //   .then((res) => {
+      //     // state=res.data;
+      //     this.setState({ stateName: res.data });
+      //     // console.table("statename", state);
+      //   });
+     await fetch(
+       "http://3.22.17.212:8000/api/v1/resManager/address/states/",
+       {
           headers: {
             Authorization: token,
           },
         }
-      )
-      .then((res) => {
-        // state=res.data;
-        this.setState({ stateName: res.data });
-        console.table("statename", state);
-      });
-    await axios
-      .get(
-        "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/address/types",
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res) => {
-        this.setState({ addressTypes: res.data });
-        console.table("addresstypes", this.state.addressTypes);
-      });
-    await axios
-      .get(
-        "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/address/reasons",
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res) => {
-        this.setState({ addressReasons: res.data });
-        console.table("addressReasons", this.state.addressReasons);
-      });
-
-    this.setState({ isloading: false });
-  }
+     )
+       .then((res) => res.json())
+       .then((result) => {
+         console.log(result);
+       });
+  
+        await axios
+        .get(
+          "http://3.22.17.212:8000/api/v1/resManager/address/types/",
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+          )
+          .then((res) => {
+            this.setState({ addressTypes: res.data });
+            // console.table("addresstypes", this.state.addressTypes);
+          });
+          await axios
+          .get(
+            "http://3.22.17.212:8000/api/v1/resManager/address/reasons/",
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+            )
+            .then((res) => {
+              this.setState({ addressReasons: res.data });
+              // console.table("addressReasons", this.state.addressReasons);
+            });
+            
+            this.setState({ isloading: false });
+          }
   isloading() {
     return (
       <>
@@ -163,25 +188,73 @@ class Addresses extends Component {
       </>
     );
   }
-  async getHistory(index){
- this.setState(
-                              {
-                                historyDialougeOpen: true,
-                              })
+  async getHistory(index) {
+    this.setState({
+      historyDialougeOpen: true,
+    });
     await axios
-  .get(
-    "http://3.22.17.212:8000/api/v1/employees/"+id+"/addresses/"+index+"/history",
-    {
+      .get(
+        "http://3.22.17.212:8000/api/v1/employees/" +
+          id +
+          "/addresses/" +
+          index +
+          "/history",
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        history = res.data;
+        console.log("history", history);
+        this.setState({ historyloading: false });
+      });
+  }
+  async updatedetails(addressid){
+    let headers = {
       headers: {
         Authorization: token,
+        "Content-Type": "multipart/form-data",
       },
-    }
-  )
-  .then((res) => {
-    history = res.data;
-    console.log("history", history);
-    this.setState({ historyloading: false });
-  });
+    };
+    let bodyFormData = new FormData();
+    bodyFormData.append("employee", id);
+    bodyFormData.append("address_reason", this.state.updatedaddressreason);
+    bodyFormData.append("default_address", this.state.updateddefaultaddresses);
+    bodyFormData.append("state", this.state.updatedstate);
+    bodyFormData.append("lga", this.state.updatedlga);
+    bodyFormData.append("city", this.state.updatedcity);
+    bodyFormData.append("street_name", this.state.updatedstreet);
+    bodyFormData.append("house_number", this.state.updatehousenumber);
+    bodyFormData.append("address_hint1", this.state.updatedaddresshint1);
+    //  bodyFormData.append("address_hint2", this.state.addresshint2);
+    //  bodyFormData.append("address_hint3", this.state.addresshint3);
+    bodyFormData.append(
+      "google_coordinate1",
+      "3.444"
+      // this.state.location.latitude
+    );
+    bodyFormData.append(
+      "google_coordinate2",
+      "3.444"
+      // this.state.location.longtitude
+    );
+    bodyFormData.append("address_image", this.state.updatedimage);
+    bodyFormData.append("since", this.state.updatestartedlivinghere);
+    bodyFormData.append("address_type", this.state.updatedaddressestype);
+    bodyFormData.append("update_reason", this.state.updatedreason);
+    
+    await axios
+      .post(
+        "http://3.22.17.212:8000/api/v1/employees/update-address/"+addressid,
+        bodyFormData,
+        headers
+      )
+      .then((response) => {
+        console.log(response);
+      });
+
   }
   getaddress() {
     return (
@@ -314,9 +387,9 @@ class Addresses extends Component {
                           location
                         </a>
                       </TableCell>
-                      <TableCell align="center" size="small" padding="none">
+                      {/* <TableCell align="center" size="small" padding="none">
                         {}
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell align="center" size="small" padding="none">
                         {row.owner_name_field}
                       </TableCell>
@@ -326,11 +399,14 @@ class Addresses extends Component {
                           color="primary"
                           variant="outlined"
                           onClick={() =>
-                            this.setState({
-                              updateDialogOpen: true,
-                              selectedIndex: index,
-                              // add the updatedstate elements here after passing the token and adding data
-                            })
+                            this.setState(
+                              {
+                                updateDialogOpen: true,
+                                selectedIndex: index,
+                                // add the updatedstate elements here after passing the token and adding data
+                              },
+                              console.log(this.state.selectedIndex)
+                            )
                           }
                         >
                           Update
@@ -353,232 +429,279 @@ class Addresses extends Component {
                 </TableBody>
               </Table>
             </TableContainer>
-            <Dialog
-              open={this.state.updateDialogOpen}
-              onClose={() => this.setState({ updateDialogOpen: false })}
-              aria-labelledby="form-dialog-title"
-            >
-              <DialogTitle id="form-dialog-title">
-                Updating the address
-              </DialogTitle>
+            {this.state.selectedIndex === -1 ? (
+              <div />
+            ) : (
+              <Dialog
+                fullWidth={"md"}
+                maxWidth={"md"}
+                open={this.state.updateDialogOpen}
+                onClose={() => this.setState({ updateDialogOpen: false })}
+                aria-labelledby="form-dialog-title"
+              >
+                <DialogTitle id="form-dialog-title">
+                  Updating the address
+                </DialogTitle>
 
-              <DialogContent>
-                <Grid>
-                  <p>
-                    <label>Addresses reason</label>
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) =>
-                        this.setState({ updatedfirstname: event.target.value })
-                      }
-                      // defaultValue={result[this.state.selectedIndex].firstname}
-                    />
-                  </p>
-
-                  <p>
-                    <label>address type</label>
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) =>
-                        this.setState({ updatedMiddlename: event.target.value })
-                      }
-                      // defaultValue={result[this.state.selectedIndex].middlename}
-                    />
-                  </p>
-                  <p>
-                    <label>default address</label>
-
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) => {
-                        this.setState({ updatedlastname: event.target.value });
-                        console.log(this.state.updatedsex);
-                      }}
-                      // defaultValue={result[this.state.selectedIndex].surname}
-                    />
-                  </p>
-
-                  <p>
-                    <label>house number</label>
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) => {
-                        this.setState({ updatedDob: event.target.value });
-                        console.log(event.target.value);
-                      }}
-                      // defaultValue={result[this.state.selectedIndex].dob}
-                    />
-                  </p>
-                  <p>
-                    <label> address image</label>
-                    <input
-                      class="w3-input"
-                      type="file"
-                      onChange={(event) => {
-                        this.setState({ file: event.target.files[0] });
-                        console.log(event.target.files[0]);
-                      }}
-                    />
-                  </p>
-
-                  <p>
-                    <label>LGA</label>
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) => {
-                        this.setState({ updatedDob: event.target.value });
-                        console.log(event.target.value);
-                      }}
-                      // defaultValue={result[this.state.selectedIndex].dob}
-                    />
-                  </p>
-                  <p>
-                    <label>city</label>
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) => {
-                        this.setState({ updatedDob: event.target.value });
-                        console.log(event.target.value);
-                      }}
-                      // defaultValue={result[this.state.selectedIndex].dob}
-                    />
-                  </p>
-                  <p>
-                    <label>Address Hint</label>
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) => {
-                        this.setState({ updatedDob: event.target.value });
-                        console.log(event.target.value);
-                      }}
-                      // defaultValue={result[this.state.selectedIndex].dob}
-                    />
-                  </p>
-                  <p>
-                    <label> address hint2</label>
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) => {
-                        this.setState({ updatedDob: event.target.value });
-                        console.log(event.target.value);
-                      }}
-                      // defaultValue={result[this.state.selectedIndex].dob}
-                    />
-                  </p>
-                  <p>
-                    <label>address hint3</label>
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) => {
-                        this.setState({ updatedDob: event.target.value });
-                        console.log(event.target.value);
-                      }}
-                      // defaultValue={result[this.state.selectedIndex].dob}
-                    />
-                  </p>
-                  <p>
-                    <label>address hint3</label>
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) => {
-                        this.setState({ updatedDob: event.target.value });
-                        console.log(event.target.value);
-                      }}
-                      // defaultValue={result[this.state.selectedIndex].dob}
-                    />
-                  </p>
-                  <p>
-                    <label>started living here</label>
-                    <input
-                      class="w3-input"
-                      type="date"
-                      onChange={(event) => {
-                        this.setState({ updatedDob: event.target.value });
-                        console.log(event.target.value);
-                      }}
-                      // defaultValue={result[this.state.selectedIndex].dob}
-                    />
-                  </p>
-                  <p>
-                    <label>update reason</label>
-                    <input
-                      class="w3-input"
-                      type="date"
-                      onChange={(event) => {
-                        this.setState({ updatedDob: event.target.value });
-                        console.log(event.target.value);
-                      }}
-                      // defaultValue={result[this.state.selectedIndex].dob}
-                    />
-                  </p>
-                  <p>
-                    <label>street</label>
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) =>
-                        this.setState(
-                          {
-                            updatedReasonforupdating: event.target.value,
+                <DialogContent>
+                  <Grid container direction="row">
+                    <Box>
+                      <p>
+                        <label>Addresses reason</label>
+                        <input
+                          class="w3-input"
+                          type="text"
+                          onChange={(event) =>
+                            this.setState({
+                              updatedaddressreason: event.target.value,
+                            })
                           }
-                          // this.reasonforupdatevalidcheck(event)
-                        )
-                      }
-                    />
-                  </p>
-                  <Box>
-                    <Map
-                      google={this.props.google}
-                      zoom={1}
-                      onClick={this.onMarkerClick}
-                      style={{ height: "75%", width: "75%" }}
-                      fullscreenControl={true}
-                    >
-                      <Marker
-                        position={{
-                          lat: this.state.location.latitude,
-                          lng: this.state.location.longtitude,
-                        }}
-                      />
-                      <InfoWindow onClose={this.onInfoWindowClose}></InfoWindow>
-                    </Map>
-                  </Box>
-                </Grid>
-              </DialogContent>
+                          defaultValue={
+                            result[this.state.selectedIndex].address_reason
+                          }
+                        />
+                      </p>
 
-              <DialogActions>
-                <Button
-                  disabled={this.state.buttondisabled}
-                  color="primary"
-                  onClick={() => {
-                    this.updatedetails();
-                  }}
-                >
-                  Update
-                </Button>
-                <Button
-                  color="secondary"
-                  onClick={() =>
-                    this.setState({
-                      updateDialogOpen: false,
-                      selectedIndex: -1,
-                    })
-                  }
-                >
-                  Cancel
-                </Button>
-              </DialogActions>
-            </Dialog>
+                      <p>
+                        <label>address type</label>
+                        <input
+                          class="w3-input"
+                          type="text"
+                          onChange={(event) =>
+                            this.setState({
+                              updatedaddressestype: event.target.value,
+                            })
+                          }
+                          defaultValue={
+                            result[this.state.selectedIndex].address_type
+                          }
+                        />
+                      </p>
+                      <p>
+                        <label>default address</label>
+
+                        <input
+                          class="w3-input"
+                          type="text"
+                          onChange={(event) => {
+                            this.setState({
+                              updateddefaultaddresses: event.target.value,
+                            });
+                            console.log(this.state.updatedsex);
+                          }}
+                          defaultValue={
+                            result[this.state.selectedIndex].default_address
+                          }
+                        />
+                      </p>
+
+                      <p>
+                        <label>house number</label>
+                        <input
+                          class="w3-input"
+                          type="text"
+                          onChange={(event) => {
+                            this.setState({
+                              updatehousenumber: event.target.value,
+                            });
+                            console.log(event.target.value);
+                          }}
+                          defaultValue={
+                            result[this.state.selectedIndex].house_number
+                          }
+                        />
+                      </p>
+                      <p>
+                        <label> address image</label>
+                        <input
+                          class="w3-input"
+                          type="file"
+                          onChange={(event) => {
+                            this.setState({
+                              updatedimage: event.target.files[0],
+                            });
+                            console.log(event.target.files[0]);
+                          }}
+                        />
+                      </p>
+                      <p>
+                        <label>street</label>
+                        <input
+                          class="w3-input"
+                          type="text"
+                          onChange={(event) =>
+                            this.setState({
+                              updatedstreet: event.target.value,
+                            })
+                          }
+                          defaultValue={result[this.state.selectedIndex].state}
+                        />
+                      </p>
+                      <p>
+                        <label>state</label>
+                        <input
+                          class="w3-input"
+                          type="text"
+                          onChange={(event) =>
+                            this.setState({
+                              updatedstate: event.target.value,
+                            })
+                          }
+                          defaultValue={result[this.state.selectedIndex].state}
+                        />
+                      </p>
+                      <p>
+                        <label>LGA</label>
+                        <input
+                          class="w3-input"
+                          type="text"
+                          onChange={(event) => {
+                            this.setState({ updatedlga: event.target.value });
+                            console.log(event.target.value);
+                          }}
+                          defaultValue={result[this.state.selectedIndex].lga}
+                        />
+                      </p>
+                      <p>
+                        <label>city</label>
+                        <input
+                          class="w3-input"
+                          type="text"
+                          onChange={(event) => {
+                            this.setState({ updatedcity: event.target.value });
+                            console.log(event.target.value);
+                          }}
+                          defaultValue={result[this.state.selectedIndex].city}
+                        />
+                      </p>
+                      <p>
+                        <label>Address Hint1</label>
+                        <input
+                          class="w3-input"
+                          type="text"
+                          onChange={(event) => {
+                            this.setState({
+                              updatedaddresshint1: event.target.value,
+                            });
+                            console.log(event.target.value);
+                          }}
+                          defaultValue={
+                            result[this.state.selectedIndex].address_hint1
+                          }
+                        />
+                      </p>
+                      <p>
+                        <label> address hint2</label>
+                        <input
+                          class="w3-input"
+                          type="text"
+                          onChange={(event) => {
+                            this.setState({
+                              updatedaddresshint2: event.target.value,
+                            });
+                            console.log(event.target.value);
+                          }}
+                          defaultValue={
+                            result[this.state.selectedIndex].address_hint2
+                          }
+                        />
+                      </p>
+                      <p>
+                        <label>address hint3</label>
+                        <input
+                          class="w3-input"
+                          type="text"
+                          onChange={(event) => {
+                            this.setState({
+                              updatedaddresshint3: event.target.value,
+                            });
+                            console.log(event.target.value);
+                          }}
+                          defaultValue={
+                            result[this.state.selectedIndex].address_hint3
+                          }
+                        />
+                      </p>
+
+                      <p>
+                        <label>started living here</label>
+                        <input
+                          class="w3-input"
+                          type="date"
+                          onChange={(event) => {
+                            this.setState({
+                              updatestartedlivinghere: event.target.value,
+                            });
+                            console.log(event.target.value);
+                          }}
+                          defaultValue={result[this.state.selectedIndex].since}
+                        />
+                      </p>
+                      <p>
+                        <label>update reason</label>
+                        <input
+                          class="w3-input"
+                          type="text"
+                          onChange={(event) => {
+                            this.setState({
+                              updatedreason: event.target.value,
+                            });
+                            console.log(event.target.value);
+                          }}
+                          defaultValue={
+                            result[this.state.selectedIndex].update_reason
+                          }
+                        />
+                      </p>
+                    </Box>
+
+                    <Box>
+                      <Map
+                        google={this.props.google}
+                        zoom={1}
+                        onClick={this.onMarkerClick}
+                        style={{ height: "75%", width: "75%" }}
+                        fullscreenControl={true}
+                      >
+                        <Marker
+                          position={{
+                            lat: this.state.location.latitude,
+                            lng: this.state.location.longtitude,
+                          }}
+                        />
+                        <InfoWindow
+                          onClose={this.onInfoWindowClose}
+                        ></InfoWindow>
+                      </Map>
+                    </Box>
+                  </Grid>
+                </DialogContent>
+
+                <DialogActions>
+                  <Button
+                    disabled={this.state.buttondisabled}
+                    color="primary"
+                    onClick={() => {
+                      this.updatedetails(result[this.state.selectedIndex].id)
+                    }}
+                  >
+                    Update
+                  </Button>
+                  <Button
+
+                    color="secondary"
+                    onClick={() =>
+                      this.setState({
+                        updateDialogOpen: false,
+                        selectedIndex: -1,
+                      })
+                    }
+                  >
+                    Cancel
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            )}
           </Grid>
         )}
         <Dialog
@@ -825,7 +948,7 @@ class Addresses extends Component {
                   this.setState({ housenumber: event.target.value });
                   console.log(event.target.value);
                 }}
-                // defaultValue={result[this.state.selectedIndex].dob}
+                //  defaultValue={result[this.state.selectedIndex].dob}
               />
             </p>
             <p>
@@ -970,6 +1093,19 @@ class Addresses extends Component {
                     // this.reasonforupdatevalidcheck(event)
                   )
                 }
+              />
+            </p>
+            <p>
+              <label>Google coordinates</label>
+              <input
+                class="w3-input"
+                type="text"
+                defaultValue={this.state.location.latitude}
+              />
+              <input
+                class="w3-input"
+                type="text"
+                defaultValue={this.state.location.longtitude}
               />
             </p>
             <p>

@@ -73,7 +73,7 @@ class Phones extends Component {
       });
     await axios
       .get(
-        "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/phone/reasons",
+        "http://3.22.17.212:8000/api/v1/resManager/phone/reasons/",
         {
           headers: {
             Authorization: token,
@@ -86,7 +86,7 @@ class Phones extends Component {
       });
     await axios
       .get(
-        "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/phone/types",
+        "http://3.22.17.212:8000/api/v1/resManager/phone/types/",
         {
           headers: {
             Authorization: token,

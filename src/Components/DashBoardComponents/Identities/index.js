@@ -23,14 +23,15 @@ import { CircularProgress } from "@material-ui/core";
 import { Select } from "@material-ui/core";
 import { MenuItem } from "@material-ui/core";
 // import image from "../../../../public/images/mainImage.jpg";
+import Box from "@material-ui/core/Box";
 
 const token1 = localStorage.getItem("Token");
 
 const token = "Token " + token1;
 const id = localStorage.getItem("id");
 let result = [];
-let history=[];
-
+let history = [];
+let pictures = [];
 
 class Identities extends Component {
   constructor(props) {
@@ -42,6 +43,7 @@ class Identities extends Component {
       loading: true,
       viewDialougeOpen: false,
       uploadDialougeOpen: false,
+      pictureid: "",
       addDialogOpen: false,
       idSource: [],
       selectedidSource: "",
@@ -56,6 +58,8 @@ class Identities extends Component {
       updatereason: "",
       historyloading: true,
       historyDialougeOpen: false,
+      uploadpictures: "",
+      pictureloading:"false"
     };
     // this.updateidentites= this.updateidentites.bind();
   }
@@ -78,7 +82,7 @@ class Identities extends Component {
         console.table("identites", result);
       });
     let idSource = await axios.get(
-      "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/id/sources?excludeSystem=true",
+      "http://3.22.17.212:8000/api/v1/resManager/id/sources/?excludeSystem=true",
       {
         headers: {
           Authorization: token,
@@ -113,7 +117,13 @@ class Identities extends Component {
     });
     await axios
       .get(
-        "http://3.22.17.212:8000/api/v1/employees/"+id+"/identities-by/"+id+"/idSources/"+index+"/history",
+        "http://3.22.17.212:8000/api/v1/employees/" +
+          id +
+          "/identities-by/" +
+          id +
+          "/idSources/" +
+          index +
+          "/history",
         {
           headers: {
             Authorization: token,
@@ -212,14 +222,22 @@ class Identities extends Component {
         >
           <DialogTitle id="form-dialog-title">View pictures</DialogTitle>
           <DialogContent>
-            <Grid item xs={4}>
-              <Paper>item</Paper>
-            </Grid>
-            <Grid item xs={4}>
-              <Paper>item</Paper>
-            </Grid>
-            <Grid item xs={4}>
-              <Paper>item</Paper>
+            <Grid
+              container
+              direction="row"
+              justify="space-evenly"
+              alignItems="center"
+            >
+              {this.state.pictureloading ? (
+                this.isloading()
+              ) : (
+                pictures.map((picture, index) => (
+                //  <image src={picture.picture}/>
+                <p> {picture.picture}</p>
+              ))
+              )}
+
+              
             </Grid>
           </DialogContent>
         </Dialog>
@@ -232,9 +250,26 @@ class Identities extends Component {
           <DialogContent>
             <Grid Container>
               <label></label>
-              <input type="file" className="w3-input"></input>
+              <input
+                type="file"
+                className="w3-input"
+                onChange={(event) => {
+                  this.setState({
+                    uploadpictures: event.target.files[0],
+                  });
+                }}
+              ></input>
             </Grid>
           </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                this.postpictures(this.state.pictureid);
+              }}
+            >
+              upload
+            </Button>
+          </DialogActions>
         </Dialog>
         <Dialog
           open={this.state.addDialogOpen}
@@ -355,6 +390,51 @@ class Identities extends Component {
       </>
     );
   }
+  async getpictures(idsource) {
+    this.setState({ viewDialougeOpen: true });
+    this.setState({ pictureloading: true });
+    await axios
+      .get(
+        "http://3.22.17.212:8000/api/v1/employees/" +
+          id +
+          "/idSources/" +
+          idsource +
+          "/pics",
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        pictures = res.data;
+        console.log("pictures", pictures);
+          this.setState({ pictureloading: false });
+      });
+  }
+  async postpictures(id) {
+  
+    let headers = {
+      headers: {
+        Authorization: token,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    let bodyFormData = new FormData();
+    bodyFormData.append("empIdentity", id);
+    bodyFormData.append("picture", this.state.uploadpictures);
+
+    await axios
+      .post(
+        "http://3.22.17.212:8000/api/v1/employees/post-identitiy-pic",
+        bodyFormData,
+        headers
+      )
+      .then((response) => {
+        console.log(response);
+      });
+      this.setState({ uploadDialougeOpen: false });
+  }
 
   getTableOfEmployees() {
     return (
@@ -400,9 +480,7 @@ class Identities extends Component {
                             size="small"
                             color="primary"
                             variant="outlined"
-                            onClick={() =>
-                              this.setState({ viewDialougeOpen: true })
-                            }
+                            onClick={() => this.getpictures(row.idSource)}
                           >
                             View
                           </Button>
@@ -413,7 +491,13 @@ class Identities extends Component {
                             color="primary"
                             variant="outlined"
                             onClick={() =>
-                              this.setState({ uploadDialougeOpen: true })
+                              this.setState(
+                                {
+                                  uploadDialougeOpen: true,
+                                  pictureid: row.id,
+                                },
+                                console.log("picturedid",this.state.pictureid)
+                              )
                             }
                           >
                             upload
@@ -633,10 +717,7 @@ class Identities extends Component {
                       <TableCell align="center">{row.dob}</TableCell>
                       <TableCell align="center">{row.sex}</TableCell>
                       <TableCell align="center">{row.idSource}</TableCell>
-                     
-                     
                       <TableCell align="center">{row.idNumber}</TableCell>{" "}
-                     
                       <TableCell component="th" align="center">
                         {row.created_on}
                       </TableCell>
