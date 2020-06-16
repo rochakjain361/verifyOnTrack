@@ -31,7 +31,8 @@ import Addresses from '../DashBoardComponents/Addresses'
 import Identities from '../DashBoardComponents/Identities'
 import Phones from '../DashBoardComponents/Phones'
 import MyJobProfile from '../DashBoardComponents/MyJobProfile'
-import Messages from '../DashBoardComponents/Messages'
+import Inbox from '../DashBoardComponents/Messages/Inbox'
+import Outbox from '../DashBoardComponents/Messages/Outbox'
 import MyProfile from '../DashBoardComponents/MyProfile'
 import AccessCodes from '../DashBoardComponents/MyCodes/AccessCodes'
 import EmployementCodes from '../DashBoardComponents/MyCodes/EmployementCodes'
@@ -85,6 +86,7 @@ class NewLandingPage extends React.PureComponent {
   state = {
     open1: false,
     open2: false,
+    open3: false
   }
 async logout(){
   console.log(token);
@@ -206,17 +208,6 @@ async logout(){
 
               <Divider />
 
-              <Link to="/messages" className={classes.link}>
-                <ListItem button>
-                  <ListItemIcon>
-                    <MessageIcon style={{ color: "white" }} />
-                  </ListItemIcon>
-                  <ListItemText primary={"Messages"} className={classes.textColor} />
-                </ListItem>
-              </Link>
-
-              <Divider />
-
               <ListItem button onClick={() => this.setState({ open2: !this.state.open2 })}>
                 <ListItemIcon>
                   <CodeIcon style={{ color: "white" }} />
@@ -236,6 +227,32 @@ async logout(){
                   <Link to="/employeeEmployementCodes" className={classes.link}>
                     <ListItem button className={classes.nested}>
                       <ListItemText primary="Employement Codes" className={classes.textColor} />
+                    </ListItem>
+                  </Link>
+                </List>
+              </Collapse>
+
+              <Divider />
+
+              <ListItem button onClick={() => this.setState({ open3: !this.state.open3 })}>
+                <ListItemIcon>
+                  <MessageIcon style={{ color: "white" }} />
+                </ListItemIcon>
+                <ListItemText primary="Messages" className={classes.textColor} />
+                {this.state.open3 ? <ExpandLess style={{ color: 'white' }} /> : <ExpandMore style={{ color: 'white' }} />}
+              </ListItem>
+
+              <Collapse in={this.state.open3} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <Link to="/employeeInbox" className={classes.link} >
+                    <ListItem button className={classes.nested}>
+                      <ListItemText primary="Inbox" className={classes.textColor} />
+                    </ListItem>
+                  </Link>
+
+                  <Link to="/employeeOutbox" className={classes.link}>
+                    <ListItem button className={classes.nested}>
+                      <ListItemText primary="Outbox" className={classes.textColor} />
                     </ListItem>
                   </Link>
                 </List>
@@ -285,9 +302,15 @@ async logout(){
                 </Container>
               </Route>
 
-              <Route exact path="/messages">
+              <Route exact path="/employeeInbox">
                 <Container>
-                  <Messages />
+                  <Inbox />
+                </Container>
+              </Route>
+
+              <Route exact path="/employeeOutbox">
+                <Container>
+                  <Outbox />
                 </Container>
               </Route>
 

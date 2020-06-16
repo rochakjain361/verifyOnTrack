@@ -52,7 +52,7 @@ export class index extends Component {
 
                     <Grid item>
                         <Typography variant='h4'>
-                            Address Types
+                            Job Leaving Reasons
                             </Typography>
                     </Grid>
 
