@@ -31,6 +31,17 @@ import Collapse from '@material-ui/core/Collapse';
 
 import ManageStates from './AdminPageComponents/Settings/AddressSettings/ManageStates'
 import ManageLGAs from './AdminPageComponents/Settings/AddressSettings/ManageLGAs'
+import ManageCities from './AdminPageComponents/Settings/AddressSettings/ManageCities'
+import ManageAddressTypes from './AdminPageComponents/Settings/AddressSettings/ManageAddressTypes'
+import ManageAddressReasons from './AdminPageComponents/Settings/AddressSettings/ManageAddressReasons'
+import ManagePhoneTypes from '././AdminPageComponents/Settings/Phone Settings/ManagePhoneTypes'
+import ManagePhoneReasons from '././AdminPageComponents/Settings/Phone Settings/ManagePhoneReasons'
+import ManageIdSources from './AdminPageComponents/Settings/ManageIdSources'
+import ManageJobCategories from './AdminPageComponents/Settings/ManageJobSettings/ManageJobCategories'
+import ManageJobLeavingReasons from './AdminPageComponents/Settings/ManageJobSettings/ManageJobLeavingReasons'
+import AddAdminUser from './AdminPageComponents/Administration/AddAdminUser'
+import AdminAccessCodes from './AdminPageComponents/ManageCodes/AdminAccessCodes'
+import AdminEvaluationCodes from './AdminPageComponents/ManageCodes/AdminEvaluationCodes'
 
 const drawerWidth = 255;
 
@@ -149,29 +160,37 @@ class AdminLandingPage extends React.PureComponent {
 
                                     <Collapse in={this.state.open6} timeout="auto" unmountOnExit className={classes.collapseNested}>
                                         <List component="div" disablePadding>
-                                            <Link to="/managestates" className={classes.link} >
+                                            <Link to="/manageStates" className={classes.link} >
                                                 <ListItem button className={classes.nested}>
                                                     <ListItemtext className={classes.textColor} primary="Manage States" />
                                                 </ListItem>
                                             </Link>
 
-                                            <Link to="/managelgas" className={classes.link} >
+                                            <Link to="/manageLGAs" className={classes.link} >
                                                 <ListItem button className={classes.nested}>
                                                     <ListItemtext className={classes.textColor} primary="Manage LGAs" />
                                                 </ListItem>
                                             </Link>
 
-                                            <ListItem button className={classes.nested}>
-                                                <ListItemtext className={classes.textColor} primary="Cities" />
-                                            </ListItem>
+                                            <Link to="/manageCities" className={classes.link} >
+                                                <ListItem button className={classes.nested}>
+                                                    <ListItemtext className={classes.textColor} primary="Cities" />
+                                                </ListItem>
+                                            </Link>
 
-                                            <ListItem button className={classes.nested}>
-                                                <ListItemtext className={classes.textColor} primary="Manage Address Types" />
-                                            </ListItem>
+                                            <Link to="/manageAddressTypes" className={classes.link}>
+                                                <ListItem button className={classes.nested}>
+                                                    <ListItemtext className={classes.textColor} primary="Manage Address Types" />
+                                                </ListItem>
+                                            </Link>
 
-                                            <ListItem button className={classes.nested}>
-                                                <ListItemtext className={classes.textColor} primary="Manage Address Reasons" />
-                                            </ListItem>
+
+                                            <Link to="/manageAddressReasons" className={classes.link}>
+                                                <ListItem button className={classes.nested}>
+                                                    <ListItemtext className={classes.textColor} primary="Manage Address Reasons" />
+                                                </ListItem>
+                                            </Link>
+
                                         </List>
                                     </Collapse>
 
@@ -187,25 +206,30 @@ class AdminLandingPage extends React.PureComponent {
 
                                     <Collapse in={this.state.open2} timeout="auto" unmountOnExit className={classes.collapseNested}>
                                         <List component="div" disablePadding>
-                                            <ListItem button className={classes.nested}>
-                                                <ListItemtext className={classes.textColor} primary="Manage Phone Types" />
-                                            </ListItem>
 
-                                            <ListItem button className={classes.nested}>
-                                                <ListItemtext className={classes.textColor} primary="Manage Phones Reasons" />
-                                            </ListItem>
+                                            <Link to="/managePhoneTypes" className={classes.link}>
+                                                <ListItem button className={classes.nested}>
+                                                    <ListItemtext className={classes.textColor} primary="Manage Phone Types" />
+                                                </ListItem>
+                                            </Link>
+
+                                            <Link to="/managePhoneReasons" className={classes.link}>
+                                                <ListItem button className={classes.nested}>
+                                                    <ListItemtext className={classes.textColor} primary="Manage Phones Reasons" />
+                                                </ListItem>
+                                            </Link>
 
                                         </List>
                                     </Collapse>
 
                                     <Divider />
 
-                                    <Link to="/adminManageIdSources" className={classes.link} style={{paddingLeft: 25}}>
+                                    <Link to="/manageIdSources" className={classes.link} style={{ paddingLeft: 25 }}>
                                         <List component="div" disablePadding>
                                             <ListItem button className={classes.nested}>
-                                            <ListItemIcon>
-                                                <PermIdentityIcon style={{ color: "white" }} />
-                                            </ListItemIcon>
+                                                <ListItemIcon>
+                                                    <PermIdentityIcon style={{ color: "white" }} />
+                                                </ListItemIcon>
                                                 <ListItemtext className={classes.textColor} primary="Manage ID sources" />
                                             </ListItem>
                                         </List>
@@ -222,13 +246,18 @@ class AdminLandingPage extends React.PureComponent {
 
                                     <Collapse in={this.state.open7} timeout="auto" unmountOnExit className={classes.collapseNested}>
                                         <List component="div" disablePadding>
-                                            <ListItem button className={classes.nested}>
-                                                <ListItemtext className={classes.textColor} primary="Manage Categories" />
-                                            </ListItem>
 
-                                            <ListItem button className={classes.nested}>
-                                                <ListItemtext className={classes.textColor} primary="Manage Job Reasons" />
-                                            </ListItem>
+                                            <Link to="/manageJobCategories" className={classes.link}>
+                                                <ListItem button className={classes.nested}>
+                                                    <ListItemtext className={classes.textColor} primary="Manage Categories" />
+                                                </ListItem>
+                                            </Link>
+
+                                            <Link to="/manageJobLeavingReasons" className={classes.link}>
+                                                <ListItem button className={classes.nested}>
+                                                    <ListItemtext className={classes.textColor} primary="Manage Job Reasons" />
+                                                </ListItem>
+                                            </Link>
 
                                         </List>
                                     </Collapse>
@@ -247,15 +276,18 @@ class AdminLandingPage extends React.PureComponent {
 
                             <Collapse in={this.state.open3} timeout="auto" unmountOnExit>
                                 <List component="div" disablePadding>
+                                <Link to="/addAdmin" className={classes.link}>
                                     <ListItem button className={classes.nested2}>
                                         <ListItemtext className={classes.textColor} primary="Add Admin User" />
                                     </ListItem>
+                                </Link>
                                 </List>
                             </Collapse>
 
                             <Divider />
 
                             <ListItem button onClick={() => this.setState({ open4: !this.state.open4 })}>
+
                                 <ListItemIcon>
                                     <CodeIcon style={{ color: "white" }} />
                                 </ListItemIcon>
@@ -265,13 +297,18 @@ class AdminLandingPage extends React.PureComponent {
 
                             <Collapse in={this.state.open4} timeout="auto" unmountOnExit>
                                 <List component="div" disablePadding>
-                                    <ListItem button className={classes.nested2}>
-                                        <ListItemtext className={classes.textColor} primary="All Codes" />
-                                    </ListItem>
 
+                                <Link to="/adminAccessCodes" className={classes.link}>
                                     <ListItem button className={classes.nested2}>
-                                        <ListItemtext className={classes.textColor} primary="Pending Codes" />
+                                        <ListItemtext className={classes.textColor} primary="Access Codes" />
                                     </ListItem>
+                                </Link>
+
+                                <Link to="/adminEvaluationCodes" className={classes.link}>
+                                    <ListItem button className={classes.nested2}>
+                                        <ListItemtext className={classes.textColor} primary="Evaluation Codes" />
+                                    </ListItem>
+                                </Link>
                                 </List>
                             </Collapse>
 
@@ -282,22 +319,89 @@ class AdminLandingPage extends React.PureComponent {
                     <main className={classes.content}>
                         <Toolbar />
                         <Switch>
-                            <Route exact path="/managestates">
+
+                            <Route exact path="/manageStates">
                                 <Container>
                                     < ManageStates />
                                 </Container>
                             </Route>
 
-                            <Route exact path="/managelgas">
+                            <Route exact path="/manageLGAs">
                                 <Container>
                                     < ManageLGAs />
+                                </Container>
+                            </Route>
+
+                            <Route exact path="/manageCities">
+                                <Container>
+                                    < ManageCities />
+                                </Container>
+                            </Route>
+
+                            <Route exact path="/manageAddressTypes">
+                                <Container>
+                                    < ManageAddressTypes />
+                                </Container>
+                            </Route>
+
+                            <Route exact path="/manageAddressReasons">
+                                <Container>
+                                    < ManageAddressReasons />
+                                </Container>
+                            </Route>
+
+                            <Route exact path="/managePhoneTypes">
+                                <Container>
+                                    < ManagePhoneTypes />
+                                </Container>
+                            </Route>
+
+                            <Route exact path="/managePhoneReasons">
+                                <Container>
+                                    < ManagePhoneReasons />
+                                </Container>
+                            </Route>
+
+                            <Route exact path="/manageIdSources">
+                                <Container>
+                                    < ManageIdSources />
+                                </Container>
+                            </Route>
+
+                            <Route exact path="/manageJobCategories">
+                                <Container>
+                                    < ManageJobCategories />
+                                </Container>
+                            </Route>
+
+                            <Route exact path="/manageJobLeavingReasons">
+                                <Container>
+                                    < ManageJobLeavingReasons />
+                                </Container>
+                            </Route>
+
+                            <Route exact path="/addAdmin">
+                                <Container>
+                                    < AddAdminUser />
+                                </Container>
+                            </Route>
+
+                            <Route exact path="/adminAccessCodes">
+                                <Container>
+                                    < AdminAccessCodes />
+                                </Container>
+                            </Route>
+
+                            <Route exact path="/AdminEvaluationCodes">
+                                <Container>
+                                    < AdminEvaluationCodes />
                                 </Container>
                             </Route>
                         </Switch>
                     </main>
                 </div>
 
-            </Router>
+            </Router >
         );
     }
 };

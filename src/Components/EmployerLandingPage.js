@@ -25,7 +25,8 @@ import StarBorder from '@material-ui/icons/StarBorder';
 import Collapse from '@material-ui/core/Collapse';
 
 import Dashboard from './EmployerPageComponents/Dashboard'
-import Messages from './EmployerPageComponents/Messages'
+import Inbox from './EmployerPageComponents/Messages/Inbox'
+import Outbox from './EmployerPageComponents/Messages/Outbox'
 import AccessCodes from './EmployerPageComponents/MyCodes/AccessCodes'
 import EmployementCodes from './EmployerPageComponents/MyCodes/EmployementCodes'
 
@@ -124,14 +125,29 @@ class EmployerLandingPage extends React.PureComponent {
 
               <Divider />
 
-              <Link to="/employerMessages" className={classes.link}>
-                <ListItem button>
-                  <ListItemIcon>
-                    <MessageIcon style={{ color: "white" }} />
-                  </ListItemIcon>
-                  <ListItemText primary={"Messages"} className={classes.textColor} />
-                </ListItem>
-              </Link>
+              <ListItem button onClick={() => this.setState({ open2: !this.state.open2 })}>
+                <ListItemIcon>
+                  <MessageIcon style={{ color: "white" }} />
+                </ListItemIcon>
+                <ListItemText primary="Messages" className={classes.textColor} />
+                {this.state.open2 ? <ExpandLess style={{ color: 'white' }} /> : <ExpandMore style={{ color: 'white' }} />}
+              </ListItem>
+
+              <Collapse in={this.state.open2} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <Link to="/employerInbox" className={classes.link} >
+                    <ListItem button className={classes.nested}>
+                      <ListItemText primary="Inbox" className={classes.textColor} />
+                    </ListItem>
+                  </Link>
+
+                  <Link to="/employerOutbox" className={classes.link}>
+                    <ListItem button className={classes.nested}>
+                      <ListItemText primary="Outbox" className={classes.textColor} />
+                    </ListItem>
+                  </Link>
+                </List>
+              </Collapse>
 
               <Divider />
 
@@ -173,9 +189,15 @@ class EmployerLandingPage extends React.PureComponent {
                 </Container>
               </Route>
 
-              <Route exact path="/employerMessages">
+              <Route exact path="/employerInbox">
                 <Container>
-                  <Messages />
+                  <Inbox />
+                </Container>
+              </Route>
+
+              <Route exact path="/employerOutbox">
+                <Container>
+                  <Outbox />
                 </Container>
               </Route>
 

@@ -13,7 +13,7 @@ export class index extends Component {
 
         return (
             <div>
-                <h1>Messages</h1>
+                <h1>Evaluation Codes</h1>
             </div>
         )
     }

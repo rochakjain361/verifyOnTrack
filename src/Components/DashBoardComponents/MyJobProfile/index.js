@@ -62,6 +62,12 @@ let positionCategories = [];
 let reasonsChoices = [];
 
 class myJobProfile extends Component {
+    constructor(props) {
+        super(props);
+        this.addJobProfile = this.addJobProfile.bind(this);
+    }
+
+
     state = {
         updateDialogOpen: false,
         editActionsOpen: false,
@@ -72,30 +78,32 @@ class myJobProfile extends Component {
         companies: [],
         positions: [],
         leavingReasons: [],
-        addJobDialog: {
-            company: '',
-            // check
-            otherCompany: '',
-            startDate: new Date(),
-            endDate: new Date(),
-            position: '',
-            jobTitle: '',
-            jobDescription: '',
-            reasonForLeaving: '',
-            rating: 0,
-        },
-        editJobDialog: {
-            company: '',
-            // check
-            otherCompany: '',
-            startDate: new Date(),
-            endDate: new Date(),
-            position: '',
-            jobTitle: '',
-            jobDescription: '',
-            reasonForLeaving: '',
-            rating: 0,
-        },
+
+        //ADD DIALOG STATES
+        addJobDialogCompany: '',
+        addJobDialogCompanyIndex: -1,
+        // check
+        addJobDialogOtherCompany: '',
+        addJobDialogStartDate: new Date(),
+        addJobDialogEndDate: new Date(),
+        addJobDialogPosition: '',
+        addJobDialogJobTitle: '',
+        addJobDialogJobDescription: '',
+        addJobDialogReasonForLeaving: '',
+        addJobDialogRating: 0,
+
+        //EDIT DIALOG STATES
+        editJobDialogCompany: '',
+        // check
+        editJobDialogOtherCompany: '',
+        editJobDialogStartDate: new Date(),
+        editJobDialogEndDate: new Date(),
+        editJobDialogPosition: '',
+        editJobDialogJobTitle: '',
+        editJobDialogJobDescription: '',
+        editJobDialogReasonForLeaving: '',
+        editJobDialogRating: 0,
+
         availableCompanies: [],
         check: false,
         isloading: true
@@ -209,189 +217,184 @@ class myJobProfile extends Component {
         return (
             <div>
                 {/* ADD JOB HISTORY DIALOG BOX */}
-                {
-                    <Dialog open={this.state.updateDialogOpen} onClose={() => this.setState({ updateDialogOpen: false })} aria-labelledby="form-dialog-title">
-                        <DialogTitle id="form-dialog-title">Add new job profile</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                Enter the details of your Job profile to be added
+
+                <Dialog open={this.state.updateDialogOpen} onClose={() => this.setState({ updateDialogOpen: false })} aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title">Add new job profile</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Enter the details of your Job profile to be added
                             </DialogContentText>
 
-                            <Grid container justify='flex-start' direction='row' alignItems='center' spacing={3}>
+                        <Grid container justify='flex-start' direction='row' alignItems='center' spacing={3}>
 
-                                <Grid item xs={9}>
-                                    <FormControl fullWidth size='small'>
-                                        <InputLabel id="companyLabel">
-                                            Company
+                            <Grid item xs={9}>
+                                <FormControl fullWidth size='small'>
+                                    <InputLabel id="companyLabel">
+                                        Company
                                         </InputLabel>
-                                        <Select
-                                            labelId="companyLabel"
-                                            id="company"
-                                            value={this.state.addJobDialog.company}
-                                            onChange={event => {this.setState({ addJobDialog: { company: event.target.value } }); console.log(this.state.addJobDialog)} }                                            fullWidth
-                                        >
-                                            {
-                                                this.state.companies.map(company => <MenuItem value={company}>{company}</MenuItem>)
-                                            }
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-
-                                <Grid item xs={3} style={{ marginTop: 15 }}>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={this.setState.check}
-                                                // onChange={handleChange}
-                                                name="checkedB"
-                                                color="primary"
-                                            />
+                                    <Select
+                                        labelId="companyLabel"
+                                        id="company"
+                                        value={this.state.addJobDialogCompany}
+                                        onChange={event => {
+                                            const selectedCompany = event.target.value;
+                                            const selectedCompanyIndex = this.state.companies.indexOf(selectedCompany)+1;
+                                            this.setState({ addJobDialogCompany: selectedCompany, addJobDialogCompanyIndex: selectedCompanyIndex })
+                                        }}
+                                        fullWidth
+                                    >
+                                        {
+                                            this.state.companies.map(company => <MenuItem key={company} value={company}>{company}</MenuItem>)
                                         }
-                                        label="Other"
-                                    />
-                                </Grid>
-
-                                {
-                                    this.state.check === false ? (
-                                        <Grid item fullWidth xs={12}>
-                                            <TextField
-                                                id="otherCompany"
-                                                label="Other Company"
-                                                value={this.state.addJobDialog.otherCompany}
-                                                onChange={event => this.setState({ addJobDialog: { otherCompany: event.target.value } })}
-                                                type="text"
-                                                fullWidth
-                                            />
-                                        </Grid>
-                                    ) : null
-                                }
-
-                                <Grid item xs={6}>
-                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                        <KeyboardDatePicker
-                                            disableToolbar
-                                            variant="inline"
-                                            format="yyyy/MM/dd"
-                                            margin="normal"
-                                            id="date-picker-inline"
-                                            label="Start Date"
-                                            value={this.state.addJobDialog.startDate}
-                                            onChange={date => this.setState({ addJobDialog: { startDate: date } })}
-                                            KeyboardButtonProps={{
-                                                'aria-label': 'change date',
-                                            }}
-                                        />
-                                    </MuiPickersUtilsProvider>
-                                </Grid>
-
-                                <Grid item xs={6}>
-                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-
-                                        <KeyboardDatePicker
-                                            disableToolbar
-                                            variant="inline"
-                                            format="yyyy/MM/dd"
-                                            margin="normal"
-                                            id="date-picker-inline"
-                                            label="End Date"
-                                            value={this.state.addJobDialog.endDate}
-                                            style={{ marginLeft: 32 }}
-                                            onChange={date => this.setState({ addJobDialog: { endDate: date } })}
-                                            KeyboardButtonProps={{
-                                                'aria-label': 'change date',
-                                            }}
-                                        />
-                                    </MuiPickersUtilsProvider>
-                                </Grid>
-
-                                <Grid item xs={12}>
-                                    <FormControl fullWidth size='small'>
-                                        <InputLabel id="positionLabel">
-                                            Position
-                                            </InputLabel>
-                                        <Select
-                                            labelId="positionLabel"
-                                            id="position"
-                                            value={this.state.addJobDialog.position}
-                                            onChange={event => {this.setState({ addJobDialog: { position: event.target.value } }); console.log(this.state.addJobDialog)}}                                            fullWidth
-                                        >
-                                            {
-                                                this.state.positions.map(position => <MenuItem value={position}>{position}</MenuItem>)
-                                            }
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-
-                                <Grid item xs={12}>
-                                    <TextField
-                                        id="jobTitle"
-                                        label="Job Title"
-                                        value={this.state.addJobDialog.jobTitle}
-                                        onChange={event => this.setState({ addJobDialog: { jobTitle: event.target.value } })}
-                                        type="text"
-                                        fullWidth
-                                    />
-                                </Grid>
-
-                                <Grid item xs={12}>
-                                    <TextField
-                                        id="jobDescription"
-                                        label="Job Description"
-                                        type="text"
-                                        fullWidth
-                                        multiline
-                                        rows={3}
-                                        value={this.state.addJobDialog.jd}
-                                        onChange={event => this.setState({ addJobDialog: { jobDescription: event.target.value } })}
-                                    />
-                                </Grid>
-
-                                <Grid item xs={12}>
-                                    <FormControl fullWidth size='small'>
-                                        <InputLabel id="reasonForLeaving">
-                                            Reason for leaving
-                                        </InputLabel>
-                                        <Select
-                                            labelId="reasonForLeaving"
-                                            id="reasonForLeaving"
-                                            value={this.state.addJobDialog.reasonForLeaving}
-                                            onChange={event => this.setState({ addJobDialog: { reasonForLeaving: event.target.value } })}
-                                            label="resonForLeaving"
-                                            fullWidth
-                                        >
-                                            {
-                                                this.state.leavingReasons.map(leavingReason => <MenuItem value={leavingReason}>{leavingReason}</MenuItem>)
-                                            }
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-
-                                <Grid item xs={6} style={{marginTop: 15}} >
-                                    <Typography >How do you rate this company?</Typography>
-                                </Grid>
-
-                                <Grid item xs={6} style={{marginTop: 15}} >
-                                    <Rating
-                                        name="simple-controlled"
-                                        value={this.state.addJobDialog.rating}
-                                        onChange={(event, newValue) => this.setState({ addJobDialog: { rating: newValue } })}
-                                        max={10}
-                                    />
-                                </Grid>
-
+                                    </Select>
+                                </FormControl>
                             </Grid>
 
-                        </DialogContent>
-                        <DialogActions>
-                            <Button style={{ width: 85 }} onClick={this.addJobProfile} color="primary" variant="contained">
-                                Add
+                            <Grid item xs={3} style={{ marginTop: 15 }}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={this.setState.check}
+                                            // onChange={handleChange}
+                                            name="checkedB"
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Other"
+                                />
+                            </Grid>
+
+                            {
+                                this.state.check === false ? (
+                                    <Grid item fullWidth xs={12}>
+                                        <TextField
+                                            id="otherCompany"
+                                            label="Other Company"
+                                            value={this.state.addJobDialogOtherCompany}
+                                            onChange={event => this.setState({ addJobDialogOtherCompany: event.target.value })}
+                                            type="text"
+                                            fullWidth
+                                        />
+                                    </Grid>
+                                ) : null
+                            }
+
+                            <Grid item xs={6}>
+                                <input
+                                    class="w3-input"
+                                    type="date"
+                                    onChange={(event) => {
+                                        this.setState({ addJobDialogStartDate: event.target.value });
+                                        console.log(event.target.value);
+                                    }}
+
+                                />
+                            </Grid>
+
+                            <Grid item xs={6}>
+                              
+
+                                <input
+                                    class="w3-input"
+                                    type="date"
+                                    onChange={(event) => {
+                                        this.setState({ addJobDialogEndDate: event.target.value });
+                                        console.log(event.target.value);
+                                    }}
+
+                                />
+                               
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <FormControl fullWidth size='small'>
+                                    <InputLabel id="positionLabel">
+                                        Position
+                                        </InputLabel>
+                                    <Select
+                                        labelId="positionLabel"
+                                        id="position"
+                                        value={this.state.addJobDialogPosition}
+                                        onChange={event => this.setState({ addJobDialogPosition: event.target.value })}
+                                        fullWidth
+                                    >
+                                        {
+                                            this.state.positions.map(position => <MenuItem key={position} value={position}>{position}</MenuItem>)
+                                        }
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <TextField
+                                    id="jobTitle"
+                                    label="Job Title"
+                                    value={this.state.addJobDialogJobTitle}
+                                    onChange={event => this.setState({ addJobDialogJobTitle: event.target.value })}
+                                    type="text"
+                                    fullWidth
+                                />
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <TextField
+                                    id="jobDescription"
+                                    label="Job Description"
+                                    type="text"
+                                    fullWidth
+                                    multiline
+                                    rows={3}
+                                    value={this.state.addJobDialogJobDescription}
+                                    onChange={event => this.setState({ addJobDialogJobDescription: event.target.value })}
+                                />
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <FormControl fullWidth size='small'>
+                                    <InputLabel id="reasonForLeaving">
+                                        Reason for leaving
+                                        </InputLabel>
+                                    <Select
+                                        labelId="reasonForLeaving"
+                                        id="reasonForLeaving"
+                                        value={this.state.addJobDialogReasonForLeaving}
+                                        onChange={event => this.setState({ addJobDialogReasonForLeaving: event.target.value })}
+                                        label="resonForLeaving"
+                                        fullWidth
+                                    >
+                                        {
+                                            this.state.leavingReasons.map(leavingReason => <MenuItem key={leavingReason} value={leavingReason}>{leavingReason}</MenuItem>)
+                                        }
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+
+                            <Grid item xs={6} style={{ marginTop: 15 }} >
+                                <Typography >How do you rate this company?</Typography>
+                            </Grid>
+
+                            <Grid item xs={6} style={{ marginTop: 15 }} >
+                                <Rating
+                                    name="simple-controlled"
+                                    value={this.state.addJobDialogRating}
+                                    onChange={(event, newValue) => this.setState({ addJobDialogRating: newValue })}
+                                    max={10}
+                                />
+                            </Grid>
+
+                        </Grid>
+
+                    </DialogContent>
+                    <DialogActions>
+                        <Button style={{ width: 85 }} onClick={this.addJobProfile} color="primary" variant="contained">
+                            Add
                             </Button>
-                            <Button color="secondary" variant="contained" onClick={() => this.setState({ updateDialogOpen: false, selectedIndex: -1 })}>
-                                Cancel
+                        <Button color="secondary" variant="contained" onClick={() => this.setState({ updateDialogOpen: false, selectedIndex: -1 })}>
+                            Cancel
                             </Button>
-                        </DialogActions>
-                    </Dialog>
-                }
+                    </DialogActions>
+                </Dialog>
+
                 {
                     this.state.isloading ?
                         (
@@ -458,7 +461,7 @@ class myJobProfile extends Component {
                         )
                 }
 
-{
+                {
                     <Dialog open={this.state.editActionsOpen} onClose={() => this.setState({ editActionsOpen: false })} aria-labelledby="form-dialog-title">
                         <DialogTitle id="form-dialog-title">Edit your job profile</DialogTitle>
                         <DialogContent>
@@ -476,13 +479,13 @@ class myJobProfile extends Component {
                                         <Select
                                             labelId="company"
                                             id="company"
-                                            value={this.state.editJobDialog.company}
-                                            onChange={event => this.setState({ editJobDialog: { company: event.target.value } })}
+                                            value={this.state.editJobDialogCompany}
+                                            onChange={event => this.setState({ editJobDialogCompany: event.target.value })}
                                             label="company"
                                             fullWidth
                                         >
                                             {
-                                                this.state.companies.map(company => <MenuItem value={company}>{company}</MenuItem>)
+                                                this.state.companies.map(company => <MenuItem key={company} value={company}>{company}</MenuItem>)
                                             }
                                         </Select>
                                     </FormControl>
@@ -508,8 +511,8 @@ class myJobProfile extends Component {
                                             <TextField
                                                 id="otherCompany"
                                                 label="Other Company"
-                                                value={this.state.editJobDialog.otherCompany}
-                                                onChange={event => this.setState({ editJobDialog: { otherCompany: event.target.value } })}
+                                                value={this.state.editJobDialogOtherCompany}
+                                                onChange={event => this.setState({ editJobDialogOtherCompany: event.target.value })}
                                                 type="text"
                                                 fullWidth
                                             />
@@ -526,8 +529,8 @@ class myJobProfile extends Component {
                                             margin="normal"
                                             id="date-picker-inline"
                                             label="Start Date"
-                                            value={this.state.editJobDialog.startDate}
-                                            onChange={date => this.setState({ editJobDialog: { startDate: date } })}
+                                            value={this.state.editJobDialogStartDate}
+                                            onChange={date => this.setState({ editJobDialogStartDate: date.getDate().format("YYYY-MM-DD") })}
                                             KeyboardButtonProps={{
                                                 'aria-label': 'change date',
                                             }}
@@ -545,9 +548,9 @@ class myJobProfile extends Component {
                                             margin="normal"
                                             id="date-picker-inline"
                                             label="End Date"
-                                            value={this.state.editJobDialog.endDate}
+                                            value={this.state.editJobDialogEndDate}
                                             style={{ marginLeft: 32 }}
-                                            onChange={date => this.setState({ editJobDialog: { endDate: date } })}
+                                            onChange={date => this.setState({ editJobDialogEndDate: date.getDate().format("YYYY-MM-DD") })}
                                             KeyboardButtonProps={{
                                                 'aria-label': 'change date',
                                             }}
@@ -563,8 +566,8 @@ class myJobProfile extends Component {
                                         <Select
                                             labelId="position"
                                             id="position"
-                                            value={this.state.editJobDialog.position}
-                                            onChange={event => this.setState({ editJobDialog: { position: event.target.value } })}
+                                            value={this.state.editJobDialogPosition}
+                                            onChange={event => this.setState({ editJobDialogPosition: event.target.value })}
                                             label="position"
                                             fullWidth
                                         >
@@ -579,8 +582,8 @@ class myJobProfile extends Component {
                                     <TextField
                                         id="jobTitle"
                                         label="Job Title"
-                                        value={this.state.editJobDialog.jobTitle}
-                                        onChange={event => this.setState({ editJobDialog: { jobTitle: event.target.value } })}
+                                        value={this.state.editJobDialogJobTitle}
+                                        onChange={event => this.setState({ editJobDialogJobTitle: event.target.value })}
                                         type="text"
                                         fullWidth
                                     />
@@ -594,8 +597,8 @@ class myJobProfile extends Component {
                                         fullWidth
                                         multiline
                                         rows={3}
-                                        value={this.state.editJobDialog.jd}
-                                        onChange={event => this.setState({ editJobDialog: { jobDescription: event.target.value } })}
+                                        value={this.state.editJobDialogJobDescription}
+                                        onChange={event => this.setState({ editJobDialogJobDescription: event.target.value })}
                                     />
                                 </Grid>
 
@@ -607,27 +610,27 @@ class myJobProfile extends Component {
                                         <Select
                                             labelId="reasonForLeaving"
                                             id="reasonForLeaving"
-                                            value={this.state.editJobDialog.reasonForLeaving}
-                                            onChange={event => this.setState({ editJobDialog: { reasonForLeaving: event.target.value } })}
+                                            value={this.state.editJobDialogReasonForLeaving}
+                                            onChange={event => this.setState({ editJobDialogReasonForLeaving: event.target.value })}
                                             label="resonForLeaving"
                                             fullWidth
                                         >
                                             {
-                                                this.state.leavingReasons.map(leavingReason => <MenuItem value={leavingReason}>{leavingReason}</MenuItem>)
+                                                this.state.leavingReasons.map(leavingReason => <MenuItem key={leavingReason} value={leavingReason}>{leavingReason}</MenuItem>)
                                             }
                                         </Select>
                                     </FormControl>
                                 </Grid>
 
-                                <Grid item xs={6} style={{marginTop: 15}} >
+                                <Grid item xs={6} style={{ marginTop: 15 }} >
                                     <Typography >How do you rate this company?</Typography>
                                 </Grid>
 
-                                <Grid item xs={6} style={{marginTop: 15}} >
+                                <Grid item xs={6} style={{ marginTop: 15 }} >
                                     <Rating
                                         name="simple-controlled"
-                                        value={this.state.editJobDialog.rating}
-                                        onChange={(event, newValue) => this.setState({ editJobDialog: { rating: newValue } })}
+                                        value={this.state.editJobDialogRating}
+                                        onChange={(event, newValue) => this.setState({ editJobDialogRating: newValue })}
                                         max={10}
                                     />
                                 </Grid>
@@ -762,31 +765,33 @@ class myJobProfile extends Component {
     // }
 
     async addJobProfile() {
+      
         try {
             let response = await fetch('http://3.22.17.212:8000/api/v1/employees/post-job',
-                {   
-                    method:'POST',
+                {
+                    method: 'POST',
                     headers: {
-                        'Authorization': 'Token '+token,
+                        'Authorization': token,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         'employee': id,
-                        'company': this.state.company,
-                        'startDate': this.state.startDate,
-                        'endDate': this.state.endDate,
-                        'jobCategory': this.state.position,
-                        'jobTitle': this.state.jobTitle,
-                        'jobDescription': this.state.jobDescription,
-                        'leavingReason': this.state.reasonForLeaving,
-                        'companyRating': this.state.rating,
+                        'company': this.state.addJobDialogCompany,
+                        'startDate': this.state.addJobDialogStartDate,
+                        'endDate': this.state.addJobDialogEndDate,
+                        'jobCategory': this.state.addJobDialogPosition,
+                        'jobTitle': this.state.addJobDialogJobTitle,
+                        'jobDescription': this.state.addJobDialogJobDescription,
+                        'leavingReason': this.state.addJobDialogReasonForLeaving,
+                        'companyRating': this.state.addJobDialogRating,
                     })
                 }
             );
             response = await response.json();
             console.log(response);
+
         } catch (error) {
-          console.log("[!ON_REGISTER] " + error);
+            console.log("[!ON_REGISTER] " + error);
         }
     }
 
@@ -794,32 +799,32 @@ class myJobProfile extends Component {
         try {
             let headers = {
                 headers: {
-                  Authorization: token,
-                  "Content-Type": "multipart/form-data",
+                    Authorization: token,
+                    "Content-Type": "multipart/form-data",
                 },
-              };
-              let bodyFormData = new FormData();
-              bodyFormData.append("employee", id);
-              bodyFormData.append("company", this.state.company);
-              bodyFormData.append("startDate", this.state.startDate);
-              bodyFormData.append("endDate", this.state.endDate);
-              bodyFormData.append("jobCategory", this.state.position);
-              bodyFormData.append("jobTitle", this.state.jobTitle);
-              bodyFormData.append("jobDescription", this.state.jobDescription);
-              bodyFormData.append("leavingReason", this.state.reasonForLeaving);
-              bodyFormData.append("companyRating", this.state.rating);
+            };
+            let bodyFormData = new FormData();
+            bodyFormData.append("employee", id);
+            bodyFormData.append("company", this.state.company);
+            bodyFormData.append("startDate", this.state.startDate);
+            bodyFormData.append("endDate", this.state.endDate);
+            bodyFormData.append("jobCategory", this.state.position);
+            bodyFormData.append("jobTitle", this.state.jobTitle);
+            bodyFormData.append("jobDescription", this.state.jobDescription);
+            bodyFormData.append("leavingReason", this.state.reasonForLeaving);
+            bodyFormData.append("companyRating", this.state.rating);
 
-              await axios
+            await axios
                 .post(
-                  "http://3.22.17.212:8000/api/v1/employees/update-jobhistory/<jobhistory Id being modified>", //Pending
-                  bodyFormData,
-                  headers
+                    "http://3.22.17.212:8000/api/v1/employees/update-jobhistory/<jobhistory Id being modified>", //Pending
+                    bodyFormData,
+                    headers
                 )
                 .then((response) => {
-                  console.log(response);
+                    console.log(response);
                 });
         } catch (error) {
-          console.log("[!ON_REGISTER] " + error);
+            console.log("[!ON_REGISTER] " + error);
         }
     }
 

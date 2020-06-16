@@ -8,8 +8,19 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from '@material-ui/icons/Delete';
 import PhoneIcon from '@material-ui/icons/Phone';
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Fab from '@material-ui/core/Fab';
@@ -18,16 +29,16 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const rows = [
     {
-        "state": "testState1",
+        "city": "testCity1",
     },
     {
-        "state": "testState2"
+        "city": "testCity2",
     },
     {
-        "state": "testState3",
+        "city": "testCity3",
     },
     {
-        "state": "testState4"
+        "city": "testCity4",
     }
 ];
 
@@ -35,7 +46,13 @@ const styles = theme => ({
 
 })
 
-export class index extends Component {
+class index extends Component {
+
+    state = {
+        states: "",
+        deleteDialogBox: false,
+    }
+
     render() {
 
         const defaultProps = {
@@ -52,7 +69,7 @@ export class index extends Component {
 
                     <Grid item>
                         <Typography variant='h4'>
-                            Address Types
+                            Cities
                             </Typography>
                     </Grid>
 
@@ -68,36 +85,48 @@ export class index extends Component {
 
                 </Grid>
 
-                <Grid container justify='flex-start' alignItems='center' style={{ marginTop: 20 }} spacing={2}>
+                <Grid container justify='flex-start' direction='row' alignItems='center' style={{ marginTop: 20 }} spacing={2}>
 
                     <Grid item xs={3}>
-
                         <TextField
-                            label="Enter new state to add"
+                            size='small'
+                            label="Add City"
                             variant='outlined'
-                            size='medium'
                             fullWidth
                         />
                     </Grid>
-                    <Grid item>
+
+                    <Grid item xs={3}>
                         <Fab size="small" color="secondary">
                             <AddIcon />
                         </Fab>
+                    </Grid>
+
+                    <Grid item xs={6}>
+                        <Autocomplete
+                            size='small'
+                            {...defaultProps}
+                            id="LGAs"
+                            Username
+                            renderInput={(params) => <TextField {...params} label="LGAs" margin="normal" variant='outlined' size='small' />}
+                        />
                     </Grid>
 
                     <TableContainer component={Paper} style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }} elevation={5}>
                         <Table stickyHeader>
                             <TableHead>
                                 <TableRow style={{ backgroundColor: 'black' }}>
-                                    <TableCell align="left">State</TableCell>
+                                    <TableCell align="left">City</TableCell>
                                     <TableCell align="right"></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {rows.map((row, index) => (
                                     <TableRow key={row.id}>
-                                        <TableCell align="left">{row.state}</TableCell>
-                                        <TableCell align="right"><Button color="primary" variant="outlined">Delete</Button></TableCell>
+                                        <TableCell align="left">{row.city}</TableCell>
+                                        <TableCell align="right"><IconButton color='default' aria-label="delete">
+                                            <DeleteIcon fontSize="medium" />
+                                        </IconButton></TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -106,6 +135,25 @@ export class index extends Component {
 
                 </Grid>
                 {/* </Paper> */}
+
+                {
+                    <Dialog open={this.state.deleteDialogBox} onClose={() => this.setState({ deleteDialogBox: false })} aria-labelledby="form-dialog-title">
+                        <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                All associated cities will also be deleted, do you want to continue?
+                    </DialogContentText>
+                        </DialogContent>
+                        <DialogActions style={{ padding: 15 }}>
+                            <Button style={{ width: 85 }} color="primary" variant="contained">
+                                Agree
+                        </Button>
+                            <Button color="secondary" variant="contained" onClick={() => this.setState({ deleteDialogBox: false, selectedIndex: -1 })}>
+                                Disagree
+                        </Button>
+                        </DialogActions>
+                    </Dialog>
+                }
             </div>
         )
     }
