@@ -44,6 +44,10 @@ const rows = [
     }
 ];
 
+const token1 = localStorage.getItem("Token");
+const token = "Token " + token1;
+const id = localStorage.getItem("id");
+
 const styles = theme => ({
 
 })
@@ -58,7 +62,29 @@ class index extends Component {
     // constructor(props) {
     //     super(props);
     //     this.generateNewEmployementCodeButton = this.generateNewEmployementCodeButton.bind(this);
-    //   } 
+    //   }
+
+    async fetchInboxMessages() {
+            let response = await fetch('http://3.22.17.212:8000/api/v1/messages/inbox',
+                {
+                    headers: {
+                        'Authorization': token
+                    }
+                });
+            console.log('http://3.22.17.212:8000/api/v1/messages/inbox');
+            response = await response.json();
+            console.log('response', response)
+            // let tempArr = [];
+            // response.forEach(element => {
+            //     tempArr.push(element["companyName"]);
+            // });
+            // this.setState({ companies: tempArr });
+            // console.log(tempArr)
+        }
+
+    async componentDidMount() {
+        this.fetchInboxMessages();
+    }
 
     render() {
 
