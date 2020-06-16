@@ -1,378 +1,673 @@
-import React, { Component } from 'react'
-import { withStyles } from '@material-ui/core/styles';
-import { TextField, Paper, Grid, Typography, Button, TableContainer, FormControlLabel, Checkbox, FormControl, Select, InputLabel, MenuItem } from '@material-ui/core/';
+import React, { Component } from "react";
+import { withStyles } from "@material-ui/core/styles";
+import {
+  TextField,
+  Paper,
+  Grid,
+  Typography,
+  Button,
+  TableContainer,
+  FormControlLabel,
+  Checkbox,
+  FormControl,
+  Select,
+  InputLabel,
+  MenuItem,
+  CircularProgress,
+} from "@material-ui/core/";
 
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-} from '@material-ui/core/';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormGroup from '@material-ui/core/FormGroup';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@material-ui/core/";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormGroup from "@material-ui/core/FormGroup";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import axios from "axios";
+const token1 = localStorage.getItem("Token");
+const token = "Token " + token1;
+const id = localStorage.getItem("id");
+// let result = [];
+let codes = [];
+let pendingcodes = [];
 
+let usernames = [];
+let emails = [];
+let companys = [];
 
-const rows = [
-    {
-        "createdOn": "09/12/2020",
-        "codeString": "testCodeString1",
-        "employerCompanyField": "testEmployerCompanyField1",
-        "codeStatus": "testCodeStatu1s",
-        "statusChangeDate": "09/12/2020",
-    },
-    {
-        "createdOn": "09/12/2020",
-        "codeString": "testCodeString1",
-        "employerCompanyField": "testEmployerCompanyField1",
-        "codeStatus": "testCodeStatus2",
-        "statusChangeDate": "09/12/2020",
-    }
-];
-
-const styles = theme => ({
-
-})
+const styles = (theme) => ({});
 
 class index extends Component {
+  state = {
+    opencodes: false,
+    generateNewEmployementCodeDialog: false,
+    loading: true,
+    choiceemail: false,
+    choiceusername: false,
+    choicecompany: false,
+    employerby: "",
+    employersearch: false,
+    isadmin: true,
+    employerid: "",
+    companyvalue: "",
+    dummyvalue: "",
+    dummyvalue1: "",
+    usernamevalue: "",
+    emailsvalue: "",
+    rating: false,
+    address: false,
+    profile: false,
+    identites: false,
+    phone: false,
+    jobHistory: false,
+  };
 
-    state = {
-        generateNewEmployementCodeDialog: false
-    }
+  isloading() {
+    return (
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        display="flex"
+        style={{ minHeight: "100vh" }}
+      >
+        <CircularProgress />
+      </Grid>
+    );
+  }
+  searchemail(emailvalue) {
+    emails.filter(function (e) {
+      if (emailvalue === e.email) {
+        console.log("123456789", e.id);
+      }
+    });
+  }
+  async searchusername(username) {
+    await axios
+      .get(
+        `http://3.22.17.212:80008000/api/v1/accounts/employer?username=` +
+          username,
 
-    // constructor(props) {
-    //     super(props);
-    //     this.generateNewEmployementCodeButton = this.generateNewEmployementCodeButton.bind(this);
-    //   } 
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        usernames = res.data;
+        console.log("usernames", usernames);
+      });
+  }
+  async searchcompany(companyName) {
+    await axios
+      .get(
+        `http://3.22.17.212:8000/api/v1/employers/?company=` + companyName,
 
-    render() {
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        companys = res.data;
+        console.log("companys", companys);
+      });
+  }
 
-        const { classes } = this.props;
+  employersearchchoice() {
+    return (
+      <>
+        <Grid item xs={12}>
+          <FormControl component="fieldset">
+            <FormLabel component="legend">Search employer by:</FormLabel>
+            <RadioGroup
+              name="searchCategory"
+              // value={value}
+              onChange={(event) => {
+                this.setState({ employerby: event.target.value });
+              }}
+            >
+              <Grid container direction="row" style={{ marginTop: 10 }}>
+                <FormControlLabel
+                  value="searchByEmail"
+                  control={<Radio />}
+                  label="Email"
+                  //   onChange={this.setState({
+                  //     choicecompany: false,
+                  //     choiceusername: false,
+                  //     choiceemail: true,
+                  //   })}
+                />
+                <FormControlLabel
+                  value="searchByUsername"
+                  control={<Radio />}
+                  label="Username"
+                  //   onChange={this.setState({
+                  //     choicecompany: false,
+                  //     choiceusername: true,
+                  //     choiceemail: false,
+                  //   })}
+                />
+                <FormControlLabel
+                  value="searchByCompany"
+                  control={<Radio />}
+                  label="Company"
+                  //   onChange={this.setState({
+                  //     choicecompany: true,
+                  //     choiceusername: false,
+                  //     choiceemail: false,
+                  //   })}
+                />
+              </Grid>
+            </RadioGroup>
+          </FormControl>
+        </Grid>
+        <Button onClick={() => this.searchemail(this.state.dummyvalue)}>
+          check
+        </Button>
 
-        const defaultProps = {
-            options: top100Films,
-            getOptionLabel: (option) => option.title,
-          };
+        {this.state.employerby === "searchByEmail" ? (
+          <Grid item xs={12}>
+            <Autocomplete
+              options={emails}
+              getOptionLabel={(option) => option.email}
+              size="small"
+              id="email"
+              value={this.state.emailsvalue}
+              onChange={(event, value) => {
+                this.setState({ emailsvalue: value });
+                console.log("emailsvalue", value);
+                // this.setState({ employerid: value.id });
+              }}
+              inputValue={this.state.dummyvalue}
+              onInputChange={(event, newInputValue) => {
+                this.setState({ dummyvalue: newInputValue });
+                // console.log(newInputValue);
+              }}
+              Email
+              renderInput={(params) => (
+                <TextField {...params} label="Email" margin="normal" />
+              )}
+            />
+          </Grid>
+        ) : this.state.employerby === "searchByUsername" ? (
+          <Grid item xs={12}>
+            <Autocomplete
+              size="small"
+              options={usernames}
+              getOptionLabel={(option) => option.username}
+              id="username"
+              Username
+              value={this.state.usernamevalue}
+              onChange={(event, value) => {
+                this.setState({ usernamevalue: value });
+                console.log("usernamevalue", value);
+                // this.setState({ employerid: value.id });
+              }}
+              inputValue={this.state.dummyvalue}
+              onInputChange={(event, newInputValue) => {
+                this.setState({ dummyvalue: newInputValue });
+                // console.log(newInputValue);
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Username" margin="normal" />
+              )}
+            />
+          </Grid>
+        ) : (
+          <Grid item xs={12}>
+            <Autocomplete
+              options={companys}
+              getOptionLabel={(option) => option.companyName}
+              size="small"
+              id="comapny"
+              Company
+              value={this.state.companyvalue}
+              onChange={(event, value) => {
+                this.setState({ companyvalue: value });
+                console.log("companyvalue", value);
+                // this.setState({ employerid: value.id });
+              }}
+              inputValue={this.state.dummyvalue}
+              onInputChange={(event, newInputValue) => {
+                this.setState({ dummyvalue: newInputValue });
+                // console.log(newInputValue);
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Company" margin="normal" />
+              )}
+            />
+          </Grid>
+        )}
+      </>
+    );
+  }
+  async componentDidMount() {
+    await axios
+      .get("http://3.22.17.212:8000/api/v1/codes/access/codes", {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        codes = res.data;
+        console.log("codes", codes);
+      });
+    await axios
+      .get("http://3.22.17.212:8000/api/v1/codes/access/pending-codes", {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        pendingcodes = res.data;
+        console.log("pendingcodes", pendingcodes);
+      });
+    await axios
+      .get(
+        `http://3.22.17.212:8000/api/v1/accounts/employer?email=`,
 
-        return (
-            <div style={{ marginTop: 20 }}>
-                {/* <Paper style={{ padding: 20, height: '100vh' }}> */}
-                <Grid container justify='space-between' alignItems='center' spacing={4}>
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        emails = res.data;
+        console.log("emails", emails);
+      });
 
-                    <Grid item xs={8}>
-                        <Typography variant='h4'>
-                            Access Codes
-                                </Typography>
-                    </Grid>
+    await axios
+      .get(
+        `http://3.22.17.212:8000/api/v1/accounts/employer?username=`,
 
-                    <Grid item xs={4}>
-                        <Button color='secondary' variant='contained' onClick={() => this.setState({ generateNewEmployementCodeDialog: true })} fullWidth>  Create New code </Button>
-                    </Grid>
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        usernames = res.data;
+        console.log("usernames", usernames);
+      });
 
-                    <Grid item>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    // checked={state.checkedB}
-                                    // onChange={handleChange}
-                                    name="checkedB"
-                                    color="primary"
-                                />
-                            }
-                            label="Show open codes"
-                        />
-                    </Grid>
+    await axios
+      .get(
+        `http://3.22.17.212:8000/api/v1/employers/`,
 
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        companys = res.data;
+        console.log("companys", companys);
+      });
+    this.setState({ loading: false });
+  }
+  async postcode() {
+    this.setState({
+      generateNewEmployementCodeDialog: false,
+      selectedIndex: -1,
+    });
+    let headers = {
+      headers: {
+        Authorization: token,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    let bodyFormData = new FormData();
+    this.state.employersearch
+      ? this.state.employerby === "searchByEmail"
+        ? bodyFormData.append("employer", this.state.emailsvalue.id)
+        : this.state.employerby === "searchByUsername"
+        ? bodyFormData.append("employer", this.state.usernamevalue.id)
+        : bodyFormData.append("employer", this.state.companyvalue.id)
+      : bodyFormData.append("forAdmin", this.state.isadmin);
+
+    bodyFormData.append("employee", id);
+
+    bodyFormData.append(
+      "canAccessProfile",
+      this.state.profile
+    );
+    bodyFormData.append("canAccessAddresses", this.state.address);
+    bodyFormData.append("canAccessJobHistory", this.state.jobHistory);
+    bodyFormData.append("canAccessPhones", this.state.phone);
+    bodyFormData.append("canAccessIdentities", this.state.identites);
+    bodyFormData.append("canAccessRatings", this.state.rating);
+
+    await axios
+      .post(
+        "http://3.22.17.212:8000/api/v1/codes/access/new-code",
+        bodyFormData,
+        headers
+      )
+      .then((response) => {
+        console.log(response);
+      });
+  }
+  gettable() {
+    return (
+      <>
+        <Grid container justify="space-between" alignItems="center" spacing={4}>
+          <Grid item xs={8}>
+            <Typography variant="h4">Access Codes</Typography>
+          </Grid>
+
+          <Grid item xs={4}>
+            <Button
+              color="secondary"
+              variant="contained"
+              onClick={() =>
+                this.setState({ generateNewEmployementCodeDialog: true })
+              }
+              fullWidth
+            >
+              Create New code
+            </Button>
+          </Grid>
+
+          <Grid item>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.opencodes}
+                  onChange={() => {
+                    this.setState({
+                      opencodes: !this.state.opencodes,
+                    });
+                    console.log(this.state.opencodes);
+                  }}
+                  name="checkedB"
+                  color="primary"
+                />
+              }
+              label="Show open codes"
+            />
+          </Grid>
+        </Grid>
+
+        <Grid container justify="flex-start" alignItems="center" spacing={2}>
+          <TableContainer
+            component={Paper}
+            style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }}
+            elevation={5}
+          >
+            <Table stickyHeader>
+              <TableHead>
+                <TableRow style={{ backgroundColor: "black" }}>
+                  <TableCell align="left">Date</TableCell>
+                  <TableCell align="left">Code</TableCell>
+                  <TableCell align="left">Employer</TableCell>
+                  <TableCell align="left">Code Status</TableCell>
+                  <TableCell align="left">Last Updated</TableCell>
+                  <TableCell align="left">Details</TableCell>
+                  <TableCell align="left">Actions</TableCell>
+                  <TableCell align="left">Update</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {this.state.opencodes
+                  ? codes.map((row, index) => (
+                      <TableRow key={row.id}>
+                        <TableCell align="left">{row.createdOn}</TableCell>
+                        <TableCell align="left">{row.codeString}</TableCell>
+                        <TableCell align="left">
+                          {row.employer_company_field}
+                        </TableCell>
+                        <TableCell align="left">{row.codeStatus}</TableCell>
+                        <TableCell align="left">
+                          {row.statusChangeDate}
+                        </TableCell>
+                        <TableCell align="left">
+                          <Button
+                            size="small"
+                            color="primary"
+                            variant="outlined"
+                          >
+                            View Details
+                          </Button>
+                        </TableCell>
+                        <TableCell align="left">
+                          <FormControl
+                            style={{ minWidth: 85 }}
+                            variant="outlined"
+                            size="small"
+                            fullWidth
+                          >
+                            <InputLabel id="">Status</InputLabel>
+                            <Select
+                              labelId="statusOptionsEmployeeField"
+                              id="statusOptionsEmployeeField"
+                              fullWidth
+                              // value={age}
+                              // onChange={handleChange}
+                            >
+                              <MenuItem value={10}>Resend Request</MenuItem>
+                              <MenuItem value={20}>Cancel Request</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </TableCell>
+                        <TableCell align="right">
+                          <Button
+                            size="small"
+                            color="secondary"
+                            variant="outlined"
+                          >
+                            Update
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  : pendingcodes.map((row, index) => (
+                      <TableRow key={row.id}>
+                        <TableCell align="left">{row.createdOn}</TableCell>
+                        <TableCell align="left">{row.codeString}</TableCell>
+                        <TableCell align="left">
+                          {row.employer_company_field}
+                        </TableCell>
+                        <TableCell align="left">{row.codeStatus}</TableCell>
+                        <TableCell align="left">
+                          {row.statusChangeDate}
+                        </TableCell>
+                        <TableCell align="left">
+                          <Button
+                            size="small"
+                            color="primary"
+                            variant="outlined"
+                          >
+                            View Details
+                          </Button>
+                        </TableCell>
+                        <TableCell align="left">
+                          <FormControl
+                            style={{ minWidth: 85 }}
+                            variant="outlined"
+                            size="small"
+                            fullWidth
+                          >
+                            <InputLabel id="">Status</InputLabel>
+                            <Select
+                              labelId="statusOptionsEmployeeField"
+                              id="statusOptionsEmployeeField"
+                              fullWidth
+                              // value={age}
+                              // onChange={handleChange}
+                            >
+                              <MenuItem value={10}>Resend Request</MenuItem>
+                              <MenuItem value={20}>Cancel Request</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </TableCell>
+                        <TableCell align="right">
+                          <Button
+                            size="small"
+                            color="secondary"
+                            variant="outlined"
+                          >
+                            Update
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+        {/* </Paper> */}
+
+        {/* GENERATE NEW CODE DIALOG DATA */}
+
+        <div>
+          <Dialog
+            open={this.state.generateNewEmployementCodeDialog}
+            onClose={() =>
+              this.setState({ generateNewEmployementCodeDialog: false })
+            }
+          >
+            <DialogTitle id="codegenerator">Code Generator</DialogTitle>
+            <DialogContent>
+              <Grid
+                container
+                justify="flex-start"
+                direction="row"
+                alignItems="center"
+                spacing={2}
+              >
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      onChange={(event) => {
+                        this.setState(
+                          {
+                            employersearch: !this.state.employersearch,
+                            isadmin: !this.state.isadmin,
+                          },
+                          console.log(
+                            this.state.employersearch,
+                            this.state.isadmin
+                          )
+                        );
+                      }}
+                      name="employer"
+                    />
+                  }
+                  label="Employer search"
+                />
+                {this.state.employersearch ? this.employersearchchoice() : null}
+
+                <Grid item xs={12}>
+                  <FormControl component="fieldset">
+                    <FormLabel component="legend">Provide access to:</FormLabel>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            // checked={employeeProfile}
+                            onChange={()=>this.setState({rating:!this.state.rating})}
+                            name="ratings"
+                          />
+                        }
+                        label="Ratings"
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            // checked={jobProfile}
+                             onChange={()=>this.setState({address:!this.state.address})}
+                            name="address"
+                          />
+                        }
+                        label="Address"
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            // checked={jobProfile}
+                             onChange={()=>this.setState({profile:!this.state.profile})}
+                            name="profile"
+                          />
+                        }
+                        label="Profile"
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            // checked={jobProfile}
+                             onChange={()=>this.setState({identites:!this.state.identites})}
+                            name="identites"
+                          />
+                        }
+                        label="Identities"
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            // checked={jobProfile}
+                             onChange={()=>this.setState({phone:!this.state.phone})}
+                            name="phones"
+                          />
+                        }
+                        label="Phones"
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            // checked={jobProfile}
+                             onChange={()=>this.setState({jobHistory:!this.state.jobHistory})}
+                            name="jobHistory"
+                          />
+                        }
+                        label="Job History"
+                      />
+                    </FormGroup>
+                  </FormControl>
                 </Grid>
-
-                <Grid container justify='flex-start' alignItems='center' spacing={2}>
-
-                    <TableContainer component={Paper} style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }} elevation={5}>
-                        <Table stickyHeader>
-                            <TableHead>
-                                <TableRow style={{ backgroundColor: 'black' }}>
-                                    <TableCell align="left">Date</TableCell>
-                                    <TableCell align="left">Code</TableCell>
-                                    <TableCell align="left">Employer</TableCell>
-                                    <TableCell align="left">Code Status</TableCell>
-                                    <TableCell align="left">Last Updated</TableCell>
-                                    <TableCell align="left">Details</TableCell>
-                                    <TableCell align="left">Actions</TableCell>
-                                    <TableCell align="left">Update</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {rows.map((row, index) => (
-                                    <TableRow key={row.id}>
-                                        <TableCell align="left">{row.createdOn}</TableCell>
-                                        <TableCell align="left">{row.codeString}</TableCell>
-                                        <TableCell align="left">{row.employerCompanyField}</TableCell>
-                                        <TableCell align="left">{row.codeStatus}</TableCell>
-                                        <TableCell align="left">{row.statusChangeDate}</TableCell>
-                                        <TableCell align="left"><Button size='small' color="primary" variant="outlined">View Details</Button></TableCell>
-                                        <TableCell align="left"><FormControl style={{ minWidth: 85 }} variant="outlined" size='small' fullWidth>
-                                            <InputLabel id="">Status</InputLabel>
-                                            <Select
-                                                labelId="statusOptionsEmployeeField"
-                                                id="statusOptionsEmployeeField"
-                                                fullWidth
-                                            // value={age}
-                                            // onChange={handleChange}
-                                            >
-                                                <MenuItem value={10}>Resend Request</MenuItem>
-                                                <MenuItem value={20}>Cancel Request</MenuItem>
-
-                                            </Select>
-                                        </FormControl></TableCell>
-                                        <TableCell align="right"><Button size='small' color="secondary" variant="outlined">Update</Button></TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-
-                </Grid>
-                {/* </Paper> */}
-                
-                {/* GENERATE NEW CODE DIALOG DATA */}
-                {
-                    <div>
-                        <Dialog open={this.state.generateNewEmployementCodeDialog} onClose={() => this.setState({ generateNewEmployementCodeDialog: false })} >
-                            <DialogTitle id="codegenerator">{"Code Generator"}</DialogTitle>
-                            <DialogContent>
-                                <Grid container justify='flex-start' direction='row' alignItems='center' spacing={2}>
-
-                                    <Grid item xs={12}>
-                                        <FormControl component="fieldset">
-                                            <FormLabel component="legend">Search employer by:</FormLabel>
-                                            <RadioGroup
-                                                name="searchCategory"
-                                            // value={value}
-                                            // onChange={handleChange}
-                                            >
-                                                <Grid container direction='row' style={{ marginTop: 10 }}>
-                                                    <FormControlLabel value="searchByEmail" control={<Radio />} label="Email" />
-                                                    <FormControlLabel value="searchByUsername" control={<Radio />} label="Username" />
-                                                    <FormControlLabel value="searchByCompany" control={<Radio />} label="Company" />
-                                                </Grid>
-                                            </RadioGroup>
-                                        </FormControl>
-                                    </Grid>
-
-                                    {/* Display these conditionally */}
-
-                                    <Grid item xs={12}>
-                                        <Autocomplete
-                                            size='small'
-                                            {...defaultProps}
-                                            id="usernam"
-                                            Email
-                                            renderInput={(params) => <TextField {...params} label="Email" margin="normal" />}
-                                        />
-                                    </Grid>
-
-                                    <Grid item xs={12}>
-                                        <Autocomplete
-                                            size='small'
-                                            {...defaultProps}
-                                            id="username"
-                                            Username
-                                            renderInput={(params) => <TextField {...params} label="Username" margin="normal" />}
-                                        />
-                                    </Grid>
-
-                                    <Grid item xs={12}>
-                                        <Autocomplete
-                                            size='small'
-                                            {...defaultProps}
-                                            id="comapny"
-                                            Company
-                                            renderInput={(params) => <TextField {...params} label="Company" margin="normal" />}
-                                        />
-                                    </Grid>
-
-                                    <Grid item xs={12}>
-                                        <FormControl component="fieldset">
-                                            <FormLabel component="legend">Provide access to:</FormLabel>
-                                            <FormGroup>
-                                                <FormControlLabel
-                                                    control={
-                                                        <Checkbox
-                                                            // checked={employeeProfile}
-                                                            // onChange={handleChange}
-                                                            name="ratings" />}
-                                                    label="Ratings"
-                                                />
-                                                <FormControlLabel
-                                                    control={
-                                                        <Checkbox
-                                                            // checked={jobProfile}
-                                                            // onChange={handleChange}
-                                                            name="address" />}
-                                                    label="Address"
-                                                />
-                                                <FormControlLabel
-                                                    control={
-                                                        <Checkbox
-                                                            // checked={jobProfile}
-                                                            // onChange={handleChange}
-                                                            name="profile" />}
-                                                    label="Profile"
-                                                />
-                                                <FormControlLabel
-                                                    control={
-                                                        <Checkbox
-                                                            // checked={jobProfile}
-                                                            // onChange={handleChange}
-                                                            name="identites" />}
-                                                    label="Identities"
-                                                />
-                                                <FormControlLabel
-                                                    control={
-                                                        <Checkbox
-                                                            // checked={jobProfile}
-                                                            // onChange={handleChange}
-                                                            name="phones" />}
-                                                    label="Phones"
-                                                />
-                                                <FormControlLabel
-                                                    control={
-                                                        <Checkbox
-                                                            // checked={jobProfile}
-                                                            // onChange={handleChange}
-                                                            name="jobHistory" />}
-                                                    label="Job History"
-                                                />
-                                            </FormGroup>
-                                        </FormControl>
-                                    </Grid>
-
-                                </Grid>
-
-                            </DialogContent>
-                            <DialogActions style={{ padding: 15 }}>
-                                <Button color="secondary" variant="contained" onClick={() => this.setState({ generateNewEmployementCodeDialog: false, selectedIndex: -1 })}>
-                                    Generate One-time Code
-                            </Button>
-                            </DialogActions>
-                        </Dialog>
-                    </div>
-                }
-
-            </div>
-        )
-    }
+              </Grid>
+            </DialogContent>
+            <DialogActions style={{ padding: 15 }}>
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={() => this.postcode()}
+              >
+                Generate One-time Code
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+      </>
+    );
+  }
+  render() {
+    // const [inputValue, setInputValue] = React.useState("");
+    return (
+      <div style={{ marginTop: 20 }}>
+        {this.state.loading ? this.isloading() : this.gettable()}
+        {/* <Paper style={{ padding: 20, height: '100vh' }}> */}
+      </div>
+    );
+  }
 }
-
-const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 },
-    { title: '12 Angry Men', year: 1957 },
-    { title: "Schindler's List", year: 1993 },
-    { title: 'Pulp Fiction', year: 1994 },
-    { title: 'The Lord of the Rings: The Return of the King', year: 2003 },
-    { title: 'The Good, the Bad and the Ugly', year: 1966 },
-    { title: 'Fight Club', year: 1999 },
-    { title: 'The Lord of the Rings: The Fellowship of the Ring', year: 2001 },
-    { title: 'Star Wars: Episode V - The Empire Strikes Back', year: 1980 },
-    { title: 'Forrest Gump', year: 1994 },
-    { title: 'Inception', year: 2010 },
-    { title: 'The Lord of the Rings: The Two Towers', year: 2002 },
-    { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
-    { title: 'Goodfellas', year: 1990 },
-    { title: 'The Matrix', year: 1999 },
-    { title: 'Seven Samurai', year: 1954 },
-    { title: 'Star Wars: Episode IV - A New Hope', year: 1977 },
-    { title: 'City of God', year: 2002 },
-    { title: 'Se7en', year: 1995 },
-    { title: 'The Silence of the Lambs', year: 1991 },
-    { title: "It's a Wonderful Life", year: 1946 },
-    { title: 'Life Is Beautiful', year: 1997 },
-    { title: 'The Usual Suspects', year: 1995 },
-    { title: 'Léon: The Professional', year: 1994 },
-    { title: 'Spirited Away', year: 2001 },
-    { title: 'Saving Private Ryan', year: 1998 },
-    { title: 'Once Upon a Time in the West', year: 1968 },
-    { title: 'American History X', year: 1998 },
-    { title: 'Interstellar', year: 2014 },
-    { title: 'Casablanca', year: 1942 },
-    { title: 'City Lights', year: 1931 },
-    { title: 'Psycho', year: 1960 },
-    { title: 'The Green Mile', year: 1999 },
-    { title: 'The Intouchables', year: 2011 },
-    { title: 'Modern Times', year: 1936 },
-    { title: 'Raiders of the Lost Ark', year: 1981 },
-    { title: 'Rear Window', year: 1954 },
-    { title: 'The Pianist', year: 2002 },
-    { title: 'The Departed', year: 2006 },
-    { title: 'Terminator 2: Judgment Day', year: 1991 },
-    { title: 'Back to the Future', year: 1985 },
-    { title: 'Whiplash', year: 2014 },
-    { title: 'Gladiator', year: 2000 },
-    { title: 'Memento', year: 2000 },
-    { title: 'The Prestige', year: 2006 },
-    { title: 'The Lion King', year: 1994 },
-    { title: 'Apocalypse Now', year: 1979 },
-    { title: 'Alien', year: 1979 },
-    { title: 'Sunset Boulevard', year: 1950 },
-    { title: 'Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb', year: 1964 },
-    { title: 'The Great Dictator', year: 1940 },
-    { title: 'Cinema Paradiso', year: 1988 },
-    { title: 'The Lives of Others', year: 2006 },
-    { title: 'Grave of the Fireflies', year: 1988 },
-    { title: 'Paths of Glory', year: 1957 },
-    { title: 'Django Unchained', year: 2012 },
-    { title: 'The Shining', year: 1980 },
-    { title: 'WALL·E', year: 2008 },
-    { title: 'American Beauty', year: 1999 },
-    { title: 'The Dark Knight Rises', year: 2012 },
-    { title: 'Princess Mononoke', year: 1997 },
-    { title: 'Aliens', year: 1986 },
-    { title: 'Oldboy', year: 2003 },
-    { title: 'Once Upon a Time in America', year: 1984 },
-    { title: 'Witness for the Prosecution', year: 1957 },
-    { title: 'Das Boot', year: 1981 },
-    { title: 'Citizen Kane', year: 1941 },
-    { title: 'North by Northwest', year: 1959 },
-    { title: 'Vertigo', year: 1958 },
-    { title: 'Star Wars: Episode VI - Return of the Jedi', year: 1983 },
-    { title: 'Reservoir Dogs', year: 1992 },
-    { title: 'Braveheart', year: 1995 },
-    { title: 'M', year: 1931 },
-    { title: 'Requiem for a Dream', year: 2000 },
-    { title: 'Amélie', year: 2001 },
-    { title: 'A Clockwork Orange', year: 1971 },
-    { title: 'Like Stars on Earth', year: 2007 },
-    { title: 'Taxi Driver', year: 1976 },
-    { title: 'Lawrence of Arabia', year: 1962 },
-    { title: 'Double Indemnity', year: 1944 },
-    { title: 'Eternal Sunshine of the Spotless Mind', year: 2004 },
-    { title: 'Amadeus', year: 1984 },
-    { title: 'To Kill a Mockingbird', year: 1962 },
-    { title: 'Toy Story 3', year: 2010 },
-    { title: 'Logan', year: 2017 },
-    { title: 'Full Metal Jacket', year: 1987 },
-    { title: 'Dangal', year: 2016 },
-    { title: 'The Sting', year: 1973 },
-    { title: '2001: A Space Odyssey', year: 1968 },
-    { title: "Singin' in the Rain", year: 1952 },
-    { title: 'Toy Story', year: 1995 },
-    { title: 'Bicycle Thieves', year: 1948 },
-    { title: 'The Kid', year: 1921 },
-    { title: 'Inglourious Basterds', year: 2009 },
-    { title: 'Snatch', year: 2000 },
-    { title: '3 Idiots', year: 2009 },
-    { title: 'Monty Python and the Holy Grail', year: 1975 },
-  ];
 
 export default withStyles(styles)(index);
