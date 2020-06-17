@@ -80,7 +80,7 @@ class Addresses extends Component {
       addresshint2: "",
       addresshint3: "",
       historyloading: true,
-      historyDialougeOpen: false,
+      historyDialogeOpen: false,
       selectedIndex: -1,
       updatedaddressreason: "",
       updateddefaultaddresses: "",
@@ -174,24 +174,24 @@ class Addresses extends Component {
   }
   isloading() {
     return (
-      <>
-        <Grid
-          container
-          spacing={0}
-          direction="column"
-          alignItems="center"
-          justify="center"
-          display="flex"
-          style={{ minHeight: "100vh" }}
-        >
+      <Grid container justify='flex-end' alignItems='center'
+        // container
+        // spacing={0}
+        direction="column"
+      // alignItems="center"
+      // justify="center"
+      // // display="flex"
+      // style={{ minHeight: "10vh" }}
+      >
+        <Grid item xs={6} style={{marginTop:100}}>
           <CircularProgress />
         </Grid>
-      </>
+      </Grid>
     );
   }
   async getHistory(index) {
     this.setState({
-      historyDialougeOpen: true,
+      historyDialogeOpen: true,
     });
     await axios
       .get(
@@ -261,8 +261,8 @@ class Addresses extends Component {
     return (
       <>
         {
-          // result.length=== 0
-          true
+          result.length === 0
+            // true
             ? (
               this.addaddress()
             ) : (
@@ -280,86 +280,24 @@ class Addresses extends Component {
                 <TableContainer component={Paper} elevation={16} p={0}>
                   <Table stickyHeader>
                     <TableHead>
-                      <TableRow style={{ backgroundColor: "white" }}>
-                        <TableCell
-                          style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                          align="center"
-                          padding="none"
-                        >
-                          Startdate
-                    </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                          align="center"
-                          size="small"
-                          padding="1"
-                        >
-                          Addresssource
-                    </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                          align="center"
-                          size="small"
-                          padding="none"
-                        >
-                          Address
-                    </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                          align="center"
-                          size="small"
-                          padding="default"
-                        >
-                          State/LGA/City
-                    </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                          align="center"
-                          size="small"
-                          padding="default"
-                        >
-                          Address
-                    </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                          align="center"
-                          size="small"
-                          padding="default"
-                        >
-                          GoogleLink
-                    </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                          align="center"
-                          size="small"
-                          padding="default"
-                        >
-                          Image
-                    </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                          align="center"
-                          size="small"
-                          padding="default"
-                        >
-                          Verifier
-                    </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                          align="center"
-                          size="small"
-                          padding="default"
-                        >
-                          Update
-                    </TableCell>
-                        <TableCell
-                          style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                          align="center"
-                          size="small"
-                          padding="none"
-                        >
-                          History
-                    </TableCell>
+                      <TableRow style={{ backgroundColor: "black" }}>
+                        {['Start date',
+                          'Address source',
+                          'Address',
+                          'State/LGA/City',
+                          'Address',
+                          'Google link',
+                          'Image',
+                          'Verifier',
+                          'Update',
+                          'History'].map((text, index) => (
+                            <TableCell
+                              style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                              align="center"
+                            >
+                              {text}
+                            </TableCell>
+                          ))}
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -391,9 +329,9 @@ class Addresses extends Component {
                               Location
                         </a>
                           </TableCell>
-                          {/* <TableCell align="center" size="small" padding="none">
-                        {}
-                      </TableCell> */}
+                          <TableCell align="center" size="small" padding="none">
+                            {}
+                          </TableCell>
                           <TableCell align="center" size="small" padding="none">
                             {row.owner_name_field}
                           </TableCell>
@@ -437,229 +375,264 @@ class Addresses extends Component {
                   <div />
                 ) : (
                     <Dialog
-                      fullWidth={"md"}
-                      maxWidth={"md"}
                       open={this.state.updateDialogOpen}
                       onClose={() => this.setState({ updateDialogOpen: false })}
                       aria-labelledby="form-dialog-title"
                     >
-                      <DialogTitle id="form-dialog-title">
-                        Updating the address
-                </DialogTitle>
-
+                      <DialogTitle id="addNewAddress" justify="center">
+                        Update address
+                        </DialogTitle>
                       <DialogContent>
-                        <Grid container direction="row">
-                          <Box>
-                            <p>
-                              <label>Addresses reason</label>
-                              <input
-                                class="w3-input"
-                                type="text"
-                                onChange={(event) =>
-                                  this.setState({
-                                    updatedaddressreason: event.target.value,
-                                  })
-                                }
-                                defaultValue={
-                                  result[this.state.selectedIndex].address_reason
-                                }
-                              />
-                            </p>
+                        <DialogContentText>
+                          Enter the details of your address
+                          </DialogContentText>
 
-                            <p>
-                              <label>Address type</label>
-                              <input
-                                class="w3-input"
-                                type="text"
-                                onChange={(event) =>
-                                  this.setState({
-                                    updatedaddressestype: event.target.value,
-                                  })
-                                }
-                                defaultValue={
-                                  result[this.state.selectedIndex].address_type
-                                }
-                              />
-                            </p>
-                            <p>
-                              <label>Default address</label>
+                        <Grid container justify='flex-start' direction='row' alignItems='center' spacing={3}>
 
-                              <input
-                                class="w3-input"
-                                type="text"
-                                onChange={(event) => {
-                                  this.setState({
-                                    updateddefaultaddresses: event.target.value,
-                                  });
-                                  console.log(this.state.updatedsex);
-                                }}
-                                defaultValue={
-                                  result[this.state.selectedIndex].default_address
-                                }
-                              />
-                            </p>
+                          <Grid item fullWidth xs={12}>
+                            <TextField
+                              id="addressType"
+                              label="Address type"
+                              onChange={(event) =>
+                                this.setState({
+                                  updatedaddressestype: event.target.value,
+                                })
+                              }
+                              defaultValue={
+                                result[this.state.selectedIndex].address_type
+                              }
+                              type="text"
+                              fullWidth
+                            />
+                          </Grid>
 
-                            <p>
-                              <label>House number</label>
-                              <input
-                                class="w3-input"
-                                type="text"
-                                onChange={(event) => {
-                                  this.setState({
-                                    updatehousenumber: event.target.value,
-                                  });
-                                  console.log(event.target.value);
-                                }}
-                                defaultValue={
-                                  result[this.state.selectedIndex].house_number
-                                }
-                              />
-                            </p>
-                            <p>
-                              <label>Address image</label>
-                              <input
-                                class="w3-input"
-                                type="file"
-                                onChange={(event) => {
-                                  this.setState({
-                                    updatedimage: event.target.files[0],
-                                  });
-                                  console.log(event.target.files[0]);
-                                }}
-                              />
-                            </p>
-                            <p>
-                              <label>Street</label>
-                              <input
-                                class="w3-input"
-                                type="text"
-                                onChange={(event) =>
-                                  this.setState({
-                                    updatedstreet: event.target.value,
-                                  })
-                                }
-                                defaultValue={result[this.state.selectedIndex].state}
-                              />
-                            </p>
-                            <p>
-                              <label>State</label>
-                              <input
-                                class="w3-input"
-                                type="text"
-                                onChange={(event) =>
-                                  this.setState({
-                                    updatedstate: event.target.value,
-                                  })
-                                }
-                                defaultValue={result[this.state.selectedIndex].state}
-                              />
-                            </p>
-                            <p>
-                              <label>LGA</label>
-                              <input
-                                class="w3-input"
-                                type="text"
-                                onChange={(event) => {
-                                  this.setState({ updatedlga: event.target.value });
-                                  console.log(event.target.value);
-                                }}
-                                defaultValue={result[this.state.selectedIndex].lga}
-                              />
-                            </p>
-                            <p>
-                              <label>City</label>
-                              <input
-                                class="w3-input"
-                                type="text"
-                                onChange={(event) => {
-                                  this.setState({ updatedcity: event.target.value });
-                                  console.log(event.target.value);
-                                }}
-                                defaultValue={result[this.state.selectedIndex].city}
-                              />
-                            </p>
-                            <p>
-                              <label>Address Hint1</label>
-                              <input
-                                class="w3-input"
-                                type="text"
-                                onChange={(event) => {
-                                  this.setState({
-                                    updatedaddresshint1: event.target.value,
-                                  });
-                                  console.log(event.target.value);
-                                }}
-                                defaultValue={
-                                  result[this.state.selectedIndex].address_hint1
-                                }
-                              />
-                            </p>
-                            <p>
-                              <label>Address hint2</label>
-                              <input
-                                class="w3-input"
-                                type="text"
-                                onChange={(event) => {
-                                  this.setState({
-                                    updatedaddresshint2: event.target.value,
-                                  });
-                                  console.log(event.target.value);
-                                }}
-                                defaultValue={
-                                  result[this.state.selectedIndex].address_hint2
-                                }
-                              />
-                            </p>
-                            <p>
-                              <label>Address hint3</label>
-                              <input
-                                class="w3-input"
-                                type="text"
-                                onChange={(event) => {
-                                  this.setState({
-                                    updatedaddresshint3: event.target.value,
-                                  });
-                                  console.log(event.target.value);
-                                }}
-                                defaultValue={
-                                  result[this.state.selectedIndex].address_hint3
-                                }
-                              />
-                            </p>
+                          <Grid item fullWidth xs={12}>
+                            <TextField
+                              id="addressReason"
+                              label="Address reason"
+                              onChange={(event) =>
+                                this.setState({
+                                  updatedaddressreason: event.target.value,
+                                })
+                              }
+                              defaultValue={
+                                result[this.state.selectedIndex].address_reason
+                              }
+                              type="text"
+                              fullWidth
+                            />
+                          </Grid>
 
-                            <p>
-                              <label>Started living here</label>
-                              <input
-                                class="w3-input"
-                                type="date"
-                                onChange={(event) => {
-                                  this.setState({
-                                    updatestartedlivinghere: event.target.value,
-                                  });
-                                  console.log(event.target.value);
-                                }}
-                                defaultValue={result[this.state.selectedIndex].since}
-                              />
-                            </p>
-                            <p>
-                              <label>Update reason</label>
-                              <input
-                                class="w3-input"
-                                type="text"
-                                onChange={(event) => {
-                                  this.setState({
-                                    updatedreason: event.target.value,
-                                  });
-                                  console.log(event.target.value);
-                                }}
-                                defaultValue={
-                                  result[this.state.selectedIndex].update_reason
-                                }
-                              />
-                            </p>
-                          </Box>
+                          <Grid item fullWidth xs={12}>
+                            <TextField
+                              id="defaultAddress"
+                              label="Default address"
+                              onChange={(event) => {
+                                this.setState({
+                                  updateddefaultaddresses: event.target.value,
+                                });
+                                console.log(this.state.updatedsex);
+                              }}
+                              defaultValue={
+                                result[this.state.selectedIndex].default_address
+                              }
+                              type="text"
+                              fullWidth
+                            />
+                          </Grid>
 
-                          <Box>
+                          <Grid item fullWidth xs={12}>
+                            <TextField
+                              id="houseNumber"
+                              label="House number"
+                              onChange={(event) => {
+                                this.setState({
+                                  updatehousenumber: event.target.value,
+                                });
+                                console.log(event.target.value);
+                              }}
+                              defaultValue={
+                                result[this.state.selectedIndex].house_number
+                              }
+                              type="text"
+                              fullWidth
+                            />
+                          </Grid>
+
+                          <Grid item xs={12}>
+                            <Button
+                              variant="contained"
+                              color="default"
+                              startIcon={<CloudUploadIcon />}
+                            >
+                              Choose file
+                        </Button>
+                          </Grid>
+
+                          <Grid item fullWidth xs={12}>
+                            <TextField
+                              id="addressImage"
+                              label="Choose Image"
+                              onChange={(event) => {
+                                this.setState({
+                                  updatedimage: event.target.files[0],
+                                });
+                                console.log(event.target.files[0]);
+                              }}
+                              type="file"
+                              fullWidth
+                            />
+                          </Grid>
+
+                          <Grid item fullWidth xs={12}>
+                            <TextField
+                              id="states"
+                              label="States"
+                              onChange={(event) =>
+                                this.setState({
+                                  updatedstate: event.target.value,
+                                })
+                              }
+                              defaultValue={result[this.state.selectedIndex].state}
+                              type="text"
+                              fullWidth
+                            />
+                          </Grid>
+
+                          <Grid item fullWidth xs={12}>
+                            <TextField
+                              id="lga"
+                              label="LGA"
+                              onChange={(event) => {
+                                this.setState({ updatedlga: event.target.value });
+                                console.log(event.target.value);
+                              }}
+                              defaultValue={result[this.state.selectedIndex].lga}
+                              type="text"
+                              fullWidth
+                            />
+                          </Grid>
+
+                          <Grid item fullWidth xs={12}>
+                            <TextField
+                              id="city"
+                              label="City"
+                              onChange={(event) => {
+                                this.setState({ updatedcity: event.target.value });
+                                console.log(event.target.value);
+                              }}
+                              defaultValue={result[this.state.selectedIndex].city}
+                              type="text"
+                              fullWidth
+                            />
+                          </Grid>
+
+                          <Grid item fullWidth xs={12}>
+                            <TextField
+                              id="addressHint1"
+                              label="Address hint 1"
+                              onChange={(event) => {
+                                this.setState({
+                                  updatedaddresshint1: event.target.value,
+                                });
+                                console.log(event.target.value);
+                              }}
+                              defaultValue={
+                                result[this.state.selectedIndex].address_hint1
+                              }
+                              type="text"
+                              fullWidth
+                            />
+                          </Grid>
+
+                          <Grid item fullWidth xs={12}>
+                            <TextField
+                              id="addressHint2"
+                              label="Address hint 2"
+                              onChange={(event) => {
+                                this.setState({
+                                  updatedaddresshint2: event.target.value,
+                                });
+                                console.log(event.target.value);
+                              }}
+                              defaultValue={
+                                result[this.state.selectedIndex].address_hint2
+                              }
+                              type="text"
+                              fullWidth
+                            />
+                          </Grid>
+
+                          <Grid item fullWidth xs={12}>
+                            <TextField
+                              id="addressHint3"
+                              label="Address hint 3"
+                              onChange={(event) => {
+                                this.setState({
+                                  updatedaddresshint3: event.target.value,
+                                });
+                                console.log(event.target.value);
+                              }}
+                              defaultValue={
+                                result[this.state.selectedIndex].address_hint3
+                              }
+                              type="text"
+                              fullWidth
+                            />
+                          </Grid>
+
+                          <Grid item fullWidth xs={12}>
+                            <TextField
+                              id="startedLivingHereSince"
+                              helperText="Started living here since"
+                              onChange={(event) => {
+                                this.setState({
+                                  updatestartedlivinghere: event.target.value,
+                                });
+                                console.log(event.target.value);
+                              }}
+                              defaultValue={result[this.state.selectedIndex].since}
+                              type="date"
+                              fullWidth
+                            />
+                          </Grid>
+
+                          <Grid item fullWidth xs={12}>
+                            <TextField
+                              id="street"
+                              label="Street"
+                              onChange={(event) =>
+                                this.setState({
+                                  updatedstreet: event.target.value,
+                                })
+                              }
+                              defaultValue={result[this.state.selectedIndex].state}
+                              type="text"
+                              fullWidth
+                            />
+                          </Grid>
+
+                          <Grid item fullWidth xs={12}>
+                            <TextField
+                              id="updateReason"
+                              label="Reason for updating"
+                              onChange={(event) => {
+                                this.setState({
+                                  updatedreason: event.target.value,
+                                });
+                                console.log(event.target.value);
+                              }}
+                              defaultValue={
+                                result[this.state.selectedIndex].update_reason
+                              }
+                              type="text"
+                              fullWidth
+                            />
+                          </Grid>
+                        </Grid>
+
+                        <Grid>
+                          {/* <Box>
                             <Map
                               google={this.props.google}
                               zoom={1}
@@ -677,23 +650,24 @@ class Addresses extends Component {
                                 onClose={this.onInfoWindowClose}
                               ></InfoWindow>
                             </Map>
-                          </Box>
+                          </Box> */}
                         </Grid>
-                      </DialogContent>
 
-                      <DialogActions>
+                      </DialogContent>
+                      <DialogActions style={{ padding: 15 }}>
                         <Button
+                          color="primary"
+                          variant="contained"
                           disabled={this.state.buttondisabled}
                           color="primary"
                           onClick={() => {
                             this.updatedetails(result[this.state.selectedIndex].id)
-                          }}
-                        >
+                          }}>
                           Update
-                  </Button>
+                          </Button>
                         <Button
-
                           color="secondary"
+                          variant="contained"
                           onClick={() =>
                             this.setState({
                               updateDialogOpen: false,
@@ -702,78 +676,43 @@ class Addresses extends Component {
                           }
                         >
                           Cancel
-                  </Button>
+                          </Button>
                       </DialogActions>
                     </Dialog>
                   )}
               </Grid>
             )}
+
         <Dialog
           fullWidth={"md"}
           maxWidth={"md"}
-          open={this.state.historyDialougeOpen}
-          onClose={() => this.setState({ historyDialougeOpen: false })}
+          open={this.state.historyDialogeOpen}
+          onClose={() => this.setState({ historyDialogeOpen: false })}
           aria-labelledby="responsive-dialog-title"
         >
-          <TableContainer component={Paper} elevation={16} p={3}>
+          <DialogTitle id="form-dialog-title">Profile History</DialogTitle>
+          {/* <DialogContent> */}
+          <TableContainer p={3}>
             <Table stickyHeader>
               <TableHead>
                 <TableRow style={{ backgroundColor: "black" }}>
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                    align="center"
-                  >
-                    State/Lga/City
-                  </TableCell>
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                    align="center"
-                  >
-                    Street name
-                  </TableCell>
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                    align="center"
-                  >
-                    House number
-                  </TableCell>
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                    align="center"
-                  >
-                    Address hint1
-                  </TableCell>
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                    align="center"
-                  >
-                    Googlecoordinates
-                  </TableCell>
-
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                    align="center"
-                  >
-                    Address reason
-                  </TableCell>
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                    align="center"
-                  >
-                    Address Type
-                  </TableCell>
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                    align="center"
-                  >
-                    Records updated date
-                  </TableCell>
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                    align="center"
-                  >
-                    Update reason
-                  </TableCell>
+                  {['State/Lga/City',
+                    'Street Name',
+                    'House Number',
+                    'Address Hint 1',
+                    'Google Coordinates',
+                    'Address Reason',
+                    'Address Type',
+                    'Records Updated Date',
+                    'Update Reason',
+                  ].map((text, index) => (
+                    <TableCell
+                      style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                      align="center"
+                    >
+                      {text}
+                    </TableCell>
+                  ))}
                 </TableRow>
               </TableHead>
 
@@ -801,7 +740,7 @@ class Addresses extends Component {
                         <TableCell align="center">{row.address_reason}</TableCell>{" "}
                         <TableCell align="center">{row.address_type}</TableCell>{" "}
                         <TableCell component="th" align="center">
-                          {row.created_on}
+                          {new Date(row.created_on).toDateString()}
                         </TableCell>
                         <TableCell align="center">{row.update_reason}</TableCell>
                       </TableRow>
@@ -810,6 +749,16 @@ class Addresses extends Component {
                 )}
             </Table>
           </TableContainer>
+          {/* </DialogContent> */}
+          <DialogActions style={{ padding: 15 }}>
+            <Button
+              variant='contained'
+              color="secondary"
+              onClick={() => this.setState({ historyDialogeOpen: false, selectedIndex: -1 })}
+            >
+              Close
+                </Button>
+          </DialogActions>
         </Dialog>
       </>
     );

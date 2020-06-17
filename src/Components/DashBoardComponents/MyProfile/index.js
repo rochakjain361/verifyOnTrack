@@ -684,10 +684,18 @@ class MyProfile extends Component {
               <TableHead>
 
                 <TableRow style={{ backgroundColor: "black" }}>
-                  {['Fullname', 'Middlename', 'Surname', 'Date of birth', 'Picture', 'Sex', 'Records updated date', 'Updated reason'].map((text, index) => (
+                  {['Fullname', 
+                  'Middlename', 
+                  'Surname', 
+                  'Date of birth', 
+                  'Picture', 
+                  'Sex', 
+                  'Records updated date', 
+                  'Updated reason'
+                ].map((text, index) => (
                     <TableCell
                       style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                      align="center"
+                      align="left"
                     >
                       {text}
                     </TableCell>
@@ -701,19 +709,19 @@ class MyProfile extends Component {
                   <TableBody>
                     {history.map((row, index) => (
                       <TableRow key={row.id}>
-                        <TableCell align="center">{row.firstname}</TableCell>
-                        <TableCell align="center">{row.middlename}</TableCell>
-                        <TableCell align="center">{row.surname}</TableCell>
-                        <TableCell align="center">{new Date(row.dob).toDateString()}</TableCell>
-                        <TableCell align="center">
+                        <TableCell align="left">{row.firstname}</TableCell>
+                        <TableCell align="left">{row.middlename}</TableCell>
+                        <TableCell align="left">{row.surname}</TableCell>
+                        <TableCell align="left">{new Date(row.dob).toDateString()}</TableCell>
+                        <TableCell align="left">
                           <Avatar src={row.picture}>Picture</Avatar>
                         </TableCell>
                         {/* <TableCell align="center">{row.source_name_field}</TableCell> */}
-                        <TableCell align="center">{row.sex}</TableCell>{" "}
-                        <TableCell component="th" align="center">
+                        <TableCell align="left">{row.sex}</TableCell>{" "}
+                        <TableCell component="th" align="left">
                           {new Date(row.created_on).toDateString()}
                         </TableCell>
-                        <TableCell align="center">{row.update_reason}</TableCell>
+                        <TableCell align="left">{row.update_reason}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

@@ -55,7 +55,6 @@ const rows = [
 const token1 = localStorage.getItem("Token");
 const token = "Token " + token1;
 const id = localStorage.getItem("id");
-const api = "http://3.22.17.212:8000"
 
 let companyChoices = [];
 let positionCategories = [];
@@ -70,7 +69,6 @@ class myJobProfile extends Component {
 
     state = {
         myJobHistory: [],
-        jobIds: [],
 
         addDialogOpen: false,
         editActionsOpen: false,
@@ -81,7 +79,6 @@ class myJobProfile extends Component {
         isloading: false,
         selectedIndex: -1,
         id: "",
-
         companies: [],
         positions: [],
         leavingReasons: [],
@@ -146,8 +143,8 @@ class myJobProfile extends Component {
     //     console.log
     // }
 
-    // async getViewDetails() {
-    //     let response = await fetch(api + "/api/v1/employees/" + id + "/jobs/" + jobId,
+    // async getJobProfiles() {
+    //     let response = await fetch("http://3.22.17.212:8000/api/v1/employees/" + id + "/jobs",
     //     {
     //         headers: {
     //             'Authorization': token
@@ -156,22 +153,7 @@ class myJobProfile extends Component {
     //     response = await response.json();
     //     console.log(response)
     //     this.setState({ myJobHistory: response });
-    // }    
-
-    async getJobProfiles() {
-        this.setState({isLoading: true})
-        let response = await fetch("http://3.22.17.212:8000/api/v1/employees/" + id + "/jobs",
-        {
-            headers: {
-                'Authorization': token
-            }
-        });
-        response = await response.json();
-        console.log(response)
-        this.setState({ myJobHistory: response });
-        this.setState({ jobIds: response.map(jobId => jobId.id) })
-        console.log("jobIds:",this.state.jobIds)
-    }
+    // }
 
     async componentDidMount() {
 
@@ -677,7 +659,6 @@ class myJobProfile extends Component {
                         </DialogActions>
                     </Dialog>
                 }
-                {this.viewDetailsDialog()}
             </div>
         )
     }
@@ -874,8 +855,6 @@ class myJobProfile extends Component {
 
     getTableOfEmployees() {
         return (
-            <div>
-            {
             <TableContainer component={Paper} elevation={16}>
                 <Table stickyHeader>
                     <TableHead>
@@ -901,7 +880,7 @@ class myJobProfile extends Component {
                                     <Button 
                                         color="primary" 
                                         variant="outlined"
-                                        onClick={() => {this.setState({viewDialogOpen: true,selectedIndex: index}); console.log(index)}}
+                                        onClick={this.viewDetailsDialog()}
                                     >
                                         View Details
                                     </Button>
@@ -926,10 +905,10 @@ class myJobProfile extends Component {
                     </TableBody>
                 </Table>
 
-
+                {this.viewDialogOpen()}
             </TableContainer>
-            }
-            </div>
+            
+            
         );
     }
 
@@ -991,6 +970,20 @@ class myJobProfile extends Component {
     //     this.setState({ companies: tempArr });
     //     console.log(tempArr)
     // }
+
+
+    async getJobProfiles() {
+        this.setState({isLoading: true})
+        let response = await fetch("http://3.22.17.212:8000/api/v1/employees/" + id + "/jobs",
+        {
+            headers: {
+                'Authorization': token
+            }
+        });
+        response = await response.json();
+        console.log(response)
+        this.setState({ myJobHistory: response });
+    }
 
     async addJobProfile() {
 
