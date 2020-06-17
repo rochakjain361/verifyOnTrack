@@ -72,6 +72,9 @@ export class index extends Component {
           });
           this.setState({loading:false})
     }
+    addState(){
+      
+    }
     displaytable(){
         return (
           <>
@@ -132,7 +135,7 @@ export class index extends Component {
                 />
               </Grid>
               <Grid item>
-                <Fab size="small" color="secondary">
+                <Fab size="small" color="secondary" onClick={()=>{this.addState()}}>
                   <AddIcon />
                 </Fab>
               </Grid>
