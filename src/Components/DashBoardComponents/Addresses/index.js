@@ -346,7 +346,7 @@ class Addresses extends Component {
                       size="small"
                       padding="default"
                     >
-                      update
+                      Update
                     </TableCell>
                     <TableCell
                       style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
@@ -384,7 +384,7 @@ class Addresses extends Component {
                           href={`http://www.google.com/maps/place/${row.google_coordinate1}+,+${row.google_coordinate2}`}
                           target=""
                         >
-                          location
+                          Location
                         </a>
                       </TableCell>
                       {/* <TableCell align="center" size="small" padding="none">
@@ -463,7 +463,7 @@ class Addresses extends Component {
                       </p>
 
                       <p>
-                        <label>address type</label>
+                        <label>Address type</label>
                         <input
                           class="w3-input"
                           type="text"
@@ -478,7 +478,7 @@ class Addresses extends Component {
                         />
                       </p>
                       <p>
-                        <label>default address</label>
+                        <label>Default address</label>
 
                         <input
                           class="w3-input"
@@ -496,7 +496,7 @@ class Addresses extends Component {
                       </p>
 
                       <p>
-                        <label>house number</label>
+                        <label>House number</label>
                         <input
                           class="w3-input"
                           type="text"
@@ -512,7 +512,7 @@ class Addresses extends Component {
                         />
                       </p>
                       <p>
-                        <label> address image</label>
+                        <label>Address image</label>
                         <input
                           class="w3-input"
                           type="file"
@@ -525,7 +525,7 @@ class Addresses extends Component {
                         />
                       </p>
                       <p>
-                        <label>street</label>
+                        <label>Street</label>
                         <input
                           class="w3-input"
                           type="text"
@@ -538,7 +538,7 @@ class Addresses extends Component {
                         />
                       </p>
                       <p>
-                        <label>state</label>
+                        <label>State</label>
                         <input
                           class="w3-input"
                           type="text"
@@ -563,7 +563,7 @@ class Addresses extends Component {
                         />
                       </p>
                       <p>
-                        <label>city</label>
+                        <label>City</label>
                         <input
                           class="w3-input"
                           type="text"
@@ -591,7 +591,7 @@ class Addresses extends Component {
                         />
                       </p>
                       <p>
-                        <label> address hint2</label>
+                        <label>Address hint2</label>
                         <input
                           class="w3-input"
                           type="text"
@@ -607,7 +607,7 @@ class Addresses extends Component {
                         />
                       </p>
                       <p>
-                        <label>address hint3</label>
+                        <label>Address hint3</label>
                         <input
                           class="w3-input"
                           type="text"
@@ -624,7 +624,7 @@ class Addresses extends Component {
                       </p>
 
                       <p>
-                        <label>started living here</label>
+                        <label>Started living here</label>
                         <input
                           class="w3-input"
                           type="date"
@@ -638,7 +638,7 @@ class Addresses extends Component {
                         />
                       </p>
                       <p>
-                        <label>update reason</label>
+                        <label>Update reason</label>
                         <input
                           class="w3-input"
                           type="text"
@@ -725,44 +725,44 @@ class Addresses extends Component {
                     style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
                     align="center"
                   >
-                    street name
+                    Street name
                   </TableCell>
                   <TableCell
                     style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
                     align="center"
                   >
-                    house number
+                    House number
                   </TableCell>
                   <TableCell
                     style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
                     align="center"
                   >
-                    address hint1
+                    Address hint1
                   </TableCell>
                   <TableCell
                     style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
                     align="center"
                   >
-                    googlecoordinates
+                    Googlecoordinates
                   </TableCell>
 
                   <TableCell
                     style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
                     align="center"
                   >
-                    address reason
+                    Address reason
                   </TableCell>
                   <TableCell
                     style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
                     align="center"
                   >
-                    address Type
+                    Address Type
                   </TableCell>
                   <TableCell
                     style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
                     align="center"
                   >
-                    records updated date
+                    Records updated date
                   </TableCell>
                   <TableCell
                     style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
@@ -919,7 +919,7 @@ class Addresses extends Component {
               ))}
             </Select>
             <p>
-              <label>default address</label>
+              <label>Default address</label>
 
               <Select
                 onChange={(event) => {
@@ -940,7 +940,7 @@ class Addresses extends Component {
             </p>
 
             <p>
-              <label>house number</label>
+              <label>House number</label>
               <input
                 class="w3-input"
                 type="text"
@@ -952,7 +952,7 @@ class Addresses extends Component {
               />
             </p>
             <p>
-              <label> address image</label>
+              <label>Address image</label>
               <input
                 class="w3-input"
                 type="file"
@@ -1032,7 +1032,7 @@ class Addresses extends Component {
               />
             </p>
             <p>
-              <label> address Hint2</label>
+              <label> Address Hint2</label>
               <input
                 class="w3-input"
                 type="text"
@@ -1044,7 +1044,7 @@ class Addresses extends Component {
               />
             </p>
             <p>
-              <label>address Hint3</label>
+              <label>Address Hint3</label>
               <input
                 class="w3-input"
                 type="text"
@@ -1057,7 +1057,7 @@ class Addresses extends Component {
             </p>
 
             <p>
-              <label>started living here</label>
+              <label>Started living here</label>
               <input
                 class="w3-input"
                 type="date"
@@ -1081,7 +1081,7 @@ class Addresses extends Component {
               />
             </p> */}
             <p>
-              <label>street</label>
+              <label>Street</label>
               <input
                 class="w3-input"
                 type="text"
