@@ -28,6 +28,7 @@ import { MenuItem } from "@material-ui/core";
 import { InputLabel } from "@material-ui/core";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import FormControl from "@material-ui/core/FormControl";
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 let result = [];
 let state = [
@@ -91,7 +92,7 @@ class Addresses extends Component {
       updatedaddresshint1: "",
       updatedimage: "",
       updatestartedlivinghere: "",
-      updatedaddressestype:"",
+      updatedaddressestype: "",
     };
 
     this.onMarkerClick = this.onMarkerClick.bind(this);
@@ -115,62 +116,62 @@ class Addresses extends Component {
         console.table("addresses", result);
       });
 
-      // await axios
-      // .get(
-      //   "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/address/states",
-      //   {
-      //     headers: {
-      //       Authorization: token,
-      //     },
-      //   }
-      //   )
-      //   .then((res) => {
-      //     // state=res.data;
-      //     this.setState({ stateName: res.data });
-      //     // console.table("statename", state);
-      //   });
-     await fetch(
-       "http://3.22.17.212:8000/api/v1/resManager/address/states/",
-       {
+    // await axios
+    // .get(
+    //   "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/address/states",
+    //   {
+    //     headers: {
+    //       Authorization: token,
+    //     },
+    //   }
+    //   )
+    //   .then((res) => {
+    //     // state=res.data;
+    //     this.setState({ stateName: res.data });
+    //     // console.table("statename", state);
+    //   });
+    await fetch(
+      "http://3.22.17.212:8000/api/v1/resManager/address/states/",
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((result) => {
+        console.log(result);
+      });
+
+    await axios
+      .get(
+        "http://3.22.17.212:8000/api/v1/resManager/address/types/",
+        {
           headers: {
             Authorization: token,
           },
         }
-     )
-       .then((res) => res.json())
-       .then((result) => {
-         console.log(result);
-       });
-  
-        await axios
-        .get(
-          "http://3.22.17.212:8000/api/v1/resManager/address/types/",
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-          )
-          .then((res) => {
-            this.setState({ addressTypes: res.data });
-            // console.table("addresstypes", this.state.addressTypes);
-          });
-          await axios
-          .get(
-            "http://3.22.17.212:8000/api/v1/resManager/address/reasons/",
-            {
-              headers: {
-                Authorization: token,
-              },
-            }
-            )
-            .then((res) => {
-              this.setState({ addressReasons: res.data });
-              // console.table("addressReasons", this.state.addressReasons);
-            });
-            
-            this.setState({ isloading: false });
-          }
+      )
+      .then((res) => {
+        this.setState({ addressTypes: res.data });
+        // console.table("addresstypes", this.state.addressTypes);
+      });
+    await axios
+      .get(
+        "http://3.22.17.212:8000/api/v1/resManager/address/reasons/",
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        this.setState({ addressReasons: res.data });
+        // console.table("addressReasons", this.state.addressReasons);
+      });
+
+    this.setState({ isloading: false });
+  }
   isloading() {
     return (
       <>
@@ -195,10 +196,10 @@ class Addresses extends Component {
     await axios
       .get(
         "http://3.22.17.212:8000/api/v1/employees/" +
-          id +
-          "/addresses/" +
-          index +
-          "/history",
+        id +
+        "/addresses/" +
+        index +
+        "/history",
         {
           headers: {
             Authorization: token,
@@ -211,7 +212,7 @@ class Addresses extends Component {
         this.setState({ historyloading: false });
       });
   }
-  async updatedetails(addressid){
+  async updatedetails(addressid) {
     let headers = {
       headers: {
         Authorization: token,
@@ -244,10 +245,10 @@ class Addresses extends Component {
     bodyFormData.append("since", this.state.updatestartedlivinghere);
     bodyFormData.append("address_type", this.state.updatedaddressestype);
     bodyFormData.append("update_reason", this.state.updatedreason);
-    
+
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/employees/update-address/"+addressid,
+        "http://3.22.17.212:8000/api/v1/employees/update-address/" + addressid,
         bodyFormData,
         headers
       )
@@ -259,451 +260,454 @@ class Addresses extends Component {
   getaddress() {
     return (
       <>
-        {result.length === 0 ? (
-          this.addaddress()
-        ) : (
-          <Grid container justify="space-between" alignItems="center">
-            <Grid
-              container
-              direction="column"
-              alignItems="center"
-              justify="center"
-              display="flex"
-            >
-              <h1>My Address</h1>
-            </Grid>
+        {
+          // result.length=== 0
+          true
+            ? (
+              this.addaddress()
+            ) : (
+              <Grid container justify="space-between" alignItems="center">
+                <Grid
+                  container
+                  direction="column"
+                  alignItems="center"
+                  justify="center"
+                  display="flex"
+                >
+                  <h1>My Address</h1>
+                </Grid>
 
-            <TableContainer component={Paper} elevation={16} p={0}>
-              <Table stickyHeader>
-                <TableHead>
-                  <TableRow style={{ backgroundColor: "white" }}>
-                    <TableCell
-                      style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                      align="center"
-                      padding="none"
-                    >
-                      Startdate
-                    </TableCell>
-                    <TableCell
-                      style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                      align="center"
-                      size="small"
-                      padding="1"
-                    >
-                      Addresssource
-                    </TableCell>
-                    <TableCell
-                      style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                      align="center"
-                      size="small"
-                      padding="none"
-                    >
-                      Address
-                    </TableCell>
-                    <TableCell
-                      style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                      align="center"
-                      size="small"
-                      padding="default"
-                    >
-                      State/LGA/City
-                    </TableCell>
-                    <TableCell
-                      style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                      align="center"
-                      size="small"
-                      padding="default"
-                    >
-                      Address
-                    </TableCell>
-                    <TableCell
-                      style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                      align="center"
-                      size="small"
-                      padding="default"
-                    >
-                      GoogleLink
-                    </TableCell>
-                    <TableCell
-                      style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                      align="center"
-                      size="small"
-                      padding="default"
-                    >
-                      Image
-                    </TableCell>
-                    <TableCell
-                      style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                      align="center"
-                      size="small"
-                      padding="default"
-                    >
-                      Verifier
-                    </TableCell>
-                    <TableCell
-                      style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                      align="center"
-                      size="small"
-                      padding="default"
-                    >
-                      Update
-                    </TableCell>
-                    <TableCell
-                      style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                      align="center"
-                      size="small"
-                      padding="none"
-                    >
-                      History
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {result.map((row, index) => (
-                    <TableRow key={row.id}>
-                      <TableCell align="center" size="small">
-                        {row.since}
-                      </TableCell>
-                      <TableCell align="center" size="small" padding="none">
-                        {row.source_name_field}
-                      </TableCell>
-                      <TableCell align="center" size="small" padding="none">
-                        {row.default_address}
-                      </TableCell>
-
-                      <TableCell align="center" size="small" padding="none">
-                        {row.state_name_field}/{row.lga_name_field}/
-                        {row.city_name_field}
-                      </TableCell>
-                      <TableCell align="center" size="small" padding="none">
-                        {row.street_name},{row.house_number},{row.address_hint1}
-                        ,{row.address_hint2} {row.address_hint3}
-                      </TableCell>
-                      <TableCell align="center" size="small">
-                        <a
-                          href={`http://www.google.com/maps/place/${row.google_coordinate1}+,+${row.google_coordinate2}`}
-                          target=""
+                <TableContainer component={Paper} elevation={16} p={0}>
+                  <Table stickyHeader>
+                    <TableHead>
+                      <TableRow style={{ backgroundColor: "white" }}>
+                        <TableCell
+                          style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                          align="center"
+                          padding="none"
                         >
-                          Location
-                        </a>
-                      </TableCell>
-                      {/* <TableCell align="center" size="small" padding="none">
-                        {}
-                      </TableCell> */}
-                      <TableCell align="center" size="small" padding="none">
-                        {row.owner_name_field}
-                      </TableCell>
-                      <TableCell align="center" size="small" padding="none">
-                        <Button
+                          Startdate
+                    </TableCell>
+                        <TableCell
+                          style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                          align="center"
                           size="small"
-                          color="primary"
-                          variant="outlined"
-                          onClick={() =>
-                            this.setState(
-                              {
-                                updateDialogOpen: true,
-                                selectedIndex: index,
-                                // add the updatedstate elements here after passing the token and adding data
-                              },
-                              console.log(this.state.selectedIndex)
-                            )
-                          }
+                          padding="1"
+                        >
+                          Addresssource
+                    </TableCell>
+                        <TableCell
+                          style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                          align="center"
+                          size="small"
+                          padding="none"
+                        >
+                          Address
+                    </TableCell>
+                        <TableCell
+                          style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                          align="center"
+                          size="small"
+                          padding="default"
+                        >
+                          State/LGA/City
+                    </TableCell>
+                        <TableCell
+                          style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                          align="center"
+                          size="small"
+                          padding="default"
+                        >
+                          Address
+                    </TableCell>
+                        <TableCell
+                          style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                          align="center"
+                          size="small"
+                          padding="default"
+                        >
+                          GoogleLink
+                    </TableCell>
+                        <TableCell
+                          style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                          align="center"
+                          size="small"
+                          padding="default"
+                        >
+                          Image
+                    </TableCell>
+                        <TableCell
+                          style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                          align="center"
+                          size="small"
+                          padding="default"
+                        >
+                          Verifier
+                    </TableCell>
+                        <TableCell
+                          style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                          align="center"
+                          size="small"
+                          padding="default"
                         >
                           Update
-                        </Button>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Button
+                    </TableCell>
+                        <TableCell
+                          style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                          align="center"
                           size="small"
-                          variant="outlined"
-                          color="secondary"
-                          onClick={() => {
-                            this.getHistory(row.id);
-                          }}
+                          padding="none"
                         >
                           History
+                    </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {result.map((row, index) => (
+                        <TableRow key={row.id}>
+                          <TableCell align="center" size="small">
+                            {row.since}
+                          </TableCell>
+                          <TableCell align="center" size="small" padding="none">
+                            {row.source_name_field}
+                          </TableCell>
+                          <TableCell align="center" size="small" padding="none">
+                            {row.default_address}
+                          </TableCell>
+
+                          <TableCell align="center" size="small" padding="none">
+                            {row.state_name_field}/{row.lga_name_field}/
+                        {row.city_name_field}
+                          </TableCell>
+                          <TableCell align="center" size="small" padding="none">
+                            {row.street_name},{row.house_number},{row.address_hint1}
+                        ,{row.address_hint2} {row.address_hint3}
+                          </TableCell>
+                          <TableCell align="center" size="small">
+                            <a
+                              href={`http://www.google.com/maps/place/${row.google_coordinate1}+,+${row.google_coordinate2}`}
+                              target=""
+                            >
+                              Location
+                        </a>
+                          </TableCell>
+                          {/* <TableCell align="center" size="small" padding="none">
+                        {}
+                      </TableCell> */}
+                          <TableCell align="center" size="small" padding="none">
+                            {row.owner_name_field}
+                          </TableCell>
+                          <TableCell align="center" size="small" padding="none">
+                            <Button
+                              size="small"
+                              color="primary"
+                              variant="outlined"
+                              onClick={() =>
+                                this.setState(
+                                  {
+                                    updateDialogOpen: true,
+                                    selectedIndex: index,
+                                    // add the updatedstate elements here after passing the token and adding data
+                                  },
+                                  console.log(this.state.selectedIndex)
+                                )
+                              }
+                            >
+                              Update
                         </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            {this.state.selectedIndex === -1 ? (
-              <div />
-            ) : (
-              <Dialog
-                fullWidth={"md"}
-                maxWidth={"md"}
-                open={this.state.updateDialogOpen}
-                onClose={() => this.setState({ updateDialogOpen: false })}
-                aria-labelledby="form-dialog-title"
-              >
-                <DialogTitle id="form-dialog-title">
-                  Updating the address
+                          </TableCell>
+                          <TableCell align="center">
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              color="secondary"
+                              onClick={() => {
+                                this.getHistory(row.id);
+                              }}
+                            >
+                              History
+                        </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                {this.state.selectedIndex === -1 ? (
+                  <div />
+                ) : (
+                    <Dialog
+                      fullWidth={"md"}
+                      maxWidth={"md"}
+                      open={this.state.updateDialogOpen}
+                      onClose={() => this.setState({ updateDialogOpen: false })}
+                      aria-labelledby="form-dialog-title"
+                    >
+                      <DialogTitle id="form-dialog-title">
+                        Updating the address
                 </DialogTitle>
 
-                <DialogContent>
-                  <Grid container direction="row">
-                    <Box>
-                      <p>
-                        <label>Addresses reason</label>
-                        <input
-                          class="w3-input"
-                          type="text"
-                          onChange={(event) =>
-                            this.setState({
-                              updatedaddressreason: event.target.value,
-                            })
-                          }
-                          defaultValue={
-                            result[this.state.selectedIndex].address_reason
-                          }
-                        />
-                      </p>
+                      <DialogContent>
+                        <Grid container direction="row">
+                          <Box>
+                            <p>
+                              <label>Addresses reason</label>
+                              <input
+                                class="w3-input"
+                                type="text"
+                                onChange={(event) =>
+                                  this.setState({
+                                    updatedaddressreason: event.target.value,
+                                  })
+                                }
+                                defaultValue={
+                                  result[this.state.selectedIndex].address_reason
+                                }
+                              />
+                            </p>
 
-                      <p>
-                        <label>Address type</label>
-                        <input
-                          class="w3-input"
-                          type="text"
-                          onChange={(event) =>
-                            this.setState({
-                              updatedaddressestype: event.target.value,
-                            })
-                          }
-                          defaultValue={
-                            result[this.state.selectedIndex].address_type
-                          }
-                        />
-                      </p>
-                      <p>
-                        <label>Default address</label>
+                            <p>
+                              <label>Address type</label>
+                              <input
+                                class="w3-input"
+                                type="text"
+                                onChange={(event) =>
+                                  this.setState({
+                                    updatedaddressestype: event.target.value,
+                                  })
+                                }
+                                defaultValue={
+                                  result[this.state.selectedIndex].address_type
+                                }
+                              />
+                            </p>
+                            <p>
+                              <label>Default address</label>
 
-                        <input
-                          class="w3-input"
-                          type="text"
-                          onChange={(event) => {
-                            this.setState({
-                              updateddefaultaddresses: event.target.value,
-                            });
-                            console.log(this.state.updatedsex);
-                          }}
-                          defaultValue={
-                            result[this.state.selectedIndex].default_address
-                          }
-                        />
-                      </p>
+                              <input
+                                class="w3-input"
+                                type="text"
+                                onChange={(event) => {
+                                  this.setState({
+                                    updateddefaultaddresses: event.target.value,
+                                  });
+                                  console.log(this.state.updatedsex);
+                                }}
+                                defaultValue={
+                                  result[this.state.selectedIndex].default_address
+                                }
+                              />
+                            </p>
 
-                      <p>
-                        <label>House number</label>
-                        <input
-                          class="w3-input"
-                          type="text"
-                          onChange={(event) => {
-                            this.setState({
-                              updatehousenumber: event.target.value,
-                            });
-                            console.log(event.target.value);
-                          }}
-                          defaultValue={
-                            result[this.state.selectedIndex].house_number
-                          }
-                        />
-                      </p>
-                      <p>
-                        <label>Address image</label>
-                        <input
-                          class="w3-input"
-                          type="file"
-                          onChange={(event) => {
-                            this.setState({
-                              updatedimage: event.target.files[0],
-                            });
-                            console.log(event.target.files[0]);
-                          }}
-                        />
-                      </p>
-                      <p>
-                        <label>Street</label>
-                        <input
-                          class="w3-input"
-                          type="text"
-                          onChange={(event) =>
-                            this.setState({
-                              updatedstreet: event.target.value,
-                            })
-                          }
-                          defaultValue={result[this.state.selectedIndex].state}
-                        />
-                      </p>
-                      <p>
-                        <label>State</label>
-                        <input
-                          class="w3-input"
-                          type="text"
-                          onChange={(event) =>
-                            this.setState({
-                              updatedstate: event.target.value,
-                            })
-                          }
-                          defaultValue={result[this.state.selectedIndex].state}
-                        />
-                      </p>
-                      <p>
-                        <label>LGA</label>
-                        <input
-                          class="w3-input"
-                          type="text"
-                          onChange={(event) => {
-                            this.setState({ updatedlga: event.target.value });
-                            console.log(event.target.value);
-                          }}
-                          defaultValue={result[this.state.selectedIndex].lga}
-                        />
-                      </p>
-                      <p>
-                        <label>City</label>
-                        <input
-                          class="w3-input"
-                          type="text"
-                          onChange={(event) => {
-                            this.setState({ updatedcity: event.target.value });
-                            console.log(event.target.value);
-                          }}
-                          defaultValue={result[this.state.selectedIndex].city}
-                        />
-                      </p>
-                      <p>
-                        <label>Address Hint1</label>
-                        <input
-                          class="w3-input"
-                          type="text"
-                          onChange={(event) => {
-                            this.setState({
-                              updatedaddresshint1: event.target.value,
-                            });
-                            console.log(event.target.value);
-                          }}
-                          defaultValue={
-                            result[this.state.selectedIndex].address_hint1
-                          }
-                        />
-                      </p>
-                      <p>
-                        <label>Address hint2</label>
-                        <input
-                          class="w3-input"
-                          type="text"
-                          onChange={(event) => {
-                            this.setState({
-                              updatedaddresshint2: event.target.value,
-                            });
-                            console.log(event.target.value);
-                          }}
-                          defaultValue={
-                            result[this.state.selectedIndex].address_hint2
-                          }
-                        />
-                      </p>
-                      <p>
-                        <label>Address hint3</label>
-                        <input
-                          class="w3-input"
-                          type="text"
-                          onChange={(event) => {
-                            this.setState({
-                              updatedaddresshint3: event.target.value,
-                            });
-                            console.log(event.target.value);
-                          }}
-                          defaultValue={
-                            result[this.state.selectedIndex].address_hint3
-                          }
-                        />
-                      </p>
+                            <p>
+                              <label>House number</label>
+                              <input
+                                class="w3-input"
+                                type="text"
+                                onChange={(event) => {
+                                  this.setState({
+                                    updatehousenumber: event.target.value,
+                                  });
+                                  console.log(event.target.value);
+                                }}
+                                defaultValue={
+                                  result[this.state.selectedIndex].house_number
+                                }
+                              />
+                            </p>
+                            <p>
+                              <label>Address image</label>
+                              <input
+                                class="w3-input"
+                                type="file"
+                                onChange={(event) => {
+                                  this.setState({
+                                    updatedimage: event.target.files[0],
+                                  });
+                                  console.log(event.target.files[0]);
+                                }}
+                              />
+                            </p>
+                            <p>
+                              <label>Street</label>
+                              <input
+                                class="w3-input"
+                                type="text"
+                                onChange={(event) =>
+                                  this.setState({
+                                    updatedstreet: event.target.value,
+                                  })
+                                }
+                                defaultValue={result[this.state.selectedIndex].state}
+                              />
+                            </p>
+                            <p>
+                              <label>State</label>
+                              <input
+                                class="w3-input"
+                                type="text"
+                                onChange={(event) =>
+                                  this.setState({
+                                    updatedstate: event.target.value,
+                                  })
+                                }
+                                defaultValue={result[this.state.selectedIndex].state}
+                              />
+                            </p>
+                            <p>
+                              <label>LGA</label>
+                              <input
+                                class="w3-input"
+                                type="text"
+                                onChange={(event) => {
+                                  this.setState({ updatedlga: event.target.value });
+                                  console.log(event.target.value);
+                                }}
+                                defaultValue={result[this.state.selectedIndex].lga}
+                              />
+                            </p>
+                            <p>
+                              <label>City</label>
+                              <input
+                                class="w3-input"
+                                type="text"
+                                onChange={(event) => {
+                                  this.setState({ updatedcity: event.target.value });
+                                  console.log(event.target.value);
+                                }}
+                                defaultValue={result[this.state.selectedIndex].city}
+                              />
+                            </p>
+                            <p>
+                              <label>Address Hint1</label>
+                              <input
+                                class="w3-input"
+                                type="text"
+                                onChange={(event) => {
+                                  this.setState({
+                                    updatedaddresshint1: event.target.value,
+                                  });
+                                  console.log(event.target.value);
+                                }}
+                                defaultValue={
+                                  result[this.state.selectedIndex].address_hint1
+                                }
+                              />
+                            </p>
+                            <p>
+                              <label>Address hint2</label>
+                              <input
+                                class="w3-input"
+                                type="text"
+                                onChange={(event) => {
+                                  this.setState({
+                                    updatedaddresshint2: event.target.value,
+                                  });
+                                  console.log(event.target.value);
+                                }}
+                                defaultValue={
+                                  result[this.state.selectedIndex].address_hint2
+                                }
+                              />
+                            </p>
+                            <p>
+                              <label>Address hint3</label>
+                              <input
+                                class="w3-input"
+                                type="text"
+                                onChange={(event) => {
+                                  this.setState({
+                                    updatedaddresshint3: event.target.value,
+                                  });
+                                  console.log(event.target.value);
+                                }}
+                                defaultValue={
+                                  result[this.state.selectedIndex].address_hint3
+                                }
+                              />
+                            </p>
 
-                      <p>
-                        <label>Started living here</label>
-                        <input
-                          class="w3-input"
-                          type="date"
-                          onChange={(event) => {
-                            this.setState({
-                              updatestartedlivinghere: event.target.value,
-                            });
-                            console.log(event.target.value);
-                          }}
-                          defaultValue={result[this.state.selectedIndex].since}
-                        />
-                      </p>
-                      <p>
-                        <label>Update reason</label>
-                        <input
-                          class="w3-input"
-                          type="text"
-                          onChange={(event) => {
-                            this.setState({
-                              updatedreason: event.target.value,
-                            });
-                            console.log(event.target.value);
-                          }}
-                          defaultValue={
-                            result[this.state.selectedIndex].update_reason
-                          }
-                        />
-                      </p>
-                    </Box>
+                            <p>
+                              <label>Started living here</label>
+                              <input
+                                class="w3-input"
+                                type="date"
+                                onChange={(event) => {
+                                  this.setState({
+                                    updatestartedlivinghere: event.target.value,
+                                  });
+                                  console.log(event.target.value);
+                                }}
+                                defaultValue={result[this.state.selectedIndex].since}
+                              />
+                            </p>
+                            <p>
+                              <label>Update reason</label>
+                              <input
+                                class="w3-input"
+                                type="text"
+                                onChange={(event) => {
+                                  this.setState({
+                                    updatedreason: event.target.value,
+                                  });
+                                  console.log(event.target.value);
+                                }}
+                                defaultValue={
+                                  result[this.state.selectedIndex].update_reason
+                                }
+                              />
+                            </p>
+                          </Box>
 
-                    <Box>
-                      <Map
-                        google={this.props.google}
-                        zoom={1}
-                        onClick={this.onMarkerClick}
-                        style={{ height: "75%", width: "75%" }}
-                        fullscreenControl={true}
-                      >
-                        <Marker
-                          position={{
-                            lat: this.state.location.latitude,
-                            lng: this.state.location.longtitude,
-                          }}
-                        />
-                        <InfoWindow
-                          onClose={this.onInfoWindowClose}
-                        ></InfoWindow>
-                      </Map>
-                    </Box>
-                  </Grid>
-                </DialogContent>
+                          <Box>
+                            <Map
+                              google={this.props.google}
+                              zoom={1}
+                              onClick={this.onMarkerClick}
+                              style={{ height: "75%", width: "75%" }}
+                              fullscreenControl={true}
+                            >
+                              <Marker
+                                position={{
+                                  lat: this.state.location.latitude,
+                                  lng: this.state.location.longtitude,
+                                }}
+                              />
+                              <InfoWindow
+                                onClose={this.onInfoWindowClose}
+                              ></InfoWindow>
+                            </Map>
+                          </Box>
+                        </Grid>
+                      </DialogContent>
 
-                <DialogActions>
-                  <Button
-                    disabled={this.state.buttondisabled}
-                    color="primary"
-                    onClick={() => {
-                      this.updatedetails(result[this.state.selectedIndex].id)
-                    }}
-                  >
-                    Update
+                      <DialogActions>
+                        <Button
+                          disabled={this.state.buttondisabled}
+                          color="primary"
+                          onClick={() => {
+                            this.updatedetails(result[this.state.selectedIndex].id)
+                          }}
+                        >
+                          Update
                   </Button>
-                  <Button
+                        <Button
 
-                    color="secondary"
-                    onClick={() =>
-                      this.setState({
-                        updateDialogOpen: false,
-                        selectedIndex: -1,
-                      })
-                    }
-                  >
-                    Cancel
+                          color="secondary"
+                          onClick={() =>
+                            this.setState({
+                              updateDialogOpen: false,
+                              selectedIndex: -1,
+                            })
+                          }
+                        >
+                          Cancel
                   </Button>
-                </DialogActions>
-              </Dialog>
+                      </DialogActions>
+                    </Dialog>
+                  )}
+              </Grid>
             )}
-          </Grid>
-        )}
         <Dialog
           fullWidth={"md"}
           maxWidth={"md"}
@@ -776,34 +780,34 @@ class Addresses extends Component {
               {this.state.historyloading ? (
                 this.isloading()
               ) : (
-                <TableBody>
-                  {history.map((row, index) => (
-                    <TableRow key={row.id}>
-                      <TableCell align="center">
-                        {row.state_name_field}
-                        {row.lga_name_field}
-                        {row.city_name_field}
-                      </TableCell>
-                      <TableCell align="center">{row.street_name}</TableCell>
-                      <TableCell align="center">{row.house_number}</TableCell>
-                      <TableCell align="center">{row.address_hint1}</TableCell>
-                      {/* <TableCell align="center">
+                  <TableBody>
+                    {history.map((row, index) => (
+                      <TableRow key={row.id}>
+                        <TableCell align="center">
+                          {row.state_name_field}
+                          {row.lga_name_field}
+                          {row.city_name_field}
+                        </TableCell>
+                        <TableCell align="center">{row.street_name}</TableCell>
+                        <TableCell align="center">{row.house_number}</TableCell>
+                        <TableCell align="center">{row.address_hint1}</TableCell>
+                        {/* <TableCell align="center">
                         <Avatar src={row.address_hint1}>Picture</Avatar>
                       </TableCell> */}
-                      <TableCell align="center">
-                        {row.google_coordinate1}
-                        {row.google_coordinate2}
-                      </TableCell>
-                      <TableCell align="center">{row.address_reason}</TableCell>{" "}
-                      <TableCell align="center">{row.address_type}</TableCell>{" "}
-                      <TableCell component="th" align="center">
-                        {row.created_on}
-                      </TableCell>
-                      <TableCell align="center">{row.update_reason}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              )}
+                        <TableCell align="center">
+                          {row.google_coordinate1}
+                          {row.google_coordinate2}
+                        </TableCell>
+                        <TableCell align="center">{row.address_reason}</TableCell>{" "}
+                        <TableCell align="center">{row.address_type}</TableCell>{" "}
+                        <TableCell component="th" align="center">
+                          {row.created_on}
+                        </TableCell>
+                        <TableCell align="center">{row.update_reason}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                )}
             </Table>
           </TableContainer>
         </Dialog>
@@ -815,7 +819,7 @@ class Addresses extends Component {
     await axios
       .get(
         "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/address/lgas?stateId=" +
-          stateid,
+        stateid,
         {
           headers: {
             Authorization: token,
@@ -833,7 +837,7 @@ class Addresses extends Component {
     await axios
       .get(
         "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/address/cities?lgaId=" +
-          lgaid,
+        lgaid,
         {
           headers: {
             Authorization: token,
@@ -888,187 +892,296 @@ class Addresses extends Component {
         console.log(response);
       });
   }
-  addaddressform() {
+  addAddressForm() {
     return (
-      <>
-        <Grid container justify="flex-start" direction="row">
-          <Grid class="w3-container">
-            <InputLabel htmlFor="grouped-select">Address Types</InputLabel>
-            <Select
-              onChange={(event) => {
-                this.setState({ selectedaddressType: event.target.value });
-              }}
-            >
-              {this.state.addressTypes.map((address) => (
-                <MenuItem id={address.id} value={address.id}>
-                  {address.addressType}
-                </MenuItem>
-              ))}
-            </Select>
+      <Dialog
+        open={this.state.addDialogOpen}
+        onClose={() => this.setState({ addDialogOpen: true })}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="addNewAddress" justify="center">
+          Add new address
+              </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Enter the details of your address
+                </DialogContentText>
 
-            <InputLabel>Address Reason</InputLabel>
-            <Select
-              onChange={(event) => {
-                this.setState({ selectedaddressReason: event.target.value });
-              }}
-            >
-              {this.state.addressReasons.map((address) => (
-                <MenuItem id={address.id} value={address.id}>
-                  {address.addressReason}
-                </MenuItem>
-              ))}
-            </Select>
-            <p>
-              <label>Default address</label>
+          <Grid container justify='flex-start' direction='row' alignItems='center' spacing={3}>
 
-              <Select
-                onChange={(event) => {
-                  this.setState(
-                    { defaultaddress: event.target.value },
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel id="addressType">Address types</InputLabel>
+                <Select
+                  labelId="addressType"
+                  id="addresType"
+                  onChange={(event) => {
+                    this.setState({ selectedaddressType: event.target.value });
+                  }}
+                >
+                  {this.state.addressTypes.map((address) => (
+                    <MenuItem id={address.id} value={address.id}>
+                      {address.addressType}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
 
-                    console.log("defaultadress", this.state.defaultaddress)
-                  );
-                }}
-              >
-                <MenuItem id={1} value="Yes">
-                  Yes
-                </MenuItem>
-                <MenuItem id={2} value="No">
-                  No
-                </MenuItem>
-              </Select>
-            </p>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel id="addressReason">Address Reason</InputLabel>
+                <Select
+                  labelId="addressReason"
+                  id="addresReason"
+                  onChange={(event) => {
+                    this.setState({ selectedaddressReason: event.target.value });
+                  }}
+                >
+                  {this.state.addressReasons.map((address) => (
+                    <MenuItem id={address.id} value={address.id}>
+                      {address.addressReason}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
 
-            <p>
-              <label>House number</label>
-              <input
-                class="w3-input"
-                type="text"
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel id="defaultAddress">Default address</InputLabel>
+                <Select
+                  labelId="defaultAddress"
+                  id="defaultAddress"
+                  onChange={(event) => {
+                    this.setState(
+                      { defaultaddress: event.target.value },
+
+                      console.log("defaultadress", this.state.defaultaddress)
+                    );
+                  }}
+                >
+                  <MenuItem id={1} value="Yes">Yes</MenuItem>
+                  <MenuItem id={2} value="No">No</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item fullWidth xs={12}>
+              <TextField
+                id="houseNumber"
+                label="House number"
                 onChange={(event) => {
                   this.setState({ housenumber: event.target.value });
                   console.log(event.target.value);
                 }}
-                //  defaultValue={result[this.state.selectedIndex].dob}
+                type="text"
+                fullWidth
               />
-            </p>
-            <p>
-              <label>Address image</label>
-              <input
-                class="w3-input"
-                type="file"
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="default"
+                startIcon={<CloudUploadIcon />}
+              >
+                Choose file
+              </Button>
+            </Grid>
+
+            <Grid item fullWidth xs={12}>
+              <TextField
+                id="addressImage"
+                label="Choose Image"
                 onChange={(event) => {
                   this.setState({ addressimage: event.target.files[0] });
                   console.log(event.target.files[0]);
                 }}
+                type="file"
+                fullWidth
               />
-            </p>
+            </Grid>
 
-            <InputLabel htmlFor="grouped-select">States</InputLabel>
-            <Select
-              onChange={(event) => {
-                this.setState({ selectedState: event.target.value });
-                // console.log(
-                //   "selectedstate",
-                //   this.state.selectedState,
-                //   event.target.value
-                // );
-                this.lganames(event.target.value);
-              }}
-            >
-              {this.state.stateName.map((states) => (
-                <MenuItem id={states.id} value={states.id}>
-                  {states.stateName}
-                </MenuItem>
-              ))}
-            </Select>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel id="states">States</InputLabel>
+                <Select
+                  labelId="states"
+                  id="states"
+                  onChange={(event) => {
+                    this.setState({ selectedState: event.target.value });
+                    // console.log(
+                    //   "selectedstate",
+                    //   this.state.selectedState,
+                    //   event.target.value
+                    // );
+                    this.lganames(event.target.value);
+                  }}
+                >
+                  {this.state.stateName.map((states) => (
+                    <MenuItem id={states.id} value={states.id}>
+                      {states.stateName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
 
-            <InputLabel htmlFor="grouped-select">LGA</InputLabel>
-            <Select
-              defaultValue=""
-              id="grouped-select"
-              onChange={(e) => {
-                this.setState({ selectedLga: e.target.value });
-                this.citynames(e.target.value);
-              }}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel id="lga">LGA</InputLabel>
+                <Select
+                  labelId="lga"
+                  id="lga"
+                  onChange={(e) => {
+                    this.setState({ selectedLga: e.target.value });
+                    this.citynames(e.target.value);
+                  }}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
 
-              {this.state.lgaStates.map((lgas) => (
-                <MenuItem value={lgas.id}>{lgas.lgaName} </MenuItem>
-              ))}
-            </Select>
+                  {this.state.lgaStates.map((lgas) => (
+                    <MenuItem value={lgas.id}>{lgas.lgaName} </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
 
-            <InputLabel htmlFor="grouped-select">City</InputLabel>
-            <Select
-              defaultValue=""
-              id="grouped-select"
-              onChange={(event) => {
-                this.setState({
-                  selectedCity: event.target.value,
-                });
-              }}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel id="city">City</InputLabel>
+                <Select
+                  labelId="city"
+                  id="city"
+                  onChange={(event) => {
+                    this.setState({
+                      selectedCity: event.target.value,
+                    });
+                  }}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
 
-              {this.state.cityStates.map((city) => (
-                <MenuItem value={city.id}>{city.cityName}</MenuItem>
-              ))}
-            </Select>
+                  {this.state.cityStates.map((city) => (
+                    <MenuItem value={city.id}>{city.cityName}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
 
-            <p>
-              <label>Address Hint1</label>
-              <input
-                class="w3-input"
-                type="text"
+            <Grid item fullWidth xs={12}>
+              <TextField
+                id="addressHint1"
+                label="Address hint 1"
                 onChange={(event) => {
                   this.setState({ addresshint1: event.target.value });
                   console.log(event.target.value);
                 }}
-                // defaultValue={result[this.state.selectedIndex].dob}
-              />
-            </p>
-            <p>
-              <label> Address Hint2</label>
-              <input
-                class="w3-input"
                 type="text"
+                fullWidth
+              />
+            </Grid>
+
+            <Grid item fullWidth xs={12}>
+              <TextField
+                id="addressHint2"
+                label="Address hint 2"
                 onChange={(event) => {
                   this.setState({ addresshint2: event.target.value });
                   console.log(event.target.value);
                 }}
-                // defaultValue={result[this.state.selectedIndex].dob}
-              />
-            </p>
-            <p>
-              <label>Address Hint3</label>
-              <input
-                class="w3-input"
                 type="text"
+                fullWidth
+              />
+            </Grid>
+
+            <Grid item fullWidth xs={12}>
+              <TextField
+                id="addressHint3"
+                label="Address hint 3"
                 onChange={(event) => {
                   this.setState({ addresshint3: event.target.value });
                   console.log(event.target.value);
                 }}
-                // defaultValue={result[this.state.selectedIndex].dob}
+                type="text"
+                fullWidth
               />
-            </p>
+            </Grid>
 
-            <p>
-              <label>Started living here</label>
-              <input
-                class="w3-input"
-                type="date"
+            <Grid item fullWidth xs={12}>
+              <TextField
+                id="startedLivingHereSince"
+                helperText="Started living here since"
                 onChange={(event) => {
                   this.setState({ startedLivingHere: event.target.value });
                   console.log(event.target.value);
                 }}
-                // defaultValue={result[this.state.selectedIndex].dob}
+                type="date"
+                fullWidth
               />
-            </p>
-            {/* <p>
+            </Grid>
+
+            <Grid item fullWidth xs={12}>
+              <TextField
+                id="street"
+                label="Street"
+                onChange={(event) =>
+                  this.setState(
+                    {
+                      Streetname: event.target.value,
+                    }
+                    // this.reasonforupdatevalidcheck(event)
+                  )
+                }
+                type="text"
+                fullWidth
+              />
+            </Grid>
+
+            <Grid item fullWidth xs={12}>
+              <TextField
+                id="googleCoordinates"
+                label="Google coordinates"
+                onChange={(event) =>
+                  this.setState(
+                    {
+                      Streetname: event.target.value,
+                    }
+                    // this.reasonforupdatevalidcheck(event)
+                  )
+                }
+                type="text"
+                fullWidth
+              />
+            </Grid>
+
+            <Grid item fullWidth xs={12}>
+              <TextField
+                id="googleCoordinates"
+                label="Google coordinates"
+                onChange={(event) =>
+                  this.setState(
+                    {
+                      Streetname: event.target.value,
+                    }
+                    // this.reasonforupdatevalidcheck(event)
+                  )
+                }
+                type="text"
+                fullWidth
+              />
+            </Grid>
+
+          </Grid>
+
+          <Grid container justify="flex-start" direction="row">
+            <Grid class="w3-container">
+
+              {/* <p>
               <label>update reason</label>
               <input
                 class="w3-input"
@@ -1080,130 +1193,107 @@ class Addresses extends Component {
                 // defaultValue={result[this.state.selectedIndex].dob}
               />
             </p> */}
-            <p>
-              <label>Street</label>
-              <input
-                class="w3-input"
-                type="text"
-                onChange={(event) =>
-                  this.setState(
-                    {
-                      Streetname: event.target.value,
-                    }
-                    // this.reasonforupdatevalidcheck(event)
-                  )
-                }
-              />
-            </p>
-            <p>
-              <label>Google coordinates</label>
-              <input
-                class="w3-input"
-                type="text"
-                defaultValue={this.state.location.latitude}
-              />
-              <input
-                class="w3-input"
-                type="text"
-                defaultValue={this.state.location.longtitude}
-              />
-            </p>
-            <p>
-              <label>Google coordinates</label>
-              <input
-                class="w3-input"
-                type="text"
-                defaultValue={this.state.location.latitude}
-              />
-              <input
-                class="w3-input"
-                type="text"
-                defaultValue={this.state.location.longtitude}
-              />
-            </p>
-            <Grid
-              display="flex"
-              p={3}
-              justify="space-around"
-              // style={{ background: "red" }}
-            >
-              <Grid
-                container
-                direction="row"
-                justify="space-evenly"
-                alignItems="center"
-              >
-                <Button
-                  color="primary"
-                  variant="outlined"
-                  onClick={() => {
-                    this.setState({
-                      addDialogOpen: false,
-                    });
-                    this.postAddress();
-                  }}
-                >
-                  Submit Profile
-                </Button>
-                <Button
-                  color="secondary"
-                  variant="outlined"
-                  onClick={() =>
-                    this.setState({
-                      addDialogOpen: false,
-                    })
-                  }
-                >
-                  Cancel
-                </Button>
-              </Grid>
+              <p>
+                <label>Google coordinates</label>
+                <input
+                  class="w3-input"
+                  type="text"
+                  defaultValue={this.state.location.latitude}
+                />
+                <input
+                  class="w3-input"
+                  type="text"
+                  defaultValue={this.state.location.longtitude}
+                />
+              </p>
+              <p>
+                <label>Google coordinates</label>
+                <input
+                  class="w3-input"
+                  type="text"
+                  defaultValue={this.state.location.latitude}
+                />
+                <input
+                  class="w3-input"
+                  type="text"
+                  defaultValue={this.state.location.longtitude}
+                />
+              </p>
             </Grid>
-          </Grid>
-          <Box>
-            <Map
-              google={this.props.google}
-              zoom={12}
-              onClick={this.onMarkerClick}
-              style={{
-                width: "40%",
-                height: "75%",
-              }}
-              fullscreenControl={true}
-            >
-              <Marker
-                position={{
-                  lat: this.state.location.latitude,
-                  lng: this.state.location.longtitude,
+            {/* <Box>
+              <Map
+                google={this.props.google}
+                zoom={12}
+                onClick={this.onMarkerClick}
+                style={{
+                  width: "40%",
+                  height: "75%",
                 }}
-              />
-              <InfoWindow onClose={this.onInfoWindowClose}></InfoWindow>
-            </Map>
-          </Box>
-        </Grid>
-      </>
+                fullscreenControl={true}
+              >
+                <Marker
+                  position={{
+                    lat: this.state.location.latitude,
+                    lng: this.state.location.longtitude,
+                  }}
+                />
+                <InfoWindow onClose={this.onInfoWindowClose}></InfoWindow>
+              </Map>
+            </Box> */}
+          </Grid>
+
+        </DialogContent>
+        <DialogActions>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              this.setState({
+                addDialogOpen: false,
+              });
+              this.postAddress();
+            }}>
+            Submit Address
+                </Button>
+          <Button
+            color="secondary"
+            variant="contained"
+            onClick={() =>
+              this.setState({
+                addDialogOpen: false,
+              })
+            }
+          >
+            Cancel
+                </Button>
+        </DialogActions>
+      </Dialog>
     );
   }
   addaddress() {
     return (
       <>
-        <Grid container direction="row" justify="space-between">
-          <h1>My Address</h1>
+        <Grid container spacing={3} justify="space-between" >
+          <Grid item xs={6}>
+            <h1>My Address</h1>
+          </Grid>
+          <Grid item xs={12}>
 
-          <Box m={3}>
-            <Button
-              size="small"
-              variant="contained"
-              color="primary"
-              onClick={() => this.setState({ addDialogOpen: true })}
-            >
-              Add Profile
-            </Button>
-          </Box>
+            <Paper style={{ padding: 20 }} elevation={3}>
+              <Typography variant="h5" gutterBottom align='center'>
+                Add address to improve ratings.
+            </Typography>
+
+              <Grid container justify='center' style={{ marginTop: 50 }}>
+                <Button color="primary" variant='contained' onClick={() => this.setState({ addDialogOpen: true })}>
+                  Add New address
+              </Button>
+              </Grid>
+            </Paper>
+          </Grid>
         </Grid>
-        <Grid container direction="row" justify="center">
-          <h3>Add address to improve your rating</h3>
-        </Grid>
-        {this.state.addDialogOpen ? this.addaddressform() : null}
+
+        {this.state.addDialogOpen ? this.addAddressForm() : null}
       </>
     );
   }

@@ -17,6 +17,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import axios from "axios";
+import FormControl from '@material-ui/core/FormControl';
 import Box from "@material-ui/core/Box";
 import { Typography } from "@material-ui/core";
 import { Select } from "@material-ui/core";
@@ -24,11 +25,13 @@ import { MenuItem } from "@material-ui/core";
 import { InputLabel } from "@material-ui/core";
 import { CircularProgress } from "@material-ui/core";
 
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+
 const token1 = localStorage.getItem("Token");
 const token = "Token " + token1;
 const id = localStorage.getItem("id");
 let result = [];
-let history=[]
+let history = []
 
 class MyProfile extends Component {
   state = {
@@ -43,9 +46,9 @@ class MyProfile extends Component {
     middlename: "",
     lastname: "",
     Dob: "",
-    historyDialougeOpen: false,
+    historyDialogeOpen: false,
     initialfile: "",
-historyloading:true,
+    historyloading: true,
     updatedMiddlename: "",
     updatedlastname: "",
     updatedReasonforupdating: "",
@@ -160,16 +163,18 @@ historyloading:true,
   }
   isloading() {
     return (
-      <Grid
-        container
-        spacing={0}
+      <Grid container justify='flex-end' alignItems='center'
+        // container
+        // spacing={0}
         direction="column"
-        alignItems="center"
-        justify="center"
-        display="flex"
-        style={{ minHeight: "100vh" }}
+      // alignItems="center"
+      // justify="center"
+      // // display="flex"
+      // style={{ minHeight: "10vh" }}
       >
-        <CircularProgress />
+        <Grid item xs={6} >
+          <CircularProgress />
+        </Grid>
       </Grid>
     );
   }
@@ -177,188 +182,215 @@ historyloading:true,
   tabledata() {
     return (
       <>
-        {result.length === 0 ? (
-          <div>
-            <Grid
-              container
-              direction="column"
-              alignItems="center"
-              justify="center"
-            >
-              <Box m={12}>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => this.setState({ addDialogOpen: true })}
-                  style={{
-                    fontFamily: "Montserrat",
-                    fontWeight: "bold",
-                    background:
-                      "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
-                  }}
+        {
+          result.length === 0
+            // true
+            ? (
+              <div>
+
+                <Grid container spacing={3} justify="space-between" >
+                  <Grid item xs={6}>
+                    <h1>My Profile</h1>
+                  </Grid>
+                  <Grid item xs={12}>
+
+                    <Paper style={{ padding: 20 }} elevation={3}>
+                      <Typography variant="h5" gutterBottom align='center'>
+                        Add job profiles to improve ratings.
+                      </Typography>
+
+                      <Grid container justify='center' style={{ marginTop: 50 }}>
+                        <Button color="primary" variant='contained' onClick={() => this.setState({ addDialogOpen: true })}>
+                          Add New Job Profile
+                        </Button>
+                      </Grid>
+                    </Paper>
+                  </Grid>
+
+                </Grid>
+
+                {<Dialog
+                  open={this.state.addDialogOpen}
+                  onClose={() => this.setState({ addDialogOpen: true })}
+                  aria-labelledby="form-dialog-title"
                 >
-                  Add Profile
-                </Button>
-              </Box>
-              <h3> Add details to your profile </h3>
-            </Grid>
-            <Dialog
-              open={this.state.addDialogOpen}
-              onClose={() => this.setState({ addDialogOpen: true })}
-              aria-labelledby="form-dialog-title"
-            >
-              <DialogTitle id="form-dialog-title" justify="center">
-                Add Profile
+                  <DialogTitle id="form-dialog-title" justify="center">
+                    Add Profile
               </DialogTitle>
-              <DialogContent>
-                <DialogContentText justify="center">
-                  Enter the following details
+                  <DialogContent>
+                    <DialogContentText>
+                      Enter the details of your profile to be updated
                 </DialogContentText>
 
-                <div class="w3-container">
-                  <p>
-                    <label>firstname</label>
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) => {
-                        this.setState({ firstname: event.target.value });
-                        console.log(this.state.firstname);
-                      }}
-                    // defaultValue={result[this.state.selectedIndex].firstname}
-                    />
-                  </p>
+                    <Grid container justify='flex-start' direction='row' alignItems='center' spacing={3}>
+                      <Grid item fullWidth xs={12}>
+                        <TextField
+                          id="firstName"
+                          label="First Name"
+                          // defaultValue={result[this.state.selectedIndex].firstname}
+                          onChange={(event) => {
+                            this.setState({ firstname: event.target.value });
+                            console.log(this.state.firstname);
+                          }}
+                          type="text"
+                          fullWidth
+                        />
+                      </Grid>
 
-                  <p>
-                    <label>MiddleName</label>
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) => {
-                        this.setState({ middlename: event.target.value });
-                        console.log(this.state.middlename);
-                      }}
-                    // defaultValue={result[this.state.selectedIndex].middlename}
-                    />
-                  </p>
-                  <p>
-                    <label>lastname</label>
+                      <Grid item fullWidth xs={12}>
+                        <TextField
+                          id="middleName"
+                          label="Middle Name"
+                          // defaultValue={result[this.state.selectedIndex].middlename}
+                          onChange={(event) => {
+                            this.setState({ middlename: event.target.value });
+                            console.log(this.state.middlename);
+                          }}
+                          type="text"
+                          fullWidth
+                        />
+                      </Grid>
 
-                    <input
-                      class="w3-input"
-                      type="text"
-                      onChange={(event) => {
-                        this.setState({ lastname: event.target.value });
-                        console.log(this.state.lastname);
-                      }}
-                    // defaultValue={result[this.state.selectedIndex].surname}
-                    />
-                  </p>
-                  <p>
-                    <label>Dob</label>
-                    <input
-                      class="w3-input"
-                      type="date"
-                      onChange={(event) => {
-                        this.setState({ Dob: event.target.value });
-                        console.log(this.state.Dob);
-                      }}
-                    // defaultValue={result[this.state.selectedIndex].dob}
-                    />
-                  </p>
-                  <p>
-                    <label>Picture</label>
-                    <input
-                      class="w3-input"
-                      type="file"
-                      onChange={(event) => {
-                        this.setState({ initialfile: event.target.files[0] });
-                        console.log(this.state.initialfile);
-                      }}
-                    />
-                  </p>
-                  <p>
-                    <InputLabel id="demo-simple-select-label">sex</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      onChange={(event) => {
-                        this.setState({ gender: event.target.value });
-                        console.log(this.state.gender);
+                      <Grid item fullWidth xs={12}>
+                        <TextField
+                          id="surname"
+                          label="Surname"
+                          // defaultValue={result[this.state.selectedIndex].surname}
+                          onChange={(event) => {
+                            this.setState({ lastname: event.target.value });
+                            console.log(this.state.lastname);
+                          }}
+                          type="text"
+                          fullWidth
+                        />
+                      </Grid>
+
+                      <Grid item fullWidth xs={12}>
+                        <TextField
+                          id="dob"
+                          // label="Date of birth"
+                          // defaultValue={result[this.state.selectedIndex].dob}
+                          onChange={(event) => {
+                            this.setState({ Dob: event.target.value });
+                            console.log(this.state.Dob);
+                          }}
+                          type="date"
+                          fullWidth
+                        />
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <Button
+                          variant="contained"
+                          color="default"
+                          startIcon={<CloudUploadIcon />}
+                        >
+                          Choose file
+                      </Button>
+                      </Grid>
+
+                      <Grid item fullWidth xs={12}>
+                        <TextField
+                          id="chooseFile"
+                          label="Choose File"
+                          onChange={(event) => {
+                            this.setState({ initialfile: event.target.files[0] });
+                            console.log(this.state.initialfile);
+                          }}
+                          type="file"
+                          fullWidth
+                        />
+                      </Grid>
+
+                      <Grid item fullWidth xs={12}>
+
+                        <FormControl fullWidth>
+                          <InputLabel id="gender">Gender</InputLabel>
+                          <Select
+                            labelId="gender"
+                            id="gender"
+                            // value={age}
+                            onChange={(event) => {
+                              this.setState({ gender: event.target.value });
+                              console.log(this.state.gender);
+                            }}
+                          >
+                            <MenuItem value={"Male"}>Male</MenuItem>
+                            <MenuItem value={"Female"}>Female</MenuItem>
+                          </Select>
+                        </FormControl>
+
+                      </Grid>
+                    </Grid>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      onClick={() => {
+                        this.setState(
+                          {
+                            addDialogOpen: false,
+                          },
+                          this.postprofile
+                        );
                       }}
                     >
-                      <MenuItem value={"Male"}>male</MenuItem>
-                      <MenuItem value={"Female"}>female</MenuItem>
-                    </Select>
-                  </p>
-                </div>
-              </DialogContent>{" "}
-              <DialogActions>
-                <Button
-                  color="primary"
-                  onClick={() => {
-                    this.setState(
-                      {
-                        addDialogOpen: false,
-                      },
-                      this.postprofile
-                    );
-                  }}
-                >
-                  Submit Profile
+                      Submit Profile
                 </Button>
-                <Button
-                  color="secondary"
-                  onClick={() =>
-                    this.setState({
-                      addDialogOpen: false,
-                    })
-                  }
-                >
-                  Cancel
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </div>
-        ) : (
-            <div>
-              <Paper elevation={2} style={{marginTop:20}}>
-
-                <Grid container style={{ padding: 20 }} spacing={3}
-                  direction="row"
-                  justify="flex-start"
-                  alignItems="center">
-                  <Grid item xs={3}>
-                    <Avatar
-                      src={result[0].picture}
-                      style={{ height: "12rem", width: "12rem" }}
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      onClick={() =>
+                        this.setState({
+                          addDialogOpen: false,
+                        })
+                      }
                     >
-                      <img src="/images/sampleuserphoto.jpg"  width="185" height="185"/>
-                    </Avatar>
-                  </Grid>
-                  <Grid item xs={9}>
-                  <Typography variant='h2' style={{ fontFamily: "Montserrat", textTransform: 'capitalize' }}>
-                      {result[0].firstname} {result[0].middlename}
-                    </Typography>
-
-                    <Typography variant='h5' style={{ fontFamily: "Montserrat" }}>
-                      Dob:{result[0].dob}
-                    </Typography>
-
-                    <Typography variant='h5' style={{ fontFamily: "Montserrat" }}>
-                      Sex:{result[0].sex}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Paper>
-              <div style={{marginTop: 50}}>
-              {this.getTableOfEmployees()}
+                      Cancel
+                </Button>
+                  </DialogActions>
+                </Dialog>}
               </div>
-              
-              
+            ) : (
+              <div>
+                <Paper elevation={2} style={{ marginTop: 20 }}>
+
+                  <Grid container style={{ padding: 20 }} spacing={3}
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="center">
+                    <Grid item xs={3}>
+                      <Avatar
+                        src={result[0].picture}
+                        style={{ height: "12rem", width: "12rem" }}
+                      >
+                        <img src="/images/sampleuserphoto.jpg" width="185" height="185" />
+                      </Avatar>
+                    </Grid>
+                    <Grid item xs={9}>
+                      <Typography variant='h2' style={{ fontFamily: "Montserrat", textTransform: 'capitalize' }}>
+                        {result[0].firstname} {result[0].middlename}
+                      </Typography>
+
+                      <Typography variant='h5' style={{ fontFamily: "Montserrat" }}>
+                        Dob:{result[0].dob}
+                      </Typography>
+
+                      <Typography variant='h5' style={{ fontFamily: "Montserrat" }}>
+                        Sex:{result[0].sex}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Paper>
+                <div style={{ marginTop: 50 }}>
+                  {this.getTableOfEmployees()}
+                </div>
 
 
-              {/* <Box p={4}>
+
+
+                {/* <Box p={4}>
               <Grid
                 container
                 // style={{backgroundColor:"red"}}
@@ -406,33 +438,33 @@ historyloading:true,
               </Grid>
             </Box> */}
 
-              {/* {this.getTableOfEmployees()} */}
-            </div>
-          )}
+                {/* {this.getTableOfEmployees()} */}
+              </div>
+            )}
       </>
     );
   }
-  async fetchhistory(){
-await axios
-  .get(
-    "http://3.22.17.212:8000/api/v1/employees/" +
-      id +
-      "/profiles-by/" +
-      id +
-      "/history",
-    {
-      headers: {
-        Authorization: token,
-      },
-    }
-  )
-  .then((res) => {
-    history = res.data;
-    console.log("history", history);
-    this.setState({ historyloading: false });
-  });
+  async fetchhistory() {
+    await axios
+      .get(
+        "http://3.22.17.212:8000/api/v1/employees/" +
+        id +
+        "/profiles-by/" +
+        id +
+        "/history",
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        history = res.data;
+        console.log("history", history);
+        this.setState({ historyloading: false });
+      });
   }
- 
+
 
   getTableOfEmployees() {
     return (
@@ -440,61 +472,16 @@ await axios
         <TableContainer component={Paper} elevation={16} p={3}>
           <Table stickyHeader>
             <TableHead>
+
               <TableRow style={{ backgroundColor: "black" }}>
-                <TableCell
-                  style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                  align="center"
-                >
-                  Picture
-                </TableCell>
-                <TableCell
-                  style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                  align="center"
-                >
-                  Date
-                </TableCell>
-                <TableCell
-                  style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                  align="center"
-                >
-                  Source
-                </TableCell>
-                <TableCell
-                  style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                  align="center"
-                >
-                  Fullname
-                </TableCell>
-                <TableCell
-                  style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                  align="center"
-                >
-                  Dob
-                </TableCell>
-                <TableCell
-                  style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                  align="center"
-                >
-                  Sex
-                </TableCell>
-                <TableCell
-                  style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                  align="center"
-                >
-                  Verifier
-                </TableCell>
-                <TableCell
-                  style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                  align="center"
-                >
-                  Update
-                </TableCell>
-                <TableCell
-                  style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                  align="center"
-                >
-                  History
-                </TableCell>
+                {['Picture', 'Date', 'Source', 'Full name', 'Date of birth', 'Sex', 'verifier', 'Update', 'History'].map((text, index) => (
+                  <TableCell
+                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    align="center"
+                  >
+                    {text}
+                  </TableCell>
+                ))}
               </TableRow>
             </TableHead>
 
@@ -502,7 +489,7 @@ await axios
               {result.map((row, index) => (
                 <TableRow key={row.id}>
                   <TableCell align="center">
-                    <Avatar src={row.picture}><img src="/images/sampleuserphoto.jpg"  width="40" height="40"/></Avatar>
+                    <Avatar src={row.picture}><img src="/images/sampleuserphoto.jpg" width="40" height="40" /></Avatar>
                   </TableCell>
                   <TableCell component="th" align="center">
                     {new Date(row.created_on).toDateString()}
@@ -533,7 +520,7 @@ await axios
                       color="secondary"
                       onClick={() =>
                         this.setState(
-                          { historyDialougeOpen: true },
+                          { historyDialogeOpen: true },
                           this.fetchhistory
                         )
                       }
@@ -559,71 +546,88 @@ await axios
                     Enter the details of your profile to be updated
                 </DialogContentText>
 
-                  <div class="w3-container">
-                    <p>
-                      <label>firstname</label>
-                      <input
-                        class="w3-input"
-                        type="text"
+                  <Grid container justify='flex-start' direction='row' alignItems='center' spacing={3}>
+                    <Grid item fullWidth xs={12}>
+                      <TextField
+                        id="firstName"
+                        label="First Name"
+                        defaultValue={result[this.state.selectedIndex].firstname}
                         onChange={(event) =>
                           this.setState({ updatedfirstname: event.target.value })
                         }
-                        defaultValue={result[this.state.selectedIndex].firstname}
-                      />
-                    </p>
-
-                    <p>
-                      <label>MiddleName</label>
-                      <input
-                        class="w3-input"
                         type="text"
+                        fullWidth
+                      />
+                    </Grid>
+
+                    <Grid item fullWidth xs={12}>
+                      <TextField
+                        id="middleName"
+                        label="Middle Name"
+                        defaultValue={result[this.state.selectedIndex].middlename}
                         onChange={(event) =>
                           this.setState({ updatedMiddlename: event.target.value })
                         }
-                        defaultValue={result[this.state.selectedIndex].middlename}
-                      />
-                    </p>
-                    <p>
-                      <label>lastname</label>
-
-                      <input
-                        class="w3-input"
                         type="text"
+                        fullWidth
+                      />
+                    </Grid>
+
+                    <Grid item fullWidth xs={12}>
+                      <TextField
+                        id="surname"
+                        label="Surname"
+                        defaultValue={result[this.state.selectedIndex].surname}
                         onChange={(event) => {
                           this.setState({ updatedlastname: event.target.value });
                           console.log(this.state.updatedsex);
                         }}
-                        defaultValue={result[this.state.selectedIndex].surname}
+                        type="text"
+                        fullWidth
                       />
-                    </p>
-                    <p>
-                      <label>Dob</label>
-                      <input
-                        class="w3-input"
-                        type="date"
+                    </Grid>
+
+                    <Grid item fullWidth xs={12}>
+                      <TextField
+                        id="dob"
+                        label="Date of birth"
+                        defaultValue={result[this.state.selectedIndex].dob}
                         onChange={(event) => {
                           this.setState({ updatedDob: event.target.value });
                           console.log(event.target.value);
                         }}
-                        defaultValue={result[this.state.selectedIndex].dob}
+                        type="date"
+                        fullWidth
                       />
-                    </p>
-                    <p>
-                      <label>choose file</label>
-                      <input
-                        class="w3-input"
-                        type="file"
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Button
+                        variant="contained"
+                        color="default"
+                        startIcon={<CloudUploadIcon />}
+                      >
+                        Choose file
+                      </Button>
+                    </Grid>
+
+                    <Grid item fullWidth xs={12}>
+                      <TextField
+                        id="chooseFile"
+                        label="Choose File"
                         onChange={(event) => {
                           this.setState({ file: event.target.files[0] });
                           console.log(event.target.files[0]);
                         }}
+                        type="file"
+                        fullWidth
                       />
-                    </p>
-                    <p>
-                      <label>Reason for updating</label>
-                      <input
-                        class="w3-input"
-                        type="text"
+                    </Grid>
+
+                    <Grid item fullWidth xs={12}>
+                      <TextField
+                        id="reasonForUpdating"
+                        label="Reason for updating:"
                         onChange={(event) =>
                           this.setState(
                             {
@@ -632,14 +636,17 @@ await axios
                             this.reasonforupdatevalidcheck(event)
                           )
                         }
+                        type="text"
+                        fullWidth
                       />
-                    </p>
-                  </div>
+                    </Grid>
+                  </Grid>
                 </DialogContent>
-                <DialogActions>
+                <DialogActions style={{ padding: 10 }}>
                   <Button
                     disabled={this.state.buttondisabled}
                     color="primary"
+                    variant="contained"
                     onClick={() => {
                       this.updatedetails();
                     }}
@@ -648,6 +655,7 @@ await axios
                 </Button>
                   <Button
                     color="secondary"
+                    variant="contained"
                     onClick={() =>
                       this.setState({
                         updateDialogOpen: false,
@@ -665,92 +673,63 @@ await axios
         <Dialog
           fullWidth={"md"}
           maxWidth={"md"}
-          open={this.state.historyDialougeOpen}
-          onClose={() => this.setState({ historyDialougeOpen: false })}
+          open={this.state.historyDialogeOpen}
+          onClose={() => this.setState({ historyDialogeOpen: false })}
           aria-labelledby="responsive-dialog-title"
         >
-          
-          <TableContainer component={Paper} elevation={16} p={3}>
+          <DialogTitle id="form-dialog-title">Profile History</DialogTitle>
+          {/* <DialogContent> */}
+          <TableContainer p={3} >
             <Table stickyHeader>
               <TableHead>
-                <TableRow style={{ backgroundColor: "black" }}>
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                    align="center"
-                  >
-                    Fullname
-                  </TableCell>
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                    align="center"
-                  >
-                    MiddleName
-                  </TableCell>
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                    align="center"
-                  >
-                    SurName
-                  </TableCell>
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                    align="center"
-                  >
-                    Dob
-                  </TableCell>
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                    align="center"
-                  >
-                    Picture
-                  </TableCell>
 
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                    align="center"
-                  >
-                    Sex
-                  </TableCell>
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                    align="center"
-                  >
-                    records updated date
-                  </TableCell>
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                    align="center"
-                  >
-                    Update reason
-                  </TableCell>
+                <TableRow style={{ backgroundColor: "black" }}>
+                  {['Fullname', 'Middlename', 'Surname', 'Date of birth', 'Picture', 'Sex', 'Records updated date', 'Updated reason'].map((text, index) => (
+                    <TableCell
+                      style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                      align="center"
+                    >
+                      {text}
+                    </TableCell>
+                  ))}
                 </TableRow>
               </TableHead>
 
               {this.state.historyloading ? (
                 this.isloading()
               ) : (
-                <TableBody>
-                  {history.map((row, index) => (
-                    <TableRow key={row.id}>
-                      <TableCell align="center">{row.firstname}</TableCell>
-                      <TableCell align="center">{row.middlename}</TableCell>
-                      <TableCell align="center">{row.surname}</TableCell>
-                      <TableCell align="center">{row.dob}</TableCell>
-                      <TableCell align="center">
-                        <Avatar src={row.picture}>Picture</Avatar>
-                      </TableCell>
-                      {/* <TableCell align="center">{row.source_name_field}</TableCell> */}
-                      <TableCell align="center">{row.sex}</TableCell>{" "}
-                      <TableCell component="th" align="center">
-                        {row.created_on}
-                      </TableCell>
-                      <TableCell align="center">{row.update_reason}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              )}
+                  <TableBody>
+                    {history.map((row, index) => (
+                      <TableRow key={row.id}>
+                        <TableCell align="center">{row.firstname}</TableCell>
+                        <TableCell align="center">{row.middlename}</TableCell>
+                        <TableCell align="center">{row.surname}</TableCell>
+                        <TableCell align="center">{new Date(row.dob).toDateString()}</TableCell>
+                        <TableCell align="center">
+                          <Avatar src={row.picture}>Picture</Avatar>
+                        </TableCell>
+                        {/* <TableCell align="center">{row.source_name_field}</TableCell> */}
+                        <TableCell align="center">{row.sex}</TableCell>{" "}
+                        <TableCell component="th" align="center">
+                          {new Date(row.created_on).toDateString()}
+                        </TableCell>
+                        <TableCell align="center">{row.update_reason}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                )}
             </Table>
           </TableContainer>
+          {/* </DialogContent> */}
+          <DialogActions style={{ padding: 15 }}>
+            <Button
+              variant='contained'
+              color="secondary"
+              onClick={() => this.setState({ historyDialogeOpen: false, selectedIndex: -1 })}
+            >
+              Close
+                </Button>
+          </DialogActions>
         </Dialog>
       </>
     );

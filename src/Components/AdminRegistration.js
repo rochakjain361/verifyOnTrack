@@ -40,6 +40,14 @@ export class AdminRegistration extends Component {
     state={
         onSubmitConfirmation: false,
 
+        firstName: '',
+        middleName: '',
+        surname: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+
+
         emailError: false
     }
 
@@ -76,6 +84,8 @@ export class AdminRegistration extends Component {
                                 autoComplete="text"
                                 autoFocus
                                 size='small'
+                                onChange={event => this.setState({firstName: event.target.value})}
+                                value={this.state.firstName}
                             />
     
                             <TextField
@@ -89,6 +99,8 @@ export class AdminRegistration extends Component {
                                 autoComplete="text"
                                 autoFocus
                                 size='small'
+                                onChange={event => this.setState({middleName: event.target.value})}
+                                value={this.state.middleName}
                             />
     
                             <TextField
@@ -102,6 +114,8 @@ export class AdminRegistration extends Component {
                                 autoComplete="text"
                                 autoFocus
                                 size='small'
+                                onChange={event => this.setState({surname: event.target.value})}
+                                value={this.state.surname}
                             />
     
                             <TextField
@@ -115,6 +129,8 @@ export class AdminRegistration extends Component {
                                 autoComplete="email"
                                 autoFocus
                                 size='small'
+                                onChange={event => this.setState({email: event.target.value})}
+                                value={this.state.email}
                             />
     
                             <TextField
@@ -128,6 +144,8 @@ export class AdminRegistration extends Component {
                                 id="password"
                                 autoComplete="current-password"
                                 size='small'
+                                onChange={event => this.setState({password: event.target.value})}
+                                value={this.state.password}
                             />
     
                             <TextField
@@ -141,6 +159,8 @@ export class AdminRegistration extends Component {
                                 id="coonFirmpassword"
                                 autoComplete="confirm-password"
                                 size='small'
+                                onChange={event => this.setState({confirmPassword: event.target.value})}
+                                value={this.state.confirmPassword}
                             />
     
                             <Button
@@ -149,7 +169,7 @@ export class AdminRegistration extends Component {
                                 variant="contained"
                                 color="primary"
                                 className={classes.submit}
-                                // onClick={() => this.setState({ onSubmitConfirmation: true, selectedIndex: -1 })}
+                                onClick={console.log(this.state)}
                             >
                                 Submit
                             </Button>
@@ -187,6 +207,7 @@ export class AdminRegistration extends Component {
             </div>
         )
     }
+
 
 
 }
