@@ -463,8 +463,11 @@ class index extends Component {
                               // value={age}
                               // onChange={handleChange}
                             >
-                              <MenuItem value={10}>Resend Request</MenuItem>
-                              <MenuItem value={20}>Cancel Request</MenuItem>
+                              {row.status_options_employee_field.map((val) =>
+                                val.map((i) => (
+                                  <MenuItem value={i}>{i}</MenuItem>
+                                ))
+                              )}
                             </Select>
                           </FormControl>
                         </TableCell>
@@ -514,8 +517,11 @@ class index extends Component {
                               // value={age}
                               // onChange={handleChange}
                             >
-                              <MenuItem value={10}>Resend Request</MenuItem>
-                              <MenuItem value={20}>Cancel Request</MenuItem>
+                              {row.status_options_employee_field.map((val) =>
+                                val.map((i) => (
+                                  <MenuItem value={i}>{i}</MenuItem>
+                                ))
+                              )}
                             </Select>
                           </FormControl>
                         </TableCell>
@@ -584,7 +590,9 @@ class index extends Component {
                         control={
                           <Checkbox
                             // checked={employeeProfile}
-                            onChange={()=>this.setState({rating:!this.state.rating})}
+                            onChange={() =>
+                              this.setState({ rating: !this.state.rating })
+                            }
                             name="ratings"
                           />
                         }
@@ -594,7 +602,9 @@ class index extends Component {
                         control={
                           <Checkbox
                             // checked={jobProfile}
-                             onChange={()=>this.setState({address:!this.state.address})}
+                            onChange={() =>
+                              this.setState({ address: !this.state.address })
+                            }
                             name="address"
                           />
                         }
@@ -604,7 +614,9 @@ class index extends Component {
                         control={
                           <Checkbox
                             // checked={jobProfile}
-                             onChange={()=>this.setState({profile:!this.state.profile})}
+                            onChange={() =>
+                              this.setState({ profile: !this.state.profile })
+                            }
                             name="profile"
                           />
                         }
@@ -614,7 +626,11 @@ class index extends Component {
                         control={
                           <Checkbox
                             // checked={jobProfile}
-                             onChange={()=>this.setState({identites:!this.state.identites})}
+                            onChange={() =>
+                              this.setState({
+                                identites: !this.state.identites,
+                              })
+                            }
                             name="identites"
                           />
                         }
@@ -624,7 +640,9 @@ class index extends Component {
                         control={
                           <Checkbox
                             // checked={jobProfile}
-                             onChange={()=>this.setState({phone:!this.state.phone})}
+                            onChange={() =>
+                              this.setState({ phone: !this.state.phone })
+                            }
                             name="phones"
                           />
                         }
@@ -634,7 +652,11 @@ class index extends Component {
                         control={
                           <Checkbox
                             // checked={jobProfile}
-                             onChange={()=>this.setState({jobHistory:!this.state.jobHistory})}
+                            onChange={() =>
+                              this.setState({
+                                jobHistory: !this.state.jobHistory,
+                              })
+                            }
                             name="jobHistory"
                           />
                         }
