@@ -11,6 +11,7 @@ import Dashboard from './Components/DashBoardComponents/Dashboard'
 import PreRegistration from './Components/PreRegistration'
 import AdminLandingPage from './Components/AdminLandingPage'
 import EmployerLandingPage from './Components/EmployerLandingPage'
+import AdminRegistration from './Components/AdminRegistration'
 
 class App extends React.PureComponent {
   render() {
@@ -21,6 +22,7 @@ class App extends React.PureComponent {
           <Switch>
             {/* Registration Paths */}
             <Route exact path='/' component={PreRegistration} />
+            <Route exact path='/adminRegistration' component={AdminRegistration} />
             <Route exact path='/signUp' component={signUp} />
             <Route exact path='/signIn' component={signIn} />
             
