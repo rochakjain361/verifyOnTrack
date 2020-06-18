@@ -27,6 +27,12 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
+const token1 = localStorage.getItem("Token");
+const token = "Token " + token1;
+const id = localStorage.getItem("id");
+const api = "http://3.22.17.212:8000"
+const cors = "https://cors-anywhere.herokuapp.com/"
+
 const rows = [
     {
         "city": "testCity1",
@@ -51,14 +57,48 @@ class index extends Component {
     state = {
         states: "",
         deleteDialogBox: false,
+
+        allStates: [],
+        allCities: [],
+
+        city: "",
+        lga: "",
+        selectedCityText: "",
+        enteredCityText: "",
+
+        enteredLGAtext: "",
+    }
+
+    async getCities() {
+        let response = await fetch(cors + api + "/api/v1/resManager/address/cities",
+            {
+                headers: {
+                    'Authorization': token
+                }
+            });
+        response = await response.json();
+        console.log("getCitiesSuccess:", response)
+        this.setState({ allStates: response });
+        this.setState({ allCities: this.state.allStates.map(city => city.cityName) })
+        console.log("allStatesList:", this.state.allStates)
+        console.log("allCities:", this.state.allCities)
+    }
+
+    async componentDidMount() {
+        this.getCities();
     }
 
     render() {
 
-        const defaultProps = {
-            options: top100Films,
-            getOptionLabel: (option) => option.title,
+        const allCitiesData = {
+            options: this.state.allStates,
+            getOptionLabel: (city) => city.cityName,
         };
+
+        const allLgasData = {
+            options: this.state.allStates,
+            getOptionLabel: (lga) => lga.lga,
+        }
 
         const { classes } = this.props;
 
@@ -75,13 +115,43 @@ class index extends Component {
 
                     <Grid item xs={6}>
                         <Autocomplete
-                            size='small'
-                            {...defaultProps}
-                            id="states"
+                            options={this.state.allStates}
+                            getOptionLabel={(option) => option.cityName}
+                            size="small"
+                            id="cities"
                             Username
-                            renderInput={(params) => <TextField {...params} label="States" margin="normal" variant='outlined' size='small' />}
+                            value={this.state.city}
+                            onChange={(event, value) => {
+                                this.setState({ city: value });
+                                console.log("city", value);
+                            }}
+                            inputValue={this.state.enteredCitytext}
+                            onInputChange={(event, newInputValue) => {
+                                this.setState({ enteredCitytext: newInputValue });
+                                // console.log(newInputValue);
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Cities"
+                                    margin="normal"
+                                    variant="outlined"
+                                    size="small"
+                                />
+                            )}
                         />
                     </Grid>
+
+                    {/* <Grid item xs={6}>
+                        <Autocomplete
+                            size='small'
+                            {...allCitiesData}
+                            id="cities"
+                            onChange={event => this.setState({ city: event.target.value })}
+                            value={this.state.city}
+                            renderInput={(params) => <TextField {...params} label="Cities" margin="normal" variant='outlined' size='small' />}
+                        />
+                    </Grid> */}
 
                 </Grid>
 
@@ -105,9 +175,8 @@ class index extends Component {
                     <Grid item xs={6}>
                         <Autocomplete
                             size='small'
-                            {...defaultProps}
+                            {...allLgasData}
                             id="LGAs"
-                            Username
                             renderInput={(params) => <TextField {...params} label="LGAs" margin="normal" variant='outlined' size='small' />}
                         />
                     </Grid>
