@@ -101,6 +101,7 @@ class index extends Component {
   async filterStates(state) {
     this.setState({ selectedstate: state });
     this.setState({ loading: true });
+    if(state!=="none"){
     await axios
       .get(
         "http://3.22.17.212:8000/api/v1/resManager/address/lgas/?stateId=" +
@@ -114,9 +115,15 @@ class index extends Component {
       .then((res) => {
         this.setState({ selectedLga: res.data });
         console.log("lga", res.data);
+        this.setState({ disabled: false });
       });
+    }
+    else{
+      this.setState({selectedLga: Lga});
+      this.setState({disabled:true})
+      
+    }
     this.setState({ loading: false });
-    this.setState({ disabled: false });
   }
   async deleteLga(id) {
      this.setState({ deleteDialogBox: false, selectedIndex: -1 });
@@ -159,9 +166,9 @@ class index extends Component {
                 label="states"
                 fullWidth
               >
-                {/* <MenuItem selected value="none">
+                <MenuItem selected value="none">
                   None
-                </MenuItem> */}
+                </MenuItem>
                 {states.map((state) => (
                   <MenuItem value={state.id}>{state.stateName}</MenuItem>
                 ))}

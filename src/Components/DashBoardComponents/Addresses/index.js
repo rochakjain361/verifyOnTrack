@@ -116,32 +116,21 @@ class Addresses extends Component {
         console.table("addresses", result);
       });
 
-    // await axios
-    // .get(
-    //   "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/address/states",
-    //   {
-    //     headers: {
-    //       Authorization: token,
-    //     },
-    //   }
-    //   )
-    //   .then((res) => {
-    //     // state=res.data;
-    //     this.setState({ stateName: res.data });
-    //     // console.table("statename", state);
-    //   });
-    await fetch(
+    await axios
+    .get(
       "http://3.22.17.212:8000/api/v1/resManager/address/states/",
       {
         headers: {
           Authorization: token,
         },
       }
-    )
-      .then((res) => res.json())
-      .then((result) => {
-        console.log(result);
+      )
+      .then((res) => {
+        
+        this.setState({ stateName: res.data });
+        
       });
+   
 
     await axios
       .get(

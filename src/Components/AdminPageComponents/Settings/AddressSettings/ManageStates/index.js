@@ -75,6 +75,9 @@ export class index extends Component {
     this.setState({ loading: false });
   }
   async componentDidMount() {
+    const token1 = localStorage.getItem("Token");
+    const token = "Token " + token1;
+    const id = localStorage.getItem("id");
     this.getstates();
   }
   async addState() {
