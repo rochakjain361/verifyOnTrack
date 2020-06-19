@@ -28,10 +28,10 @@ import TextField from "@material-ui/core/TextField";
 import { InputLabel } from "@material-ui/core";
 import FormControl from '@material-ui/core/FormControl';
 
-const token1 = localStorage.getItem("Token");
+let token1 = "";
 
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+let token = "";
+let id = "";
 let result = [];
 let history = [];
 let pictures = [];
@@ -66,24 +66,26 @@ class Identities extends Component {
     };
     // this.updateidentites= this.updateidentites.bind();
   }
-
+async getidentites(){
+  await axios
+    .get(
+      "http://3.22.17.212:8000/api/v1/employees/" + id + "/identities-by/" + id,
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    )
+    .then((res) => {
+      result = res.data;
+      console.table("identites", result);
+    });
+}
   async componentDidMount() {
-    await axios
-      .get(
-        "http://3.22.17.212:8000/api/v1/employees/" +
-        id +
-        "/identities-by/" +
-        id,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res) => {
-        result = res.data;
-        console.table("identites", result);
-      });
+    token1 = localStorage.getItem("Token");
+    token = "Token " + token1;
+    id = localStorage.getItem("id");
+    await this.getidentites();
     let idSource = await axios.get(
       "http://3.22.17.212:8000/api/v1/resManager/id/sources/?excludeSystem=true",
       {
@@ -191,6 +193,7 @@ class Identities extends Component {
       .then((response) => {
         console.log(response);
       });
+      await this.getidentites();
   }
   render() {
     return (
@@ -475,6 +478,7 @@ class Identities extends Component {
         console.log(response);
       });
     this.setState({ uploadDialougeOpen: false });
+    await this.getidentites();
   }
 
   getTableOfEmployees() {

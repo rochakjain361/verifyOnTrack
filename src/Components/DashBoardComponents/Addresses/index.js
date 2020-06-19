@@ -28,7 +28,7 @@ import { MenuItem } from "@material-ui/core";
 import { InputLabel } from "@material-ui/core";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import FormControl from "@material-ui/core/FormControl";
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 let result = [];
 let state = [
@@ -44,9 +44,9 @@ let state = [
 let lga = [];
 let city = [];
 let history = [];
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+let token1 = "";
+let token = "";
+let id = "";
 class Addresses extends Component {
   constructor(props) {
     super(props);
@@ -57,7 +57,10 @@ class Addresses extends Component {
       location: {
         latitude: null,
         longtitude: null,
+        updatedlatitude: null,
+        updatedlongititude: null,
       },
+
       selectedaddressType: "",
       selectedaddressReason: "",
       defaultaddress: "",
@@ -93,19 +96,28 @@ class Addresses extends Component {
       updatedimage: "",
       updatestartedlivinghere: "",
       updatedaddressestype: "",
+      updatedlgastates: [],
+      updatedcityStates: [],
     };
 
     this.onMarkerClick = this.onMarkerClick.bind(this);
   }
   onMarkerClick(props, marker, e) {
-    
     this.setState({
       location: { latitude: e.latLng.lat(), longtitude: e.latLng.lng() },
     });
 
     console.log(this.state.location.latitude, this.state.location.longtitude);
   }
-  async componentDidMount() {
+  // updateonMarkerClick(props, marker, e) {
+  //   console.log(e.latLng.lat(),e.latLng.lng());
+  //   this.setState({
+  //       location: {updatedlatitude: e.latLng.lat(),
+  //     updatedlongititude: e.latLng.lng()},
+  //   });
+
+  // }
+  async getaddressdata() {
     await axios
       .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/addresses", {
         headers: {
@@ -116,45 +128,39 @@ class Addresses extends Component {
         result = res.data;
         console.table("addresses", result);
       });
+  }
+  async componentDidMount() {
+    token1 = localStorage.getItem("Token");
+    token = "Token " + token1;
+    id = localStorage.getItem("id");
+    await this.getaddressdata();
 
     await axios
-    .get(
-      "http://3.22.17.212:8000/api/v1/resManager/address/states/",
-      {
+      .get("http://3.22.17.212:8000/api/v1/resManager/address/states/", {
         headers: {
           Authorization: token,
         },
-      }
-      )
+      })
       .then((res) => {
-        
         this.setState({ stateName: res.data });
-        
       });
-   
 
     await axios
-      .get(
-        "http://3.22.17.212:8000/api/v1/resManager/address/types/",
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
+      .get("http://3.22.17.212:8000/api/v1/resManager/address/types/", {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((res) => {
         this.setState({ addressTypes: res.data });
         // console.table("addresstypes", this.state.addressTypes);
       });
     await axios
-      .get(
-        "http://3.22.17.212:8000/api/v1/resManager/address/reasons/",
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
+      .get("http://3.22.17.212:8000/api/v1/resManager/address/reasons/", {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((res) => {
         this.setState({ addressReasons: res.data });
         // console.table("addressReasons", this.state.addressReasons);
@@ -164,16 +170,19 @@ class Addresses extends Component {
   }
   isloading() {
     return (
-      <Grid container justify='flex-end' alignItems='center'
+      <Grid
+        container
+        justify="flex-end"
+        alignItems="center"
         // container
         // spacing={0}
         direction="column"
-      // alignItems="center"
-      // justify="center"
-      // // display="flex"
-      // style={{ minHeight: "10vh" }}
+        // alignItems="center"
+        // justify="center"
+        // // display="flex"
+        // style={{ minHeight: "10vh" }}
       >
-        <Grid item xs={6} style={{marginTop:100}}>
+        <Grid item xs={6} style={{ marginTop: 100 }}>
           <CircularProgress />
         </Grid>
       </Grid>
@@ -186,10 +195,10 @@ class Addresses extends Component {
     await axios
       .get(
         "http://3.22.17.212:8000/api/v1/employees/" +
-        id +
-        "/addresses/" +
-        index +
-        "/history",
+          id +
+          "/addresses/" +
+          index +
+          "/history",
         {
           headers: {
             Authorization: token,
@@ -203,6 +212,10 @@ class Addresses extends Component {
       });
   }
   async updatedetails(addressid) {
+    this.setState({
+      updateDialogOpen: false,
+      selectedIndex: -1,
+    });
     let headers = {
       headers: {
         Authorization: token,
@@ -223,13 +236,13 @@ class Addresses extends Component {
     //  bodyFormData.append("address_hint3", this.state.addresshint3);
     bodyFormData.append(
       "google_coordinate1",
-      
-       this.state.location.latitude
+      "17.40"
+      // this.state.location.updatedlatitude
     );
     bodyFormData.append(
       "google_coordinate2",
-    
-       this.state.location.longtitude
+      "78.44"
+      // this.state.location.updatedlongititude
     );
     bodyFormData.append("address_image", this.state.updatedimage);
     bodyFormData.append("since", this.state.updatestartedlivinghere);
@@ -245,7 +258,7 @@ class Addresses extends Component {
       .then((response) => {
         console.log(response);
       });
-
+      this.getaddressdata();
   }
   getaddress() {
     return (
@@ -333,16 +346,35 @@ class Addresses extends Component {
                           size="small"
                           color="primary"
                           variant="outlined"
-                          onClick={() =>
-                            this.setState(
-                              {
-                                updateDialogOpen: true,
-                                selectedIndex: index,
-                                // add the updatedstate elements here after passing the token and adding data
+                          onClick={() => {
+                            this.setState({
+                              updateDialogOpen: true,
+                              selectedIndex: index,
+                              updatedaddressreason:
+                                result[index].address_reason,
+                              updateddefaultaddresses:
+                                result[index].default_address,
+                              updatedstate: result[index].state,
+                              updatedlga: result[index].lga,
+                              updatedcity: result[index].city,
+                              updatedstreet: result[index].street_name,
+                              updatehousenumber: result[index].house_number,
+                              updatedaddresshint1: result[index].address_hint1,
+                              updatedimage: result[index].address_image,
+                              updatestartedlivinghere: result[index].since,
+                              updatedaddressestype: result[index].address_type,
+                              // updatedlatitude: result[index].google_coordinate1,
+                              // updatedlongititude:
+                              // result[index].google_coordinate2,
+                              location: {
+                                latitude: result[index].google_coordinate1,
+                                longtitude: result[index].google_coordinate2,
                               },
-                              console.log(this.state.selectedIndex)
-                            )
-                          }
+                              // add the updatedstate elements here after passing the token and adding data
+                            });
+                            this.lganames(result[index].state, "update");
+                            this.citynames(result[index].lga, "update");
+                          }}
                         >
                           Update
                         </Button>
@@ -370,286 +402,323 @@ class Addresses extends Component {
               <Dialog
                 open={this.state.updateDialogOpen}
                 onClose={() => this.setState({ updateDialogOpen: false })}
-                aria-labelledby="form-dialog-title"
+                aria-labelledby="responsive-dialog-title"
               >
                 <DialogTitle id="addNewAddress" justify="center">
                   Update address
                 </DialogTitle>
                 <DialogContent>
-                  <DialogContentText>
-                    Enter the details of your address
-                  </DialogContentText>
+                  <Box display="flex" flexDirection="row" width={1}>
+                    <Box p={1} width={1 / 2}>
+                      <DialogContentText>
+                        Enter the details of your address
+                      </DialogContentText>
 
-                  <Grid
-                    container
-                    justify="flex-start"
-                    direction="row"
-                    alignItems="center"
-                    spacing={3}
-                  >
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="addressType"
-                        label="Address type"
-                        onChange={(event) =>
-                          this.setState({
-                            updatedaddressestype: event.target.value,
-                          })
-                        }
-                        defaultValue={
-                          result[this.state.selectedIndex].address_type
-                        }
-                        type="text"
-                        fullWidth
-                      />
-                    </Grid>
-
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="addressReason"
-                        label="Address reason"
-                        onChange={(event) =>
-                          this.setState({
-                            updatedaddressreason: event.target.value,
-                          })
-                        }
-                        defaultValue={
-                          result[this.state.selectedIndex].address_reason
-                        }
-                        type="text"
-                        fullWidth
-                      />
-                    </Grid>
-
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="defaultAddress"
-                        label="Default address"
-                        onChange={(event) => {
-                          this.setState({
-                            updateddefaultaddresses: event.target.value,
-                          });
-                          console.log(this.state.updatedsex);
-                        }}
-                        defaultValue={
-                          result[this.state.selectedIndex].default_address
-                        }
-                        type="text"
-                        fullWidth
-                      />
-                    </Grid>
-
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="houseNumber"
-                        label="House number"
-                        onChange={(event) => {
-                          this.setState({
-                            updatehousenumber: event.target.value,
-                          });
-                          console.log(event.target.value);
-                        }}
-                        defaultValue={
-                          result[this.state.selectedIndex].house_number
-                        }
-                        type="text"
-                        fullWidth
-                      />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <Button
-                        variant="contained"
-                        color="default"
-                        startIcon={<CloudUploadIcon />}
+                      <Grid
+                        container
+                        justify="flex-start"
+                        direction="row"
+                        alignItems="center"
+                        spacing={3}
                       >
-                        Choose file
-                      </Button>
-                    </Grid>
+                        <Grid item fullWidth xs={12}>
+                          <InputLabel id="addressType">
+                            Address types
+                          </InputLabel>
+                          <Select
+                            id="addressType"
+                            label="Address type"
+                            defaultValue={this.state.updatedaddressestype}
+                            onChange={(event) =>
+                              this.setState({
+                                updatedaddressestype: event.target.value,
+                              })
+                            }
+                            fullWidth
+                          >
+                            {this.state.addressTypes.map((address) => (
+                              <MenuItem id={address.id} value={address.id}>
+                                {address.addressType}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </Grid>
 
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="addressImage"
-                        label="Choose Image"
-                        onChange={(event) => {
-                          this.setState({
-                            updatedimage: event.target.files[0],
-                          });
-                          console.log(event.target.files[0]);
-                        }}
-                        type="file"
-                        fullWidth
-                      />
-                    </Grid>
+                        <Grid item fullWidth xs={12}>
+                          <InputLabel id="addressReason">
+                            Address Reason
+                          </InputLabel>
+                          <Select
+                            id="addressReason"
+                            label="Address reason"
+                            defaultValue={this.state.updatedaddressreason}
+                            onChange={(event) =>
+                              this.setState({
+                                updatedaddressreason: event.target.value,
+                              })
+                            }
+                            type="text"
+                            fullWidth
+                          >
+                            {this.state.addressReasons.map((address) => (
+                              <MenuItem id={address.id} value={address.id}>
+                                {address.addressReason}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </Grid>
 
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="states"
-                        label="States"
-                        onChange={(event) =>
-                          this.setState({
-                            updatedstate: event.target.value,
-                          })
-                        }
-                        defaultValue={result[this.state.selectedIndex].state}
-                        type="text"
-                        fullWidth
-                      />
-                    </Grid>
+                        <Grid item fullWidth xs={12}>
+                          <Select
+                            id="defaultAddress"
+                            label="Default address"
+                            defaultValue={this.state.updateddefaultaddresses}
+                            onChange={(event) => {
+                              this.setState({
+                                updateddefaultaddresses: event.target.value,
+                              });
+                            }}
+                            type="text"
+                            fullWidth
+                          >
+                            <MenuItem id={1} value="Yes">
+                              Yes
+                            </MenuItem>
+                            <MenuItem id={2} value="No">
+                              No
+                            </MenuItem>
+                          </Select>
+                        </Grid>
 
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="lga"
-                        label="LGA"
-                        onChange={(event) => {
-                          this.setState({ updatedlga: event.target.value });
-                          console.log(event.target.value);
-                        }}
-                        defaultValue={result[this.state.selectedIndex].lga}
-                        type="text"
-                        fullWidth
-                      />
-                    </Grid>
+                        <Grid item fullWidth xs={12}>
+                          <TextField
+                            id="houseNumber"
+                            label="House number"
+                            onChange={(event) => {
+                              this.setState({
+                                updatehousenumber: event.target.value,
+                              });
+                              console.log(event.target.value);
+                            }}
+                            defaultValue={this.state.updatehousenumber}
+                            type="text"
+                            fullWidth
+                          />
+                        </Grid>
 
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="city"
-                        label="City"
-                        onChange={(event) => {
-                          this.setState({ updatedcity: event.target.value });
-                          console.log(event.target.value);
-                        }}
-                        defaultValue={result[this.state.selectedIndex].city}
-                        type="text"
-                        fullWidth
-                      />
-                    </Grid>
+                        <Grid item xs={12}>
+                          <Button
+                            variant="contained"
+                            color="default"
+                            startIcon={<CloudUploadIcon />}
+                          >
+                            Choose file
+                          </Button>
+                        </Grid>
 
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="addressHint1"
-                        label="Address hint 1"
-                        onChange={(event) => {
-                          this.setState({
-                            updatedaddresshint1: event.target.value,
-                          });
-                          console.log(event.target.value);
-                        }}
-                        defaultValue={
-                          result[this.state.selectedIndex].address_hint1
-                        }
-                        type="text"
-                        fullWidth
-                      />
-                    </Grid>
+                        <Grid item fullWidth xs={12}>
+                          <TextField
+                            id="addressImage"
+                            label="Choose Image"
+                            onChange={(event) => {
+                              this.setState({
+                                updatedimage: event.target.files[0],
+                              });
+                              console.log(event.target.files[0]);
+                            }}
+                            type="file"
+                            fullWidth
+                          />
+                        </Grid>
 
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="addressHint2"
-                        label="Address hint 2"
-                        onChange={(event) => {
-                          this.setState({
-                            updatedaddresshint2: event.target.value,
-                          });
-                          console.log(event.target.value);
-                        }}
-                        defaultValue={
-                          result[this.state.selectedIndex].address_hint2
-                        }
-                        type="text"
-                        fullWidth
-                      />
-                    </Grid>
+                        <Grid item fullWidth xs={12}>
+                          <InputLabel id="state">state</InputLabel>
+                          <Select
+                            id="states"
+                            label="States"
+                            onChange={(event) => {
+                              this.setState({
+                                updatedstate: event.target.value,
+                              });
+                              this.lganames(event.target.value, "update");
+                            }}
+                            defaultValue={this.state.updatedstate}
+                            fullWidth
+                          >
+                            {this.state.stateName.map((states) => (
+                              <MenuItem id={states.id} value={states.id}>
+                                {states.stateName}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </Grid>
 
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="addressHint3"
-                        label="Address hint 3"
-                        onChange={(event) => {
-                          this.setState({
-                            updatedaddresshint3: event.target.value,
-                          });
-                          console.log(event.target.value);
-                        }}
-                        defaultValue={
-                          result[this.state.selectedIndex].address_hint3
-                        }
-                        type="text"
-                        fullWidth
-                      />
-                    </Grid>
+                        <Grid item fullWidth xs={12}>
+                          <InputLabel id="Lga">Lga</InputLabel>
+                          <Select
+                            id="lga"
+                            label="LGA"
+                            onChange={(event) => {
+                              this.setState({ updatedlga: event.target.value });
+                              this.citynames(event.target.value, "update");
+                            }}
+                            defaultValue={this.state.updatedlga}
+                            fullWidth
+                          >
+                            {this.state.updatedlgastates.map((lgas) => (
+                              <MenuItem value={lgas.id}>
+                                {lgas.lgaName}{" "}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </Grid>
 
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="startedLivingHereSince"
-                        helperText="Started living here since"
-                        onChange={(event) => {
-                          this.setState({
-                            updatestartedlivinghere: event.target.value,
-                          });
-                          console.log(event.target.value);
-                        }}
-                        defaultValue={result[this.state.selectedIndex].since}
-                        type="date"
-                        fullWidth
-                      />
-                    </Grid>
+                        <Grid item fullWidth xs={12}>
+                          <InputLabel id="City"> City</InputLabel>
+                          <Select
+                            id="city"
+                            label="City"
+                            onChange={(event) => {
+                              this.setState({
+                                updatedcity: event.target.value,
+                              });
+                              console.log(event.target.value);
+                            }}
+                            defaultValue={this.state.updatedcity}
+                            type="text"
+                            fullWidth
+                          >
+                            {this.state.updatedcityStates.map((city) => (
+                              <MenuItem value={city.id}>
+                                {city.cityName}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </Grid>
 
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="street"
-                        label="Street"
-                        onChange={(event) =>
-                          this.setState({
-                            updatedstreet: event.target.value,
-                          })
-                        }
-                        defaultValue={result[this.state.selectedIndex].state}
-                        type="text"
-                        fullWidth
-                      />
-                    </Grid>
+                        <Grid item fullWidth xs={12}>
+                          <TextField
+                            id="addressHint1"
+                            label="Address hint 1"
+                            onChange={(event) => {
+                              this.setState({
+                                updatedaddresshint1: event.target.value,
+                              });
+                              console.log(event.target.value);
+                            }}
+                            defaultValue={this.state.updatedaddresshint1}
+                            type="text"
+                            fullWidth
+                          />
+                        </Grid>
 
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="updateReason"
-                        label="Reason for updating"
-                        onChange={(event) => {
-                          this.setState({
-                            updatedreason: event.target.value,
-                          });
-                          console.log(event.target.value);
-                        }}
-                        defaultValue={
-                          result[this.state.selectedIndex].update_reason
-                        }
-                        type="text"
-                        fullWidth
-                      />
-                    </Grid>
-                  </Grid>
+                        <Grid item fullWidth xs={12}>
+                          <TextField
+                            id="addressHint2"
+                            label="Address hint 2"
+                            onChange={(event) => {
+                              this.setState({
+                                updatedaddresshint2: event.target.value,
+                              });
+                              console.log(event.target.value);
+                            }}
+                            defaultValue={this.state.updatedaddresshint2}
+                            type="text"
+                            fullWidth
+                          />
+                        </Grid>
 
-                  <Grid>
-                    <Box>
+                        <Grid item fullWidth xs={12}>
+                          <TextField
+                            id="addressHint3"
+                            label="Address hint 3"
+                            onChange={(event) => {
+                              this.setState({
+                                updatedaddresshint3: event.target.value,
+                              });
+                              console.log(event.target.value);
+                            }}
+                            defaultValue={this.state.updatedaddresshint2}
+                            type="text"
+                            fullWidth
+                          />
+                        </Grid>
+
+                        <Grid item fullWidth xs={12}>
+                          <TextField
+                            id="startedLivingHereSince"
+                            helperText="Started living here since"
+                            onChange={(event) => {
+                              this.setState({
+                                updatestartedlivinghere: event.target.value,
+                              });
+                              console.log(event.target.value);
+                            }}
+                            defaultValue={this.state.updatestartedlivinghere}
+                            type="date"
+                            fullWidth
+                          />
+                        </Grid>
+
+                        <Grid item fullWidth xs={12}>
+                          <TextField
+                            id="street"
+                            label="Street"
+                            onChange={(event) =>
+                              this.setState({
+                                updatedstreet: event.target.value,
+                              })
+                            }
+                            defaultValue={this.state.updatedstreet}
+                            type="text"
+                            fullWidth
+                          />
+                        </Grid>
+
+                        <Grid item fullWidth xs={12}>
+                          <TextField
+                            id="updateReason"
+                            label="Reason for updating"
+                            onChange={(event) => {
+                              this.setState({
+                                updatedreason: event.target.value,
+                              });
+                              console.log(event.target.value);
+                            }}
+                            
+                            type="text"
+                            fullWidth
+                          />
+                        </Grid>
+                      </Grid>
+                    </Box>
+
+                    <Box p={1} width={1 / 2}>
                       <Map
                         google={this.props.google}
-                        zoom={1}
+                        zoom={0}
                         onClick={this.onMarkerClick}
-                        style={{ height: "75%", width: "75%" }}
+                        style={{ height: "75%", width: "40%" }}
                         fullscreenControl={true}
                       >
                         <Marker
-                          position={{
-                            lat: this.state.location.latitude,
-                            lng: this.state.location.longtitude,
-                          }}
+                          // initial={{
+                          //   lat: this.state.updatedlatitude,
+                          //   lng: this.state.updatedlongititude,
+                          // }}
+                        
+                            position={{
+                          lat: this.state.location.latitude,
+                          lng: this.state.location.longtitude,
+                        }}
+                          
                         />
                         <InfoWindow
                           onClose={this.onInfoWindowClose}
                         ></InfoWindow>
                       </Map>
                     </Box>
-                  </Grid>
+                  </Box>
                 </DialogContent>
                 <DialogActions style={{ padding: 15 }}>
                   <Button
@@ -829,7 +898,7 @@ class Addresses extends Component {
                               //   this.state.selectedState,
                               //   event.target.value
                               // );
-                              this.lganames(event.target.value);
+                              this.lganames(event.target.value, "add");
                             }}
                           >
                             {this.state.stateName.map((states) => (
@@ -849,7 +918,7 @@ class Addresses extends Component {
                             id="lga"
                             onChange={(e) => {
                               this.setState({ selectedLga: e.target.value });
-                              this.citynames(e.target.value);
+                              this.citynames(e.target.value, "add");
                             }}
                           >
                             <MenuItem value="">
@@ -1115,12 +1184,12 @@ class Addresses extends Component {
       </>
     );
   }
-  async lganames(stateid) {
+  async lganames(stateid, val) {
     this.setState({ selectedState: stateid });
     await axios
       .get(
-        "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/address/lgas?stateId=" +
-        stateid,
+        "http://3.22.17.212:8000/api/v1/resManager/address/lgas/?stateId=" +
+          stateid,
         {
           headers: {
             Authorization: token,
@@ -1128,17 +1197,19 @@ class Addresses extends Component {
         }
       )
       .then((res) => {
-        this.setState({ lgaStates: res.data });
+        val === "update"
+          ? this.setState({ updatedlgastates: res.data })
+          : this.setState({ lgaStates: res.data });
         console.table("lga", this.state.lgaStates);
       });
   }
-  async citynames(lgaid) {
+  async citynames(lgaid, val) {
     this.setState({ selectedLga: lgaid });
     console.log("selectedlga", this.state.selectedLga, lgaid);
     await axios
       .get(
         "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/address/cities?lgaId=" +
-        lgaid,
+          lgaid,
         {
           headers: {
             Authorization: token,
@@ -1146,7 +1217,9 @@ class Addresses extends Component {
         }
       )
       .then((res) => {
-        this.setState({ cityStates: res.data });
+        val === "update"
+          ? this.setState({ updatedcityStates: res.data })
+          : this.setState({ cityStates: res.data });
         console.table("cites", this.state.cityStates);
       });
   }
@@ -1171,12 +1244,13 @@ class Addresses extends Component {
     //  bodyFormData.append("address_hint3", this.state.addresshint3);
     bodyFormData.append(
       "google_coordinate1",
-      "3.444"
+      "17.406"
       // this.state.location.latitude
     );
     bodyFormData.append(
       "google_coordinate2",
-      "3.444"
+      "78.440"
+
       // this.state.location.longtitude
     );
     bodyFormData.append("address_image", this.state.addressimage);
@@ -1192,6 +1266,7 @@ class Addresses extends Component {
       .then((response) => {
         console.log(response);
       });
+      this.getaddressdata();
   }
   addAddressForm() {
     return (
@@ -1340,7 +1415,7 @@ class Addresses extends Component {
                         //   this.state.selectedState,
                         //   event.target.value
                         // );
-                        this.lganames(event.target.value);
+                        this.lganames(event.target.value, "add");
                       }}
                     >
                       {this.state.stateName.map((states) => (
@@ -1360,7 +1435,7 @@ class Addresses extends Component {
                       id="lga"
                       onChange={(e) => {
                         this.setState({ selectedLga: e.target.value });
-                        this.citynames(e.target.value);
+                        this.citynames(e.target.value, "add");
                       }}
                     >
                       <MenuItem value="">
@@ -1541,21 +1616,24 @@ class Addresses extends Component {
   addaddress() {
     return (
       <>
-        <Grid container spacing={3} justify="space-between" >
+        <Grid container spacing={3} justify="space-between">
           <Grid item xs={6}>
             <h1>My Address</h1>
           </Grid>
           <Grid item xs={12}>
-
             <Paper style={{ padding: 20 }} elevation={3}>
-              <Typography variant="h5" gutterBottom align='center'>
+              <Typography variant="h5" gutterBottom align="center">
                 Add address to improve ratings.
-            </Typography>
+              </Typography>
 
-              <Grid container justify='center' style={{ marginTop: 50 }}>
-                <Button color="primary" variant='contained' onClick={() => this.setState({ addDialogOpen: true })}>
+              <Grid container justify="center" style={{ marginTop: 50 }}>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={() => this.setState({ addDialogOpen: true })}
+                >
                   Add New address
-              </Button>
+                </Button>
               </Grid>
             </Paper>
           </Grid>

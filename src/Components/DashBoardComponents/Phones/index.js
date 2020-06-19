@@ -22,9 +22,9 @@ import { Button } from "@material-ui/core";
 import { Select } from "@material-ui/core";
 import { MenuItem } from "@material-ui/core";
 import { InputLabel } from "@material-ui/core";
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+let token1 = "";
+let token = "";
+let id = "";
 let result = [];
 let history = [];
 class Phones extends Component {
@@ -59,18 +59,24 @@ class Phones extends Component {
       historyDialougeOpen: false,
     };
   }
+  async getphonedata(){
+     await axios
+       .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/phones", {
+         headers: {
+           Authorization: token,
+         },
+       })
+       .then((res) => {
+         result = res.data;
+         console.table("Phones", result);
+         // console.log(result[0].phone_reason);
+       });
+  }
   async componentDidMount() {
-    await axios
-      .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/phones", {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        result = res.data;
-        console.table("Phones", result);
-        // console.log(result[0].phone_reason);
-      });
+    token1 = localStorage.getItem("Token");
+     token = "Token " + token1;
+     id = localStorage.getItem("id");
+   await this.getphonedata();
     await axios
       .get("http://3.22.17.212:8000/api/v1/resManager/phone/reasons/", {
         headers: {
@@ -120,6 +126,7 @@ class Phones extends Component {
       .then((response) => {
         console.log(response);
       });
+      await this.getphonedata();
   }
   async updatePhones(phoneid) {
     this.setState({
@@ -156,6 +163,7 @@ class Phones extends Component {
       .then((response) => {
         console.log(response);
       });
+      await this.getphonedata();
   }
   async getHistory(index) {
     this.setState({

@@ -27,9 +27,9 @@ import { CircularProgress } from "@material-ui/core";
 
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+let token1 = "";
+let token = "";
+let id = "";
 let result = [];
 let history = []
 
@@ -59,22 +59,22 @@ class MyProfile extends Component {
     file: null,
     gender: "",
   };
+  async getprofiledata(){
+     await axios
+       .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/profiles", {
+         headers: {
+           Authorization: token,
+         },
+       })
+       .then((res) => {
+         result = res.data;
+       });
+  }
   async componentDidMount() {
-    console.log(token);
-    await axios
-      .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/profiles", {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        result = res.data;
-        // this.setState({ id: result[0].employee });
-        // this.setState({ updatedfirstname: result[0].firstname });
-        // this.setState({ updatedMiddlename: result[0].middlename });
-        // this.setState({ updatedlastname: result[0].surname });
-        // this.setState({ updatedDob: result[0].dob });
-      });
+     token1 = localStorage.getItem("Token");
+     token = "Token " + token1;
+     id = localStorage.getItem("id");
+  await this.getprofiledata();
     this.setState({ isloading: false });
 
     // console.table(result);
@@ -135,6 +135,7 @@ class MyProfile extends Component {
       .then((response) => {
         console.log(response);
       });
+      await this.getprofiledata();
   }
   async postprofile() {
     let headers = {
@@ -160,6 +161,7 @@ class MyProfile extends Component {
       .then((response) => {
         console.log(response);
       });
+      await this.getprofiledata();
   }
   isloading() {
     return (
