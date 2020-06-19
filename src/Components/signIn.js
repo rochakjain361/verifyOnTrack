@@ -1,18 +1,23 @@
-import React, { Component } from 'react'
-import { withStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import PropTypes from 'prop-types';
-import Card from '@material-ui/core/Card';
-import TextField from '@material-ui/core/TextField';
-import GradientButton from './GradientButton'
-import RouterLink from './RouterLink/index.js';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import 'typeface-roboto';
-import Typography from '@material-ui/core/Typography';
+import React, { Component } from "react";
+import { withStyles } from "@material-ui/core/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Grid from "@material-ui/core/Grid";
+import PropTypes from "prop-types";
+import Card from "@material-ui/core/Card";
+import TextField from "@material-ui/core/TextField";
+import GradientButton from "./GradientButton";
+import RouterLink from "./RouterLink/index.js";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import "typeface-roboto";
+import Typography from "@material-ui/core/Typography";
 import LandingPage from "../Components/LandingPage/index";
-import { BrowserRouter as Router, Route, Switch,Redirect } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from "react-router-dom";
 import ValidationMessage from "./ValidationMessage";
 import Alert from "@material-ui/lab/Alert";
 
@@ -28,30 +33,30 @@ class signIn extends Component {
     usernamevalid: false,
     passwordvalid: false,
     submitDisabled: "disabled",
-    warning:false,
-    response:""
+    warning: false,
+    response: "",
   };
   UserGreeting(props) {
-  return <h1>Welcome back!</h1>;
-}
+    return <h1>Welcome back!</h1>;
+  }
   usernamevalidcheck = (event) => {
     if (event.target.value.length > 0) {
       //  console.log(event.target.value);
-      this.setState({ usernamevalid: true },this.formvalid);
+      this.setState({ usernamevalid: true }, this.formvalid);
     }
   };
   passwordvalidcheck = (event) => {
     if (event.target.value.length > 0) {
       //  console.log(event.target.value);
-      this.setState({ passwordvalid: true },this.formvalid);
+      this.setState({ passwordvalid: true }, this.formvalid);
     }
   };
-  formvalid=()=>{
-if(this.state.usernamevalid&&this.state.passwordvalid){
-  // console.log("////////////////////////////////")
-  this.setState({submitDisabled:""})
-}
-  }
+  formvalid = () => {
+    if (this.state.usernamevalid && this.state.passwordvalid) {
+      // console.log("////////////////////////////////")
+      this.setState({ submitDisabled: "" });
+    }
+  };
 
   render() {
     const { classes } = this.props;
@@ -189,8 +194,7 @@ if(this.state.usernamevalid&&this.state.passwordvalid){
 
   async onSignInButtonPress() {
     try {
-      let apiEndpoint =
-        "http://3.22.17.212:8000/api/v1/accounts/auth/login";
+      let apiEndpoint = "http://3.22.17.212:8000/api/v1/accounts/auth/login";
 
       var requestBody = {
         username: this.state.username,
@@ -209,45 +213,52 @@ if(this.state.usernamevalid&&this.state.passwordvalid){
       const data = await response.json();
       const token = data["token"];
       console.log(data);
-      
-      if (data.token) {
-        localStorage.setItem("Token",data.token);
-        localStorage.setItem("id", data.user.id);
-        
-        this.setState({ response: data });
-        this.props.history.push({
-          pathname: "/Homepage",
-          state: { data: this.state.response },
-        });
-        
-      }
-      else{
-        
-          this.setState({warning:true})
-      
 
+      if (data.token) {
+        localStorage.setItem("Token", data.token);
+        localStorage.setItem("id", data.user.id);
+
+        this.setState({ response: data });
+        if (data.user.is_admin) {
+          this.props.history.push({
+            pathname: "/admin",
+          });
+        } else if (data.user.is_employer) {
+          this.props.history.push({
+            pathname: "/employer",
+          });
+        } else {
+          this.props.history.push({
+            pathname: "/Homepage",
+          });
+        }
+      } else {
+        this.setState({ warning: true });
       }
     } catch (error) {
       console.log("[!ON_REGISTER] " + error);
       // return <Route exact path="/Homepage" component={LandingPage} />;
     }
-  };
+  }
 }
 signIn.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
-    height: '100vh',
+    height: "100vh",
   },
   mainImage: {
-    backgroundImage: 'url(/images/mainImage2.jpg)',
-    backgroundRepeat: 'no-repeat',
-    backgroundColor: theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-  }
+    backgroundImage: "url(/images/mainImage2.jpg)",
+    backgroundRepeat: "no-repeat",
+    backgroundColor:
+      theme.palette.type === "light"
+        ? theme.palette.grey[50]
+        : theme.palette.grey[900],
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  },
 });
 
 export default withStyles(styles)(signIn);

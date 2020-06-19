@@ -365,7 +365,7 @@ class MyProfile extends Component {
                         src={result[0].picture}
                         style={{ height: "12rem", width: "12rem" }}
                       >
-                        <img src="/images/sampleuserphoto.jpg" width="185" height="185" />
+                        <img src="/images/sampleuserphoto.jpg" width="185" height="185" alt="" />
                       </Avatar>
                     </Grid>
                     <Grid item xs={9}>
@@ -503,6 +503,7 @@ class MyProfile extends Component {
                         src="/images/sampleuserphoto.jpg"
                         width="40"
                         height="40"
+                        alt=""
                       />
                     </Avatar>
                   </TableCell>

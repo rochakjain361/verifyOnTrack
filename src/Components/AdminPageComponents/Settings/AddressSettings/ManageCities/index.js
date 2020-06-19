@@ -31,23 +31,9 @@ import { CircularProgress } from "@material-ui/core";
 const token1 = localStorage.getItem("Token");
 const token = "Token " + token1;
 const id = localStorage.getItem("id");
-const api = "http://3.22.17.212:8000"
 const cors = "https://cors-anywhere.herokuapp.com/"
 
-const rows = [
-    {
-        "city": "testCity1",
-    },
-    {
-        "city": "testCity2",
-    },
-    {
-        "city": "testCity3",
-    },
-    {
-        "city": "testCity4",
-    }
-];
+
 
 const styles = theme => ({
 
