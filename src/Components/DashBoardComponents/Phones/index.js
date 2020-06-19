@@ -26,7 +26,7 @@ const token1 = localStorage.getItem("Token");
 const token = "Token " + token1;
 const id = localStorage.getItem("id");
 let result = [];
-let history=[];
+let history = [];
 class Phones extends Component {
   constructor(props) {
     super(props);
@@ -72,27 +72,21 @@ class Phones extends Component {
         // console.log(result[0].phone_reason);
       });
     await axios
-      .get(
-        "http://3.22.17.212:8000/api/v1/resManager/phone/reasons/",
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
+      .get("http://3.22.17.212:8000/api/v1/resManager/phone/reasons/", {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((res) => {
         this.setState({ phoneReasons: res.data });
         console.table("PhonesReason", this.state.phoneReasons);
       });
     await axios
-      .get(
-        "http://3.22.17.212:8000/api/v1/resManager/phone/types/",
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
+      .get("http://3.22.17.212:8000/api/v1/resManager/phone/types/", {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((res) => {
         this.setState({ phoneTypes: res.data });
         console.table("PhonesTypes", this.state.phoneTypes);
@@ -169,7 +163,11 @@ class Phones extends Component {
     });
     await axios
       .get(
-        "http://3.22.17.212:8000/api/v1/employees/" + id + "/phones/"+index+"/history",
+        "http://3.22.17.212:8000/api/v1/employees/" +
+          id +
+          "/phones/" +
+          index +
+          "/history",
         {
           headers: {
             Authorization: token,
@@ -227,6 +225,15 @@ class Phones extends Component {
                           this.setState({
                             updateDialogOpen: true,
                             selectedIndex: index,
+
+                            updatephoneType: result[index].phone_type,
+
+                            updatephoneReason: result[index].phone_reason,
+
+                            updateimeiNumber: result[index].imeiNumber,
+                            updatephoneNumber: result[index].phoneNumber,
+                            updatestartedusingon: result[index].dateObtained,
+                            updatedefaultPhone: result[index].default_phone,
                           })
                         }
                       >
@@ -276,7 +283,7 @@ class Phones extends Component {
                         updatephoneReason: event.target.value,
                       });
                     }}
-                    defaultValue={result[this.state.selectedIndex].phone_reason}
+                    defaultValue={this.state.updatephoneReason}
                   >
                     {this.state.phoneReasons.map((phonetype) => (
                       <MenuItem id={phonetype.id} value={phonetype.id}>
@@ -298,7 +305,7 @@ class Phones extends Component {
                         updatephoneType: event.target.value,
                       });
                     }}
-                    defaultValue={result[this.state.selectedIndex].phone_type}
+                    defaultValue={this.state.updatephoneType}
                   >
                     {this.state.phoneTypes.map((phonetype) => (
                       <MenuItem id={phonetype.id} value={phonetype.id}>
@@ -321,7 +328,7 @@ class Phones extends Component {
                       });
                     }}
                     defaultValue={
-                      result[this.state.selectedIndex].default_phone
+                      this.state.updatedefaultPhone
                     }
                   >
                     <MenuItem id={1} value="Yes">
@@ -345,7 +352,7 @@ class Phones extends Component {
                         updatephoneNumber: event.target.value,
                       });
                     }}
-                    defaultValue={result[this.state.selectedIndex].phoneNumber}
+                    defaultValue={this.state.updatephoneNumber}
                   />
                   <label>IMEI number</label>
                   <input
@@ -361,7 +368,7 @@ class Phones extends Component {
                         updateimeiNumber: event.target.value,
                       });
                     }}
-                    defaultValue={result[this.state.selectedIndex].imeiNumber}
+                    defaultValue={this.state.updateimeiNumber}
                   />
                   <label>Started using on</label>
                   <input
@@ -377,7 +384,7 @@ class Phones extends Component {
                         updatestartedusingon: event.target.value,
                       });
                     }}
-                    defaultValue={result[this.state.selectedIndex].dateObtained}
+                    defaultValue={this.state.updatestartedusingon}
                   />
                   <label>Update Reason</label>
                   <input
