@@ -15,7 +15,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import axios from "axios";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, Typography } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 import CardMedia from "@material-ui/core/CardMedia";
 import { Button } from "@material-ui/core";
@@ -185,7 +185,28 @@ class Phones extends Component {
       <>
         {result.length === 0 ? (
           <>
-            <h1>Add phone data to improve rating</h1>
+            <Grid container spacing={3} justify="space-between" >
+                  <Grid item xs={6}>
+                    <h1>Phones</h1>
+                  </Grid>
+                  <Grid item xs={12}>
+
+                    <Paper style={{ padding: 20 }} elevation={3}>
+                      <Typography variant="h5" gutterBottom align='center'>
+                        Add phone details to improve ratings.
+              </Typography>
+
+                      <Grid container justify='center' style={{ marginTop: 50 }}>
+                        <Button color="primary" variant='contained' onClick={() => {
+                          this.setState({ addDialogOpen: true });
+                        }}>
+                          Add New Phone
+                </Button>
+                      </Grid>
+                    </Paper>
+                  </Grid>
+
+                </Grid>
           </>
         ) : (
           <TableContainer component={Paper} elevation={16}>
@@ -685,11 +706,6 @@ class Phones extends Component {
               color="secondary"
               onClick={() => {
                 this.setState({ addDialogOpen: true });
-              }}
-              style={{
-                fontFamily: "Montserrat",
-                fontWeight: "bold",
-                background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
               }}
             >
               Add Phone

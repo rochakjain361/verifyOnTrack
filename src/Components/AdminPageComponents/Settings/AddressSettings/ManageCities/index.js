@@ -28,6 +28,12 @@ import AddIcon from '@material-ui/icons/Add';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { CircularProgress } from "@material-ui/core";
 
+const token1 = localStorage.getItem("Token");
+const token = "Token " + token1;
+const id = localStorage.getItem("id");
+const api = "http://3.22.17.212:8000"
+const cors = "https://cors-anywhere.herokuapp.com/"
+
 const rows = [
     {
         "city": "testCity1",
@@ -50,9 +56,7 @@ let states=[];
 let Lga=[];
 let Cities=[];
 // let addlga=[];
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+
 class index extends Component {
   state = {
     states: "",
