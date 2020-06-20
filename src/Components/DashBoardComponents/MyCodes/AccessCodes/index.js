@@ -70,6 +70,8 @@ class index extends Component {
     identites: false,
     phone: false,
     jobHistory: false,
+    viewDialog: false,
+    codedetails:""
   };
 
   isloading() {
@@ -323,6 +325,25 @@ class index extends Component {
       });
     this.setState({ loading: false });
   }
+  async getcode(codeid) {
+ 
+    this.setState({ viewDialog: true });
+    await axios
+      .get(
+        "http://3.22.17.212:8000/api/v1/codes/access/code/" + codeid,
+
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        this.setState({ codedetails: res.data });
+        console.log("codedetails", this.state.codedetails.canAccessProfile);
+      });
+    
+  }
   async postcode() {
     this.setState({
       generateNewEmployementCodeDialog: false,
@@ -346,10 +367,7 @@ class index extends Component {
 
     bodyFormData.append("employee", id);
 
-    bodyFormData.append(
-      "canAccessProfile",
-      this.state.profile
-    );
+    bodyFormData.append("canAccessProfile", this.state.profile);
     bodyFormData.append("canAccessAddresses", this.state.address);
     bodyFormData.append("canAccessJobHistory", this.state.jobHistory);
     bodyFormData.append("canAccessPhones", this.state.phone);
@@ -444,6 +462,7 @@ class index extends Component {
                             size="small"
                             color="primary"
                             variant="outlined"
+                            onClick={() => this.getcode(row.id)}
                           >
                             View Details
                           </Button>
@@ -498,6 +517,7 @@ class index extends Component {
                             size="small"
                             color="primary"
                             variant="outlined"
+                            onClick={() => this.getcode(row.id)}
                           >
                             View Details
                           </Button>
@@ -676,6 +696,131 @@ class index extends Component {
                 Generate One-time Code
               </Button>
             </DialogActions>
+          </Dialog>
+          <Dialog
+            fullWidth={"md"}
+            maxWidth={"md"}
+            open={this.state.viewDialog}
+            onClose={() => this.setState({ viewDialog: false })}
+            aria-labelledby="responsive-dialog-title"
+          >
+            <DialogTitle id="codegenerator">Code Details</DialogTitle>
+            <DialogContent>
+              <TableContainer component={Paper} elevation={6} p={0}>
+                <Table stickyHeader>
+                  <TableHead>
+                    <TableRow style={{ backgroundColor: "black" }}>
+                      {[
+                        "Created Date",
+                        "Code String",
+                        "Employer company",
+                        "last updated",
+                        " current status",
+                        "Profile access",
+                        "Jobhistory access",
+                        "Address access",
+                        "Phones access",
+                        "Ratings access",
+                        "Identities access",
+                      ].map((text, index) => (
+                        <TableCell
+                          style={{
+                            fontWeight: "bolder",
+                            fontFamily: "Montserrat",
+                          }}
+                          align="center"
+                        >
+                          {text}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {
+                      <TableRow key={this.state.codedetails.id}>
+                        <TableCell align="center">
+                          {this.state.codedetails.createdOn}
+                        </TableCell>
+                        <TableCell align="center">
+                          
+                          {this.state.codedetails.codeString}
+                        </TableCell>
+                        <TableCell align="center">
+                          {this.state.codedetails.employer_company_field}
+                        </TableCell>
+                        <TableCell align="center">
+                          {this.state.codedetails.statusChangeDate}
+                        </TableCell>
+
+                        <TableCell align="center">
+                          {this.state.codedetails.codeStatus}
+                        </TableCell>
+                        <TableCell align="center">
+                          <Checkbox
+                            checked={this.state.codedetails.canAccessProfile}
+                            defaultValue={
+                              this.state.codedetails.canAccessProfile
+                            }
+                            name="checkedB"
+                            color="primary"
+                          />
+                        </TableCell>
+                        <TableCell align="center">
+                          <Checkbox
+                            checked={this.state.codedetails.canAccessAddresses}
+                            defaultValue={
+                              this.state.codedetails.canAccessAddresses
+                            }
+                            name="checkedB"
+                            color="primary"
+                          />
+                        </TableCell>
+                        <TableCell component="th" align="center">
+                          <Checkbox
+                            checked={this.state.codedetails.canAccessJobHistory}
+                            defaultValue={
+                              this.state.codedetails.canAccessJobHistory
+                            }
+                            name="checkedB"
+                            color="primary"
+                          />
+                        </TableCell>
+                        <TableCell align="center">
+                          <Checkbox
+                            checked={this.state.codedetails.canAccessPhones}
+                            defaultValue={
+                              this.state.codedetails.canAccessPhones
+                            }
+                            name="checkedB"
+                            color="primary"
+                          />
+                        </TableCell>
+                        <TableCell align="center">
+                          <Checkbox
+                            checked={this.state.codedetails.canAccessIdentities}
+                            defaultValue={
+                              this.state.codedetails.canAccessIdentities
+                            }
+                            name="checkedB"
+                            color="primary"
+                          />
+                        </TableCell>
+                        <TableCell align="center">
+                          <Checkbox
+                            checked={this.state.codedetails.canAccessRatings}
+                            defaultValue={
+                              this.state.codedetails.canAccessRatings
+                            }
+                            name="checkedB"
+                            color="primary"
+                          />
+                        </TableCell>
+                      </TableRow>
+                    }
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </DialogContent>
           </Dialog>
         </div>
       </>

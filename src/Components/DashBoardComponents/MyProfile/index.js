@@ -22,9 +22,9 @@ import Box from "@material-ui/core/Box";
 import { Typography } from "@material-ui/core";
 import { Select } from "@material-ui/core";
 import { MenuItem } from "@material-ui/core";
-import { InputLabel } from "@material-ui/core";
+import { Label } from "@material-ui/core";
 import { CircularProgress } from "@material-ui/core";
-
+import InputLabel from '@material-ui/core/InputLabel';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 let token1 = "";
@@ -38,7 +38,7 @@ class MyProfile extends Component {
     updateDialogOpen: false,
     addDialogOpen: false,
     selectedIndex: -1,
-    result: null,
+  
     isloading: false,
     updatedval: "",
     updatedfirstname: "",
@@ -58,6 +58,7 @@ class MyProfile extends Component {
     id: "",
     file: null,
     gender: "",
+    result:[],
   };
   async getprofiledata(){
      await axios
@@ -68,17 +69,18 @@ class MyProfile extends Component {
        })
        .then((res) => {
          result = res.data;
+         this.setState({result:result})
        });
   }
   async componentDidMount() {
+    this.setState({isloading:true})
      token1 = localStorage.getItem("Token");
      token = "Token " + token1;
      id = localStorage.getItem("id");
   await this.getprofiledata();
     this.setState({ isloading: false });
 
-    // console.table(result);
-    // console.log(result[0].id);
+   
   }
 
   _handleChangeEvent(event) {
@@ -185,8 +187,8 @@ class MyProfile extends Component {
     return (
       <>
         {
-          result.length === 0
-            // true
+          this.state.result.length === 0
+         
             ? (
               <div>
 
@@ -309,7 +311,7 @@ class MyProfile extends Component {
                         <FormControl fullWidth>
                           <InputLabel id="gender">Gender</InputLabel>
                           <Select
-                            labelId="gender"
+                            label="gender"
                             id="gender"
                             // value={age}
                             onChange={(event) => {
@@ -364,7 +366,7 @@ class MyProfile extends Component {
                     alignItems="center">
                     <Grid item xs={3}>
                       <Avatar
-                        src={result[0].picture}
+                        src={this.state.result[0].picture}
                         style={{ height: "12rem", width: "12rem" }}
                       >
                         <img src="/images/sampleuserphoto.jpg" width="185" height="185" alt="" />
@@ -372,15 +374,15 @@ class MyProfile extends Component {
                     </Grid>
                     <Grid item xs={9}>
                       <Typography variant='h2' style={{ fontFamily: "Montserrat", textTransform: 'capitalize' }}>
-                        {result[0].firstname} {result[0].middlename}
+                        {this.state.result[0].firstname} {this.state.result[0].middlename}
                       </Typography>
 
                       <Typography variant='h5' style={{ fontFamily: "Montserrat" }}>
-                        Dob:{result[0].dob}
+                        Dob:{this.state.result[0].dob}
                       </Typography>
 
                       <Typography variant='h5' style={{ fontFamily: "Montserrat" }}>
-                        Sex:{result[0].sex}
+                        Sex:{this.state.result[0].sex}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -418,7 +420,7 @@ class MyProfile extends Component {
                   >
                     <Grid alignItems="left" elevation={6}>
                       <h3>
-                        Name:{result[0].firstname} {result[0].middlename}
+                        Name:{this.state.result[0].firstname} {result[0].middlename}
                         {result[0].surname}
                       </h3>
                       <h4>Dob:{result[0].dob}</h4>
@@ -497,7 +499,7 @@ class MyProfile extends Component {
             </TableHead>
 
             <TableBody>
-              {result.map((row, index) => (
+              {this.state.result.map((row, index) => (
                 <TableRow key={row.id}>
                   <TableCell align="center">
                     <Avatar src={row.picture}>
