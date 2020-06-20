@@ -58,14 +58,14 @@ class index extends Component {
                     <Grid item xs={4}>
                         <Card className={classes.profileCardHeight} elevation={4}>
                             <CardContent>
-                                <Typography variant='button' display="block">Profile</Typography>
+                                <Typography variant='button' display="block" align="center">Profile</Typography>
                                 <Profile/>
                             </CardContent>
                         </Card>
 
                         <Card elevation={4} className={classes.marginTop} style={{ minHeight: 400 }}>
                             <CardContent>
-                                <Typography variant="button" display="block" >Works at</Typography>
+                                <Typography variant="button" display="block" align="center">Works at</Typography>
                                 <WorksAt />
                             </CardContent>
                         </Card>

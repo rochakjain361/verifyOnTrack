@@ -7,7 +7,7 @@ const theme = createMuiTheme({
     },
     typography: {
         fontFamily: 'Montserrat-Regular',
-        fontSize: 12,
+        fontSize: 13,
         button: {
             textTransform: 'none',
             fontSize: 12
