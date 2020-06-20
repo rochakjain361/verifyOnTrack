@@ -23,8 +23,11 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import DeleteIcon from '@material-ui/icons/Delete';
 import axios from "axios";
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 61161ccea72648d085fb9af64497040b07e58064
 const token1 = localStorage.getItem("Token");
 const token = "Token " + token1;
 const id = localStorage.getItem("id");
