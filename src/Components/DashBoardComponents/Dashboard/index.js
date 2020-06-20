@@ -22,6 +22,7 @@ import CustomAppBar from '../DashBoardPageComponents/CustomAppbar';
 import Messages from '../DashBoardPageComponents/Messages'
 import Ratings from '../DashBoardPageComponents/Ratings'
 import Codes from '../DashBoardPageComponents/Codes'
+import Profile from '../DashBoardPageComponents/Profile'
 
 const styles = theme => ({
     profileCardHeight: {
@@ -52,12 +53,13 @@ class index extends Component {
         const { classes } = this.props;
 
         return (
-            <div style={{ padding: 20 }}>
+            <div>
                 <Grid container direction='row' spacing={2} justify='flex-start'>
                     <Grid item xs={4}>
                         <Card className={classes.profileCardHeight} elevation={4}>
                             <CardContent>
                                 <Typography variant='button' display="block">Profile</Typography>
+                                <Profile/>
                             </CardContent>
                         </Card>
 
