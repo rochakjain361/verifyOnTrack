@@ -686,7 +686,6 @@ class Addresses extends Component {
                               });
                               console.log(event.target.value);
                             }}
-                            
                             type="text"
                             fullWidth
                           />
@@ -694,7 +693,7 @@ class Addresses extends Component {
                       </Grid>
                     </Box>
 
-                    <Box p={1} width={1 / 2}>
+                    <Box p={1} width={1 / 2} >
                       <Map
                         google={this.props.google}
                         zoom={0}
@@ -707,12 +706,11 @@ class Addresses extends Component {
                           //   lat: this.state.updatedlatitude,
                           //   lng: this.state.updatedlongititude,
                           // }}
-                        
-                            position={{
-                          lat: this.state.location.latitude,
-                          lng: this.state.location.longtitude,
-                        }}
-                          
+
+                          position={{
+                            lat: this.state.location.latitude,
+                            lng: this.state.location.longtitude,
+                          }}
                         />
                         <InfoWindow
                           onClose={this.onInfoWindowClose}
@@ -760,7 +758,7 @@ class Addresses extends Component {
               </DialogTitle>
               <DialogContent>
                 <Box display="flex" flexDirection="row" width={1}>
-                  <Box width={1 / 2}>
+                  <Box width={1 / 2} height={1}>
                     <DialogContentText>
                       Enter the details of your address
                     </DialogContentText>
@@ -1049,7 +1047,7 @@ class Addresses extends Component {
                       </Grid>
                     </Grid>
                   </Box>
-                  <Box p={1} width={1 / 2}>
+                  <Box p={1} width={1 / 2} style={{ minHeight: "10vh" }}>
                     <Map
                       google={this.props.google}
                       zoom={12}

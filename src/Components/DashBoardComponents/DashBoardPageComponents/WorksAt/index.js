@@ -31,18 +31,7 @@ class index extends Component {
         }
     }
     
-  isloading() {
-    return (
-      <>
-        <Grid
-          container
-          justify='center'
-        >
-          <Grid item><CircularProgress /></Grid>
-        </Grid>
-      </>
-    );
-  }
+  
   async componentDidMount() {
       this.setState({ loading :true});
     token1 = localStorage.getItem("Token");
