@@ -66,8 +66,8 @@ class index extends Component {
             <div>
                 <Paper variant='outlined' style={{ marginTop: 10 }}>
                     <Grid container style={{ padding: 10 }} alignItems='center'>
-                        <Grid item xs={1}>
-                            <MessageIcon />
+                        <Grid item xs={1} >
+                            <MessageIcon/>
                         </Grid>
                         <Grid item xs={11}>
                             <>{this.inboxMessageDescription()}</>

@@ -36,14 +36,9 @@ class index extends Component {
       <>
         <Grid
           container
-        //   spacing={0}
-        //   direction="column"
-        //   alignItems="center"
-        //   justify="center"
-        //   display="flex"
-        //   style={{ minHeight: "100vh" }}
+          justify='center'
         >
-          <CircularProgress />
+          <Grid item><CircularProgress /></Grid>
         </Grid>
       </>
     );
@@ -78,16 +73,9 @@ class index extends Component {
         
         <Grid>
           {this.state.loading ? (
-            <Grid
-              container
-              direction="column"
-              alignItems="center"
-              justify="center"
-              display="flex"
-             style={{ minHeight: "100vh" }}
-            >
-              <CircularProgress />
-            </Grid>
+            this.isloading()
+              // <CircularProgress />
+            
           ) : (
             this.state.result.map((company, index) => (
               <Grid>

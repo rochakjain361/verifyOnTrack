@@ -7,11 +7,6 @@ import {
     Paper,
     Tabs,
     Tab,
-    AppBar,
-    TabPanel,
-    ExpansionPanel,
-    ExpansionPanelSummary,
-    ExpansionPanelDetails
 } from '@material-ui/core/';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { withStyles } from '@material-ui/core/styles';

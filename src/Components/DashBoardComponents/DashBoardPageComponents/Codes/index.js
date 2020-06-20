@@ -1,29 +1,25 @@
 import React, { Component } from 'react'
 import {
     Grid,
-    Card,
-    CardContent,
     Typography,
     Paper,
-    Tabs,
-    Tab,
-    AppBar,
-    TabPanel,
-    ExpansionPanel,
-    ExpansionPanelSummary,
-    ExpansionPanelDetails
+    ButtonGroup,
+    Button,
 } from '@material-ui/core/';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
+import MessageIcon from '@material-ui/icons/Message'
+
 const styles = theme => ({
-   
+
 })
 
 class index extends Component {
 
     state = {
+        accessCodesButtonDisable: true,
+        employementCodesButtonDisable: false,
     }
 
     render() {
@@ -31,9 +27,125 @@ class index extends Component {
         const { classes } = this.props;
 
         return (
-            <Typography>Codes Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-            It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
-            </Typography>
+            <div style={{ marginTop: 10 }}>
+                <Grid container justify='center'>
+                    <ButtonGroup disableElevation size='small' variant="contained" color="secondary">
+                        <Button
+                            disabled={this.state.accessCodesButtonDisable}
+                            style={{ minWidth: 150 }}
+                            onClick={() => this.setState({ employementCodesButtonDisable: false, accessCodesButtonDisable: true })}
+                            >AccessCodes</Button>
+                        <Button
+                            style={{ minWidth: 150 }}
+                            disabled={this.state.employementCodesButtonDisable}
+                            onClick={() => this.setState({ employementCodesButtonDisable: true, accessCodesButtonDisable: false })}
+                            >EmployementCodes</Button>
+                    </ButtonGroup>
+                </Grid>
+                <Grid container direction ='row' style={{marginTop: 10, marginLeft:3}}>
+                    <Grid item xs={4}><Typography variant='h6' display="block">Created on</Typography></Grid>
+                    <Grid item xs={4}><Typography variant='h6' display="block">Code</Typography></Grid>
+                    <Grid item xs={4}><Typography variant='h6' display="block">Action</Typography></Grid>
+                </Grid>
+                {this.state.accessCodesButtonDisable ? (this.accessCodes()):(this.employementCodes())}
+
+            </div>
+        );
+    }
+
+    accessCodes() {
+        return (
+            <div>
+               <Paper elevation={1} style={{ marginTop: 10 }}>
+                    <Grid container style={{ padding: 10 }} direction='row' alignItems='center'>
+                        <Grid item xs={4}>
+                        <Typography variant="body2" display="block">05/08/2020</Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                        <Typography variant="body2" display="block">EDja-JMZs-iHoR</Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <Button color='default' variant='contained' href='#' style={{minWidth:100}}>Action</Button>
+                        </Grid>
+                    </Grid>
+                </Paper>
+
+                <Paper elevation={1} style={{ marginTop: 10 }}>
+                    <Grid container style={{ padding: 10 }} direction='row' alignItems='center'>
+                        <Grid item xs={4}>
+                        <Typography variant="body2" display="block">05/08/2020</Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                        <Typography variant="body2" display="block">EDja-JMZs-iHoR</Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <Button color='default' variant='contained' href='#' style={{minWidth:100}}>Action</Button>
+                        </Grid>
+                    </Grid>
+                </Paper>
+
+                <Paper elevation={1} style={{ marginTop: 10 }}>
+                    <Grid container style={{ padding: 10 }} direction='row' alignItems='center'>
+                        <Grid item xs={4}>
+                        <Typography variant="body2" display="block">05/08/2020</Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                        <Typography variant="body2" display="block">EDja-JMZs-iHoR</Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <Button color='default' variant='contained' href='#' style={{minWidth:100}}>Action</Button>
+                        </Grid>
+                    </Grid>
+                </Paper>
+            </div>
+        );
+    }
+
+    employementCodes() {
+        return (
+            <div>
+               <Paper elevation={1} style={{ marginTop: 10 }}>
+                    <Grid container style={{ padding: 10 }} direction='row' alignItems='center'>
+                        <Grid item xs={4}>
+                        <Typography variant="body2" display="block">05/08/2020</Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                        <Typography variant="body2" display="block">EDja-JMZs-iHoR</Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <Button color='default' variant='contained' href='#' style={{minWidth:100}}>Action</Button>
+                        </Grid>
+                    </Grid>
+                </Paper>
+
+                <Paper elevation={1} style={{ marginTop: 10 }}>
+                    <Grid container style={{ padding: 10 }} direction='row' alignItems='center'>
+                        <Grid item xs={4}>
+                        <Typography variant="body2" display="block">05/08/2020</Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                        <Typography variant="body2" display="block">EDja-JMZs-iHoR</Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <Button color='default' variant='contained' href='#' style={{minWidth:100}}>Action</Button>
+                        </Grid>
+                    </Grid>
+                </Paper>
+
+                <Paper elevation={1} style={{ marginTop: 10 }}>
+                    <Grid container style={{ padding: 10 }} direction='row' alignItems='center'>
+                        <Grid item xs={4}>
+                        <Typography variant="body2" display="block">05/08/2020</Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                        <Typography variant="body2" display="block">EDja-JMZs-iHoR</Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <Button color='default' variant='contained' href='#' style={{minWidth:100}}>Action</Button>
+                        </Grid>
+                    </Grid>
+                </Paper>
+            </div>
         );
     }
 
