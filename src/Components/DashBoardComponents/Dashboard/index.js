@@ -63,7 +63,7 @@ class index extends Component {
 
                         <Card elevation={4} className={classes.marginTop} style={{ minHeight: 400 }}>
                             <CardContent>
-                                <Typography variant="button" display="block">Works at</Typography>
+                                <Typography variant="button" display="block" >Works at</Typography>
                                 <WorksAt />
                             </CardContent>
                         </Card>

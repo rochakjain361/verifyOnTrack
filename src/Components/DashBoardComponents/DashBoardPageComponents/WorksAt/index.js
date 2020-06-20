@@ -1,103 +1,130 @@
 import React, { Component } from 'react'
 import {
-    Grid,
-    Card,
-    CardContent,
-    Typography,
-    Paper,
-    Tabs,
-    Tab,
-    ExpansionPanel,
-    ExpansionPanelSummary,
-    ExpansionPanelDetails
-} from '@material-ui/core/';
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  Paper,
+  Tabs,
+  Tab,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  CircularProgress,
+  LinearProgress,
+} from "@material-ui/core/";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { withStyles } from '@material-ui/core/styles';
+import axios from "axios";
 
-const styles = theme => ({
-
-})
-
+let token1 = "";
+let token = "";
+let id = "";
+let result = [];
 class index extends Component {
-
-    render() {
-
-        const { classes } = this.props;
-
-        return (
-            <div>
-                <ExpansionPanel >
-                    <ExpansionPanelSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography variant="body1" display='block'>Company name 1</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                        {this.workDescription()}
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
-
-{/* ONLY KEEP THE ABOVE EXPANSION PANEL AND USE MAP FUNC TO LOOP */}
-
-                <ExpansionPanel>
-                    <ExpansionPanelSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel2a-content"
-                        id="panel2a-header"
-                    >
-                        <Typography variant="body1" display='block'>Company name 2</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                        {this.workDescription()}
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
-
-                <ExpansionPanel >
-                    <ExpansionPanelSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography variant="body1" display='block'>Company name 3</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                        {this.workDescription()}
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
-
-                <ExpansionPanel>
-                    <ExpansionPanelSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel2a-content"
-                        id="panel2a-header"
-                    >
-                        <Typography variant="body1" display='block'>Company name 4</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                        {this.workDescription()}    
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
-            </div>
-        );
+    constructor(props) {
+        super(props)
+    
+        this.state = {
+            result:[],
+            loading:true,
+        }
     }
-
-    workDescription() {
-        return(
-            <Grid container direction='row'>
-            <Typography variant='body1' display='block'>
-                Job Tiltle
-            </Typography>
-            <Typography variant='body2' display='block' style={{marginTop:5}}>
-            Job Description Lorem ipsum dolor sit amet, 
-            consectetur adipiscing elit. Suspendisse malesuada lacus ex, 
-            sit amet blandit leo lobortis eget.
-            </Typography>
+    
+  isloading() {
+    return (
+      <>
+        <Grid
+          container
+        //   spacing={0}
+        //   direction="column"
+        //   alignItems="center"
+        //   justify="center"
+        //   display="flex"
+        //   style={{ minHeight: "100vh" }}
+        >
+          <CircularProgress />
         </Grid>
-        );   
-    }
+      </>
+    );
+  }
+  async componentDidMount() {
+      this.setState({ loading :true});
+    token1 = localStorage.getItem("Token");
+    token = "Token " + token1;
+    id = localStorage.getItem("id");
+    await axios
+      .get(
+        "http://3.22.17.212:8000/api/v1/employees/" + id + "/jobs?current=true",
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        // result = res.data;
+        this.setState({result:res.data})
+        console.table("companies", this.state.result);
+        // console.log(result[0].phone_reason);
+      });
+       this.setState({ loading: false });
+  }
+  render() {
+    return (
+      <div>
+        {/* {this.workDescription()} */}
+        {/* ONLY KEEP THE ABOVE EXPANSION PANEL AND USE MAP FUNC TO LOOP */}
+        
+        <Grid>
+          {this.state.loading ? (
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justify="center"
+              display="flex"
+             style={{ minHeight: "100vh" }}
+            >
+              <CircularProgress />
+            </Grid>
+          ) : (
+            this.state.result.map((company, index) => (
+              <Grid>
+                <ExpansionPanel>
+                  <ExpansionPanelSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel2a-content"
+                    id="panel2a-header"
+                  >
+                    <Typography
+                      variant="subtitle1"
+                      display="block"
+                      gutterBottom
+                    >
+                      {company.company_name_field}
+                    </Typography>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails>
+                    <Grid container direction="column">
+                      <Typography variant="body1" display="block" gutterBottom>
+                        Job Title:{company.jobTitle}
+                      </Typography>
+                      <Typography variant="body2" gutterBottom>
+                        Job Description:{company.jobDescription}
+                      </Typography>
+                    </Grid>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              </Grid>
+            ))
+          )}
+        </Grid>
+      </div>
+    );
+  }
 
+ 
 }
 
-export default withStyles(styles)(index);
+export default withStyles()(index);
