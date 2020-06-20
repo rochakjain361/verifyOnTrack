@@ -22,6 +22,8 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import DeleteIcon from '@material-ui/icons/Delete';
+import axios from "axios";
+
 
 const token1 = localStorage.getItem("Token");
 const token = "Token " + token1;
@@ -152,7 +154,7 @@ class index extends Component {
                                 {this.state.allAddressTypes.map((row, index) => (
                                     <TableRow key={row.id}>
                                         <TableCell align="left">{row.addressType}</TableCell>
-                                        <TableCell align="right"><Button variant='outlined' size='small' onClick = {()=>{this.deleteAddressType(index)}} color = 'secondary'>Delete</Button>
+                                        <TableCell align="right"><Button variant='outlined' size='small' onClick = {()=>{this.deleteAddressType(row.id)}} color = 'secondary'>Delete</Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -197,14 +199,17 @@ class index extends Component {
 
     async deleteAddressType(index) {
         try {
-            let response = await fetch(api + "/api/v1/resManager/address/types/" + index + "/",
-                {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': token,
-                        // 'Content-Type': 'application/json'
-                    }
-                }
+            let response = await axios.delete(
+              "http://3.22.17.212:8000/api/v1/resManager/address/types/" +
+                index +
+                "/",
+              {
+               
+                headers: {
+                  Authorization: token,
+                  // 'Content-Type': 'application/json'
+                },
+              }
             );
             response = await response.json();
             console.log('delAddressSuccess:', response);
@@ -212,6 +217,7 @@ class index extends Component {
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
         }
+          this.getAddressTypes();
     }
 }
 

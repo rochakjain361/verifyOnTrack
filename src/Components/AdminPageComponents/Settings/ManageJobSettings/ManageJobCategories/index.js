@@ -22,6 +22,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import DeleteIcon from '@material-ui/icons/Delete';
+import axios from "axios";
 
 const token1 = localStorage.getItem("Token");
 const token = "Token " + token1;
@@ -153,7 +154,7 @@ class index extends Component {
                                 {this.state.allJobCategories.map((row, index) => (
                                     <TableRow key={row.id}>
                                         <TableCell align="left">{row.positionCategory}</TableCell>
-                                        <TableCell align="right"><Button variant='outlined' size='small' onClick={() => { this.deleteJobCategories(index) }} color='secondary'>Delete</Button>
+                                        <TableCell align="right"><Button variant='outlined' size='small' onClick={() => { this.deleteJobCategories(row.id) }} color='secondary'>Delete</Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -197,16 +198,35 @@ class index extends Component {
         }
     }
 
-    async deleteJobCategories(index) {
+    // async deleteJobCategories(index) {
+    //     try {
+    //         let response = await fetch(api + "/api/v1/resManager/job/categories/" + index + "/",
+    //             {
+    //                 method: 'DELETE',
+    //                 headers: {
+    //                     'Authorization': token,
+    //                     // 'Content-Type': 'application/json'
+    //                 }
+    //             }
+    //         );
+    //         response = await response.json();
+    //         console.log('delJobCategoriesSuccess:', response);
+    //         await this.getJobCategories();
+    //     } catch (error) {
+    //         console.log("[!ON_REGISTER] " + error);
+    //     }
+    // }
+
+    async deleteJobCategories(index)  {
         try {
-            let response = await fetch(api + "/api/v1/resManager/job/categories/" + index + "/",
-                {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': token,
-                        // 'Content-Type': 'application/json'
-                    }
-                }
+            let response = await axios.delete(api + "/api/v1/resManager/job/categories/" + index + "/",
+              {
+               
+                headers: {
+                  Authorization: token,
+                  'Content-Type': 'application/json'
+                },
+              }
             );
             response = await response.json();
             console.log('delJobCategoriesSuccess:', response);
@@ -214,6 +234,7 @@ class index extends Component {
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
         }
+        await this.getJobCategories();
     }
 }
 

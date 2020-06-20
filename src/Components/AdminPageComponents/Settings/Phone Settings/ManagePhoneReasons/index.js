@@ -22,6 +22,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import DeleteIcon from '@material-ui/icons/Delete';
+import axios from 'axios'
 
 const token1 = localStorage.getItem("Token");
 const token = "Token " + token1;
@@ -152,7 +153,7 @@ class index extends Component {
                                 {this.state.allPhoneReasons.map((row, index) => (
                                     <TableRow key={row.id}>
                                         <TableCell align="left">{row.phoneReason}</TableCell>
-                                        <TableCell align="right"><Button variant='outlined' size='small' onClick={() => { this.deletePhoneReason(index) }} color='secondary'>Delete</Button>
+                                        <TableCell align="right"><Button variant='outlined' size='small' onClick={() => { this.deletePhoneReason(row.id) }} color='secondary'>Delete</Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -195,16 +196,35 @@ class index extends Component {
         }
     }
 
-    async deletePhoneReason(index) {
+    // async deletePhoneReason(index) {
+    //     try {
+    //         let response = await fetch(api + "/api/v1/resManager/phone/reasons/" + index + "/",
+    //             {
+    //                 method: 'DELETE',
+    //                 headers: {
+    //                     'Authorization': token,
+    //                     // 'Content-Type': 'application/json'
+    //                 }
+    //             }
+    //         );
+    //         response = await response.json();
+    //         console.log('delPhoneSuccess:', response);
+    //         await this.getPhoneReasons();
+    //     } catch (error) {
+    //         console.log("[!ON_REGISTER] " + error);
+    //     }
+    // }
+
+    async deletePhoneReason(index)  {
         try {
-            let response = await fetch(api + "/api/v1/resManager/phone/reasons/" + index + "/",
-                {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': token,
-                        // 'Content-Type': 'application/json'
-                    }
-                }
+            let response = await axios.delete(api + "/api/v1/resManager/phone/reasons/" + index + "/",
+              {
+               
+                headers: {
+                  Authorization: token,
+                  'Content-Type': 'application/json'
+                },
+              }
             );
             response = await response.json();
             console.log('delPhoneSuccess:', response);
@@ -212,8 +232,10 @@ class index extends Component {
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
         }
+        await this.getPhoneReasons();
     }
 }
+
 
 export default withStyles(styles)(index);
 

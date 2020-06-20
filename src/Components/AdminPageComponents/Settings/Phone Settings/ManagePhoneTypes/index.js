@@ -22,6 +22,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import DeleteIcon from '@material-ui/icons/Delete';
+import axios from 'axios'
 
 const token1 = localStorage.getItem("Token");
 const token = "Token " + token1;
@@ -152,7 +153,7 @@ class index extends Component {
                                 {this.state.allPhoneTypes.map((row, index) => (
                                     <TableRow key={row.id}>
                                         <TableCell align="left">{row.phoneType}</TableCell>
-                                        <TableCell align="right"><Button variant='outlined' size='small' onClick = {()=>{this.deletePhoneType(index)}} color = 'secondary'>Delete</Button>
+                                        <TableCell align="right"><Button variant='outlined' size='small' onClick = {()=>{this.deletePhoneType(row.id)}} color = 'secondary'>Delete</Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -195,16 +196,35 @@ class index extends Component {
         }
     }
 
-    async deletePhoneType(index) {
+    // async deletePhoneType(index) {
+    //     try {
+    //         let response = await fetch(api + "/api/v1/resManager/phone/types/" + index + "/",
+    //             {
+    //                 method: 'DELETE',
+    //                 headers: {
+    //                     'Authorization': token,
+    //                     // 'Content-Type': 'application/json'
+    //                 }
+    //             }
+    //         );
+    //         response = await response.json();
+    //         console.log('delPhoneSuccess:', response);
+    //         await this.getPhoneTypes();
+    //     } catch (error) {
+    //         console.log("[!ON_REGISTER] " + error);
+    //     }
+    // }
+
+    async deletePhoneType(index)  {
         try {
-            let response = await fetch(api + "/api/v1/resManager/phone/types/" + index + "/",
-                {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': token,
-                        // 'Content-Type': 'application/json'
-                    }
-                }
+            let response = await axios.delete(api + "/api/v1/resManager/phone/types/" + index + "/",
+              {
+               
+                headers: {
+                  Authorization: token,
+                  'Content-Type': 'application/json'
+                },
+              }
             );
             response = await response.json();
             console.log('delPhoneSuccess:', response);
@@ -212,6 +232,7 @@ class index extends Component {
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
         }
+        await this.getPhoneTypes();
     }
 }
 
