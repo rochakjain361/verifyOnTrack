@@ -1,29 +1,27 @@
 import React, { Component } from 'react'
 import {
     Grid,
-    Card,
-    CardContent,
     Typography,
-    Paper,
-    Tabs,
-    Tab,
-    AppBar,
-    TabPanel,
-    ExpansionPanel,
-    ExpansionPanelSummary,
-    ExpansionPanelDetails
 } from '@material-ui/core/';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import Rating from '@material-ui/lab/Rating';
+
 
 const styles = theme => ({
-   
+
 })
 
 class index extends Component {
 
     state = {
+        overallProfileValue: 0,
+        profileValue: 0,
+        idValue: 0,
+        addressValue: 0,
+        phoneValue: 0,
+        votValue: 0,
+        otherJobsValue: 0
     }
 
     render() {
@@ -31,9 +29,71 @@ class index extends Component {
         const { classes } = this.props;
 
         return (
-            <Typography>Ratings Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-            It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
-            </Typography>
+            <div style={{ marginTop: 10 }}>
+                <Typography style={{marginTop:10}} variant='h6'>Ratings</Typography>
+                <Grid container style={{ marginTop: 15 }} >
+
+                    <Grid item xs={3}>
+                        <Typography>Profile:</Typography>
+                    </Grid>
+                    <Grid item xs={9}> 
+                        <Rating
+                            name="simple-controlled"
+                            value={this.state.addJobDialogRating}
+                            onChange={(event, newValue) => this.setState({ profileValue: newValue })}
+                            max={10}
+                        />
+                    </Grid>
+
+                    <Grid item xs={3}>
+                        <Typography>ID:</Typography>
+                    </Grid>
+                    <Grid item xs={9}> 
+                        <Rating
+                            name="simple-controlled"
+                            value={this.state.addJobDialogRating}
+                            onChange={(event, newValue) => this.setState({ idValue: newValue })}
+                            max={10}
+                        />
+                    </Grid>
+
+                    <Grid item xs={3}>
+                        <Typography>Address:</Typography>
+                    </Grid>
+                    <Grid item xs={9}> 
+                        <Rating
+                            name="simple-controlled"
+                            value={this.state.addJobDialogRating}
+                            onChange={(event, newValue) => this.setState({ addressValue: newValue })}
+                            max={10}
+                        />
+                    </Grid>
+
+                    <Grid item xs={3}>
+                        <Typography>Phone:</Typography>
+                    </Grid>
+                    <Grid item xs={9}> 
+                        <Rating
+                            name="simple-controlled"
+                            value={this.state.addJobDialogRating}
+                            onChange={(event, newValue) => this.setState({ phoneValue: newValue })}
+                            max={10}
+                        />
+                    </Grid>
+
+                    <Grid item xs={3}>
+                        <Typography>Other Jobs:</Typography>
+                    </Grid>
+                    <Grid item xs={9}> 
+                        <Rating
+                            name="simple-controlled"
+                            value={this.state.addJobDialogRating}
+                            onChange={(event, newValue) => this.setState({ otherJobsValue: newValue })}
+                            max={10}
+                        />
+                    </Grid>
+                </Grid>
+            </div>
         );
     }
 
