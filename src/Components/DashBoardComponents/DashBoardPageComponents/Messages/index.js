@@ -6,6 +6,8 @@ import {
     Typography,
     Paper,
     Switch,
+    ButtonGroup,
+    Button,
     FormGroup,
     Tabs,
     Tab,
@@ -28,6 +30,8 @@ const styles = theme => ({
 class index extends Component {
 
     state = {
+        inboxButtonDisable: false,
+        outboxButtonDisable: true,
     }
 
     render() {
@@ -35,52 +39,64 @@ class index extends Component {
         const { classes } = this.props;
 
         return (
-            <div style={{ marginTop: 20 }}>
-                <Switch style={{flex: -1}}></Switch>
-                <Paper variant='outlined' style={{ marginTop: 5 }}>
-                    <Grid container style={{padding: 10}} alignItems='center'>
+            <div style={{ marginTop: 10 }}>
+                <Grid container justify='center'>
+                    <ButtonGroup disableElevation size='small' variant="contained" color="secondary">
+                        <Button 
+                        disabled={this.state.inboxButtonDisable}
+                        style={{minWidth:75}}
+                        onClick={()=>this.setState({inboxButtonDisable: !this.state.outButtonDisable})}>Inbox</Button>
+                        <Button 
+                        style={{minWidth:75}} 
+                        disabled={this.state.inboxButtonDisable}
+                        onClick={()=>this.setState({outboxButtonDisable: this.state.inboxButtonDisable})}>Outbox</Button>
+                    </ButtonGroup>
+                </Grid>
+
+                <Paper variant='outlined' style={{ marginTop: 10 }}>
+                    <Grid container style={{ padding: 10 }} alignItems='center'>
                         <Grid item xs={1}>
-                        <MessageIcon /> 
+                            <MessageIcon />
                         </Grid>
                         <Grid item xs={11}>
                             <Typography variant='body1' display='block'>
-                            Initiated by
+                                Initiated by
                             </Typography>
-                        <Typography variant="body2" display="block">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                                    sit amet blandit leo lobortis eget.
+                            <Typography variant="body2" display="block">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
+                                sit amet blandit leo lobortis eget.
                             </Typography>
                         </Grid>
                     </Grid>
                 </Paper>
-                <Paper variant='outlined'style={{ marginTop: 5 }} >
-                    <Grid container style={{padding: 10}} alignItems='center'>
+                <Paper variant='outlined' style={{ marginTop: 5 }} >
+                    <Grid container style={{ padding: 10 }} alignItems='center'>
                         <Grid item xs={1}>
-                        <MessageIcon /> 
+                            <MessageIcon />
                         </Grid>
                         <Grid item xs={11}>
                             <Typography variant='body1' display='block'>
-                            Initiated by
+                                Initiated by
                             </Typography>
-                        <Typography variant="body2" display="block">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                                    sit amet blandit leo lobortis eget.
+                            <Typography variant="body2" display="block">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
+                                sit amet blandit leo lobortis eget.
                             </Typography>
                         </Grid>
                     </Grid>
                 </Paper>
-                <Paper variant='outlined'style={{ marginTop: 5 }} >
-                    <Grid container style={{padding: 10}} alignItems='center'>
+                <Paper variant='outlined' style={{ marginTop: 5 }} >
+                    <Grid container style={{ padding: 10 }} alignItems='center'>
                         <Grid item xs={1}>
-                        <MessageIcon /> 
+                            <MessageIcon />
                         </Grid>
                         <Grid item xs={11}>
                             <Typography variant='body1' display='block'>
-                            Initiated by
+                                Initiated by
                             </Typography>
-                        <Typography variant="body2" display="block">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                                    sit amet blandit leo lobortis eget.
+                            <Typography variant="body2" display="block">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
+                                sit amet blandit leo lobortis eget.
                             </Typography>
                         </Grid>
                     </Grid>
