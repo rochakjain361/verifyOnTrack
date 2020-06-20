@@ -36,13 +36,13 @@ class index extends Component {
 
         return (
             <div style={{ marginTop: 10 }}>
-                <Grid container direction='column' justify='flex-start'>
+                <Grid container direction='column' justify='center'>
                     <Grid item xs={3}>
                         <Avatar
                             // src={this.state.result[0].picture}
-                            style={{ height: "8rem", width: "8rem" }}
+                            style={{ height: "10rem", width: "10rem" }}
                         >
-                            <img src="/images/sampleuserphoto.jpg" width="120" height="120" alt="" />
+                            <img src="/images/sampleuserphoto.jpg" width="150" height="150" alt="" />
                         </Avatar>
                     </Grid>
 

@@ -56,14 +56,14 @@ class index extends Component {
             <div>
                 <Grid container direction='row' spacing={2} justify='flex-start'>
                     <Grid item xs={4}>
-                        <Card className={classes.profileCardHeight} elevation={4}>
+                        <Card className={classes.profileCardHeight} elevation={2}>
                             <CardContent>
-                                <Typography variant='button' display="block">Profile</Typography>
+                                <Typography variant='h5' display="block">Profile</Typography>
                                 <Profile/>
                             </CardContent>
                         </Card>
 
-                        <Card elevation={4} className={classes.marginTop} style={{ minHeight: 400 }}>
+                        <Card elevation={2} className={classes.marginTop} style={{ minHeight: 400 }}>
                             <CardContent>
                                 <Typography variant="button" display="block">Works at</Typography>
                                 <WorksAt />
@@ -73,7 +73,7 @@ class index extends Component {
                     </Grid>
 
                     <Grid item xs={8}>
-                        <Card className={classes.profileCardHeight} elevation={4}>
+                        <Card className={classes.profileCardHeight} elevation={2}>
                             <CardContent>
 
                                 <CustomAppBar 
@@ -93,7 +93,7 @@ class index extends Component {
                             </CardContent>
                         </Card>
 
-                        <Card className={classes.profileCardHeight} elevation={4} className={classes.marginTop}>
+                        <Card className={classes.profileCardHeight} elevation={2} className={classes.marginTop}>
                             <CardContent>
                                 <Paper className={classes.tabs}>
                                     <Tabs
