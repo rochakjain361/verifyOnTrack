@@ -63,15 +63,10 @@ class index extends Component {
     return (
       <div style={{ marginTop: 10 }}>
         {this.state.loading ? (
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            justify="center"
-            display="flex"
-            style={{ minHeight: "100vh" }}
-          >
-            <CircularProgress />
+          <Grid container justify="center" alignItems="center">
+            <Grid item>
+              <CircularProgress />
+            </Grid>
           </Grid>
         ) : (
           this.state.result.map((profile, index) => (

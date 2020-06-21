@@ -62,7 +62,7 @@ const styles = theme => ({
   },
   content: {
     flexGrow: 1,
-    padding: 10,
+    //  padding: 10,
   },
   nested: {
     paddingLeft: 72,
@@ -267,7 +267,7 @@ async logout(){
             <Switch>
 
               <Route exact path="/dashboard">
-                <Container>
+                <Container style={{backgroundColor:"grey"}}>
                   <Dashboard />
                 </Container>
               </Route>

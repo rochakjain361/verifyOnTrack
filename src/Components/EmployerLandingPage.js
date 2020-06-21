@@ -54,7 +54,7 @@ const styles = theme => ({
   },
   content: {
     flexGrow: 1,
-    padding: 10,
+    padding: 0,
   },
   nested: {
     paddingLeft: 72,
@@ -252,7 +252,7 @@ class EmployerLandingPage extends React.PureComponent {
             <Toolbar />
             <Switch>
               <Route exact path="/employerDashboard">
-                <Container>
+                <Container >
                   <Dashboard />
                 </Container>
               </Route>
