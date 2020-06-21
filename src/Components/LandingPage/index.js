@@ -267,7 +267,7 @@ async logout(){
             <Switch>
 
               <Route exact path="/dashboard">
-                <Container style={{backgroundColor:"grey"}}>
+                <Container style={{backgroundColor:"#eeeeee "}}>
                   <Dashboard />
                 </Container>
               </Route>

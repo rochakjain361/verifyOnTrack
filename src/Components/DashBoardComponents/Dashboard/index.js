@@ -57,7 +57,7 @@ class index extends Component {
               direction="row"
               spacing={2}
               justify="flex-start"
-              style={{ background: "grey" }}
+              style={{ background: "#eeeeee" }}
             >
               <Grid item xs={4}>
                 <Card className={classes.profileCardHeight} elevation={2}>
