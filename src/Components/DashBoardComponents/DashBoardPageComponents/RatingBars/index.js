@@ -63,19 +63,26 @@ class index extends Component {
             horizontal: true,
             startingShape: "rounded",
             endingShape: "rounded",
-            //  distributed: true,
-            barHeight: "50%",
-            columnWidth: "90%", 
-            // colors:[]
-            // dataLabels:false
+            distributed: true,
+            barHeight: "35%",
           },
         },
         dataLabels: {
           enabled: false,
-          // textAnchor: "start",
+          //  textAnchor: "start",
         },
         grid: {
-          show: false,
+          show: true,
+          xaxis: {
+            lines: {
+              show: false,
+            },
+          },
+          yaxis: {
+            lines: {
+              show: false,
+            },
+          },
         },
         xaxis: {
           categories: ["Profile", "ID", "Address", "Phone", "Other Jobs"],
@@ -112,14 +119,17 @@ class index extends Component {
               options={this.state.options}
               series={[
                 {
-                  name: "out of 100",
+                  name: "out of 10★",
                   data: [
-                    this.state.result.profileRating,
-                    this.state.result.idRating,
-                    this.state.result.addressRating,
-                    this.state.result.phoneRating,
-                    this.state.result.otherJobRating,
+                    this.state.result.profileRating / 10 ,
+                    this.state.result.idRating / 10,
+                    this.state.result.addressRating / 10,
+                    this.state.result.phoneRating / 10,
+                    this.state.result.otherJobRating / 10,
                   ],
+                  
+             
+                  
                   labels: {
                     style: {
                       colors: ["#FFFFFF", "#FFFFFF", "#FFFFFF"],
@@ -129,7 +139,7 @@ class index extends Component {
               ]}
               type="bar"
               width={"500px"}
-              height={"150px"}
+              height={"215px"}
             />
           )}
         </Grid>

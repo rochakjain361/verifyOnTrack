@@ -40,7 +40,7 @@ class index extends Component {
         // result = res.data;
         this.setState({ result: res.data });
         console.table("messages data", this.state.result);
-        console.log(this.state.result[0].message);
+        
       });
     this.setState({ loading: false });
   }

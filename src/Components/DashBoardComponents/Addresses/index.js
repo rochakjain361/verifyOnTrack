@@ -105,10 +105,18 @@ class Addresses extends Component {
   onMarkerClick(props, marker, e) {
     
     this.setState({
-      location: { latitude: e.latLng.lat(), longtitude: e.latLng.lng() },
+      location: {
+        latitude: e.latLng.lat(),
+        longtitude: e.latLng.lng(),
+      },
     });
+    // this.setState({location:{latitude:this.state.location.latitude.slice(0,8),longtitude:this.state.location.longtitude.slice(0,8)}})
 
-    console.log(this.state.location.latitude, this.state.location.longtitude);
+    console.log(
+      this.state.location.latitude,
+      this.state.location.longtitude
+    );
+    
   }
   // updateonMarkerClick(props, marker, e) {
   //   console.log(e.latLng.lat(),e.latLng.lng());
