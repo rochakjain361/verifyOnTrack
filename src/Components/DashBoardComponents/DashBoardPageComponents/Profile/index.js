@@ -110,7 +110,9 @@ class index extends Component {
                 <Typography variant="body2">
                   {new Date(profile.dob).toDateString()}
                 </Typography>{" "}
-                <Typography variant="body2">{profile.sex}</Typography>
+                <Typography variant="body2">
+                  {profile.employee_email_field}
+                </Typography>
               </Grid>
             </Grid>
           ))
