@@ -2,11 +2,16 @@ import React, { Component } from 'react'
 import {
     Grid,
     Typography,
+    Paper,
+    ButtonGroup,
+    Button,
 } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Rating from '@material-ui/lab/Rating';
 
+
+import MessageIcon from '@material-ui/icons/Message'
 
 const styles = theme => ({
 
@@ -30,8 +35,19 @@ class index extends Component {
 
         return (
             <div style={{ marginTop: 10 }}>
-                <Typography style={{marginTop:10}} variant='h6'>Ratings</Typography>
                 <Grid container style={{ marginTop: 15 }} >
+                <Grid item xs={3}>
+                        <Typography variant='h6'>Overall Profile:</Typography>
+                    </Grid>
+                    <Grid item xs={9}> 
+                        <Rating
+                            size="large"
+                            name="simple-controlled"
+                            value={this.state.addJobDialogRating}
+                            onChange={(event, newValue) => this.setState({ overallProfileValue: newValue })}
+                            max={10}
+                        />
+                    </Grid>
 
                     <Grid item xs={3}>
                         <Typography>Profile:</Typography>
@@ -77,6 +93,18 @@ class index extends Component {
                             name="simple-controlled"
                             value={this.state.addJobDialogRating}
                             onChange={(event, newValue) => this.setState({ phoneValue: newValue })}
+                            max={10}
+                        />
+                    </Grid>
+
+                    <Grid item xs={3}>
+                        <Typography>VerifyOnTrac Jobs:</Typography>
+                    </Grid>
+                    <Grid item xs={9}> 
+                        <Rating
+                            name="simple-controlled"
+                            value={this.state.addJobDialogRating}
+                            onChange={(event, newValue) => this.setState({ votValue: newValue })}
                             max={10}
                         />
                     </Grid>
