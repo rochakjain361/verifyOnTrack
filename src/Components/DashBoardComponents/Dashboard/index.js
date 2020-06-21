@@ -7,6 +7,7 @@ import {
     Paper,
     Tabs,
     Tab,
+    Box
 } from '@material-ui/core/';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { withStyles } from '@material-ui/core/styles';
@@ -50,15 +51,21 @@ class index extends Component {
         const { classes } = this.props;
 
         return (
-          <div>
-            <Grid container direction="row" spacing={2} justify="flex-start">
+          <Box py={2}>
+            <Grid
+              container
+              direction="row"
+              spacing={2}
+              justify="flex-start"
+              style={{ background: "grey" }}
+            >
               <Grid item xs={4}>
                 <Card className={classes.profileCardHeight} elevation={2}>
                   <CardContent>
                     <Typography variant="h5" display="block" align="center">
                       Profile
                     </Typography>
-                    
+
                     <Profile />
                   </CardContent>
                 </Card>
@@ -115,7 +122,7 @@ class index extends Component {
                 </Card>
               </Grid>
             </Grid>
-          </div>
+          </Box>
         );
     }
 
