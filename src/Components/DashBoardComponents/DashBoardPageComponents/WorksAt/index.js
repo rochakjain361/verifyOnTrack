@@ -1,17 +1,11 @@
 import React, { Component } from 'react'
 import {
   Grid,
-  Card,
-  CardContent,
   Typography,
-  Paper,
-  Tabs,
-  Tab,
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
   CircularProgress,
-  LinearProgress,
 } from "@material-ui/core/";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { withStyles } from '@material-ui/core/styles';
@@ -96,10 +90,10 @@ class index extends Component {
                   <ExpansionPanelDetails>
                     <Grid container direction="column">
                       <Typography variant="body1" display="block" gutterBottom>
-                        Job Title:{company.jobTitle}
+                        {company.jobTitle}
                       </Typography>
                       <Typography variant="body2" gutterBottom>
-                        Job Description:{company.jobDescription}
+                        {company.jobDescription}
                       </Typography>
                     </Grid>
                   </ExpansionPanelDetails>

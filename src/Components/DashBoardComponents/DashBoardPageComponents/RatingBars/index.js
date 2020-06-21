@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
+import Chart from "react-apexcharts";
 
 const styles = theme => ({
 
@@ -22,7 +23,22 @@ class index extends Component {
         addressValue: 0,
         phoneValue: 0,
         votValue: 0,
-        otherJobsValue: 0
+        otherJobsValue: 0,
+
+        options: {
+            chart: {
+              id: "basic-bar"
+            },
+            xaxis: {
+              categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
+            }
+          },
+          series: [
+            {
+              name: "series-1",
+              data: [30, 40, 45, 50, 49, 60, 70, 91]
+            }
+          ]
     }
 
     render() {
@@ -31,7 +47,7 @@ class index extends Component {
 
         return (
             <div style={{ marginTop: 10 }}>
-                <Grid container style={{ marginTop: 15 }} >
+                {/* <Grid container style={{ marginTop: 15 }} >
                 <Grid item xs={3}>
                         <Typography variant='h6'>Overall Profile:</Typography>
                     </Grid>
@@ -116,7 +132,14 @@ class index extends Component {
                             max={10}
                         />
                     </Grid>
-                </Grid>
+                </Grid> */}
+
+                <Chart
+              options={this.state.options}
+              series={this.state.series}
+              type="bar"
+              width="500"
+            />
             </div>
         );
     }

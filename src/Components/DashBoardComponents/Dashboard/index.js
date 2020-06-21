@@ -24,7 +24,7 @@ import DashButtons from '../DashBoardPageComponents/DashButtons'
 
 const styles = theme => ({
     profileCardHeight: {
-        minHeight: 300,
+        minHeight: 250,
         // minWidth: window.innerWidth/3
     },
     tabs: {
@@ -62,10 +62,9 @@ class index extends Component {
               <Grid item xs={4}>
                 <Card className={classes.profileCardHeight} elevation={2}>
                   <CardContent>
-                    <Typography variant="h5" display="block" align="center">
+                    <Typography variant="h5" display="block" align="flex-start">
                       Profile
                     </Typography>
-
                     <Profile />
                   </CardContent>
                 </Card>
@@ -79,10 +78,10 @@ class index extends Component {
                 <Card
                   elevation={2}
                   className={classes.marginTop}
-                  style={{ minHeight: 400 }}
+                  style={{ minHeight: 300 }}
                 >
                   <CardContent>
-                    <Typography variant="button" display="block" align="center">
+                    <Typography variant="h5" display="block"  align="flex-start">
                       Works at
                     </Typography>
                     <WorksAt />

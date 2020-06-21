@@ -85,8 +85,8 @@ class index extends Component {
                 <Avatar
                   src="/images/sampleuserphoto.jpg"
                   style={{
-                    height: "8rem",
-                    width: "8rem",
+                    height: "10rem",
+                    width: "10rem",
                   }}
                 ></Avatar>
               </Grid>

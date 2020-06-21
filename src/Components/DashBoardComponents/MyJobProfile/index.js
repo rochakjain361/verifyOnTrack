@@ -264,7 +264,7 @@ class myJobProfile extends Component {
                     <h1>My Job Profile</h1>
                 </Grid>
                 <Grid item xs={3}>
-                    <Button color="secondary" style={{ marginTop: 25, marginLeft: 32 }} variant='contained' onClick={this.addJobProfile} >
+                    <Button color="secondary" style={{ marginTop: 25, marginLeft: 32 }} variant='contained' onClick={()=>{this.setState({addDialogOpen: true})}} >
                         Add New Job History
                                         </Button>
                 </Grid>
@@ -668,7 +668,7 @@ class myJobProfile extends Component {
 
                 </DialogContent>
                 <DialogActions>
-                    <Button style={{ width: 85 }} onClick={() => { this.editJobProfile(this.state.myJobHistory[this.state.selectedEditIndex])
+                    <Button style={{ width: 85 }} onClick={() => { this.editJobProfile(this.state.myJobHistory[this.state.selectedEditIndex].id)
                                                                     // console.log("hello",this.state.myJobHistory[this.state.selectedEditIndex])
                                                                 }} color="primary" variant="contained">
                         Edit
@@ -776,19 +776,19 @@ class myJobProfile extends Component {
                                                     editActionsOpen: true,
                                                     selectedEditIndex: index,
 
-                                                    editJobDialogCompany: this.state.myJobHistory[index].company,
+                                                    editJobDialogCompany: this.state.myJobHistory[row.id].company,
                                                     // editJobDialogCheck: false,
                                                     // editJobDialogOtherCompany: this.state.myJobHistory[index].company_other,
-                                                    editJobDialogStartDate: this.state.myJobHistory[index].startDate,
-                                                    editJobDialogEndDate: this.state.myJobHistory[index].endDate,
-                                                    editJobDialogPosition: this.state.myJobHistory[index].jobCategory,
-                                                    editJobDialogJobTitle: this.state.myJobHistory[index].jobTitle,
-                                                    editJobDialogJobDescription: this.state.myJobHistory[index].jobDescription,
-                                                    editJobDialogReasonForLeaving: this.state.myJobHistory[index].leavingReason,
-                                                    editJobDialogRating: this.state.myJobHistory[index].companyRating,
-                                                    editJobDialogUpdateReason: this.state.myJobHistory[index].update_reason
+                                                    editJobDialogStartDate: this.state.myJobHistory[row.id].startDate,
+                                                    editJobDialogEndDate: this.state.myJobHistory[row.id].endDate,
+                                                    editJobDialogPosition: this.state.myJobHistory[row.id].job_category_field,
+                                                    editJobDialogJobTitle: this.state.myJobHistory[row.id].jobTitle,
+                                                    editJobDialogJobDescription: this.state.myJobHistory[row.id].jobDescription,
+                                                    editJobDialogReasonForLeaving: this.state.myJobHistory[row.id].leaving_reason_field,
+                                                    editJobDialogRating: this.state.myJobHistory[row.id].companyRating,
+                                                    editJobDialogUpdateReason: this.state.myJobHistory[row.id].update_reason
                                                 });
-                                                console.log(this.state.myJobHistory);
+                                                console.log("hello",this.state.myJobHistory);
                                                 
                                             }
                                                 // this.setState({
@@ -864,9 +864,9 @@ class myJobProfile extends Component {
         }
     }
 
-    async editJobProfile(index) {
+    async editJobProfile(id) {
 
-        // this.setState({ editActionsOpen: true });
+        this.setState({ editActionsOpen: true });
 
         const editJobDialogReasonForLeavingIndex = this.state.leavingReasons.indexOf(this.state.editJobDialogReasonForLeaving) + 1;
         const editJobDialogPositionIndex = this.state.positions.indexOf(this.state.editJobDialogPosition) + 1;
@@ -886,7 +886,7 @@ class myJobProfile extends Component {
             'update_reason': this.state.editJobDialogUpdateReason
         }
 
-        let response = await fetch( api + '/employees/update-job/' + index,
+        let response = await fetch( api + '/employees/update-job/' + id,
             {
                 method: 'POST',
                 headers: {
