@@ -68,6 +68,8 @@ class index extends Component {
 
     return (
       <div style={{ marginTop: 10 }}>
+          {this.state.loading?this.isloading():(
+              <>
         <Typography style={{ marginTop: 10 }} variant="h6">
           Ratings
         </Typography>
@@ -78,7 +80,7 @@ class index extends Component {
           <Grid item xs={9}>
             <Rating
               name="simple-controlled"
-              Value={this.state.result.profileRating / 10}
+              value={this.state.result.profileRating / 10}
               precision={0.1}
               //   onChange={(event, newValue) =>
               //     this.setState({ profileValue: newValue })
@@ -147,6 +149,7 @@ class index extends Component {
             />
           </Grid>
         </Grid>
+       </>   )}
       </div>
     );
   }
