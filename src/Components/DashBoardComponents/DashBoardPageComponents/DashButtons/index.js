@@ -33,7 +33,7 @@ class index extends Component {
                     </Grid>
                     <Grid item xs={6}>
                         <Button variant='contained' color='secondary'
-                        onClick={this.confirmationDialog()}>Request Cancel Evaluation Request</Button>
+                        onClick={()=>{this.setState({confirmationDialogBox:true})}}>Request Cancel Evaluation Request</Button>
                     </Grid>
                 </Grid>
                 {this.confirmationDialog()}
@@ -53,7 +53,7 @@ class index extends Component {
             <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
             <DialogContent>
               <DialogContentText>
-              "It is suggested that you complete profile updations before you request for VerifyOnTrac Evaluation. Do you want to proceed?
+              It is suggested that you complete profile updations before you request for VerifyOnTrac Evaluation. Do you want to proceed?
               </DialogContentText>
             </DialogContent>
             <DialogActions style={{ padding: 15 }}>
