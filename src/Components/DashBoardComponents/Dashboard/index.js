@@ -19,6 +19,7 @@ import Ratings from '../DashBoardPageComponents/Ratings'
 import Codes from '../DashBoardPageComponents/Codes'
 import Profile from '../DashBoardPageComponents/Profile'
 import RatingBars from '../DashBoardPageComponents/RatingBars'
+import DashButtons from '../DashBoardPageComponents/DashButtons'
 
 const styles = theme => ({
     profileCardHeight: {
@@ -62,6 +63,12 @@ class index extends Component {
                   </CardContent>
                 </Card>
 
+                {/* <Card className={classes.marginTop} elevation={2}> */}
+                  {/* <CardContent> */}
+                    <DashButtons/>
+                  {/* </CardContent> */}
+                {/* </Card> */}
+                    
                 <Card
                   elevation={2}
                   className={classes.marginTop}
