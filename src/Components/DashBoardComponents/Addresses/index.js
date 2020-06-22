@@ -111,9 +111,19 @@ class Addresses extends Component {
       },
     });
     // this.setState({location:{latitude:this.state.location.latitude.slice(0,8),longtitude:this.state.location.longtitude.slice(0,8)}})
+let lat=this.state.location.latitude.toString();
+let long=this.state.location.longtitude.toString();
 
-    console.log(
-      this.state.location.latitude,
+lat=lat.slice(0,11)
+long=long.slice(0,11)
+lat=parseFloat(lat);
+long=parseFloat(long);
+this.setState({location:{
+  latitude:lat,
+  longtitude:long
+}})
+    console.log(lat,
+     this.state.location.latitude,
       this.state.location.longtitude
     );
     
@@ -245,13 +255,13 @@ class Addresses extends Component {
     //  bodyFormData.append("address_hint3", this.state.addresshint3);
     bodyFormData.append(
       "google_coordinate1",
-      "17.40"
-      // this.state.location.updatedlatitude
+      // "17.40"
+      this.state.location.latitude
     );
     bodyFormData.append(
       "google_coordinate2",
-      "78.44"
-      // this.state.location.updatedlongititude
+      // "78.44"
+       this.state.location.longtitude
     );
     bodyFormData.append("address_image", this.state.updatedimage);
     bodyFormData.append("since", this.state.updatestartedlivinghere);
@@ -1036,7 +1046,7 @@ class Addresses extends Component {
                           fullWidth
                         />
                       </Grid>
-                      <Grid container justify="flex-start" direction="row">
+                      {/* <Grid container justify="flex-start" direction="row">
                         <Grid class="w3-container">
                           <p>
                             <label>Google coordinates</label>
@@ -1052,7 +1062,7 @@ class Addresses extends Component {
                             />
                           </p>
                         </Grid>
-                      </Grid>
+                      </Grid> */}
                     </Grid>
                   </Box>
                   <Box p={1} width={1 / 2} style={{ minHeight: "10vh" }}>
@@ -1251,14 +1261,14 @@ class Addresses extends Component {
     //  bodyFormData.append("address_hint3", this.state.addresshint3);
     bodyFormData.append(
       "google_coordinate1",
-      "17.406"
-      // this.state.location.latitude
+      // "17.406"
+      this.state.location.latitude
     );
     bodyFormData.append(
       "google_coordinate2",
-      "78.440"
+      // "78.440"
 
-      // this.state.location.longtitude
+       this.state.location.longtitude
     );
     bodyFormData.append("address_image", this.state.addressimage);
     bodyFormData.append("since", this.state.startedLivingHere);
@@ -1549,7 +1559,7 @@ class Addresses extends Component {
                     fullWidth
                   />
                 </Grid>
-                <Grid container justify="flex-start" direction="row">
+                {/* <Grid container justify="flex-start" direction="row">
                   <Grid class="w3-container">
                     <p>
                       <label>Google coordinates</label>
@@ -1565,7 +1575,7 @@ class Addresses extends Component {
                       />
                     </p>
                   </Grid>
-                </Grid>
+                </Grid> */}
               </Grid>
             </Box>
             <Box p={1} width={1 / 2}>
