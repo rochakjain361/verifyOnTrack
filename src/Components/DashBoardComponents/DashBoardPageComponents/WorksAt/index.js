@@ -70,7 +70,12 @@ class index extends Component {
             this.isloading()
               // <CircularProgress />
             
-          ) : (
+          ) : this.state.result.length===0?<Grid container
+          direction="row"
+          justify="center"
+          alignItems="center">
+            <Typography>Add your job details </Typography>
+          </Grid>:(
             this.state.result.map((company, index) => (
               <Grid style={{marginTop: 15}}>
                 <ExpansionPanel >

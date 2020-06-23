@@ -32,7 +32,7 @@ let token1 = "";
 
 let token = "";
 let id = "";
-let result = [];
+// let result = [];
 let history = [];
 let pictures = [];
 
@@ -62,7 +62,8 @@ class Identities extends Component {
       historyloading: true,
       historyDialogeOpen: false,
       uploadpictures: "",
-      pictureloading: "false"
+      pictureloading: "false",
+      result:[],
     };
     // this.updateidentites= this.updateidentites.bind();
   }
@@ -77,8 +78,9 @@ async getidentites(){
       }
     )
     .then((res) => {
-      result = res.data;
-      console.table("identites", result);
+      //result = res.data;
+      this.setState({result:res.data});
+      console.table("identites", this.state.result);
     });
 }
   async componentDidMount() {
@@ -165,6 +167,7 @@ async getidentites(){
       .then((response) => {
         console.log(response);
       });
+      await this.getidentites();
   }
   async updateidentites(idsource) {
     this.setState({
@@ -484,7 +487,7 @@ async getidentites(){
   getTableOfEmployees() {
     return (
       <>
-        {result.length === 0 ? (
+        {this.state.result.length === 0 ? (
           this.adddata()
         ) : (
           <TableContainer component={Paper} elevation={16}>
@@ -512,7 +515,7 @@ async getidentites(){
                 </TableRow>
               </TableHead>
               <TableBody>
-                {result.map((row, index) => (
+                {this.state.result.map((row, index) => (
                   <TableRow key={row.id}>
                     <TableCell align="left">
                       {new Date(row.created_on).toDateString()}
@@ -570,10 +573,10 @@ async getidentites(){
                           this.setState({
                             updateDialogOpen: true,
                             selectedIndex: index,
-                            updateFullName: result[index].fullname,
-                            updatedob: result[index].dob,
-                            updatesex: result[index].sex,
-                            updateidnumber: result[index].idSource,
+                            updateFullName: this.state.result[index].fullname,
+                            updatedob: this.state.result[index].dob,
+                            updatesex: this.state.result[index].sex,
+                            updateidnumber: this.state.result[index].idSource,
                           })
                         }
                       >
@@ -683,7 +686,7 @@ async getidentites(){
                       <TextField
                         id="updatereason"
                         label="Update Reason"
-                        // defaultValue={result[this.state.selectedIndex].idSource}
+                        // defaultValue={this.state.result[this.state.selectedIndex].idSource}
                         onChange={(event) => {
                           this.setState({ updatereason: event.target.value });
                         }}
@@ -701,7 +704,7 @@ async getidentites(){
                     variant="contained"
                     onClick={() => {
                       this.updateidentites(
-                        result[this.state.selectedIndex].idSource
+                        this.state.result[this.state.selectedIndex].idSource
                       );
                     }}
                   >

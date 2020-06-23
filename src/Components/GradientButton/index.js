@@ -23,7 +23,7 @@ class GradientButton extends React.PureComponent {
                 fullWidth={this.props.fullWidth}
                 variant="contained"
                 color="primary"
-                size="small"
+                size="medium"
                 className={classes.button}
                 onClick={this.props.onClick}
                 type={this.props.type}

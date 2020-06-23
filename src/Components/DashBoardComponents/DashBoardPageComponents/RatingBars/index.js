@@ -66,19 +66,26 @@ class index extends Component {
             horizontal: true,
             startingShape: "rounded",
             endingShape: "rounded",
-            //  distributed: true,
-            barHeight: "50%",
-            columnWidth: "50%", 
-            // colors:[]
-            // dataLabels:false
+            distributed: true,
+            barHeight: "35%",
           },
         },
         dataLabels: {
           enabled: false,
-          // textAnchor: "start",
+          //  textAnchor: "start",
         },
         grid: {
-          show: false,
+          show: true,
+          xaxis: {
+            lines: {
+              show: false,
+            },
+          },
+          yaxis: {
+            lines: {
+              show: false,
+            },
+          },
         },
         xaxis: {
           categories: ["Profile", "ID", "Address", "Phone", "Other Jobs"],
@@ -125,25 +132,27 @@ class index extends Component {
                 </Grid>
               </Grid>
             </>
-          ) : this.state.result.length === 0 ? null : (
+          ) : this.state.result.profileRating === 0&&this.state.result.idRating === 0 &&this.state.result.addressRating===0&& this.state.result.phoneRating===0&& this.state.result.otherJobRating===0 ? <Grid container
+          direction="row"
+          justify="center"
+          alignItems="center">
+            <Typography> No Rating</Typography>
+          </Grid> : (
             <Chart
               options={this.state.options}
               series={[
                 {
-                  name: "out of 100",
+                  name: "out of 10★",
                   data: [
-                    // this.state.result.profileRating,
-                    // this.state.result.idRating,
-                    // this.state.result.addressRating,
-                    // this.state.result.phoneRating,
-                    // this.state.result.otherJobRating,
-                    50,
-                    30,
-                    90,
-                    10,
-                    70,
-                    
+                    this.state.result.profileRating / 10 ,
+                    this.state.result.idRating / 10,
+                    this.state.result.addressRating / 10,
+                    this.state.result.phoneRating / 10,
+                    this.state.result.otherJobRating / 10,
                   ],
+                  
+             
+                  
                   labels: {
                     style: {
                       colors: ["#FFFFFF", "#FFFFFF", "#FFFFFF"],

@@ -97,7 +97,7 @@ class signIn extends Component {
                 ) : null}
                 <form className={classes.form} noValidate>
                   <Typography
-                    style={{ fontFamily: "Montserrat", fontWeight: "bold" }}
+                    style={{ fontFamily: "Montserrat", fontWeight: "bold", }}
                     variant="h4"
                     gutterBottom
                     color="primary"
@@ -158,7 +158,7 @@ class signIn extends Component {
                     <Grid item xs={12}>
                       <GradientButton
                         onClick={this.onSignInButtonPress}
-                        title={"Sign IN"}
+                        title={"Sign In"}
                         center
                         disabled={this.state.submitDisabled}
                         style={{
@@ -166,6 +166,9 @@ class signIn extends Component {
                           marginBottom: 16,
                           fontFamily: "Montserrat",
                           fontWeight: "bold",
+                          fontSize: "18",
+                          // color:"white"
+                          
                         }}
                         fullWidth
                       />
@@ -229,7 +232,7 @@ class signIn extends Component {
           });
         } else {
           this.props.history.push({
-            pathname: "/Homepage",
+            pathname: "/dashboard",
           });
         }
       } else {
