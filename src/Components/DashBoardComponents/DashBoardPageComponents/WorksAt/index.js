@@ -72,8 +72,8 @@ class index extends Component {
             
           ) : (
             this.state.result.map((company, index) => (
-              <Grid>
-                <ExpansionPanel>
+              <Grid style={{marginTop: 15}}>
+                <ExpansionPanel >
                   <ExpansionPanelSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel2a-content"

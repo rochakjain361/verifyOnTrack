@@ -5,145 +5,161 @@ import {
     Paper,
     ButtonGroup,
     Button,
+    CircularProgress
 } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
 import Chart from "react-apexcharts";
-
+import axios from "axios";
 const styles = theme => ({
 
 })
+let token1 = "";
+let token = "";
+let id = "";
 
 class index extends Component {
+  async componentDidMount() {
+    this.setState({ loading: true });
+    token1 = localStorage.getItem("Token");
+    token = "Token " + token1;
+    id = localStorage.getItem("id");
+    await axios
+      .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/ratings", {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        this.setState({ result: res.data });
+        console.table("rating", this.state.result);
+        console.log(this.state.result.profileRating / 10);
+      });
+    this.setState({ loading: false });
+  }
 
-    state = {
-        overallProfileValue: 0,
-        profileValue: 0,
-        idValue: 0,
-        addressValue: 0,
-        phoneValue: 0,
-        votValue: 0,
-        otherJobsValue: 0,
+  constructor(props) {
+    super(props);
 
-        options: {
-            chart: {
-              id: "basic-bar"
-            },
-            xaxis: {
-              categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
-            }
+    this.state = {
+      overallProfileValue: 0,
+      profileValue: 0,
+      idValue: 0,
+      addressValue: 0,
+      phoneValue: 0,
+      votValue: 0,
+      otherJobsValue: 0,
+      result: [],
+      // series: ,
+      options: {
+        chart: {
+            width: '100%',
+            height: '100%',  
+          toolbar: {
+            show: false,
           },
-          series: [
-            {
-              name: "series-1",
-              data: [30, 40, 45, 50, 49, 60, 70, 91]
+          
+          type: "bar",
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+            startingShape: "rounded",
+            endingShape: "rounded",
+            //  distributed: true,
+            barHeight: "50%",
+            columnWidth: "50%", 
+            // colors:[]
+            // dataLabels:false
+          },
+        },
+        dataLabels: {
+          enabled: false,
+          // textAnchor: "start",
+        },
+        grid: {
+          show: false,
+        },
+        xaxis: {
+          categories: ["Profile", "ID", "Address", "Phone", "Other Jobs"],
+          // colors:["#FFFFFF"]
+          labels: {
+            style: {
+              colors: ["#FFFFFF", "#FFFFFF", "#FFFFFF"],
+            },
+          },
+        },
+        fill: {
+            colors: [function({ value, seriesIndex, w }) {
+              if(value <= 20) {
+                  return '#ff1744'
+              } else if (value > 20 && value <= 40) {
+                  return '#ff5722'
+              } else if (value > 40 && value <= 60) {
+                return '#ffa733'
+            } else if (value > 60 && value <= 80) {
+                return '#00b0ff'
+            } else{
+                return '#00e676'
             }
-          ]
-    }
+            }]
+          }
+        // fill: {
+        //   colors: ["#FFFFFF", "#FFFFFF", "#FFFFFF"],
+        // },
+      },
+    };
+  }
 
-    render() {
+  render() {
+    const { classes } = this.props;
 
-        const { classes } = this.props;
-
-        return (
-            <div style={{ marginTop: 10 }}>
-                {/* <Grid container style={{ marginTop: 15 }} >
-                <Grid item xs={3}>
-                        <Typography variant='h6'>Overall Profile:</Typography>
-                    </Grid>
-                    <Grid item xs={9}> 
-                        <Rating
-                            size="large"
-                            name="simple-controlled"
-                            value={this.state.addJobDialogRating}
-                            onChange={(event, newValue) => this.setState({ overallProfileValue: newValue })}
-                            max={10}
-                        />
-                    </Grid>
-
-                    <Grid item xs={3}>
-                        <Typography>Profile:</Typography>
-                    </Grid>
-                    <Grid item xs={9}> 
-                        <Rating
-                            name="simple-controlled"
-                            value={this.state.addJobDialogRating}
-                            onChange={(event, newValue) => this.setState({ profileValue: newValue })}
-                            max={10}
-                        />
-                    </Grid>
-
-                    <Grid item xs={3}>
-                        <Typography>ID:</Typography>
-                    </Grid>
-                    <Grid item xs={9}> 
-                        <Rating
-                            name="simple-controlled"
-                            value={this.state.addJobDialogRating}
-                            onChange={(event, newValue) => this.setState({ idValue: newValue })}
-                            max={10}
-                        />
-                    </Grid>
-
-                    <Grid item xs={3}>
-                        <Typography>Address:</Typography>
-                    </Grid>
-                    <Grid item xs={9}> 
-                        <Rating
-                            name="simple-controlled"
-                            value={this.state.addJobDialogRating}
-                            onChange={(event, newValue) => this.setState({ addressValue: newValue })}
-                            max={10}
-                        />
-                    </Grid>
-
-                    <Grid item xs={3}>
-                        <Typography>Phone:</Typography>
-                    </Grid>
-                    <Grid item xs={9}> 
-                        <Rating
-                            name="simple-controlled"
-                            value={this.state.addJobDialogRating}
-                            onChange={(event, newValue) => this.setState({ phoneValue: newValue })}
-                            max={10}
-                        />
-                    </Grid>
-
-                    <Grid item xs={3}>
-                        <Typography>VerifyOnTrac Jobs:</Typography>
-                    </Grid>
-                    <Grid item xs={9}> 
-                        <Rating
-                            name="simple-controlled"
-                            value={this.state.addJobDialogRating}
-                            onChange={(event, newValue) => this.setState({ votValue: newValue })}
-                            max={10}
-                        />
-                    </Grid>
-
-                    <Grid item xs={3}>
-                        <Typography>Other Jobs:</Typography>
-                    </Grid>
-                    <Grid item xs={9}> 
-                        <Rating
-                            name="simple-controlled"
-                            value={this.state.addJobDialogRating}
-                            onChange={(event, newValue) => this.setState({ otherJobsValue: newValue })}
-                            max={10}
-                        />
-                    </Grid>
-                </Grid> */}
-
-                <Chart
+    return (
+      <div style={{ marginTop: 10 }}>
+        <Grid container style={{ marginTop: 15 }}>
+          {this.state.loading ? (
+            <>
+              <Grid container justify="center">
+                <Grid item>
+                  <CircularProgress />
+                </Grid>
+              </Grid>
+            </>
+          ) : this.state.result.length === 0 ? null : (
+            <Chart
               options={this.state.options}
-              series={this.state.series}
+              series={[
+                {
+                  name: "out of 100",
+                  data: [
+                    // this.state.result.profileRating,
+                    // this.state.result.idRating,
+                    // this.state.result.addressRating,
+                    // this.state.result.phoneRating,
+                    // this.state.result.otherJobRating,
+                    50,
+                    30,
+                    90,
+                    10,
+                    70,
+                    
+                  ],
+                  labels: {
+                    style: {
+                      colors: ["#FFFFFF", "#FFFFFF", "#FFFFFF"],
+                    },
+                  },
+                },
+              ]}
               type="bar"
-              width="500"
+              width={"500px"}
+              height={"300px"}
             />
-            </div>
-        );
-    }
-
+          )}
+        </Grid>
+      </div>
+    );
+  }
 }
 
 export default withStyles(styles)(index);

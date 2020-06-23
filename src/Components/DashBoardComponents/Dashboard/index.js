@@ -71,14 +71,14 @@ class index extends Component {
 
                 {/* <Card className={classes.marginTop} elevation={2}> */}
                   {/* <CardContent> */}
-                    <DashButtons/>
+                    {/* <DashButtons/> */}
                   {/* </CardContent> */}
                 {/* </Card> */}
                     
                 <Card
                   elevation={2}
                   className={classes.marginTop}
-                  style={{ minHeight: 300 }}
+                  style={{ minHeight: 300, maxHeight: 400, overflow: 'auto' }}
                 >
                   <CardContent>
                     <Typography variant="h5" display="block"  align="flex-start">
@@ -90,7 +90,9 @@ class index extends Component {
               </Grid>
 
               <Grid item xs={8}>
-                <Card className={classes.profileCardHeight} elevation={2}>
+
+
+                <Card className={classes.profileCardHeight} elevation={2} style={{minHeight: 348}}>
                   <CardContent>
                     <CustomAppBar
                       onChange={(event, value) =>
@@ -111,6 +113,7 @@ class index extends Component {
                   className={classes.profileCardHeight}
                   elevation={2}
                   className={classes.marginTop}
+                  style={{minHeight: 342}}
                 >
                   <CardContent>
                     <Typography variant='h5' display="block">

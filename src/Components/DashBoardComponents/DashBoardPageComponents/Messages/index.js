@@ -51,8 +51,9 @@ class index extends Component {
       <div style={{ marginTop: 10 }}>
         <Grid container justify="center">
           <ButtonGroup
+          style={{marginTop: 20}}
             disableElevation
-            size="small"
+            size="medium"
             variant="contained"
             color="secondary"
           >
@@ -95,54 +96,58 @@ class index extends Component {
     return (
       <div>
         {this.state.result.length === 0 ? (
-          <Grid container justify="center" alignItems="center">
+          <Grid container justify="center" alignItems="center" style={{marginTop:20}}>
             <Grid item>
               <CircularProgress />
             </Grid>
           </Grid>
         ) : (
-          <Paper variant="outlined" style={{ marginTop: 10 }}>
-            <Grid container style={{ padding: 10 }} alignItems="center">
-              <Grid item xs={1}>
-                <MessageIcon />
-              </Grid>
-              <Grid item xs={11}>
-                <Grid container justify="space-between">
-                  <Typography>
-                    {this.state.result[0].initiated_by_field}
-                  </Typography>
-                  <Typography variant="caption">
-                    {new Date(
-                      this.state.result[0].initialDate_field
-                    ).toDateString()}
+          <>
+            <Paper variant="outlined" style={{ marginTop: 20 }}>
+              <Grid container style={{ padding: 10 }} alignItems="center">
+                <Grid item xs={1}>
+                  <MessageIcon />
+                </Grid>
+                <Grid item xs={11}>
+                  <Grid container justify="space-between">
+                    <Typography>
+                      {this.state.result[0].initiated_by_field}
+                    </Typography>
+                    <Typography variant="caption">
+                      {new Date(
+                        this.state.result[0].initialDate_field
+                      ).toDateString()}
+                    </Typography>
+                  </Grid>
+                  <Typography variant="body2" display="block">
+                    {this.state.result[0].message}
                   </Typography>
                 </Grid>
-                <Typography variant="body2" display="block">
-                  {this.state.result[0].message}
-                </Typography>
               </Grid>
-            </Grid>
-            <Grid container style={{ padding: 10 }} alignItems="center">
-              <Grid item xs={1}>
-                <MessageIcon />
-              </Grid>
-              <Grid item xs={11}>
-                <Grid container justify="space-between">
-                  <Typography>
-                    {this.state.result[1].initiated_by_field}
-                  </Typography>
-                  <Typography variant="caption">
-                    {new Date(
-                      this.state.result[1].initialDate_field
-                    ).toDateString()}
+            </Paper>
+            <Paper variant="outlined" style={{ marginTop: 10 }}>
+              <Grid container style={{ padding: 10 }} alignItems="center">
+                <Grid item xs={1}>
+                  <MessageIcon />
+                </Grid>
+                <Grid item xs={11}>
+                  <Grid container justify="space-between">
+                    <Typography>
+                      {this.state.result[1].initiated_by_field}
+                    </Typography>
+                    <Typography variant="caption">
+                      {new Date(
+                        this.state.result[1].initialDate_field
+                      ).toDateString()}
+                    </Typography>
+                  </Grid>
+                  <Typography variant="body2" display="block">
+                    {this.state.result[1].message}
                   </Typography>
                 </Grid>
-                <Typography variant="body2" display="block">
-                  {this.state.result[1].message}
-                </Typography>
               </Grid>
-            </Grid>
-          </Paper>
+            </Paper>
+          </>
         )}
       </div>
     );
@@ -166,7 +171,7 @@ class index extends Component {
   messageOutbox() {
     return (
       <div>
-        <Paper variant="outlined" style={{ marginTop: 10 }}>
+        <Paper variant="outlined" style={{ marginTop: 20 }}>
           <Grid container style={{ padding: 10 }} alignItems="center">
             <Grid item xs={1}>
               <MessageIcon />

@@ -21,6 +21,7 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import axios from "axios";
 import Avatar from "@material-ui/core/Avatar";
+import DashButtons from '../DashButtons'
 
 
 let token1 = "";
@@ -110,8 +111,11 @@ class index extends Component {
                 <Typography variant="body2">
                   {new Date(profile.dob).toDateString()}
                 </Typography>{" "}
-                <Typography variant="body2">{profile.sex}</Typography>
+                <Typography variant="body2">
+                  {profile.employee_email_field}
+                </Typography>
               </Grid>
+              <DashButtons/>
             </Grid>
           ))
         )}
