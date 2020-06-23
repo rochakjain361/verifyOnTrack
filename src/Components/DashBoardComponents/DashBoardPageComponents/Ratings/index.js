@@ -68,7 +68,12 @@ class index extends Component {
 
     return (
       <div style={{ marginTop: 10 }}>
-          {this.state.loading?this.isloading():(
+          {this.state.loading?this.isloading():this.state.result.profileRating === 0&&this.state.result.idRating === 0 &&this.state.result.addressRating===0&& this.state.result.phoneRating===0&& this.state.result.otherJobRating===0 ? <Grid container
+          direction="row"
+          justify="center"
+          alignItems="center">
+            <Typography> No Rating</Typography>
+          </Grid> :(
               <>
         <Typography style={{ marginTop: 10 }} variant="h6">
           Ratings

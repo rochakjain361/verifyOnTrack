@@ -114,7 +114,12 @@ class index extends Component {
                 </Grid>
               </Grid>
             </>
-          ) : this.state.result.length === 0 ? null : (
+          ) : this.state.result.profileRating === 0&&this.state.result.idRating === 0 &&this.state.result.addressRating===0&& this.state.result.phoneRating===0&& this.state.result.otherJobRating===0 ? <Grid container
+          direction="row"
+          justify="center"
+          alignItems="center">
+            <Typography> No Rating</Typography>
+          </Grid> : (
             <Chart
               options={this.state.options}
               series={[

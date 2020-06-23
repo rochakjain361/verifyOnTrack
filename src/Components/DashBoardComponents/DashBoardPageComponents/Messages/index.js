@@ -45,7 +45,7 @@ class index extends Component {
     this.setState({ loading: false });
   }
   render() {
-    const { classes } = this.props;
+   
 
     return (
       <div style={{ marginTop: 10 }}>
@@ -94,13 +94,40 @@ class index extends Component {
   messageInbox() {
     return (
       <div>
-        {this.state.result.length === 0 ? (
+        {this.state.loading ? (
           <Grid container justify="center" alignItems="center">
             <Grid item>
               <CircularProgress />
             </Grid>
           </Grid>
-        ) : (
+        ) :this.state.result.length===0?<Grid container
+        direction="row"
+        justify="center"
+        alignItems="center">
+          <Typography>No Messages</Typography>
+        </Grid>: this.state.result.length===1?( <>
+            <Paper variant="outlined" style={{ marginTop: 10 }}>
+              <Grid container style={{ padding: 10 }} alignItems="center">
+                <Grid item xs={1}>
+                  <MessageIcon />
+                </Grid>
+                <Grid item xs={11}>
+                  <Grid container justify="space-between">
+                    <Typography>
+                      {this.state.result[0].initiated_by_field}
+                    </Typography>
+                    <Typography variant="caption">
+                      {new Date(
+                        this.state.result[0].initialDate_field
+                      ).toDateString()}
+                    </Typography>
+                  </Grid>
+                  <Typography variant="body2" display="block">
+                    {this.state.result[0].message}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Paper></>):(
           <>
             <Paper variant="outlined" style={{ marginTop: 10 }}>
               <Grid container style={{ padding: 10 }} alignItems="center">

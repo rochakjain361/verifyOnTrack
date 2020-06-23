@@ -52,7 +52,7 @@ class index extends Component {
         // result = res.data;
         this.setState({ result: res.data });
         console.table("profile data", this.state.result);
-         console.log(this.state.result[0].firstname );
+        //  console.log(this.state.result[0].firstname );
       });
     this.setState({ loading: false });
   }
@@ -68,7 +68,12 @@ class index extends Component {
               <CircularProgress />
             </Grid>
           </Grid>
-        ) : (
+        ) : this.state.result.length===0?<Grid container
+        direction="row"
+        justify="center"
+        alignItems="center">
+          <Typography>Add your profile data</Typography>
+        </Grid>:(
           this.state.result.map((profile, index) => (
             <Grid
               container
@@ -115,8 +120,8 @@ class index extends Component {
                 </Typography>
               </Grid>
             </Grid>
-          ))
-        )}
+          )))
+        }
       </div>
     );
   }

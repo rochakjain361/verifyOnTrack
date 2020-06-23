@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 
 import {
   Grid,
@@ -108,8 +108,16 @@ const StyledTab = withStyles((theme) => ({
     },
   },
 }))((props) => <Tab disableRipple {...props} />);
-
 export default function Index()  {
+  const [messages,setmessages]=React.useState(null);
+  useEffect(() => {
+    
+   
+      // setmessages(<Messages/>)
+      // setmessages(<div><p>fhkjsdkf</p></div>)
+      
+    
+  }, [])
   const [value, setValue] = React.useState(0);
   const theme = useTheme();
   
@@ -190,7 +198,7 @@ export default function Index()  {
                 onChangeIndex={handleChangeIndex}
               >
                 <TabPanel value={value} index={0} dir={theme.direction}>
-                  <Messages />
+                  <Messages/>
                 </TabPanel>
                 <TabPanel value={value} index={1} dir={theme.direction}>
                   <Codes />
@@ -223,5 +231,6 @@ export default function Index()  {
     );
   
 }
+
 
 

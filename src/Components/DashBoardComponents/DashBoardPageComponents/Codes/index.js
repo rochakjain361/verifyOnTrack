@@ -57,13 +57,18 @@ class index extends Component {
 
     return (
       <>
-        {this.state.result.length === 0 ? (
+        {this.state.loading? (
           <Grid container justify="center" alignItems="center">
             <Grid item>
               <CircularProgress />
             </Grid>
           </Grid>
-        ) : (
+        ) : this.state.result.length===0?<Grid container
+        direction="row"
+        justify="center"
+        alignItems="center">
+          <Typography>No Codes added</Typography>
+        </Grid>:(
           <div style={{ marginTop: 10 }}>
             <Grid container justify="center">
               <ButtonGroup
@@ -131,6 +136,36 @@ class index extends Component {
   accessCodes() {
     return (
       <div>
+        {this.state.result.length===1?( <Paper elevation={1} style={{ marginTop: 10 }}>
+          <Grid
+            container
+            style={{ padding: 10 }}
+            direction="row"
+            alignItems="center"
+          >
+            <Grid item xs={4}>
+              <Typography variant="body2" display="block">
+                {this.state.result[0].createdOn}
+              </Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography variant="body2" display="block">
+                {this.state.result[0].codeString}
+              </Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Button
+                color="default"
+                variant="contained"
+                href="#"
+                style={{ minWidth: 100 }}
+              >
+                Action
+              </Button>
+            </Grid>
+          </Grid>
+          </Paper>
+          ):(
         <Paper elevation={1} style={{ marginTop: 10 }}>
           <Grid
             container
@@ -186,7 +221,7 @@ class index extends Component {
               </Button>
             </Grid>
           </Grid>
-        </Paper>
+        </Paper>)}
       </div>
     );
   }

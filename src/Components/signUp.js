@@ -413,6 +413,7 @@ class signUp extends Component {
                         marginBottom: 16,
                         fontFamily: "Montserrat",
                         fontWeight: "bold",
+                        // color:"white"
                       }}
                       fullWidth
                     />
@@ -473,8 +474,8 @@ class signUp extends Component {
         },
       });
       console.log("..................................................");
-      response = await response.json();
       console.log("response", response);
+      response = await response.json();
     } catch (error) {
       console.log("[!ON_REGISTER] " + error);
     }
