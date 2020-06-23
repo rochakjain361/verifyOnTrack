@@ -28,9 +28,9 @@ import AddIcon from '@material-ui/icons/Add';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { CircularProgress } from "@material-ui/core";
 
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+let token1 = "";
+let token = "";
+let id = "";
 const cors = "https://cors-anywhere.herokuapp.com/"
 
 
@@ -38,9 +38,9 @@ const cors = "https://cors-anywhere.herokuapp.com/"
 const styles = theme => ({
 
 })
-let states=[];
-let Lga=[];
-let Cities=[];
+let states = [];
+let Lga = [];
+let Cities = [];
 // let addlga=[];
 
 class index extends Component {
@@ -50,50 +50,50 @@ class index extends Component {
     selectedstate: "",
     loading: false,
     addlga: [],
-    selectedLga:"",
-    filterstate:"",
-    filterlga:[],
-    filterlgavalue:"",
-    filtercity:[],
+    selectedLga: "",
+    filterstate: "",
+    filterlga: [],
+    filterlgavalue: "",
+    filtercity: [],
   };
-  async filterforlga(state){
-      this.setState({filterstate:state});
-       await axios
-         .get(
-           "http://3.22.17.212:8000/api/v1/resManager/address/lgas/?stateId=" +
-             state,
-           {
-             headers: {
-               Authorization: token,
-             },
-           }
-         )
-         .then((res) => {
-           //  addlga = res.data;
-           this.setState({ filterlga: res.data });
-           console.log("addlga", this.state.addlga);
-         });
-      
+  async filterforlga(state) {
+    this.setState({ filterstate: state });
+    await axios
+      .get(
+        "http://3.22.17.212:8000/api/v1/resManager/address/lgas/?stateId=" +
+        state,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        //  addlga = res.data;
+        this.setState({ filterlga: res.data });
+        console.log("addlga", this.state.addlga);
+      });
+
   }
-  async filtercity(lga){
- 
-      this.setState({ filterlgavalue: lga })
-        await axios.get(
-          "http://3.22.17.212:8000/api/v1/resManager/address/cities/?lgaId=" +
-            lga,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        )
-        .then((res) => {
-          //  addlga = res.data;
-          this.setState({ filtercity: res.data });
-          console.log("addlga", this.state.filtercity);
-        });
-     
-        
+  async filtercity(lga) {
+
+    this.setState({ filterlgavalue: lga })
+    await axios.get(
+      "http://3.22.17.212:8000/api/v1/resManager/address/cities/?lgaId=" +
+      lga,
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    )
+      .then((res) => {
+        //  addlga = res.data;
+        this.setState({ filtercity: res.data });
+        console.log("addlga", this.state.filtercity);
+      });
+
+
 
   }
   async getLga() {
@@ -117,7 +117,7 @@ class index extends Component {
       .then((res) => {
         Lga = res.data;
 
-        this.setState({ selectedLga: Lga,});
+        this.setState({ selectedLga: Lga, });
         console.log("lga", Lga);
       });
     await axios
@@ -128,13 +128,16 @@ class index extends Component {
       })
       .then((res) => {
         Cities = res.data;
- this.setState({ filtercity: Cities });
+        this.setState({ filtercity: Cities });
         console.log("cities", Cities);
       });
 
     this.setState({ loading: false });
   }
   async componentDidMount() {
+     token1 = localStorage.getItem("Token");
+     token = "Token " + token1;
+     id = localStorage.getItem("id");
     this.getLga();
   }
   isloading() {
@@ -158,7 +161,7 @@ class index extends Component {
     await axios
       .get(
         "http://3.22.17.212:8000/api/v1/resManager/address/lgas/?stateId=" +
-          state,
+        state,
         {
           headers: {
             Authorization: token,
@@ -171,195 +174,195 @@ class index extends Component {
         console.log("addlga", this.state.addlga);
       });
   }
-  async addcity(){
-      console.log("/////////////",this.state.selectedLga);
-      console.log(this.state.addcity);
-       let headers = {
-         headers: {
-           Authorization: token,
-           "Content-Type": "multipart/form-data",
-         },
-       };
-       let bodyFormData = new FormData();
-       bodyFormData.append("lga", this.state.selectedLga);
-       bodyFormData.append("cityName", this.state.addcity);
+  async addcity() {
+    console.log("/////////////", this.state.selectedLga);
+    console.log(this.state.addcity);
+    let headers = {
+      headers: {
+        Authorization: token,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    let bodyFormData = new FormData();
+    bodyFormData.append("lga", this.state.selectedLga);
+    bodyFormData.append("cityName", this.state.addcity);
 
-       await axios
-         .post(
-           "http://3.22.17.212:8000/api/v1/resManager/address/cities/",
-           bodyFormData,
-           headers
-         )
-         .then((response) => {
-           console.log(response);
-           this.getLga();
-         });
+    await axios
+      .post(
+        "http://3.22.17.212:8000/api/v1/resManager/address/cities/",
+        bodyFormData,
+        headers
+      )
+      .then((response) => {
+        console.log(response);
+        this.getLga();
+      });
   }
   render() {
-   
-    
+
+
 
     return (
       <div style={{ marginTop: 20 }}>
         {this.state.loading ? (
           this.isloading()
         ) : (
-          <>
-            <Grid
-              container
-              justify="space-between"
-              alignItems="center"
-              spacing={4}
-            >
-              <Grid item>
-                <Typography variant="h4">Cities</Typography>
-              </Grid>
-            </Grid>
-
-            <Grid
-              container
-              justify="flex-start"
-              direction="row"
-              alignItems="center"
-              style={{ marginTop: 20 }}
-              spacing={2}
-            >
-              <Grid item xs={3}>
-                <FormControl fullWidth variant="outlined" size="medium">
-                  <InputLabel id="states">State</InputLabel>
-                  <Select
-                    labelId="states"
-                    id="states"
-                    value={this.state.selectedstate}
-                    onChange={(event) => {
-                      this.filterLga(event.target.value);
-                    }}
-                    label="states"
-                    fullWidth
-                  >
-                    {states.map((state) => (
-                      <MenuItem value={state.id}>{state.stateName}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={3}>
-                <FormControl fullWidth variant="outlined" size="medium">
-                  <InputLabel id="states">Lga</InputLabel>
-                  <Select
-                    labelId="Lga"
-                    id="Lga"
-                    value={this.state.selectedLga}
-                    onChange={(event) => {
-                      this.setState({ selectedLga: event.target.value });
-                    }}
-                    label="Lga"
-                    fullWidth
-                  >
-                    {this.state.addlga.map((lga) => (
-                      <MenuItem value={lga.id}>{lga.lgaName}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  size="small"
-                  label="Add City"
-                  variant="outlined"
-                  fullWidth
-                  onChange={(event) => {
-                    this.setState({ addcity: event.target.value });
-                  }}
-                />
-              </Grid>
-
-              <Grid item xs={3}>
-                <Fab
-                  size="small"
-                  color="secondary"
-                  onClick={() => {
-                    this.addcity();
-                  }}
-                >
-                  <AddIcon />
-                </Fab>
-              </Grid>
-              <Grid item xs={4}>
-                <FormControl fullWidth variant="outlined" size="medium">
-                  <InputLabel id="states">State</InputLabel>
-                  <Select
-                    labelId="states"
-                    id="states"
-                    value={this.state.filterstate}
-                    onChange={(event) => {
-                      this.filterforlga(event.target.value);
-                    }}
-                    label="states"
-                    fullWidth
-                  >
-                    <MenuItem selected value="none">
-                      None
-                    </MenuItem>
-                    {states.map((state) => (
-                      <MenuItem value={state.id}>{state.stateName}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <FormControl fullWidth variant="outlined" size="medium">
-                  <InputLabel id="states">Lga</InputLabel>
-                  <Select
-                    labelId="Lga"
-                    id="Lga"
-                    value={this.state.filterlgavalue}
-                    onChange={(event) => {
-                      this.filtercity(event.target.value);
-                    }}
-                    label="Lga"
-                    fullWidth
-                  >
-                    <MenuItem selected value="none">
-                      None
-                    </MenuItem>
-                    {this.state.filterlga.map((lga) => (
-                      <MenuItem value={lga.id}>{lga.lgaName}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <TableContainer
-                component={Paper}
-                style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }}
-                elevation={5}
+            <>
+              <Grid
+                container
+                justify="space-between"
+                alignItems="center"
+                spacing={4}
               >
-                <Table stickyHeader>
-                  <TableHead>
-                    <TableRow style={{ backgroundColor: "black" }}>
-                      <TableCell align="center">City</TableCell>
-                      <TableCell align="center"></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {this.state.filtercity.map((row, index) => (
-                      <TableRow key={row.id}>
-                        <TableCell align="center">{row.cityName}</TableCell>
-                        <TableCell align="center">
-                          <IconButton color="default" aria-label="delete">
-                            <DeleteIcon fontSize="medium" />
-                          </IconButton>
-                        </TableCell>
+                <Grid item>
+                  <Typography variant="h4">Cities</Typography>
+                </Grid>
+              </Grid>
+
+              <Grid
+                container
+                justify="flex-start"
+                direction="row"
+                alignItems="center"
+                style={{ marginTop: 20 }}
+                spacing={2}
+              >
+                <Grid item xs={3}>
+                  <FormControl fullWidth variant="outlined" size="medium">
+                    <InputLabel id="states">State</InputLabel>
+                    <Select
+                      labelId="states"
+                      id="states"
+                      value={this.state.selectedstate}
+                      onChange={(event) => {
+                        this.filterLga(event.target.value);
+                      }}
+                      label="states"
+                      fullWidth
+                    >
+                      {states.map((state) => (
+                        <MenuItem value={state.id}>{state.stateName}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={3}>
+                  <FormControl fullWidth variant="outlined" size="medium">
+                    <InputLabel id="states">Lga</InputLabel>
+                    <Select
+                      labelId="Lga"
+                      id="Lga"
+                      value={this.state.selectedLga}
+                      onChange={(event) => {
+                        this.setState({ selectedLga: event.target.value });
+                      }}
+                      label="Lga"
+                      fullWidth
+                    >
+                      {this.state.addlga.map((lga) => (
+                        <MenuItem value={lga.id}>{lga.lgaName}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    size="small"
+                    label="Add City"
+                    variant="outlined"
+                    fullWidth
+                    onChange={(event) => {
+                      this.setState({ addcity: event.target.value });
+                    }}
+                  />
+                </Grid>
+
+                <Grid item xs={3}>
+                  <Fab
+                    size="small"
+                    color="secondary"
+                    onClick={() => {
+                      this.addcity();
+                    }}
+                  >
+                    <AddIcon />
+                  </Fab>
+                </Grid>
+                <Grid item xs={4}>
+                  <FormControl fullWidth variant="outlined" size="medium">
+                    <InputLabel id="states">State</InputLabel>
+                    <Select
+                      labelId="states"
+                      id="states"
+                      value={this.state.filterstate}
+                      onChange={(event) => {
+                        this.filterforlga(event.target.value);
+                      }}
+                      label="states"
+                      fullWidth
+                    >
+                      <MenuItem selected value="none">
+                        None
+                    </MenuItem>
+                      {states.map((state) => (
+                        <MenuItem value={state.id}>{state.stateName}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                  <FormControl fullWidth variant="outlined" size="medium">
+                    <InputLabel id="states">Lga</InputLabel>
+                    <Select
+                      labelId="Lga"
+                      id="Lga"
+                      value={this.state.filterlgavalue}
+                      onChange={(event) => {
+                        this.filtercity(event.target.value);
+                      }}
+                      label="Lga"
+                      fullWidth
+                    >
+                      <MenuItem selected value="none">
+                        None
+                    </MenuItem>
+                      {this.state.filterlga.map((lga) => (
+                        <MenuItem value={lga.id}>{lga.lgaName}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <TableContainer
+                  component={Paper}
+                  style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }}
+                  elevation={5}
+                >
+                  <Table stickyHeader>
+                    <TableHead>
+                      <TableRow style={{ backgroundColor: "black" }}>
+                        <TableCell align="center">City</TableCell>
+                        <TableCell align="center"></TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
-            {/* </Paper> */}
-          </>
-        )}
+                    </TableHead>
+                    <TableBody>
+                      {this.state.filtercity.map((row, index) => (
+                        <TableRow key={row.id}>
+                          <TableCell align="center">{row.cityName}</TableCell>
+                          <TableCell align="center">
+                            <IconButton color="default" aria-label="delete">
+                              <DeleteIcon fontSize="medium" />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
+              {/* </Paper> */}
+            </>
+          )}
         {
           <Dialog
             open={this.state.deleteDialogBox}

@@ -26,7 +26,7 @@ import { InputLabel } from "@material-ui/core";
 let token1 = "";
 let token = "";
 let id = "";
-let result = [];
+// let result = [];
 let history = [];
 class Phones extends Component {
   constructor(props) {
@@ -58,6 +58,7 @@ class Phones extends Component {
       updatedefaultPhone: "",
       historyloading: true,
       historyDialougeOpen: false,
+      result:[],
     };
   }
   async getphonedata(){
@@ -68,8 +69,9 @@ class Phones extends Component {
          },
        })
        .then((res) => {
-         result = res.data;
-         console.table("Phones", result);
+        //  result = res.data;
+        this.setState({result:res.data})
+         console.table("Phones", this.state.result);
          // console.log(result[0].phone_reason);
        });
   }
@@ -192,29 +194,17 @@ class Phones extends Component {
   getPhones() {
     return (
       <>
-        {result.length === 0 ? (
+        {this.state.result.length === 0 ? (
           <>
             <Grid container spacing={3} justify="space-between">
-              <Grid item xs={6}>
-                <h1>Phones</h1>
-              </Grid>
+             
               <Grid item xs={12}>
                 <Paper style={{ padding: 20 }} elevation={3}>
                   <Typography variant="h5" gutterBottom align="center">
                     Add phone details to improve ratings.
                   </Typography>
 
-                  <Grid container justify="center" style={{ marginTop: 50 }}>
-                    <Button
-                      color="primary"
-                      variant="contained"
-                      onClick={() => {
-                        this.setState({ addDialogOpen: true });
-                      }}
-                    >
-                      Add New Phone
-                    </Button>
-                  </Grid>
+                  
                 </Paper>
               </Grid>
             </Grid>
@@ -238,7 +228,7 @@ class Phones extends Component {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {result.map((row, index) => (
+                {this.state.result.map((row, index) => (
                   <TableRow key={row.id}>
                     <TableCell align="center">{row.created_on}</TableCell>
                     <TableCell align="center">{row.default_phone}</TableCell>
@@ -258,14 +248,14 @@ class Phones extends Component {
                             updateDialogOpen: true,
                             selectedIndex: index,
 
-                            updatephoneType: result[index].phone_type,
+                            updatephoneType: this.state.result[index].phone_type,
 
-                            updatephoneReason: result[index].phone_reason,
+                            updatephoneReason: this.state.result[index].phone_reason,
 
-                            updateimeiNumber: result[index].imeiNumber,
-                            updatephoneNumber: result[index].phoneNumber,
-                            updatestartedusingon: result[index].dateObtained,
-                            updatedefaultPhone: result[index].default_phone,
+                            updateimeiNumber: this.state.result[index].imeiNumber,
+                            updatephoneNumber: this.state.result[index].phoneNumber,
+                            updatestartedusingon: this.state.result[index].dateObtained,
+                            updatedefaultPhone: this.state.result[index].default_phone,
                           })
                         }
                       >
@@ -453,7 +443,7 @@ class Phones extends Component {
                   <Button
                     color="primary"
                     onClick={() => {
-                      this.updatePhones(result[this.state.selectedIndex].id);
+                      this.updatePhones(this.state.result[this.state.selectedIndex].id);
                     }}
                   >
                     Update
@@ -498,7 +488,7 @@ class Phones extends Component {
                   onChange={(event) => {
                     this.setState({ phoneReason: event.target.value });
                   }}
-                  //   defaultValue={result[this.state.selectedIndex].fullname}
+                  //   defaultValue={this.state.result[this.state.selectedIndex].fullname}
                 >
                   {this.state.phoneReasons.map((phonetype) => (
                     <MenuItem id={phonetype.id} value={phonetype.id}>
@@ -514,7 +504,7 @@ class Phones extends Component {
                   onChange={(event) => {
                     this.setState({ phoneType: event.target.value });
                   }}
-                  //   defaultValue={result[this.state.selectedIndex].dob}
+                  //   defaultValue={this.state.result[this.state.selectedIndex].dob}
                 >
                   {this.state.phoneTypes.map((phonetype) => (
                     <MenuItem id={phonetype.id} value={phonetype.id}>
@@ -531,7 +521,7 @@ class Phones extends Component {
                     this.setState({ defaultPhone: event.target.value });
                   }}
 
-                  //   defaultValue={result[this.state.selectedIndex].sex}
+                  //   defaultValue={this.state.result[this.state.selectedIndex].sex}
                 >
                   <MenuItem id={1} value="Yes">
                     Yes
@@ -553,7 +543,7 @@ class Phones extends Component {
                   onChange={(event) => {
                     this.setState({ phoneNumber: event.target.value });
                   }}
-                  //   defaultValue={result[this.state.selectedIndex].idSource}
+                  //   defaultValue={this.state.result[this.state.selectedIndex].idSource}
                 />
               </Grid>
               <Grid item fullWidth xs={12}>
@@ -568,7 +558,7 @@ class Phones extends Component {
                   onChange={(event) => {
                     this.setState({ imeiNumber: event.target.value });
                   }}
-                  //   defaultValue={result[this.state.selectedIndex].idSource}
+                  //   defaultValue={this.state.result[this.state.selectedIndex].idSource}
                 />
               </Grid>
               <Grid item fullWidth xs={12}>

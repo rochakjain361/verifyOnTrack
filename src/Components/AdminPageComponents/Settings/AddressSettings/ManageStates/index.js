@@ -29,9 +29,9 @@ let result = [];
 
 const styles = (theme) => ({});
 
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+let token1 = "";
+let token = "";
+let id = "";
 
 //   const { classes } = this.props;
 export class index extends Component {
@@ -75,9 +75,10 @@ export class index extends Component {
     this.setState({ loading: false });
   }
   async componentDidMount() {
-    const token1 = localStorage.getItem("Token");
-    const token = "Token " + token1;
-    const id = localStorage.getItem("id");
+    token1 = localStorage.getItem("Token");
+    token = "Token " + token1;
+    id = localStorage.getItem("id");
+
     this.getstates();
   }
   async addState() {

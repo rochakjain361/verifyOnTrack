@@ -374,7 +374,7 @@ class MyProfile extends Component {
                     </Grid>
                     <Grid item xs={9}>
                       <Typography variant='h2' style={{ fontFamily: "Montserrat", textTransform: 'capitalize' }}>
-                        {this.state.result[0].firstname} {this.state.result[0].middlename}
+                        {this.state.result[0].firstname} {this.state.result[0].middlename} {this.state.result[0].surname}
                       </Typography>
 
                       <Typography variant='h5' style={{ fontFamily: "Montserrat" }}>
@@ -515,7 +515,7 @@ class MyProfile extends Component {
                     {new Date(row.created_on).toDateString()}
                   </TableCell>
                   <TableCell align="center">{row.source_name_field}</TableCell>
-                  <TableCell align="center">{row.firstname}</TableCell>
+                  <TableCell align="center"> {row.firstname} {row.middlename} {row.surname}</TableCell>
                   <TableCell align="center">{row.dob}</TableCell>
                   <TableCell align="center">{row.sex}</TableCell>
                   <TableCell align="center">{row.owner_name_field}</TableCell>

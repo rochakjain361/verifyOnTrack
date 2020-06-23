@@ -33,30 +33,13 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import axios from "axios";
-const rows = [
-  {
-    state: "testState1",
-    LGA: "testLGA1",
-  },
-  {
-    state: "testState2",
-    LGA: "testLGA2",
-  },
-  {
-    state: "testState3",
-    LGA: "testLGA3",
-  },
-  {
-    state: "testState4",
-    LGA: "testLGA4",
-  },
-];
+
 let states = [];
 let Lga = [];
 
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+let token1 = "";
+let token = "";
+let id = "";
 let result = [];
 class index extends Component {
   state = {
@@ -96,6 +79,9 @@ class index extends Component {
     this.setState({ loading: false });
   }
   async componentDidMount() {
+    token1 = localStorage.getItem("Token");
+token = "Token " + token1;
+id = localStorage.getItem("id");
     this.getLga();
   }
   async filterStates(state) {
