@@ -242,7 +242,7 @@ class Phones extends Component {
               <TableBody>
                 {this.state.result.map((row, index) => (
                   <TableRow key={row.id}>
-                    <TableCell align="center">{row.created_on}</TableCell>
+                    <TableCell align="center">{new Date(row.created_on).toDateString()}</TableCell>
                     <TableCell align="center">{row.default_phone}</TableCell>
                     <TableCell align="center">
                       {row.source_name_field}

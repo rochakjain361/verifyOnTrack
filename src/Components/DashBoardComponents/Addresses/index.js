@@ -321,10 +321,6 @@ class Addresses extends Component {
                         "History",
                       ].map((text, index) => (
                         <TableCell
-                          style={{
-                            fontWeight: "bolder",
-                            fontFamily: "Montserrat",
-                          }}
                           align="center"
                         >
                           {text}
@@ -1152,7 +1148,6 @@ class Addresses extends Component {
                     "Update Reason",
                   ].map((text, index) => (
                     <TableCell
-                      style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
                       align="center"
                     >
                       {text}

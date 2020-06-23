@@ -109,7 +109,7 @@ async getevaldata(){
                 <Button
                 style={{maxHeight: 30}}
                   variant="contained"
-                  color="secondary"
+                  color="primary"
                   onClick={() => {
                     this.setState({ requestconfirmationDialogBox: true });
                   }}

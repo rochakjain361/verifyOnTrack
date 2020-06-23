@@ -97,7 +97,7 @@ class signIn extends Component {
                 ) : null}
                 <form className={classes.form} noValidate>
                   <Typography
-                    style={{ fontFamily: "Montserrat", fontWeight: "bold", }}
+                    // style={{ fontFamily: "Montserrat", fontWeight: "bold", }}
                     variant="h4"
                     gutterBottom
                     color="primary"
@@ -164,9 +164,9 @@ class signIn extends Component {
                         style={{
                           marginTop: 16,
                           marginBottom: 16,
-                          fontFamily: "Montserrat",
-                          fontWeight: "bold",
-                          fontSize: "18",
+                          // fontFamily: "Montserrat",
+                          // fontWeight: "bold",
+                          // fontSize: "18",
                           // color:"white"
                           
                         }}
