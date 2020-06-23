@@ -59,8 +59,19 @@ class Phones extends Component {
       historyloading: true,
       historyDialougeOpen: false,
       result:[],
+      buttondisabled: "disabled"
     };
   }
+  reasonforupdatevalidcheck = (event) => {
+    if (event.target.value.length > 0) {
+      //  console.log(event.target.value);
+      this.setState({ buttondisabled: "" });
+    } else {
+      this.setState({ buttondisabled: "disabled" });
+    }
+
+
+  };
   async getphonedata(){
      await axios
        .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/phones", {
@@ -102,6 +113,7 @@ class Phones extends Component {
       });
     this.setState({ loading: false });
   }
+  
   async postPhones() {
     let headers = {
       headers: {
@@ -432,7 +444,9 @@ class Phones extends Component {
                         onChange={(event) => {
                           this.setState({
                             updateReason: event.target.value,
-                          });
+                          },
+                          this.reasonforupdatevalidcheck(event)
+                          );
                         }}
                         fullWidth
                       />
@@ -442,6 +456,7 @@ class Phones extends Component {
                 <DialogActions>
                   <Button
                     color="primary"
+                    disabled={this.state.buttondisabled}
                     onClick={() => {
                       this.updatePhones(this.state.result[this.state.selectedIndex].id);
                     }}

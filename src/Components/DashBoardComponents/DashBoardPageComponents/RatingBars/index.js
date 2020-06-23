@@ -96,21 +96,21 @@ class index extends Component {
             },
           },
         },
-        fill: {
-            colors: [function({ value, seriesIndex, w }) {
-              if(value <= 20) {
-                  return '#ff1744'
-              } else if (value > 20 && value <= 40) {
-                  return '#ff5722'
-              } else if (value > 40 && value <= 60) {
-                return '#ffa733'
-            } else if (value > 60 && value <= 80) {
-                return '#00b0ff'
-            } else{
-                return '#00e676'
-            }
-            }]
-          }
+        // fill: {
+        //     colors: [function({ value, seriesIndex, w }) {
+        //       if(value <= 20) {
+        //           return '#ff1744'
+        //       } else if (value > 20 && value <= 40) {
+        //           return '#ff5722'
+        //       } else if (value > 40 && value <= 60) {
+        //         return '#ffa733'
+        //     } else if (value > 60 && value <= 80) {
+        //         return '#00b0ff'
+        //     } else{
+        //         return '#00e676'
+        //     }
+        //     }]
+        //   }
         // fill: {
         //   colors: ["#FFFFFF", "#FFFFFF", "#FFFFFF"],
         // },

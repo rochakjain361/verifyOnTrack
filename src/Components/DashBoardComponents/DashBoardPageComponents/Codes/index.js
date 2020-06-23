@@ -165,7 +165,7 @@ class index extends Component {
             </Grid>
           </Grid>
           </Paper>
-          ):(
+          ):(<>
         <Paper elevation={1} style={{ marginTop: 10 }}>
           <Grid
             container
@@ -194,6 +194,8 @@ class index extends Component {
               </Button>
             </Grid>
           </Grid>
+          </Paper>
+           <Paper elevation={1} style={{ marginTop: 10 }}>
           <Grid
             container
             style={{ padding: 10 }}
@@ -221,7 +223,7 @@ class index extends Component {
               </Button>
             </Grid>
           </Grid>
-        </Paper>)}
+        </Paper></>)}
       </div>
     );
   }

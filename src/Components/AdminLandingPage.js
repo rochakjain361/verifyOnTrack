@@ -44,10 +44,9 @@ import AdminAccessCodes from './AdminPageComponents/ManageCodes/AdminAccessCodes
 import AdminEvaluationCodes from './AdminPageComponents/ManageCodes/AdminEvaluationCodes'
 
 const drawerWidth = 255;
-const token1 = localStorage.getItem("Token");
-
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+let token1 = "";
+let token = "" ;
+let id = "";
 const styles = theme => ({
     root: {
         display: 'flex',
@@ -127,6 +126,11 @@ class AdminLandingPage extends React.PureComponent {
     this.props.history.push({
       pathname: "/signin",
     });
+  }
+  async componentDidMount(){
+    token1 = localStorage.getItem("Token");
+token = "Token " + token1;
+id = localStorage.getItem("id");
   }
 
   render() {

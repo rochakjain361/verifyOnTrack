@@ -91,6 +91,7 @@ class Addresses extends Component {
       updatedaddressestype: "",
       updatedlgastates: [],
       updatedcityStates: [],
+      buttondisabled: "disabled",
     };
 
     this.onMarkerClick = this.onMarkerClick.bind(this);
@@ -131,6 +132,16 @@ class Addresses extends Component {
   //   });
 
   // }
+  reasonforupdatevalidcheck = (event) => {
+    if (event.target.value.length > 0) {
+      //  console.log(event.target.value);
+      this.setState({ buttondisabled: "" });
+    } else {
+      this.setState({ buttondisabled: "disabled" });
+    }
+
+
+  };
   async getaddressdata() {
     await axios
       .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/addresses", {
@@ -259,7 +270,7 @@ class Addresses extends Component {
       // "78.44"
       this.state.location.longtitude
     );
-    bodyFormData.append("address_image", this.state.updatedimage);
+    // bodyFormData.append("address_image", this.state.updatedimage);
     bodyFormData.append("since", this.state.updatestartedlivinghere);
     bodyFormData.append("address_type", this.state.updatedaddressestype);
     bodyFormData.append("update_reason", this.state.updatedreason);
@@ -693,7 +704,8 @@ class Addresses extends Component {
                                 onChange={(event) => {
                                   this.setState({
                                     updatedreason: event.target.value,
-                                  });
+                                  },
+                                  this.reasonforupdatevalidcheck(event));
                                   console.log(event.target.value);
                                 }}
                                 type="text"
@@ -733,6 +745,7 @@ class Addresses extends Component {
                       <Button
                         color="primary"
                         variant="contained"
+                        disabled={this.state.buttondisabled}
                         disabled={this.state.buttondisabled}
                         color="primary"
                         onClick={() => {

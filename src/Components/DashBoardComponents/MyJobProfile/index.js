@@ -869,7 +869,7 @@ class myJobProfile extends Component {
 
     async editJobProfile(index) {
 
-        console.log('index',)
+        console.log('index',index)
 
         // this.setState({ editActionsOpen: true });
 

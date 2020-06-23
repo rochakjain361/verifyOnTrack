@@ -64,9 +64,20 @@ class Identities extends Component {
       uploadpictures: "",
       pictureloading: "false",
       result:[],
+      buttondisabled: "disabled",
     };
     // this.updateidentites= this.updateidentites.bind();
   }
+  reasonforupdatevalidcheck = (event) => {
+    if (event.target.value.length > 0) {
+      //  console.log(event.target.value);
+      this.setState({ buttondisabled: "" });
+    } else {
+      this.setState({ buttondisabled: "disabled" });
+    }
+
+
+  };
 async getidentites(){
   await axios
     .get(
@@ -688,7 +699,7 @@ async getidentites(){
                         label="Update Reason"
                         // defaultValue={this.state.result[this.state.selectedIndex].idSource}
                         onChange={(event) => {
-                          this.setState({ updatereason: event.target.value });
+                          this.setState({ updatereason: event.target.value },this.reasonforupdatevalidcheck(event));
                         }}
                         type="text"
                         fullWidth
@@ -702,6 +713,7 @@ async getidentites(){
                     disabled={this.state.buttondisabled}
                     color="primary"
                     variant="contained"
+                    disabled={this.state.buttondisabled}
                     onClick={() => {
                       this.updateidentites(
                         this.state.result[this.state.selectedIndex].idSource
