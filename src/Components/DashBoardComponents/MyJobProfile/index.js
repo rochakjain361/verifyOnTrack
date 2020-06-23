@@ -869,17 +869,17 @@ class myJobProfile extends Component {
 
     async editJobProfile(index) {
 
-        console.log('index',)
+        console.log('index',index)
 
         // this.setState({ editActionsOpen: true });
 
 
         let bodyData = {
-            'employee': id,
+           
             'company': this.state.editJobDialogCompany,
             // 'company_other': this.state.editJobDialogOtherCompany,
-            // 'startDate': this.state.editJobDialogStartDate,
-            'startDate': "2020-12-30",
+             'startDate': this.state.editJobDialogStartDate,
+           
             'endDate': this.state.editJobDialogEndDate,
             'jobCategory': this.state.editJobDialogPosition,
             'jobTitle': this.state.editJobDialogJobTitle,
@@ -897,7 +897,7 @@ class myJobProfile extends Component {
                     'Authorization': token,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify()
+                body: JSON.stringify(bodyData)
             });
         response = await response.json(bodyData);
         console.log('EditJobSuccess:', response);
