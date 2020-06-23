@@ -153,12 +153,6 @@ export default function Index()  {
               </CardContent>
             </Card>
 
-            {/* <Card className={classes.marginTop} elevation={2}> */}
-            {/* <CardContent> */}
-            <DashButtons />
-            {/* </CardContent> */}
-            {/* </Card> */}
-
             <Card
               elevation={2}
               className={classes.marginTop}

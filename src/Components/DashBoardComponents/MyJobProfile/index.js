@@ -506,7 +506,7 @@ class myJobProfile extends Component {
                                     fullWidth
                                 >
                                     {
-                                        this.state.companies.map(company => <MenuItem key={company} value={this.state.editJobDialogCompany}>{company.companyName}</MenuItem>)
+                                        this.state.companies.map(company => <MenuItem key={company} value={company}>{company.companyName}</MenuItem>)
                                         // this.state.companies.map(company => <MenuItem key={company} value={company}>{company}</MenuItem>)
                                     }
                                 </Select>
@@ -548,43 +548,29 @@ class myJobProfile extends Component {
                         }
 
                         <Grid item xs={6}>
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <KeyboardDatePicker
-                                    disableToolbar
-                                    variant="inline"
-                                    format="yyyy/MM/dd"
-                                    margin="normal"
-                                    id="date-picker-inline"
-                                    label="Start Date"
-                                    // value={this.state.editJobDialogStartDate}
-                                    defaultValue={this.state.editJobDialogStartDate}
-                                    onChange={date => this.setState({ editJobDialogStartDate: date.getDate().format("YYYY-MM-DD") })}
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'change date',
-                                    }}
-                                />
-                            </MuiPickersUtilsProvider>
+                            <input
+                                class="w3-input"
+                                type="date"
+                                onChange={(event) => {
+                                    this.setState({ editJobDialogStartDate: event.target.value });
+                                    console.log(event.target.value);
+                                }}
+
+                            />
                         </Grid>
 
                         <Grid item xs={6}>
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
 
-                                <KeyboardDatePicker
-                                    disableToolbar
-                                    variant="inline"
-                                    format="yyyy/MM/dd"
-                                    margin="normal"
-                                    id="date-picker-inline"
-                                    label="End Date"
-                                    // value={this.state.editJobDialogEndDate}
-                                    defaultValue={this.state.editJobDialogEndDate}
-                                    style={{ marginLeft: 32 }}
-                                    onChange={date => this.setState({ editJobDialogEndDate: date.getDate().format("YYYY-MM-DD") })}
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'change date',
-                                    }}
-                                />
-                            </MuiPickersUtilsProvider>
+                            <input
+                                class="w3-input"
+                                type="date"
+                                onChange={(event) => {
+                                    this.setState({ editJobDialogEndDate: event.target.value });
+                                    console.log(event.target.value);
+                                }}
+
+                            />
+
                         </Grid>
 
                         <Grid item xs={12}>
@@ -602,7 +588,7 @@ class myJobProfile extends Component {
                                     fullWidth
                                 >
                                     {
-                                        this.state.positions.map(position => <MenuItem key={position} value={this.state.editJobDialogPosition}>{position.positionCategory}</MenuItem>)}
+                                        this.state.positions.map(position => <MenuItem key={position} value={position}>{position.positionCategory}</MenuItem>)}
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -648,7 +634,7 @@ class myJobProfile extends Component {
                                     fullWidth
                                 >
                                     {
-                                        this.state.leavingReasons.map(leavingReason => <MenuItem key={leavingReason} value={this.state.editJobDialogReasonForLeaving}>{leavingReason.reason}</MenuItem>)
+                                        this.state.leavingReasons.map(leavingReason => <MenuItem key={leavingReason} value={leavingReason}>{leavingReason.reason}</MenuItem>)
                                     }
                                 </Select>
                             </FormControl>
@@ -686,7 +672,7 @@ class myJobProfile extends Component {
                 </DialogContent>
                 <DialogActions>
                     <Button style={{ width: 85 }} onClick={() => {
-                        this.editJobProfile(this.state.myJobHistory[this.state.selectedEditIndex])
+                        this.editJobProfile(this.state.selectedEditIndex)
                         // console.log("hello",this.state.myJobHistory[this.state.selectedEditIndex])
                     }} color="primary" variant="contained">
                         Edit
@@ -883,19 +869,17 @@ class myJobProfile extends Component {
 
     async editJobProfile(index) {
 
-        console.log('index',this.state.selectedEditIndex)
+        console.log('index',)
 
         // this.setState({ editActionsOpen: true });
 
-        // const editJobDialogReasonForLeavingIndex = this.state.leavingReasons.indexOf(this.state.editJobDialogReasonForLeaving) + 1;
-        // const editJobDialogPositionIndex = this.state.positions.indexOf(this.state.editJobDialogPosition) + 1;
-        // const editJobDialogCompanyIndex = this.state.companies.indexOf(this.state.editJobDialogCompany) + 1;
 
         let bodyData = {
             'employee': id,
             'company': this.state.editJobDialogCompany,
-            'company_other': this.state.editJobDialogOtherCompany,
-            'startDate': this.state.editJobDialogStartDate,
+            // 'company_other': this.state.editJobDialogOtherCompany,
+            // 'startDate': this.state.editJobDialogStartDate,
+            'startDate': "2020-12-30",
             'endDate': this.state.editJobDialogEndDate,
             'jobCategory': this.state.editJobDialogPosition,
             'jobTitle': this.state.editJobDialogJobTitle,
@@ -904,8 +888,9 @@ class myJobProfile extends Component {
             'companyRating': this.state.editJobDialogRating,
             'update_reason': this.state.editJobDialogUpdateReason
         }
+        console.log('editbody:', bodyData)
 
-        let response = await fetch(api + '/employees/update-job/' + this.state.selectedEditIndex,
+        let response = await fetch('http://3.22.17.212:8000/api/v1/employees/update-job/' + index,
             {
                 method: 'POST',
                 headers: {
