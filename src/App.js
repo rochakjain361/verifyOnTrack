@@ -14,6 +14,8 @@ import AdminLandingPage from './Components/AdminLandingPage'
 import EmployerLandingPage from './Components/EmployerLandingPage'
 import AdminRegistration from './Components/AdminRegistration'
 import theme from './theme';
+import dash from './dash'
+import dash2 from './dash2'
 
 class App extends React.PureComponent {
   render() {
@@ -28,6 +30,8 @@ class App extends React.PureComponent {
               <Route exact path='/adminRegistration' component={AdminRegistration} />
               <Route exact path='/signUp' component={signUp} />
               <Route exact path='/signIn' component={signIn} />
+              <Route exact path='/dash' component={dash} />
+              <Route exact path='/dash2' component={dash2} />
 
               {/* Employee PAGE PATHS */}
               <Route exact path='/Homepage' component={LandingPage} />

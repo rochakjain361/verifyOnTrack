@@ -373,15 +373,21 @@ class MyProfile extends Component {
                       </Avatar>
                     </Grid>
                     <Grid item xs={9}>
-                      <Typography variant='h2' style={{ fontFamily: "Montserrat", textTransform: 'capitalize' }}>
+                      <Typography variant='h2' 
+                      // style={{ fontFamily: "Montserrat", textTransform: 'capitalize' }}
+                      >
                         {this.state.result[0].firstname} {this.state.result[0].middlename} {this.state.result[0].surname}
                       </Typography>
 
-                      <Typography variant='h5' style={{ fontFamily: "Montserrat" }}>
+                      <Typography variant='h5' 
+                      // style={{ fontFamily: "Montserrat" }}
+                      >
                         Dob:{this.state.result[0].dob}
                       </Typography>
 
-                      <Typography variant='h5' style={{ fontFamily: "Montserrat" }}>
+                      <Typography variant='h5' 
+                      // style={{ fontFamily: "Montserrat" }}
+                      >
                         Sex:{this.state.result[0].sex}
                       </Typography>
                     </Grid>
@@ -489,7 +495,7 @@ class MyProfile extends Component {
                   "History",
                 ].map((text, index) => (
                   <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    // style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
                     align="center"
                   >
                     {text}
@@ -724,7 +730,7 @@ class MyProfile extends Component {
                     "Updated reason",
                   ].map((text, index) => (
                     <TableCell
-                      style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                      // style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
                       align="left"
                     >
                       {text}

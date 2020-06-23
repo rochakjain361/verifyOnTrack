@@ -506,7 +506,7 @@ async getidentites(){
                     "History",
                   ].map((text, index) => (
                     <TableCell
-                      style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                      // style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
                       align="left"
                     >
                       {text}
@@ -751,7 +751,7 @@ async getidentites(){
                     "Update Reason",
                   ].map((text, index) => (
                     <TableCell
-                      style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                      // style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
                       align="left"
                     >
                       {text}
