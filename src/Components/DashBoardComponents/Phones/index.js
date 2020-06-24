@@ -66,7 +66,10 @@ class Phones extends Component {
     if (event.target.value.length > 0) {
       //  console.log(event.target.value);
       this.setState({ buttondisabled: "" });
-    } else {
+    }else if(event.target.value>250){
+      this.setState({ buttondisabled: "disabled" });
+    } 
+    else {
       this.setState({ buttondisabled: "disabled" });
     }
 
@@ -225,31 +228,32 @@ class Phones extends Component {
           <TableContainer component={Paper} elevation={16}>
             <Table stickyHeader>
               <TableHead>
-                <TableRow style={{ backgroundColor: "black" }}>
+                <TableRow style={{ backgroundColor: "black" , fontWeight: "bolder",}} >
                   {/* Date, Source, Fullname, DOB, Sex, Picture, VerifiedBy, Actions */}
-                  <TableCell align="center">Start Date</TableCell>
-                  <TableCell align="center">default phone</TableCell>
+                  <TableCell align="center"  style={{ fontWeight: "bolder", }}>Phone</TableCell>
+                  <TableCell align="center"  style={{ fontWeight: "bolder", }}>IMEI</TableCell>
+                  <TableCell align="center"  style={{ fontWeight: "bolder", }}>default phone</TableCell>
+                  <TableCell align="center"  style={{ fontWeight: "bolder", }}>source</TableCell>
+                  <TableCell align="center"  style={{ fontWeight: "bolder", }}>VerifiedBy</TableCell>
+                  <TableCell align="center"  style={{ fontWeight: "bolder", }}>Start Date</TableCell>
                   {/* <TableCell align="center">IdNumber</TableCell> */}
-                  <TableCell align="center">source</TableCell>
-                  <TableCell align="center">Phone</TableCell>
-                  <TableCell align="center">IMEI</TableCell>
                   {/* <TableCell align="center">picture</TableCell> */}
-                  <TableCell align="center">VerifiedBy</TableCell>
-                  <TableCell align="center">Update</TableCell>
-                  <TableCell align="center">History</TableCell>
+                  <TableCell align="center"  style={{ fontWeight: "bolder", }}>Update</TableCell>
+                  <TableCell align="center"  style={{ fontWeight: "bolder", }}>History</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {this.state.result.map((row, index) => (
                   <TableRow key={row.id}>
-                    <TableCell align="center">{new Date(row.created_on).toDateString()}</TableCell>
+                    <TableCell align="center">{row.phoneNumber}</TableCell>
+                    <TableCell align="center">{row.imeiNumber}</TableCell>
                     <TableCell align="center">{row.default_phone}</TableCell>
                     <TableCell align="center">
                       {row.source_name_field}
                     </TableCell>
-                    <TableCell align="center">{row.phoneNumber}</TableCell>
-                    <TableCell align="center">{row.imeiNumber}</TableCell>
+                   
                     <TableCell align="center">{row.owner_name_field}</TableCell>
+                    <TableCell align="center">{new Date(row.created_on).toDateString()}</TableCell>
 
                     <TableCell align="center">
                       <Button
@@ -276,8 +280,8 @@ class Phones extends Component {
                     </TableCell>
                     <TableCell align="center">
                       <Button
-                        size="small"
-                        color="primary"
+                      
+                        color="secondary"
                         variant="outlined"
                         onClick={() => {
                           this.getHistory(row.id);
@@ -299,8 +303,8 @@ class Phones extends Component {
                 //  aria-labelledby="form-dialog-title"
                 aria-labelledby="responsive-dialog-title"
               >
-                <DialogTitle id="form-dialog-title">
-                  Updating the phone data
+                <DialogTitle id="form-dialog-title" align="center">
+                  Update phone data
                 </DialogTitle>
 
                 <DialogContent>
@@ -406,7 +410,7 @@ class Phones extends Component {
                         margin="dense"
                         id="dob"
                         label=""
-                        type="number"
+                        type="text"
                         fullWidth
                         onChange={(event) => {
                           this.setState({
@@ -441,6 +445,7 @@ class Phones extends Component {
                         id="dob"
                         label=""
                         type="text"
+                        helperText="update reason can be less than 250 characters"
                         onChange={(event) => {
                           this.setState({
                             updateReason: event.target.value,
@@ -456,6 +461,7 @@ class Phones extends Component {
                 <DialogActions>
                   <Button
                     color="primary"
+                    variant="contained"
                     disabled={this.state.buttondisabled}
                     onClick={() => {
                       this.updatePhones(this.state.result[this.state.selectedIndex].id);
@@ -465,6 +471,7 @@ class Phones extends Component {
                   </Button>
                   <Button
                     color="secondary"
+                    variant="contained"
                     onClick={() =>
                       this.setState({
                         updateDialogOpen: false,
@@ -484,14 +491,14 @@ class Phones extends Component {
           onClose={() => this.setState({ addDialogOpen: false })}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">
-            adding the phone data
+          <DialogTitle id="form-dialog-title" align="center">
+            add new  phone data
           </DialogTitle>
 
           <DialogContent>
-            <Grid container spacing={1} justify="center" alignItems="center">
+            <Grid container spacing={3} justify="center" alignItems="center">
               
-              <Grid item fullWidth xs={12}>
+              <Grid item fullWidth xs={12}  >
                 <InputLabel>Phone Reason</InputLabel>
                 <Select
                   autoFocus
@@ -553,7 +560,7 @@ class Phones extends Component {
                   margin="dense"
                   id="dob"
                   label=""
-                  type="number"
+                  type="text"
                   fullWidth
                   onChange={(event) => {
                     this.setState({ phoneNumber: event.target.value });
@@ -568,7 +575,7 @@ class Phones extends Component {
                   margin="dense"
                   id="dob"
                   label=""
-                  type="number"
+                  type="text"
                   fullWidth
                   onChange={(event) => {
                     this.setState({ imeiNumber: event.target.value });
@@ -595,6 +602,7 @@ class Phones extends Component {
           <DialogActions>
             <Button
               color="primary"
+              variant="contained"
               onClick={() =>
                 this.setState(
                   {
@@ -608,6 +616,7 @@ class Phones extends Component {
             </Button>
             <Button
               color="secondary"
+              variant="contained"
               onClick={() =>
                 this.setState({
                   addDialogOpen: false,
@@ -624,50 +633,54 @@ class Phones extends Component {
           open={this.state.historyDialougeOpen}
           onClose={() => this.setState({ historyDialougeOpen: false })}
           aria-labelledby="responsive-dialog-title"
-        >
-          <TableContainer component={Paper} elevation={16} p={3}>
+        > <DialogTitle id="form-dialog-title" align="center">
+       Phone History
+      </DialogTitle>
+          <TableContainer  p={3}>
             <Table stickyHeader>
+           
               <TableHead>
                 <TableRow style={{ backgroundColor: "black" }}>
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                    align="center"
-                  >
-                    phoneReason
-                  </TableCell>
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                    align="center"
-                  >
-                    phoneType
-                  </TableCell>
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                    align="center"
-                  >
-                    DefaultPhone
-                  </TableCell>
-                  <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                <TableCell
+                    style={{ fontWeight: "bolder",  }}
                     align="center"
                   >
                     phonenumber
                   </TableCell>
                   <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    style={{ fontWeight: "bolder",  }}
+                    align="center"
+                  >
+                    phoneReason
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder", }}
+                    align="center"
+                  >
+                    phoneType
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder",  }}
+                    align="center"
+                  >
+                    DefaultPhone
+                  </TableCell>
+                
+                  <TableCell
+                    style={{ fontWeight: "bolder",  }}
                     align="center"
                   >
                     imeinumber
                   </TableCell>
 
                   <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    style={{ fontWeight: "bolder",  }}
                     align="center"
                   >
                     records updated date
                   </TableCell>
                   <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    style={{ fontWeight: "bolder",  }}
                     align="center"
                   >
                     Update reason
@@ -681,10 +694,10 @@ class Phones extends Component {
                 <TableBody>
                   {history.map((row, index) => (
                     <TableRow key={row.id}>
+                      <TableCell align="center">{row.phoneNumber}</TableCell>
                       <TableCell align="center">{row.phone_reason}</TableCell>
                       <TableCell align="center">{row.phone_type}</TableCell>
                       <TableCell align="center">{row.default_phone}</TableCell>
-                      <TableCell align="center">{row.phoneNumber}</TableCell>
                       <TableCell align="center">
                         {row.imeiNumber}
                       </TableCell>{" "}
@@ -698,6 +711,17 @@ class Phones extends Component {
               )}
             </Table>
           </TableContainer>
+          <DialogActions style={{ padding: 15 }}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() =>
+                this.setState({ historyDialougeOpen: false, selectedIndex: -1 })
+              }
+            >
+              Close
+            </Button>
+          </DialogActions>
         </Dialog>
       </>
     );

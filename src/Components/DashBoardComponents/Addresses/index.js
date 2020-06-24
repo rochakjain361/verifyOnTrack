@@ -136,6 +136,10 @@ class Addresses extends Component {
     if (event.target.value.length > 0) {
       //  console.log(event.target.value);
       this.setState({ buttondisabled: "" });
+    } 
+    else if (event.target.value.length > 250) {
+      //  console.log(event.target.value);
+      this.setState({ buttondisabled: "disabled" });
     } else {
       this.setState({ buttondisabled: "disabled" });
     }
@@ -179,7 +183,7 @@ class Addresses extends Component {
       })
       .then((res) => {
         this.setState({ addressTypes: res.data });
-        // console.table("addresstypes", this.state.addressTypes);
+         console.table("addresstypes", this.state.addressTypes);
       });
     await axios
       .get("http://3.22.17.212:8000/api/v1/resManager/address/reasons/", {
@@ -189,7 +193,7 @@ class Addresses extends Component {
       })
       .then((res) => {
         this.setState({ addressReasons: res.data });
-        // console.table("addressReasons", this.state.addressReasons);
+         console.table("addressReasons", this.state.addressReasons);
       });
 
     this.setState({ isloading: false });
@@ -295,7 +299,10 @@ class Addresses extends Component {
         ) : (
             <Grid container justify="space-between" alignItems="center">
               <Grid container justify="space-between" alignItems="center">
-                <h1>My Address</h1>
+             
+                <h1>Address</h1>
+                
+
                 <Button
                   color="primary"
                   variant="contained"
@@ -309,18 +316,19 @@ class Addresses extends Component {
                   <TableHead>
                     <TableRow style={{ backgroundColor: "black" }}>
                       {[
-                        "Start date",
+                      "Living since",
+                      "Address",
+                      "State/LGA/City",
+                      "Google link",
+                   
                         "Address source",
-                        "Address",
-                        "State/LGA/City",
-                        "Address",
-                        "Google link",
-                        "Image",
+                        "Default Address",
                         "Verifier",
                         "Update",
                         "History",
                       ].map((text, index) => (
                         <TableCell
+                        style={{ fontWeight: "bolder", }}
                           align="center"
                         >
                           {text}
@@ -335,19 +343,12 @@ class Addresses extends Component {
                           {row.since}
                         </TableCell>
                         <TableCell align="center" size="small" padding="none">
-                          {row.source_name_field}
+                        {row.house_number},{row.street_name},{row.address_hint1}
+                        ,{row.address_hint2} {row.address_hint3}
                         </TableCell>
-                        <TableCell align="center" size="small" padding="none">
-                          {row.default_address}
-                        </TableCell>
-
                         <TableCell align="center" size="small" padding="none">
                           {row.state_name_field}/{row.lga_name_field}/
                         {row.city_name_field}
-                        </TableCell>
-                        <TableCell align="center" size="small" padding="none">
-                          {row.street_name},{row.house_number},{row.address_hint1}
-                        ,{row.address_hint2} {row.address_hint3}
                         </TableCell>
                         <TableCell align="center" size="small">
                           <a
@@ -357,9 +358,17 @@ class Addresses extends Component {
                             Location
                         </a>
                         </TableCell>
+                        
                         <TableCell align="center" size="small" padding="none">
-                          {}
+                          {row.source_name_field}
                         </TableCell>
+                        <TableCell align="center" size="small" padding="none">
+                          {row.default_address}
+                        </TableCell>
+
+                        
+                     
+                      
                         <TableCell align="center" size="small" padding="none">
                           {row.owner_name_field}
                         </TableCell>
@@ -422,17 +431,19 @@ class Addresses extends Component {
                 <div />
               ) : (
                   <Dialog
+                  fullWidth={"md"}
+          maxWidth={"md"}
                     open={this.state.updateDialogOpen}
                     onClose={() => this.setState({ updateDialogOpen: false })}
                     aria-labelledby="responsive-dialog-title"
                   >
-                    <DialogTitle id="addNewAddress" justify="center">
+                    <DialogTitle id="addNewAddress" align="center">
                       Update address
                 </DialogTitle>
                     <DialogContent>
                       <Box display="flex" flexDirection="row" width={1}>
-                        <Box p={1} width={1 / 2}>
-                          <DialogContentText>
+                        <Box p={2} width={1 / 2}>
+                          <DialogContentText align="center">
                             Enter the details of your address
                       </DialogContentText>
 
@@ -491,6 +502,9 @@ class Addresses extends Component {
                             </Grid>
 
                             <Grid item fullWidth xs={12}>
+                            <InputLabel id="addressType">
+                                Default Address
+                          </InputLabel>
                               <Select
                                 id="defaultAddress"
                                 label="Default address"
@@ -528,20 +542,20 @@ class Addresses extends Component {
                               />
                             </Grid>
 
-                            <Grid item xs={12}>
-                              <Button
-                                variant="contained"
-                                color="default"
+                            
+                             
+                            
+
+                            {/* <Grid item fullWidth xs={12}>
+                            <Button
+                               
                                 startIcon={<CloudUploadIcon />}
                               >
-                                Choose file
-                          </Button>
-                            </Grid>
-
-                            <Grid item fullWidth xs={12}>
+                               
+                         
                               <TextField
                                 id="addressImage"
-                                label="Choose Image"
+                                // label="Choose Image"
                                 onChange={(event) => {
                                   this.setState({
                                     updatedimage: event.target.files[0],
@@ -550,11 +564,11 @@ class Addresses extends Component {
                                 }}
                                 type="file"
                                 fullWidth
-                              />
-                            </Grid>
+                              /> </Button>
+                            </Grid> */}
 
                             <Grid item fullWidth xs={12}>
-                              <InputLabel id="state">state</InputLabel>
+                              <InputLabel id="state">State</InputLabel>
                               <Select
                                 id="states"
                                 label="States"
@@ -701,6 +715,7 @@ class Addresses extends Component {
                               <TextField
                                 id="updateReason"
                                 label="Reason for updating"
+                                helperText="update reason field can not exceed 250 characters"
                                 onChange={(event) => {
                                   this.setState({
                                     updatedreason: event.target.value,
@@ -718,8 +733,12 @@ class Addresses extends Component {
                         <Box p={1} width={1 / 2} >
                           <Map
                             google={this.props.google}
-                            zoom={0}
+                            zoom={6}
                             onClick={this.onMarkerClick}
+                            initialCenter={{
+                              lat: this.state.location.latitude,
+                              lng: this.state.location.longtitude
+                            }}
                             style={{ height: "75%", width: "40%" }}
                             fullscreenControl={true}
                           >
@@ -770,19 +789,19 @@ class Addresses extends Component {
                   </Dialog>
                 )}
               <Dialog
-                // fullWidth={"md"}
-                // maxWidth={"md"}
+                fullWidth={"md"}
+                maxWidth={"md"}
                 open={this.state.addDialogOpen}
                 onClose={() => this.setState({ addDialogOpen: false })}
                 aria-labelledby="responsive-dialog-title"
               >
-                <DialogTitle id="addNewAddress" justify="center">
+                <DialogTitle id="addNewAddress" justify="center" align="center">
                   Add new address
               </DialogTitle>
                 <DialogContent>
                   <Box display="flex" flexDirection="row" width={1}>
-                    <Box width={1 / 2} height={1}>
-                      <DialogContentText>
+                    <Box p={2} width={1 / 2} height={1}>
+                      <DialogContentText align="center">
                         Enter the details of your address
                     </DialogContentText>
                       <Grid
@@ -880,7 +899,7 @@ class Addresses extends Component {
                           />
                         </Grid>
 
-                        <Grid item xs={12}>
+                        {/* <Grid item xs={12}>
                           <Button
                             variant="contained"
                             color="default"
@@ -888,9 +907,9 @@ class Addresses extends Component {
                           >
                             Choose file
                         </Button>
-                        </Grid>
+                        </Grid> */}
 
-                        <Grid item fullWidth xs={12}>
+                        {/* <Grid item fullWidth xs={12}>
                           <TextField
                             id="addressImage"
                             label="Choose Image"
@@ -903,7 +922,7 @@ class Addresses extends Component {
                             type="file"
                             fullWidth
                           />
-                        </Grid>
+                        </Grid> */}
 
                         <Grid item xs={12}>
                           <FormControl fullWidth>
@@ -1073,7 +1092,11 @@ class Addresses extends Component {
                     <Box p={1} width={1 / 2} style={{ minHeight: "10vh" }}>
                       <Map
                         google={this.props.google}
-                        zoom={12}
+                        zoom={6}
+                        initialCenter={{
+                          lat:9.0765, 
+                          lng:7.3986,
+                        }}
                         onClick={this.onMarkerClick}
                         style={{
                           width: "40%",
@@ -1130,7 +1153,7 @@ class Addresses extends Component {
           onClose={() => this.setState({ historyDialogeOpen: false })}
           aria-labelledby="responsive-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">Profile History</DialogTitle>
+          <DialogTitle id="form-dialog-title" align="center">Address History</DialogTitle>
           {/* <DialogContent> */}
           <TableContainer p={3}>
             <Table stickyHeader>
@@ -1138,10 +1161,10 @@ class Addresses extends Component {
                 <TableRow style={{ backgroundColor: "black" }}>
                   {[
                     "State/Lga/City",
-                    "Street Name",
-                    "House Number",
-                    "Address Hint 1",
-                    "Google Coordinates",
+                    
+                    "House Number,Street Name,Address Hint 1",
+                    
+                    "Google Link",
                     "Address Reason",
                     "Address Type",
                     "Records Updated Date",
@@ -1149,6 +1172,7 @@ class Addresses extends Component {
                   ].map((text, index) => (
                     <TableCell
                       align="center"
+                      style={{ fontWeight: "bolder", }}
                     >
                       {text}
                     </TableCell>
@@ -1163,19 +1187,22 @@ class Addresses extends Component {
                     {history.map((row, index) => (
                       <TableRow key={row.id}>
                         <TableCell align="center">
-                          {row.state_name_field}
-                          {row.lga_name_field}
+                          {row.state_name_field},
+                          {row.lga_name_field},
                           {row.city_name_field}
                         </TableCell>
-                        <TableCell align="center">{row.street_name}</TableCell>
-                        <TableCell align="center">{row.house_number}</TableCell>
-                        <TableCell align="center">{row.address_hint1}</TableCell>
+                        <TableCell align="center">{row.house_number},{row.street_name},{row.address_hint1}</TableCell>
+                       
                         {/* <TableCell align="center">
                         <Avatar src={row.address_hint1}>Picture</Avatar>
                       </TableCell> */}
                         <TableCell align="center">
-                          {row.google_coordinate1}
-                          {row.google_coordinate2}
+                        <a
+                            href={`http://www.google.com/maps/place/${row.google_coordinate1}+,+${row.google_coordinate2}`}
+                            target=""
+                          >
+                            Location
+                        </a>
                         </TableCell>
                         <TableCell align="center">{row.address_reason}</TableCell>{" "}
                         <TableCell align="center">{row.address_type}</TableCell>{" "}
@@ -1639,7 +1666,7 @@ class Addresses extends Component {
       <>
         <Grid container spacing={3} justify="space-between">
           <Grid item xs={6}>
-            <h1>My Address</h1>
+            <h1> Address</h1>
           </Grid>
           <Grid item xs={12}>
             <Paper style={{ padding: 20 }} elevation={3}>

@@ -11,6 +11,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import "typeface-roboto";
 import Typography from "@material-ui/core/Typography";
+import Link from '@material-ui/core/Link';
 import LandingPage from "../Components/LandingPage/index";
 import {
   BrowserRouter as Router,
@@ -39,24 +40,45 @@ class signIn extends Component {
   UserGreeting(props) {
     return <h1>Welcome back!</h1>;
   }
-  usernamevalidcheck = (event) => {
-    if (event.target.value.length > 0) {
+  usernamecheck = () => {
+    console.log(this.state.username)
+    if (this.state.username.length > 0) {
       //  console.log(event.target.value);
-      this.setState({ usernamevalid: true }, this.formvalid);
+      this.setState({ usernamevalid: false },);
+    } else {
+      this.setState({ usernamevalid: true },);
     }
-  };
-  passwordvalidcheck = (event) => {
-    if (event.target.value.length > 0) {
+  }
+  passwordcheck = () => {
+    if (this.state.password.length > 0) {
       //  console.log(event.target.value);
-      this.setState({ passwordvalid: true }, this.formvalid);
+      this.setState({ passwordvalid: false },);
+    }
+    else {
+      this.setState({ passwordvalid: true },);
+    }
+  }
+
+  formvalid() {
+    console.log("username",this.state.username)
+    if (this.state.username.length > 0) {
+      //  console.log(event.target.value);
+      this.setState({ usernamevalid: false },);
+    } else {
+      this.setState({ usernamevalid: true },);
+    }
+    if (this.state.password.length > 0) {
+      //  console.log(event.target.value);
+      this.setState({ passwordvalid: false },);
+    }
+    else {
+      this.setState({ passwordvalid: true },);
+    }
+    if (!this.state.usernamevalid && !this.state.passwordvalid) {
+      this.onSignInButtonPress()
     }
   };
-  formvalid = () => {
-    if (this.state.usernamevalid && this.state.passwordvalid) {
-      // console.log("////////////////////////////////")
-      this.setState({ submitDisabled: "" });
-    }
-  };
+
 
   render() {
     const { classes } = this.props;
@@ -71,6 +93,9 @@ class signIn extends Component {
           justify="center"
         >
           <CssBaseline />
+          <Grid>
+
+          </Grid>
 
           <Grid
             container
@@ -101,6 +126,7 @@ class signIn extends Component {
                     variant="h4"
                     gutterBottom
                     color="primary"
+                    align="center"
                   >
                     Sign In
                   </Typography>
@@ -111,6 +137,7 @@ class signIn extends Component {
                         variant="outlined"
                         margin="normal"
                         required
+                        error={this.state.usernamevalid}
                         style={{ marginRight: 10 }}
                         margin="dense"
                         id="username"
@@ -121,10 +148,11 @@ class signIn extends Component {
                         autoFocus
                         fullWidth
                         size="medium"
+                        helperText={this.state.usernamevalid ? "please enter your username" : ""}
                         onChange={(event) =>
                           this.setState(
-                            { username: event.target.value },
-                            this.usernamevalidcheck(event)
+                            { username: event.target.value }, this.usernamecheck()
+
                           )
                         }
                       />
@@ -135,6 +163,7 @@ class signIn extends Component {
                         variant="outlined"
                         margin="normal"
                         required
+                        error={this.state.passwordvalid}
                         style={{ marginRight: 10 }}
                         margin="dense"
                         label="Password"
@@ -144,10 +173,11 @@ class signIn extends Component {
                         autoComplete="current-password"
                         fullWidth
                         size="small"
+                        helperText={this.state.passwordvalid ? "please enter your password" : ""}
                         onChange={(event) =>
                           this.setState(
-                            { password: event.target.value },
-                            this.passwordvalidcheck(event)
+                            { password: event.target.value }, this.passwordcheck()
+
                           )
                         }
                       />
@@ -157,10 +187,10 @@ class signIn extends Component {
                   <Grid container spacing={1} sm={12} md={12}>
                     <Grid item xs={12}>
                       <GradientButton
-                        onClick={this.onSignInButtonPress}
-                        title={"Sign In"}
+                        onClick={()=>this.formvalid()}
+                        title={"SignIn"}
                         center
-                        disabled={this.state.submitDisabled}
+                        // disabled={this.state.submitDisabled}
                         style={{
                           marginTop: 16,
                           marginBottom: 16,
@@ -168,17 +198,17 @@ class signIn extends Component {
                           // fontWeight: "bold",
                           // fontSize: "18",
                           // color:"white"
-                          
+
                         }}
                         fullWidth
                       />
                     </Grid>
 
                     <Grid container xs={12} justify="center">
-                      <RouterLink
-                        title="Don't have an account? Sign Up"
-                        to="/signup"
-                      />
+
+                      <Link title="Don't have an account? Sign Up" href="/signup" >
+                        Don't have an account?SignUp
+           </Link>
                     </Grid>
                   </Grid>
                 </form>

@@ -26,7 +26,7 @@ class App extends React.PureComponent {
           <div>
             <Switch>
               {/* Registration Paths */}
-              <Route exact path='/' component={PreRegistration} />
+              <Route exact path='/' component={signIn} />
               <Route exact path='/adminRegistration' component={AdminRegistration} />
               <Route exact path='/signUp' component={signUp} />
               <Route exact path='/signIn' component={signIn} />
