@@ -40,22 +40,25 @@ class signIn extends Component {
   UserGreeting(props) {
     return <h1>Welcome back!</h1>;
   }
-  usernamecheck = () => {
+  usernamecheck = (event) => {
+    this.setState(
+      { username: event.target.value })
     console.log(this.state.username)
-    if (this.state.username.length > 0) {
+    if (event.target.value .length === 0) {
       //  console.log(event.target.value);
-      this.setState({ usernamevalid: false },);
-    } else {
       this.setState({ usernamevalid: true },);
+     
+    } else {
+      this.setState({ usernamevalid: false },);
     }
   }
-  passwordcheck = () => {
-    if (this.state.password.length > 0) {
+  passwordcheck = (event) => {
+    if (event.target.value .length=== 0) {
       //  console.log(event.target.value);
-      this.setState({ passwordvalid: false },);
+      this.setState({ passwordvalid: true },);
     }
     else {
-      this.setState({ passwordvalid: true },);
+      this.setState({ passwordvalid: false },);
     }
   }
 
@@ -150,10 +153,9 @@ class signIn extends Component {
                         size="medium"
                         helperText={this.state.usernamevalid ? "please enter your username" : ""}
                         onChange={(event) =>
-                          this.setState(
-                            { username: event.target.value }, this.usernamecheck()
+                          this.usernamecheck(event)
 
-                          )
+                          
                         }
                       />
                     </Grid>
@@ -176,7 +178,7 @@ class signIn extends Component {
                         helperText={this.state.passwordvalid ? "please enter your password" : ""}
                         onChange={(event) =>
                           this.setState(
-                            { password: event.target.value }, this.passwordcheck()
+                            { password: event.target.value }, this.passwordcheck(event)
 
                           )
                         }
@@ -254,7 +256,7 @@ class signIn extends Component {
         this.setState({ response: data });
         if (data.user.is_admin) {
           this.props.history.push({
-            pathname: "/admin",
+            pathname: "/manageStates",
           });
         } else if (data.user.is_employer) {
           this.props.history.push({

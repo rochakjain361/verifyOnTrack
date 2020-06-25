@@ -26,14 +26,12 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { CircularProgress } from "@material-ui/core";
-
 import IconButton from "@material-ui/core/IconButton";
 import PhoneIcon from "@material-ui/icons/Phone";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import axios from "axios";
-
 let states = [];
 let Lga = [];
 
@@ -51,10 +49,11 @@ class index extends Component {
     selectedLga: [],
     sloading: false,
     disabled: true,
+    buttondiabled:true,
     deleteid: "",
   };
   async getLga() {
-    this.setState({ loading: true });
+
     await axios
       .get("http://3.22.17.212:8000/api/v1/resManager/address/states/", {
         headers: {
@@ -76,43 +75,45 @@ class index extends Component {
         this.setState({ selectedLga: Lga });
         console.log("lga", Lga);
       });
-    this.setState({ loading: false });
+
   }
   async componentDidMount() {
+    this.setState({ loading: true });
     token1 = localStorage.getItem("Token");
-token = "Token " + token1;
-id = localStorage.getItem("id");
-    this.getLga();
+    token = "Token " + token1;
+    id = localStorage.getItem("id");
+    await this.getLga();
+    this.setState({ loading: false });
   }
   async filterStates(state) {
     this.setState({ selectedstate: state });
-    this.setState({ loading: true });
-    if(state!=="none"){
-    await axios
-      .get(
-        "http://3.22.17.212:8000/api/v1/resManager/address/lgas/?stateId=" +
+
+    if (state !== "none") {
+      await axios
+        .get(
+          "http://3.22.17.212:8000/api/v1/resManager/address/lgas/?stateId=" +
           state,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res) => {
-        this.setState({ selectedLga: res.data });
-        console.log("lga", res.data);
-        this.setState({ disabled: false });
-      });
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        )
+        .then((res) => {
+          this.setState({ selectedLga: res.data });
+          console.log("lga", res.data);
+          this.setState({ disabled: false });
+        });
     }
-    else{
-      this.setState({selectedLga: Lga});
-      this.setState({disabled:true})
-      
+    else {
+      this.setState({ selectedLga: Lga });
+      this.setState({ disabled: true })
+
     }
-    this.setState({ loading: false });
+
   }
   async deleteLga(id) {
-     this.setState({ deleteDialogBox: false, selectedIndex: -1 });
+    this.setState({ deleteDialogBox: false, selectedIndex: -1 });
     await axios.delete(
       "http://3.22.17.212:8000/api/v1/resManager/address/lgas/" + id + "/",
       {
@@ -126,9 +127,9 @@ id = localStorage.getItem("id");
   displayTable() {
     return (
       <>
-        <Grid container justify="space-between" alignItems="center" spacing={4}>
+        <Grid container justify="space-between" justify="center" align="center" spacing={4}>
           <Grid item>
-            <Typography variant="h4">LGAs</Typography>
+            <Typography variant="h4" >Local Government Areas(LGA)</Typography>
           </Grid>
         </Grid>
 
@@ -169,13 +170,15 @@ id = localStorage.getItem("id");
               size="medium"
               fullWidth
               onChange={(event) => {
-                this.setState({ newLga: event.target.value });
+                event.target.value.length===0?this.setState({buttondiabled:true}):
+                this.setState({ newLga: event.target.value,buttondiabled:false });
               }}
             />
           </Grid>
           <Grid item>
             <Fab
               size="small"
+              disabled={this.state.buttondiabled}
               color="secondary"
               onClick={() => {
                 this.addLga();
@@ -248,7 +251,7 @@ id = localStorage.getItem("id");
                   this.deleteLga(this.state.deleteid);
                 }}
               >
-                Agree
+                Delete
               </Button>
               <Button
                 color="secondary"
@@ -257,7 +260,7 @@ id = localStorage.getItem("id");
                   this.setState({ deleteDialogBox: false, selectedIndex: -1 })
                 }
               >
-                Disagree
+                Cancel
               </Button>
             </DialogActions>
           </Dialog>
@@ -284,6 +287,8 @@ id = localStorage.getItem("id");
       )
       .then((response) => {
         console.log(response);
+        this.setState({ selectedstate:  "none" });
+        this.setState({ disabled: true })
         this.getLga();
       });
   }

@@ -8,6 +8,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import { CircularProgress } from "@material-ui/core";
 
 import IconButton from "@material-ui/core/IconButton";
 import PhoneIcon from '@material-ui/icons/Phone';
@@ -15,7 +16,11 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -38,13 +43,16 @@ class index extends Component {
     state = {
         allAddressTypes: [],
         selectedAddressType: [],
-
+loading:true,
         addressTypesArr: [],
         newAddressType: "",
+        butttondisabled:true,
+        deleteid:"",
+        deleteDialogBox:false,
     }
 
     async getAddressTypes() {
-        let response = await fetch(cors + api + "/api/v1/resManager/address/types",
+        let response = await fetch(  api + "/api/v1/resManager/address/types/",
             {
                 headers: {
                     'Authorization': token
@@ -59,7 +67,10 @@ class index extends Component {
     }
 
     async componentDidMount() {
-        this.getAddressTypes();
+        this.setState({loading:true})
+        
+        await this.getAddressTypes();
+        this.setState({loading:false})
     }
 
     render() {
@@ -74,6 +85,17 @@ class index extends Component {
         return (
             <div style={{ marginTop: 20 }}>
                 {/* <Paper style={{ padding: 20, height: '100vh' }}> */}
+                {this.state.loading?   <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        display="flex"
+        style={{ minHeight: "100vh" }}
+      >
+        <CircularProgress />
+      </Grid>:<>
                 <Grid container justify='space-between' alignItems='center' spacing={4}>
 
                     <Grid item>
@@ -124,13 +146,15 @@ class index extends Component {
                             size='medium'
                             fullWidth
                             onChange={(event) => {
-                                this.setState({ newAddressType: event.target.value });
+                                event.target.value.length===0?this.setState({butttondisabled:true}):
+                                this.setState({ newAddressType: event.target.value ,butttondisabled:false});
                             }}
-                            value={this.state.newAddressType}
+                            // value={this.state.newAddressType}
                         />
                     </Grid>
                     <Grid item>
                         <Fab
+                        disabled={this.state.butttondisabled}
                             onClick={() => {
                                 this.addAddressType();
                               }}
@@ -152,7 +176,7 @@ class index extends Component {
                                 {this.state.allAddressTypes.map((row, index) => (
                                     <TableRow key={row.id}>
                                         <TableCell align="left">{row.addressType}</TableCell>
-                                        <TableCell align="right"><Button variant='outlined' size='small' onClick = {()=>{this.deleteAddressType(row.id)}} color = 'secondary'>Delete</Button>
+                                        <TableCell align="right"><Button variant='outlined' size='small' onClick = {()=>{this.setState({deleteDialogBox:true,deleteid:row.id})}} color = 'secondary'>Delete</Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -161,7 +185,34 @@ class index extends Component {
                     </TableContainer>
 
                 </Grid>
+                </>}
                 {/* </Paper> */}
+                <Dialog
+            open={this.state.deleteDialogBox}
+            onClose={() => this.setState({ deleteDialogBox: false })}
+            aria-labelledby="form-dialog-title"
+          >
+            <DialogTitle id="alert-dialog-title">{"Are you sure you want to this AddressReason??"}</DialogTitle>
+            <DialogContent>
+             
+            </DialogContent>
+            <DialogActions style={{ padding: 15 }}>
+              <Button style={{ width: 85 }} color="primary" variant="contained"  onClick={() =>
+               this.deleteAddressType(this.state.deleteid)
+                }>
+              Delete
+              </Button>
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={() =>
+                  this.setState({ deleteDialogBox: false, selectedIndex: -1 })
+                }
+              >
+               Cancel
+              </Button>
+            </DialogActions>
+          </Dialog>
             </div>
         )
     }
@@ -196,6 +247,7 @@ class index extends Component {
     }
 
     async deleteAddressType(index) {
+        this.setState({deleteDialogBox: false})
         try {
             let response = await axios.delete(
               "http://3.22.17.212:8000/api/v1/resManager/address/types/" +

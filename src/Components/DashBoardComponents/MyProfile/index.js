@@ -70,7 +70,7 @@ class MyProfile extends Component {
       .then((res) => {
         result = res.data;
         this.setState({ result: result })
-        console.log(result);
+        console.log("Profile Data",result);
       });
   }
   async componentDidMount() {
@@ -382,7 +382,7 @@ class MyProfile extends Component {
                         src={this.state.result[0].picture}
                         style={{ height: "12rem", width: "12rem" }}
                       >
-                        <img src="/images/sampleuserphoto.jpg" width="185" height="185" alt="" />
+                        {/* <img src="/images/sampleuserphoto.jpg" width="185" height="185" alt="" /> */}
                       </Avatar>
                     </Grid>
                     <Grid container
@@ -530,12 +530,12 @@ class MyProfile extends Component {
                 <TableRow key={row.id}>
                   <TableCell align="center">
                     <Avatar src={row.picture}>
-                      <img
+                      {/* <img
                         src="/images/sampleuserphoto.jpg"
                         width="40"
                         height="40"
                         alt=""
-                      />
+                      /> */}
                     </Avatar>
                   </TableCell>
                   <TableCell align="center"> {row.firstname} {row.middlename} {row.surname}</TableCell>
