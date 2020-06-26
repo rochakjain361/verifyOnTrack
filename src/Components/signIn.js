@@ -21,6 +21,10 @@ import {
 } from "react-router-dom";
 import ValidationMessage from "./ValidationMessage";
 import Alert from "@material-ui/lab/Alert";
+import CardMedia from '@material-ui/core/CardMedia';
+import { Box } from "@material-ui/core";
+
+
 
 class signIn extends Component {
   constructor(props) {
@@ -44,16 +48,16 @@ class signIn extends Component {
     this.setState(
       { username: event.target.value })
     console.log(this.state.username)
-    if (event.target.value .length === 0) {
+    if (event.target.value.length === 0) {
       //  console.log(event.target.value);
       this.setState({ usernamevalid: true },);
-     
+
     } else {
       this.setState({ usernamevalid: false },);
     }
   }
   passwordcheck = (event) => {
-    if (event.target.value .length=== 0) {
+    if (event.target.value.length === 0) {
       //  console.log(event.target.value);
       this.setState({ passwordvalid: true },);
     }
@@ -63,7 +67,7 @@ class signIn extends Component {
   }
 
   formvalid() {
-    console.log("username",this.state.username)
+    console.log("username", this.state.username)
     if (this.state.username.length > 0) {
       //  console.log(event.target.value);
       this.setState({ usernamevalid: false },);
@@ -87,37 +91,46 @@ class signIn extends Component {
     const { classes } = this.props;
 
     return (
-      <>
+      <Grid container
+        direction="row"
+        className={classes.root}
+        justify="center">
         <Grid
           container
-          component="main"
-          className={classes.root}
+          align="center"
           direction="row"
-          justify="center"
-        >
+          justify="center">
           <CssBaseline />
-          <Grid>
+
+          <Grid container
+            xs={6}
+            direction="column"
+            justify="center"
+            align="center" >
+            <Grid
+              item >
+
+              <img src="/images/VERIFY.png" width="185" height="185" alt="" />
+              {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Suspendisse faucibus interdum posuere lorem ipsum dolor sit. Sapien et ligula ullamcorper malesuada proin libero. Sed felis eget velit aliquet sagittis. Odio tempor orci dapibus ultrices in iaculis nunc. Et sollicitudin ac orci phasellus. Lectus arcu bibendum at varius vel pharetra vel turpis. Quis lectus nulla at volutpat diam ut. Quis ipsum suspendisse ultrices gravida dictum fusce ut. Lacus sed turpis tincidunt id aliquet risus feugiat. Viverra adipiscing at in tellus integer feugiat scelerisque. Vitae suscipit tellus mauris a diam maecenas sed enim ut. Odio ut sem nulla pharetra diam sit. At imperdiet dui accumsan sit amet nulla facilisi. At in tellus integer feugiat scelerisque varius morbi. Viverra vitae congue eu consequat ac. Lacus vel facilisis */}
+            </Grid>
 
           </Grid>
-
           <Grid
             container
-            xs={false}
-            sm={12}
-            md={12}
+            xs={6}
+            sm={6}
+            md={6}
             square
+spacing={3}
             className={classes.mainImage}
             direction="row"
             justify="center"
-          >
-            <Grid
-              item
-              style={{ marginTop: 40, marginBottom: 40 }}
-              sm={6}
-              md={6}
+            align="center">
+            <Grid  item
             >
+
               <Card
-                style={{ padding: 50, marginLeft: 40, marginRight: 40 }}
+                style={{ padding: 50, marginLeft: 0, marginRight: 20 }}
                 raised={true}
               >
                 {this.state.warning ? (
@@ -130,6 +143,7 @@ class signIn extends Component {
                     gutterBottom
                     color="primary"
                     align="center"
+                    
                   >
                     Sign In
                   </Typography>
@@ -155,7 +169,7 @@ class signIn extends Component {
                         onChange={(event) =>
                           this.usernamecheck(event)
 
-                          
+
                         }
                       />
                     </Grid>
@@ -189,7 +203,7 @@ class signIn extends Component {
                   <Grid container spacing={1} sm={12} md={12}>
                     <Grid item xs={12}>
                       <GradientButton
-                        onClick={()=>this.formvalid()}
+                        onClick={() => this.formvalid()}
                         title={"SignIn"}
                         center
                         // disabled={this.state.submitDisabled}
@@ -218,12 +232,10 @@ class signIn extends Component {
             </Grid>
           </Grid>
         </Grid>
-        {/* {this.state.response ? (
-          <LandingPage data={this.state.response} />
-        ) : (
-          null
-        )} */}
-      </>
+      </Grid>
+
+
+
     );
   }
 

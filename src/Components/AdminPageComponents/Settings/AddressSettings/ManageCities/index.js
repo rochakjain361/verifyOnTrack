@@ -27,7 +27,8 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { CircularProgress } from "@material-ui/core";
-
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 let token1 = "";
 let token = "";
 let id = "";
@@ -42,7 +43,9 @@ let states = [];
 let Lga = [];
 let Cities = [];
 // let addlga=[];
-
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 class index extends Component {
   state = {
     states: "",
@@ -57,6 +60,8 @@ class index extends Component {
     filterlgavalue: "",
     filtercity: [],
     butondisable:true,
+    snackbar:"",
+    snackbarresponse:"",
   };
   async filterforlga(state) {
     this.setState({ filterstate: state });
@@ -123,7 +128,16 @@ class index extends Component {
           Authorization: token,
         },
       }
-    );
+    ).then((response)=>
+    {
+      this.setState({ snackbar:true,snackbarresponse:response });
+  
+    }).catch((error)=>{
+      if (error.response) {
+        this.setState({snackbar:true,snackbarresponse:error.response})
+      }
+
+    })
     this.getLga();
   }
   async getStateLga(){
@@ -216,8 +230,12 @@ class index extends Component {
       )
       .then((response) => {
         console.log(response);
+        this.setState({ snackbar:true,snackbarresponse:response });
         this.getLga();
-      });
+      })  .catch((error) => {
+        if (error.response) {
+          this.setState({snackbar:true,snackbarresponse:error.response})
+        }})
   }
   render() {
 
@@ -316,6 +334,18 @@ class index extends Component {
                   </Fab>
 
                 </Grid>
+                <Grid>
+
+<Snackbar open={this.state.snackbar} autoHideDuration={6000} onClick={() => { this.setState({ snackbar: !this.state.snackbar }) }}>
+{this.state.snackbarresponse.status === 201 ?  <Alert onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }} severity="success">
+    City added sucessfully
+</Alert>:this.state.snackbarresponse.status===204? <Alert onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }} severity="success">
+    City deleted sucessfully
+</Alert>:<Alert onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }} severity="error">
+  Something went wrong please try again
+</Alert>}
+</Snackbar>
+</Grid> 
                 <Grid container align="center" justify="center" direction="row">
                   <Typography variant="h5" gutterBottom >
                     Filter city

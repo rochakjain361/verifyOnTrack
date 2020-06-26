@@ -26,6 +26,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { CircularProgress } from "@material-ui/core";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import IconButton from "@material-ui/core/IconButton";
 import PhoneIcon from "@material-ui/icons/Phone";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -39,6 +41,9 @@ let token1 = "";
 let token = "";
 let id = "";
 let result = [];
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 class index extends Component {
   state = {
     states: "",
@@ -51,6 +56,8 @@ class index extends Component {
     disabled: true,
     buttondiabled:true,
     deleteid: "",
+    snackbar:"",
+    snackbarresponse:"",
   };
   async getLga() {
 
@@ -114,14 +121,21 @@ class index extends Component {
   }
   async deleteLga(id) {
     this.setState({ deleteDialogBox: false, selectedIndex: -1 });
-    await axios.delete(
+    axios.delete(
       "http://3.22.17.212:8000/api/v1/resManager/address/lgas/" + id + "/",
       {
         headers: {
           Authorization: token,
         },
       }
-    );
+    ).then((response)=>{
+      this.setState({ selectedstate:  "none",snackbar:true,snackbarresponse:response });
+    }).catch((error)=>{
+      if (error.response) {
+        this.setState({snackbar:true,snackbarresponse:error.response})
+      }
+
+    })
     this.getLga();
   }
   displayTable() {
@@ -187,7 +201,19 @@ class index extends Component {
               <AddIcon />
             </Fab>
           </Grid>
+        
+        <Grid>
 
+          <Snackbar open={this.state.snackbar} autoHideDuration={6000} onClick={() => { this.setState({ snackbar: !this.state.snackbar }) }}>
+          {this.state.snackbarresponse.status === 201 ?  <Alert onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }} severity="success">
+              Lga added sucessfully
+      </Alert>:this.state.snackbarresponse.status===204? <Alert onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }} severity="success">
+              Lga deleted sucessfully
+      </Alert>:<Alert onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }} severity="error">
+            Something went wrong please try again
+      </Alert>}
+          </Snackbar>
+        </Grid> 
           <TableContainer
             component={Paper}
             style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }}
@@ -287,10 +313,15 @@ class index extends Component {
       )
       .then((response) => {
         console.log(response);
-        this.setState({ selectedstate:  "none" });
+
+        this.setState({ selectedstate:  "none",snackbar:true,snackbarresponse:response });
         this.setState({ disabled: true })
         this.getLga();
-      });
+      })
+      .catch((error) => {
+        if (error.response) {
+          this.setState({snackbar:true,snackbarresponse:error.response})
+        }})
   }
   isloading() {
     return (

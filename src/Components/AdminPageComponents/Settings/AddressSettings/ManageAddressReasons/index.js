@@ -27,7 +27,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import DeleteIcon from '@material-ui/icons/Delete';
 import axios from "axios";
-
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 const token1 = localStorage.getItem("Token");
 const token = "Token " + token1;
 const id = localStorage.getItem("id");
@@ -37,7 +38,9 @@ const cors = "https://cors-anywhere.herokuapp.com/"
 const styles = theme => ({
 
 })
-
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 class index extends Component {
 
     state = {
@@ -50,6 +53,8 @@ class index extends Component {
         newAddressReason: "",
         deleteid:"",
         deleteDialogBox: false,
+        snackbar: "",
+        snackbarresponse: "",
     }
 
     async getAddressReasons() {
@@ -163,7 +168,18 @@ class index extends Component {
                             <AddIcon />
                         </Fab>
                     </Grid>
+                    <Grid>
 
+<Snackbar open={this.state.snackbar} autoHideDuration={6000} onClick={() => { this.setState({ snackbar: !this.state.snackbar }) }}>
+    {this.state.snackbarresponse.status === 201 ? <Alert onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }} severity="success">
+        AddressType added sucessfully
+</Alert> : this.state.snackbarresponse.status === 204 ? <Alert onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }} severity="success">
+AddressType deleted sucessfully
+</Alert> : <Alert onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }} severity="error">
+                Something went wrong please try again
+</Alert>}
+</Snackbar>
+</Grid>
                     <TableContainer component={Paper} style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }} elevation={5}>
                         <Table stickyHeader>
                             <TableHead>
@@ -235,12 +251,14 @@ class index extends Component {
                     })
                 }
             );
-            response = await response.json();
+            this.setState({  snackbar: true, snackbarresponse: response });
+           
             console.log('AddAddressSuccess:', response);
             await this.getAddressReasons();
             this.setState({newAddressReason: ""})
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
+            this.setState({ snackbar: true, snackbarresponse: error.response })
         }
     }
 
@@ -258,11 +276,12 @@ class index extends Component {
                 },
               }
             );
-            response = await response.json();
+            this.setState({  snackbar: true, snackbarresponse: response });
             console.log('delAddressSuccess:', response);
             await this.getAddressReasons();
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
+            this.setState({ snackbar: true, snackbarresponse: error.response })
         }
           this.getAddressReasons();
     }
