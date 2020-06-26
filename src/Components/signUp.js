@@ -476,6 +476,11 @@ class signUp extends Component {
       console.log("..................................................");
       console.log("response", response);
       response = await response.json();
+      if(response.token){
+        this.props.history.push({
+          pathname:"/signin",
+        });
+      }
     } catch (error) {
       console.log("[!ON_REGISTER] " + error);
     }

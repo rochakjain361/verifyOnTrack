@@ -374,7 +374,7 @@ class MyProfile extends Component {
                     </Grid>
                     <Grid item xs={9}>
                       <Typography variant='h2' 
-                      // style={{ fontFamily: "Montserrat", textTransform: 'capitalize' }}
+                      style={{ textTransform: 'capitalize' }}
                       >
                         {this.state.result[0].firstname} {this.state.result[0].middlename} {this.state.result[0].surname}
                       </Typography>

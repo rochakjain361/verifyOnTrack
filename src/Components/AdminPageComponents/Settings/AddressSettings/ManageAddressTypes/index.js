@@ -198,9 +198,7 @@ class index extends Component {
     async deleteAddressType(index) {
         try {
             let response = await axios.delete(
-              "http://3.22.17.212:8000/api/v1/resManager/address/types/" +
-                index +
-                "/",
+              "http:///3.22.17.212:8000/api/v1/resManager/address/types/"+ index +"/",
               {
                
                 headers: {

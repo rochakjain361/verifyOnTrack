@@ -8,6 +8,11 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 import IconButton from "@material-ui/core/IconButton";
 import PhoneIcon from '@material-ui/icons/Phone';
@@ -39,9 +44,14 @@ class index extends Component {
     state = {
         allPhoneTypes: [],
         selectedPhoneType: [],
+        phoneTypeSelected: "",
+        enteredType: "",
 
         phoneTypesArr: [],
         newPhoneType: "",
+        deleteDialogBox: false,
+        deleteid: "",
+        selectedIndex: "",
     }
 
     async getPhoneTypes() {
@@ -84,34 +94,33 @@ class index extends Component {
                     </Grid>
 
                     <Grid item xs={6}>
-                        <FormControl fullWidth>
-                            <InputLabel id="managePhoneTypes" style={{ marginLeft: 10 }}>Search Phone Types</InputLabel>
-                            <Select
-                                variant="outlined"
-                                labelId="managePhoneTypes"
-                                id="managePhoneTypes"
-                                value={this.state.selectedPhoneType}
-                                onChange={event => this.setState({ selectedPhoneType: event.target.value })}
-                            >
-                                {
-                                    this.state.phoneTypesArr.map(phone => <MenuItem key={phone} value={phone}>{phone}</MenuItem>)
-
-                                }
-                            </Select>
-                        </FormControl>
-                    </Grid>
-
-                    {/* <Grid item xs={6}>
                         <Autocomplete
-                            size='small'
-                            {...allPhoneTypesList}
-                            id="addressTypes"
+                            options={this.state.allPhoneTypes}
+                            getOptionLabel={(option) => option.phoneType}
+                            size="small"
+                            id="phoneTypes"
                             Username
-                            onChange={event => this.setState({ selectedPhoneType: event.target.value })}
-                            value={this.state.selectedPhoneType}
-                            renderInput={(params) => <TextField {...params} label="Search phone types" margin="normal" variant='outlined' size='small' />}
+                            value={this.state.phoneTypeSelected}
+                            onChange={(event, value) => {
+                                this.setState({ phoneTypeSelected: value });
+                                console.log("phoneTypeSelected", value);
+                            }}
+                            inputValue={this.state.enteredtext}
+                            onInputChange={(event, newInputValue) => {
+                                this.setState({ enteredType: newInputValue });
+                                // console.log(newInputValue);
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Phone Types"
+                                    margin="normal"
+                                    variant="outlined"
+                                    size="small"
+                                />
+                            )}
                         />
-                    </Grid> */}
+                    </Grid>
 
                 </Grid>
 
@@ -134,7 +143,7 @@ class index extends Component {
                         <Fab
                             onClick={() => {
                                 this.addPhoneType();
-                              }}
+                            }}
                             size="small"
                             color="secondary">
                             <AddIcon />
@@ -153,7 +162,14 @@ class index extends Component {
                                 {this.state.allPhoneTypes.map((row, index) => (
                                     <TableRow key={row.id}>
                                         <TableCell align="left">{row.phoneType}</TableCell>
-                                        <TableCell align="right"><Button variant='outlined' size='small' onClick = {()=>{this.deletePhoneType(row.id)}} color = 'secondary'>Delete</Button>
+                                        <TableCell align="right"><Button variant='outlined' size='small' 
+                                        onClick={() => {
+                                            this.setState({
+                                              deleteDialogBox: true,
+                                              selectedIndex: index,
+                                              deleteid: row.id,
+                                            });
+                                          }} color='secondary'>Delete</Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -163,6 +179,7 @@ class index extends Component {
 
                 </Grid>
                 {/* </Paper> */}
+                {this.deleteDialog()}
             </div>
         )
     }
@@ -175,7 +192,7 @@ class index extends Component {
         console.log('Body data:', bodyData)
 
         try {
-            let response = await fetch( api + '/api/v1/resManager/phone/types/',
+            let response = await fetch(api + '/api/v1/resManager/phone/types/',
                 {
                     method: 'POST',
                     headers: {
@@ -190,48 +207,64 @@ class index extends Component {
             response = await response.json();
             console.log('AddPhoneSuccess:', response);
             await this.getPhoneTypes();
-            this.setState({newPhoneType: ""})
+            this.setState({ newPhoneType: "" })
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
         }
     }
 
-    // async deletePhoneType(index) {
-    //     try {
-    //         let response = await fetch(api + "/api/v1/resManager/phone/types/" + index + "/",
-    //             {
-    //                 method: 'DELETE',
-    //                 headers: {
-    //                     'Authorization': token,
-    //                     // 'Content-Type': 'application/json'
-    //                 }
-    //             }
-    //         );
-    //         response = await response.json();
-    //         console.log('delPhoneSuccess:', response);
-    //         await this.getPhoneTypes();
-    //     } catch (error) {
-    //         console.log("[!ON_REGISTER] " + error);
-    //     }
-    // }
+    deleteDialog(selectedIndex) {
+        return(
+        <div>
+        <Dialog
+        open={this.state.deleteDialogBox}
+        onClose={() => this.setState({ deleteDialogBox: false })}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+          Current entry will be deleted, do you want to
+        continue?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions style={{ padding: 15 }}>
+          <Button
+            style={{ width: 85 }}
+            color="primary"
+            variant="contained"
+            onClick={() => {
+                this.deletePhoneType(this.state.deleteid);
+                this.setState({deleteDialogBox: false})
+              }}
+          >
+            Delete
+          </Button>
+          <Button
+            color="secondary"
+            variant="contained"
+            onClick={() => {
+                this.setState({deleteDialogBox: false})
+              }}
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+        );
+    }
 
-    async deletePhoneType(index)  {
-        try {
-            let response = await axios.delete(api + "/api/v1/resManager/phone/types/" + index + "/",
-              {
-               
+    async deletePhoneType(id) {
+        // console.log("......",id)
+        await axios.delete(
+            api + "/api/v1/resManager/phone/types/" + id + "/",
+            {
                 headers: {
-                  Authorization: token,
-                  'Content-Type': 'application/json'
+                    Authorization: token,
                 },
-              }
-            );
-            response = await response.json();
-            console.log('delPhoneSuccess:', response);
-            await this.getPhoneTypes();
-        } catch (error) {
-            console.log("[!ON_REGISTER] " + error);
-        }
+            }
+        );
         await this.getPhoneTypes();
     }
 }

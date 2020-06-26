@@ -13,3 +13,54 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
+
+// const SingInContainer = ({ message, variant}) => {
+//   const [open, setSnackBarState] = useState(false);
+//   const handleClose = (reason) => {
+//       if (reason === 'clickaway') {
+//         return;
+//       }
+//       setSnackBarState(false)
+
+//     };
+
+//   if (variant) {
+//       setSnackBarState(true);
+//   }
+//   return (
+//       <div>
+//       <SnackBar
+//           open={open}
+//           handleClose={handleClose}
+//           variant={variant}
+//           message={message}
+//           />
+//       <SignInForm/>
+//       </div>
+//   )
+// }
+
+// const SingInContainer = ({ message, variant}) => {
+//   const [open, setSnackBarState] = useState(variant ? true : false); 
+//                                 // or useState(!!variant); 
+//                                 // or useState(Boolean(variant));
+//   const handleClose = (reason) => {
+//       if (reason === 'clickaway') {
+//         return;
+//       }
+//       setSnackBarState(false)
+
+//     };
+
+//   return (
+//       <div>
+//       <SnackBar
+//           open={open}
+//           handleClose={handleClose}
+//           variant={variant}
+//           message={message}
+//           />
+//       <SignInForm/>
+//       </div>
+//   )
+// }

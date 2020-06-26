@@ -448,7 +448,7 @@ class index extends Component {
                 {this.state.opencodes
                   ? codes.map((row, index) => (
                       <TableRow key={row.id}>
-                        <TableCell align="left">{row.createdOn}</TableCell>
+                        <TableCell align="left">{new Date(row.createdOn).toDateString()}</TableCell>
                         <TableCell align="left">{row.codeString}</TableCell>
                         <TableCell align="left">
                           {row.employer_company_field}

@@ -15,14 +15,45 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import ExpandLess from "@material-ui/icons/ExpandLess";
+import ExpandMore from "@material-ui/icons/ExpandMore";
+import StarBorder from "@material-ui/icons/StarBorder";
+import Collapse from "@material-ui/core/Collapse";
+import { Container, Button, Grid } from "@material-ui/core";
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
+import axios from "axios";
+
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import PersonIcon from "@material-ui/icons/Person";
+import WorkIcon from "@material-ui/icons/Work";
+import MessageIcon from "@material-ui/icons/Message";
+import DashboardIcon from "@material-ui/icons/Dashboard";
+import CodeIcon from "@material-ui/icons/Code";
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+
+import Dashboard from "./Components/DashBoardComponents/Dashboard";
+import Addresses from "./Components/DashBoardComponents/Addresses";
+import Identities from "./Components/DashBoardComponents/Identities";
+import Phones from "./Components/DashBoardComponents/Phones";
+import MyJobProfile from "./Components/DashBoardComponents/MyJobProfile";
+import Inbox from "./Components/DashBoardComponents/Messages/Inbox";
+import Outbox from "./Components/DashBoardComponents/Messages/Outbox";
+import MyProfile from "./Components/DashBoardComponents/MyProfile";
+import AccessCodes from "./Components/DashBoardComponents/MyCodes/AccessCodes";
+import EmployementCodes from "./Components/DashBoardComponents/MyCodes/EmployementCodes";
 
 const drawerWidth = 240;
+let token1 = "";
+
+let token = "";
+let id = "";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
+    flexGrow: 1,
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -49,6 +80,8 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
     flexShrink: 0,
     whiteSpace: 'nowrap',
+    width: "inherit",
+    background: "#424242",
   },
   drawerOpen: {
     width: drawerWidth,
@@ -56,6 +89,7 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
+    background: "#424242",
   },
   drawerClose: {
     transition: theme.transitions.create('width', {
@@ -67,6 +101,14 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       width: theme.spacing(9) + 1,
     },
+    background: "#424242",
+  },
+  textColor: {
+    color: "white",
+  },
+  drawerPaper: {
+    width: "inherit",
+    background: "#424242",
   },
   toolbar: {
     display: 'flex',
@@ -76,9 +118,22 @@ const useStyles = makeStyles((theme) => ({
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
   },
+  nested: {
+    paddingLeft: 72,
+  },
+  link: {
+    textDecoration: "none",
+    // color: theme.palette.text.primary
+  },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
   },
 }));
 
@@ -86,6 +141,13 @@ export default function MiniDrawer() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [auth, setAuth] = React.useState(true);
+  // const [anchorEl, setAnchorEl] = React.useState(false);
+
+  const [open1, setOpen1] = React.useState(false);
+  const [open2, setOpen2] = React.useState(false);
+  const [open3, setOpen3] = React.useState(false);
+  const [open4, setOpen4] = React.useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -93,9 +155,39 @@ export default function MiniDrawer() {
 
   const handleDrawerClose = () => {
     setOpen(false);
+    setOpen1(false)
+    setOpen2(false)
+    setOpen3(false)
   };
 
+  const logout = async () => {
+    console.log(token);
+    let headers = {
+      headers: {
+        Authorization: token,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    await axios
+      .post(
+        "http://3.22.17.212:8000/api/v1/accounts/auth/logout",
+        {},
+
+        headers
+      )
+      .then((response) => {
+        localStorage.clear();
+        console.log(response);
+      });
+
+    console.log("////////////////////////////////////////");
+    this.props.history.push({
+      pathname: "/signin",
+    });
+  }
+
   return (
+    <Router>
     <div className={classes.root}>
       <CssBaseline />
       <AppBar
@@ -105,7 +197,7 @@ export default function MiniDrawer() {
         })}
       >
         <Toolbar>
-          <IconButton
+        <IconButton
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
@@ -116,9 +208,10 @@ export default function MiniDrawer() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
-            Mini variant drawer
+          <Typography variant="h6" className={classes.title}>
+            Verify OnTrac
           </Typography>
+          <Button onClick={logout} color="inherit" variant='outlined' size='medium'>Logout</Button>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -136,54 +229,241 @@ export default function MiniDrawer() {
       >
         <div className={classes.toolbar}>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            {theme.direction === 'rtl' ? <ChevronRightIcon style={{ color: "white" }} /> : <ArrowBackIcon style={{ color: "white" }} />}
           </IconButton>
         </div>
+
+        <Link to="/dashboard" className={classes.link}>
+          <ListItem button>
+            <ListItemIcon>
+              <DashboardIcon style={{ color: "white" }} />
+            </ListItemIcon>
+            <ListItemText
+              primary={"Dashboard"}
+              className={classes.textColor}
+            />
+          </ListItem>
+        </Link>
+
         <Divider />
-        <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
+        <ListItem
+          button
+          onClick={() => setOpen1(!open1)}
+        >
+          <ListItemIcon>
+            <PersonIcon style={{ color: "white" }} />
+          </ListItemIcon>
+          <ListItemText primary="My Info" className={classes.textColor} />
+          {open1 ? (
+            <ExpandLess style={{ color: "white" }} />
+          ) : (
+              <ExpandMore style={{ color: "white" }} />
+            )}
+        </ListItem>
+
+        <Collapse in={open1} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <Link to="/profiles" className={classes.link}>
+              <ListItem button className={classes.nested}>
+                <ListItemText
+                  primary="Profiles"
+                  className={classes.textColor}
+                />
+              </ListItem>
+            </Link>
+
+            <Link to="/addresses" className={classes.link}>
+              <ListItem button className={classes.nested}>
+                <ListItemText
+                  primary="Addresses"
+                  className={classes.textColor}
+                />
+              </ListItem>
+            </Link>
+
+            <Link to="/identities" className={classes.link}>
+              <ListItem button className={classes.nested}>
+                <ListItemText
+                  primary="Identities"
+                  className={classes.textColor}
+                />
+              </ListItem>
+            </Link>
+
+            <Link to="/phones" className={classes.link}>
+              <ListItem button className={classes.nested}>
+                <ListItemText
+                  primary="Phones"
+                  className={classes.textColor}
+                />
+              </ListItem>
+            </Link>
+          </List>
+        </Collapse>
+
         <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
+
+        <Link to="/myjobprofile" className={classes.link}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <WorkIcon style={{ color: "white" }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="My Job Profile"
+                    className={classes.textColor}
+                  />
+                </ListItem>
+              </Link>
+
+              <Divider />
+
+              <ListItem
+                button
+                onClick={() => setOpen2(!open2)}
+              >
+                <ListItemIcon>
+                  <CodeIcon style={{ color: "white" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="My Codes"
+                  className={classes.textColor}
+                />
+                {open2 ? (
+                  <ExpandLess style={{ color: "white" }} />
+                ) : (
+                  <ExpandMore style={{ color: "white" }} />
+                )}
+              </ListItem>
+
+              <Collapse in={open2} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <Link to="/employeeAccessCodes" className={classes.link}>
+                    <ListItem button className={classes.nested}>
+                      <ListItemText
+                        primary="Access Codes"
+                        className={classes.textColor}
+                      />
+                    </ListItem>
+                  </Link>
+
+                  <Link to="/employeeEmployementCodes" className={classes.link}>
+                    <ListItem button className={classes.nested}>
+                      <ListItemText
+                        primary="Employement Codes"
+                        className={classes.textColor}
+                      />
+                    </ListItem>
+                  </Link>
+                </List>
+              </Collapse>
+
+              <Divider />
+
+        <ListItem
+          button
+          onClick={() => setOpen3(!open3)}
+        >
+          <ListItemIcon>
+            <MessageIcon style={{ color: "white" }} />
+          </ListItemIcon>
+          <ListItemText
+            primary="Messages"
+            className={classes.textColor}
+          />
+          {open3 ? (
+            <ExpandLess style={{ color: "white" }} />
+          ) : (
+              <ExpandMore style={{ color: "white" }} />
+            )}
+        </ListItem>
+
+        <Collapse in={open3} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <Link to="/employeeInbox" className={classes.link}>
+              <ListItem button className={classes.nested}>
+                <ListItemText
+                  primary="Inbox"
+                  className={classes.textColor}
+                />
+              </ListItem>
+            </Link>
+
+            <Link to="/employeeOutbox" className={classes.link}>
+              <ListItem button className={classes.nested}>
+                <ListItemText
+                  primary="Outbox"
+                  className={classes.textColor}
+                />
+              </ListItem>
+            </Link>
+          </List>
+        </Collapse>
       </Drawer>
       <main className={classes.content}>
-        <div className={classes.toolbar} />
-        <Typography paragraph>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum
-          facilisis leo vel. Risus at ultrices mi tempus imperdiet. Semper risus in hendrerit
-          gravida rutrum quisque non tellus. Convallis convallis tellus id interdum velit laoreet id
-          donec ultrices. Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-          adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra nibh cras.
-          Metus vulputate eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo quis
-          imperdiet massa tincidunt. Cras tincidunt lobortis feugiat vivamus at augue. At augue eget
-          arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem
-          donec massa sapien faucibus et molestie ac.
-        </Typography>
-        <Typography paragraph>
-          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper eget nulla
-          facilisi etiam dignissim diam. Pulvinar elementum integer enim neque volutpat ac
-          tincidunt. Ornare suspendisse sed nisi lacus sed viverra tellus. Purus sit amet volutpat
-          consequat mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis risus sed
-          vulputate odio. Morbi tincidunt ornare massa eget egestas purus viverra accumsan in. In
-          hendrerit gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem et
-          tortor. Habitant morbi tristique senectus et. Adipiscing elit duis tristique sollicitudin
-          nibh sit. Ornare aenean euismod elementum nisi quis eleifend. Commodo viverra maecenas
-          accumsan lacus vel facilisis. Nulla posuere sollicitudin aliquam ultrices sagittis orci a.
-        </Typography>
-      </main>
+            <Toolbar />
+            <Switch>
+              <Route exact path="/dashboard">
+                <Container style={{ backgroundColor: "#eeeeee " }}>
+                  <Dashboard />
+                </Container>
+              </Route>
+
+              <Route exact path="/profiles">
+                <Container>
+                  <MyProfile />
+                </Container>
+              </Route>
+
+              <Route exact path="/addresses">
+                <Container>
+                  <Addresses />
+                </Container>
+              </Route>
+
+              <Route exact path="/identities">
+                <Container>
+                  <Identities />
+                </Container>
+              </Route>
+
+              <Route exact path="/Phones">
+                <Container>
+                  <Phones />
+                </Container>
+              </Route>
+
+              <Route exact path="/myjobprofile">
+                <Container>
+                  <MyJobProfile />
+                </Container>
+              </Route>
+
+              <Route exact path="/employeeInbox">
+                <Container>
+                  <Inbox />
+                </Container>
+              </Route>
+
+              <Route exact path="/employeeOutbox">
+                <Container>
+                  <Outbox />
+                </Container>
+              </Route>
+
+              <Route exact path="/employeeAccessCodes">
+                <Container>
+                  <AccessCodes />
+                </Container>
+              </Route>
+
+              <Route exact path="/employeeEmployementCodes">
+                <Container>
+                  <EmployementCodes />
+                </Container>
+              </Route>
+            </Switch>
+          </main>
     </div>
+    </Router>
   );
 }
