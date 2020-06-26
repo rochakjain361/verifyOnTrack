@@ -110,7 +110,7 @@ class signIn extends Component {
             <Grid
               item >
 
-              <img src="/images/VERIFY.png" width="185" height="185" alt="" />
+              <img src="/images/VERIFY.png" width="385" height="385" alt="" />
             </Grid>
             <Grid item>
 
@@ -165,7 +165,7 @@ class signIn extends Component {
 
                   </Grid>
 
-                  <Grid item xs={12} md={12}>
+                  <Grid item xs={12} md={10}>
                     <TextField
                       variant="standard"
                       margin="normal"
@@ -190,7 +190,7 @@ class signIn extends Component {
                     />
                   </Grid>
 
-                  <Grid item xs={12} md={12}>
+                  <Grid item xs={12} md={10}>
                     <TextField
                       variant="standard"
                       margin="normal"
@@ -216,7 +216,7 @@ class signIn extends Component {
                   </Grid>
 
 
-                  <Grid container spacing={1} sm={12} md={12}>
+                  <Grid container spacing={1} sm={12} md={10}>
                     <Grid item xs={12}>
                       <GradientButton
                         onClick={() => this.formvalid()}
@@ -314,13 +314,14 @@ const styles = (theme) => ({
     height: "100vh",
   },
   mainImage: {
-    backgroundImage: "url(/images/mainImage2.jpg)",
+    // backgroundImage: "url(/images/mainImage2.jpg)",
     backgroundRepeat: "no-repeat",
-    backgroundColor:
-      theme.palette.type === "light"
-        ? theme.palette.grey[50]
-        : theme.palette.grey[900],
-    backgroundSize: "cover",
+    
+    backgroundColor:"#3f50b5",
+    //   theme.palette.type === "light"
+    //     ? theme.palette.grey[50]
+    //     : theme.palette.grey[900],
+    // backgroundSize: "cover",
     backgroundPosition: "center",
   },
 });
