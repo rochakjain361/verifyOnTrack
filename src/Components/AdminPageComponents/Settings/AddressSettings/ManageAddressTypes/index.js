@@ -177,7 +177,7 @@ class index extends Component {
                                     {this.state.snackbarresponse.status === 201 ? <Alert onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }} severity="success">
                                         AddressType added sucessfully
 </Alert> : this.state.snackbarresponse.status === 204 ? <Alert onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }} severity="success">
-AddressType deleted sucessfully
+                                            AddressType deleted sucessfully
 </Alert> : <Alert onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }} severity="error">
                                                 Something went wrong please try again
 </Alert>}
@@ -256,8 +256,8 @@ AddressType deleted sucessfully
                     })
                 }
             );
-            this.setState({  snackbar: true, snackbarresponse: response });
-           
+            this.setState({ snackbar: true, snackbarresponse: response });
+
             console.log('AddAddressSuccess:', response);
             await this.getAddressTypes();
 
@@ -285,8 +285,8 @@ AddressType deleted sucessfully
                 }
             );
             console.log('delAddressSuccess:', response);
-            this.setState({  snackbar: true, snackbarresponse: response });
-           
+            this.setState({ snackbar: true, snackbarresponse: response });
+
             await this.getAddressTypes();
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);

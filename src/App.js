@@ -15,7 +15,7 @@ import EmployerLandingPage from './Components/EmployerLandingPage'
 import AdminRegistration from './Components/AdminRegistration'
 import theme from './theme';
 import dash from './dash'
-import dash2 from './dash2'
+import Stepper from './Components/WorkFlow/Stepper'
 
 class App extends React.PureComponent {
   render() {
@@ -31,7 +31,7 @@ class App extends React.PureComponent {
               <Route exact path='/signUp' component={signUp} />
               <Route exact path='/signIn' component={signIn} />
               <Route exact path='/dash' component={dash} />
-              <Route exact path='/dash2' component={dash2} />
+              <Route exact path='/workflow' component={Stepper} />
 
               {/* Employee PAGE PATHS */}
               <Route exact path='/Homepage' component={LandingPage} />

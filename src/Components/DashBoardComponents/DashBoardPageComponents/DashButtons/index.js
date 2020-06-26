@@ -33,7 +33,7 @@ async getevaldata(){
     .then((res) => {
       // result = res.data;
       this.setState({ result: res.data });
-      console.table("needeval data", this.state.result.needsEval);
+      // console.table("needeval data", this.state.result.needsEval);
     });
 }
   async componentDidMount() {

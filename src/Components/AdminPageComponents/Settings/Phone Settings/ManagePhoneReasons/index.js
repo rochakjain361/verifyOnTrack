@@ -13,6 +13,8 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 import IconButton from "@material-ui/core/IconButton";
 import PhoneIcon from '@material-ui/icons/Phone';
@@ -38,6 +40,9 @@ const cors = "https://cors-anywhere.herokuapp.com/"
 const styles = theme => ({
 
 })
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 class index extends Component {
 
@@ -52,6 +57,8 @@ class index extends Component {
         deleteDialogBox: false,
         deleteid: "",
         selectedIndex: "",
+        snackbar: "",
+        snackbarresponse: "",
     }
 
     async getPhoneReasons() {
@@ -122,7 +129,7 @@ class index extends Component {
                         />
                     </Grid>
 
-                    
+
 
                 </Grid>
 
@@ -152,6 +159,8 @@ class index extends Component {
                         </Fab>
                     </Grid>
 
+                    {this.snackBar()}
+
                     <TableContainer component={Paper} style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }} elevation={5}>
                         <Table stickyHeader>
                             <TableHead>
@@ -164,14 +173,14 @@ class index extends Component {
                                 {this.state.allPhoneReasons.map((row, index) => (
                                     <TableRow key={row.id}>
                                         <TableCell align="left">{row.phoneReason}</TableCell>
-                                        <TableCell align="right"><Button variant='outlined' size='small' 
-                                        onClick={() => {
-                                            this.setState({
-                                              deleteDialogBox: true,
-                                              selectedIndex: index,
-                                              deleteid: row.id,
-                                            });
-                                          }} color='secondary'>Delete</Button>
+                                        <TableCell align="right"><Button variant='outlined' size='small'
+                                            onClick={() => {
+                                                this.setState({
+                                                    deleteDialogBox: true,
+                                                    selectedIndex: index,
+                                                    deleteid: row.id,
+                                                });
+                                            }} color='secondary'>Delete</Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -186,47 +195,92 @@ class index extends Component {
         )
     }
 
-    deleteDialog(selectedIndex) {
-        return(
-        <div>
-        <Dialog
-        open={this.state.deleteDialogBox}
-        onClose={() => this.setState({ deleteDialogBox: false })}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-          Current entry will be deleted, do you want to
-        continue?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions style={{ padding: 15 }}>
-          <Button
-            style={{ width: 85 }}
-            color="primary"
-            variant="contained"
-            onClick={() => {
-                this.deletePhoneReason(this.state.deleteid);
-                this.setState({deleteDialogBox: false})
-              }}
-          >
-            Delete
-          </Button>
-          <Button
-            color="secondary"
-            variant="contained"
-            onClick={() => {
-                this.setState({deleteDialogBox: false})
-              }}
-          >
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+    snackBar() {
+        return (
+            <Snackbar open={this.state.snackbar} autoHideDuration={1000} onClick={() => { this.setState({ snackbar: !this.state.snackbar }) }}>
+                                    {this.state.snackbarresponse.status === 201 ? <Alert onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }} severity="success">
+                                        AddressType added sucessfully
+</Alert> : this.state.snackbarresponse.status === 204 ? <Alert onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }} severity="success">
+                                            AddressType deleted sucessfully
+</Alert> : <Alert onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }} severity="error">
+                                                Something went wrong please try again
+</Alert>}
+                                </Snackbar>
         );
     }
+
+    deleteDialog(selectedIndex) {
+        return (
+            <div>
+                <Dialog
+                    open={this.state.deleteDialogBox}
+                    onClose={() => this.setState({ deleteDialogBox: false })}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Current entry will be deleted, do you want to
+                            continue?
+          </DialogContentText>
+                    </DialogContent>
+                    <DialogActions style={{ padding: 15 }}>
+                        <Button
+                            style={{ width: 85 }}
+                            color="primary"
+                            variant="contained"
+                            onClick={() => {
+                                this.deletePhoneReason(this.state.deleteid);
+                                this.setState({ deleteDialogBox: false })
+                            }}
+                        >
+                            Delete
+          </Button>
+                        <Button
+                            color="secondary"
+                            variant="contained"
+                            onClick={() => {
+                                this.setState({ deleteDialogBox: false })
+                            }}
+                        >
+                            Cancel
+          </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        );
+    }
+
+    // async addPhoneReason() {
+    //     let bodyData = {
+    //         'phoneReason': this.state.newPhoneReason,
+    //     }
+
+    //     console.log('Body data:', bodyData)
+
+    //     try {
+    //         let response = await fetch(api + '/api/v1/resManager/phone/reasons/',
+    //             {
+    //                 method: 'POST',
+    //                 headers: {
+    //                     'Authorization': token,
+    //                     'Content-Reason': 'application/json'
+    //                 },
+    //                 body: JSON.stringify({
+    //                     'phoneReason': this.state.newPhoneReason,
+    //                 })
+    //             }
+    //         );
+    //         response = await response.json();
+    //         console.log('AddPhoneSuccess:', response);
+    //         await this.getPhoneReasons();
+    //         this.setState({ newPhoneReason: "" })
+    //         this.setState({ snackbar: true, snackbarresponse: response });
+    //     } catch (error) {
+    //         console.log("[!ON_REGISTER] " + error);
+    //         this.setState({ snackbar: true, snackbarresponse: error.response })
+    //     }
+    // }
 
     async addPhoneReason() {
         let bodyData = {
@@ -241,33 +295,48 @@ class index extends Component {
                     method: 'POST',
                     headers: {
                         'Authorization': token,
-                        'Content-Reason': 'application/json'
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         'phoneReason': this.state.newPhoneReason,
                     })
                 }
             );
-            response = await response.json();
-            console.log('AddPhoneSuccess:', response);
+            this.setState({ snackbar: true, snackbarresponse: response });
+
+            console.log('Success:', response);
             await this.getPhoneReasons();
-            this.setState({ newPhoneReason: "" })
+
+
+
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
+            this.setState({ snackbar: true, snackbarresponse: error.response })
         }
     }
-    
+
     async deletePhoneReason(id) {
-        // console.log("......",id)
-        await axios.delete(
-            api + "/api/v1/resManager/phone/reasons/" + id + "/",
-            {
-                headers: {
-                    Authorization: token,
-                },
-            }
-        );
-        await this.getPhoneReasons();
+        this.setState({ deleteDialogBox: false })
+        try {
+            let response = await axios.delete(
+                api + "/api/v1/resManager/phone/reasons/" + id + "/",
+                {
+
+                    headers: {
+                        Authorization: token,
+                        // 'Content-Type': 'application/json'
+                    },
+                }
+            );
+            console.log('Success:', response);
+            this.setState({ snackbar: true, snackbarresponse: response });
+
+            await this.getPhoneReasons();
+        } catch (error) {
+            console.log("[!ON_REGISTER] " + error);
+            this.setState({ snackbar: true, snackbarresponse: error.response })
+        }
+        this.getPhoneReasons();
     }
 }
 
