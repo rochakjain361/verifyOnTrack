@@ -50,6 +50,7 @@ class index extends Component {
     return (
       <div style={{ marginTop: 10 }}>
         <Grid container justify="center">
+          <Grid item>
           <ButtonGroup
           style={{marginTop: 20}}
             disableElevation
@@ -82,6 +83,7 @@ class index extends Component {
               Outbox
             </Button>
           </ButtonGroup>
+          </Grid>
         </Grid>
         {this.state.inboxButtonDisable
           ? this.messageInbox()
@@ -89,8 +91,6 @@ class index extends Component {
       </div>
     );
   }
-
-  
 
   messageInbox() {
     return (

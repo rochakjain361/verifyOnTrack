@@ -8,6 +8,11 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 import IconButton from "@material-ui/core/IconButton";
 import PhoneIcon from '@material-ui/icons/Phone';
@@ -39,9 +44,14 @@ class index extends Component {
     state = {
         allPhoneReasons: [],
         selectedPhoneReasons: [],
+        phoneReasonSelected: "",
+        enteredReason: "",
 
         phoneReasonsArr: [],
         newPhoneReason: "",
+        deleteDialogBox: false,
+        deleteid: "",
+        selectedIndex: "",
     }
 
     async getPhoneReasons() {
@@ -84,34 +94,35 @@ class index extends Component {
                     </Grid>
 
                     <Grid item xs={6}>
-                        <FormControl fullWidth>
-                            <InputLabel id="managePhoneReasons" style={{ marginLeft: 10 }}>Search Phone Reasons</InputLabel>
-                            <Select
-                                variant="outlined"
-                                labelId="managePhoneReasons"
-                                id="managePhoneReasons"
-                                value={this.state.selectedPhoneReasons}
-                                onChange={event => this.setState({ selectedPhoneReasons: event.target.value })}
-                            >
-                                {
-                                    this.state.phoneReasonsArr.map(phone => <MenuItem key={phone} value={phone}>{phone}</MenuItem>)
-
-                                }
-                            </Select>
-                        </FormControl>
+                        <Autocomplete
+                            options={this.state.allPhoneReasons}
+                            getOptionLabel={(option) => option.phoneReason}
+                            size="small"
+                            id="phoneReasons"
+                            Username
+                            value={this.state.phoneReasonSelected}
+                            onChange={(event, value) => {
+                                this.setState({ phoneReasonSelected: value });
+                                console.log("phoneReasonSelected", value);
+                            }}
+                            inputValue={this.state.enteredtext}
+                            onInputChange={(event, newInputValue) => {
+                                this.setState({ enteredReason: newInputValue });
+                                // console.log(newInputValue);
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Phone Reasons"
+                                    margin="normal"
+                                    variant="outlined"
+                                    size="small"
+                                />
+                            )}
+                        />
                     </Grid>
 
-                    {/* <Grid item xs={6}>
-                        <Autocomplete
-                            size='small'
-                            {...allphoneReasonsList}
-                            id="addressTypes"
-                            Username
-                            onChange={event => this.setState({ selectedPhoneReasons: event.target.value })}
-                            value={this.state.selectedPhoneReasons}
-                            renderInput={(params) => <TextField {...params} label="Search phone types" margin="normal" variant='outlined' size='small' />}
-                        />
-                    </Grid> */}
+                    
 
                 </Grid>
 
@@ -153,7 +164,14 @@ class index extends Component {
                                 {this.state.allPhoneReasons.map((row, index) => (
                                     <TableRow key={row.id}>
                                         <TableCell align="left">{row.phoneReason}</TableCell>
-                                        <TableCell align="right"><Button variant='outlined' size='small' onClick={() => { this.deletePhoneReason(row.id) }} color='secondary'>Delete</Button>
+                                        <TableCell align="right"><Button variant='outlined' size='small' 
+                                        onClick={() => {
+                                            this.setState({
+                                              deleteDialogBox: true,
+                                              selectedIndex: index,
+                                              deleteid: row.id,
+                                            });
+                                          }} color='secondary'>Delete</Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -163,8 +181,51 @@ class index extends Component {
 
                 </Grid>
                 {/* </Paper> */}
+                {this.deleteDialog()}
             </div>
         )
+    }
+
+    deleteDialog(selectedIndex) {
+        return(
+        <div>
+        <Dialog
+        open={this.state.deleteDialogBox}
+        onClose={() => this.setState({ deleteDialogBox: false })}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+          Current entry will be deleted, do you want to
+        continue?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions style={{ padding: 15 }}>
+          <Button
+            style={{ width: 85 }}
+            color="primary"
+            variant="contained"
+            onClick={() => {
+                this.deletePhoneReason(this.state.deleteid);
+                this.setState({deleteDialogBox: false})
+              }}
+          >
+            Delete
+          </Button>
+          <Button
+            color="secondary"
+            variant="contained"
+            onClick={() => {
+                this.setState({deleteDialogBox: false})
+              }}
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+        );
     }
 
     async addPhoneReason() {
@@ -180,7 +241,7 @@ class index extends Component {
                     method: 'POST',
                     headers: {
                         'Authorization': token,
-                        'Content-Type': 'application/json'
+                        'Content-Reason': 'application/json'
                     },
                     body: JSON.stringify({
                         'phoneReason': this.state.newPhoneReason,
@@ -195,43 +256,17 @@ class index extends Component {
             console.log("[!ON_REGISTER] " + error);
         }
     }
-
-    // async deletePhoneReason(index) {
-    //     try {
-    //         let response = await fetch(api + "/api/v1/resManager/phone/reasons/" + index + "/",
-    //             {
-    //                 method: 'DELETE',
-    //                 headers: {
-    //                     'Authorization': token,
-    //                     // 'Content-Type': 'application/json'
-    //                 }
-    //             }
-    //         );
-    //         response = await response.json();
-    //         console.log('delPhoneSuccess:', response);
-    //         await this.getPhoneReasons();
-    //     } catch (error) {
-    //         console.log("[!ON_REGISTER] " + error);
-    //     }
-    // }
-
-    async deletePhoneReason(index)  {
-        try {
-            let response = await axios.delete(api + "/api/v1/resManager/phone/reasons/" + index + "/",
-              {
-               
+    
+    async deletePhoneReason(id) {
+        // console.log("......",id)
+        await axios.delete(
+            api + "/api/v1/resManager/phone/reasons/" + id + "/",
+            {
                 headers: {
-                  Authorization: token,
-                  'Content-Type': 'application/json'
+                    Authorization: token,
                 },
-              }
-            );
-            response = await response.json();
-            console.log('delPhoneSuccess:', response);
-            await this.getPhoneReasons();
-        } catch (error) {
-            console.log("[!ON_REGISTER] " + error);
-        }
+            }
+        );
         await this.getPhoneReasons();
     }
 }

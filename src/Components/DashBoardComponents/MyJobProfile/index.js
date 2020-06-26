@@ -482,7 +482,7 @@ class myJobProfile extends Component {
                 <DialogTitle id="form-dialog-title">Edit your job profile</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Enter the details of your Job profile to be edited
+                        Enter the details of your Job profile to be updated
                             </DialogContentText>
 
                     <Grid container justify='flex-start' direction='row' alignItems='center' spacing={3}>
@@ -495,11 +495,10 @@ class myJobProfile extends Component {
                                 <Select
                                     labelId="company"
                                     id="company"
-                                    defaultValue={this.state.editJobDialogCompany}
+                                    value={this.state.editJobDialogCompany}
                                     onChange={
                                         event => {
-                                            console.log('editEvent:', event.target.value)
-                                            this.setState({ editJobDialogCompany: event.target.value })
+                                            console.log('editCompany:', this.state.editJobDialogCompany)
                                         }}
 
                                     label="company"
@@ -512,7 +511,6 @@ class myJobProfile extends Component {
                                 </Select>
                             </FormControl>
                         </Grid>
-
 
                         <Grid item xs={3} style={{ marginTop: 15 }}>
                             <FormControlLabel
@@ -688,7 +686,7 @@ class myJobProfile extends Component {
     viewDetailsDialog() {
         return (
             <Dialog open={this.state.viewDialogOpen} onClose={() => this.setState({ viewDialogOpen: false })} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Job details</DialogTitle>
+                <DialogTitle id="form-dialog-title">Job History</DialogTitle>
                 {/* <DialogContent> */}
 
                 <Table stickyHeader>
@@ -768,7 +766,7 @@ class myJobProfile extends Component {
                                             }
                                             }
                                         >
-                                            View Details
+                                            History
                                     </Button>
 
                                         <Button
@@ -795,7 +793,7 @@ class myJobProfile extends Component {
                                                     editJobDialogRating: this.state.myJobHistory[index].companyRating,
                                                     editJobDialogUpdateReason: this.state.myJobHistory[index].update_reason
                                                 });
-                                                console.log("hello", this.state.editJobDialogCompany);
+                                                console.log('editCompany:', this.state.editJobDialogCompany)
 
                                             }
                                                 // this.setState({
@@ -804,7 +802,7 @@ class myJobProfile extends Component {
                                                 // })
                                             }
                                         >
-                                            Edit
+                                            Update
                                     </Button>
                                     </TableCell>
                                 </TableRow>

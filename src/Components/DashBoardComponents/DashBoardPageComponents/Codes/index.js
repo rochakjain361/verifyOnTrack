@@ -69,7 +69,7 @@ class index extends Component {
         alignItems="center">
           <Typography>No Codes added</Typography>
         </Grid>:(
-          <div style={{ marginTop: 10 }}>
+          <div>
             <Grid container justify="center">
               <ButtonGroup
                 disableElevation
@@ -87,7 +87,7 @@ class index extends Component {
                     })
                   }
                 >
-                  AccessCodes
+                  Employement Codes
                 </Button>
                 <Button
                   style={{ minWidth: 150 }}
@@ -99,10 +99,11 @@ class index extends Component {
                     })
                   }
                 >
-                  EmployementCodes
+                  Access Codes
                 </Button>
               </ButtonGroup>
             </Grid>
+            
             <Grid
               container
               direction="row"
@@ -125,8 +126,8 @@ class index extends Component {
               </Grid>
             </Grid>
             {this.state.accessCodesButtonDisable
-              ? this.accessCodes()
-              : this.employementCodes()}
+              ? this.employementCodes()
+              : this.accessCodes()}
           </div>
         )}
       </>
