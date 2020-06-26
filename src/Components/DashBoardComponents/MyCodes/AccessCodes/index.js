@@ -34,9 +34,9 @@ import FormLabel from "@material-ui/core/FormLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import axios from "axios";
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+let token1 = "";
+let token = "";
+let id = "";
 // let result = [];
 let codes = [];
 let pendingcodes = [];
@@ -71,7 +71,9 @@ class index extends Component {
     phone: false,
     jobHistory: false,
     viewDialog: false,
-    codedetails:""
+    codedetails:"",
+    codes:[],
+    pendingcodes:[],
   };
 
   isloading() {
@@ -259,6 +261,9 @@ class index extends Component {
     );
   }
   async componentDidMount() {
+     token1 = localStorage.getItem("Token");
+ token = "Token " + token1;
+ id = localStorage.getItem("id");
     await axios
       .get("http://3.22.17.212:8000/api/v1/codes/access/codes", {
         headers: {
@@ -267,6 +272,7 @@ class index extends Component {
       })
       .then((res) => {
         codes = res.data;
+        this.setState({codes:res.data})
         console.log("codes", codes);
       });
     await axios
@@ -277,6 +283,7 @@ class index extends Component {
       })
       .then((res) => {
         pendingcodes = res.data;
+        this.setState({pendingcodes:res.data})
         console.log("pendingcodes", pendingcodes);
       });
     await axios
@@ -446,16 +453,16 @@ class index extends Component {
               </TableHead>
               <TableBody>
                 {this.state.opencodes
-                  ? codes.map((row, index) => (
+                  ? this.state.codes.map((row, index) => (
                       <TableRow key={row.id}>
-                        <TableCell align="left">{new Date(row.createdOn).toDateString()}</TableCell>
+                        <TableCell align="left"> {new Date(row.createdOn).toDateString()}</TableCell>   
                         <TableCell align="left">{row.codeString}</TableCell>
                         <TableCell align="left">
                           {row.employer_company_field}
                         </TableCell>
                         <TableCell align="left">{row.codeStatus}</TableCell>
                         <TableCell align="left">
-                          {row.statusChangeDate}
+                        {new Date(row.statusChangeDate).toDateString()}
                         </TableCell>
                         <TableCell align="left">
                           <Button
@@ -503,14 +510,14 @@ class index extends Component {
                     ))
                   : pendingcodes.map((row, index) => (
                       <TableRow key={row.id}>
-                        <TableCell align="left">{row.createdOn}</TableCell>
+                        <TableCell align="left"> {new Date(row.createdOn).toDateString()}</TableCell>
                         <TableCell align="left">{row.codeString}</TableCell>
                         <TableCell align="left">
                           {row.employer_company_field}
                         </TableCell>
                         <TableCell align="left">{row.codeStatus}</TableCell>
                         <TableCell align="left">
-                          {row.statusChangeDate}
+                          {new Date(row.statusChangeDate).toDateString()}
                         </TableCell>
                         <TableCell align="left">
                           <Button

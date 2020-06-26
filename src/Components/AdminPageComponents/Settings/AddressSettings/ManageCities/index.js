@@ -27,7 +27,8 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { CircularProgress } from "@material-ui/core";
-
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 let token1 = "";
 let token = "";
 let id = "";
@@ -42,11 +43,14 @@ let states = [];
 let Lga = [];
 let Cities = [];
 // let addlga=[];
-
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 class index extends Component {
   state = {
     states: "",
     deleteDialogBox: false,
+    deletecity:"",
     selectedstate: "",
     loading: false,
     addlga: [],
@@ -55,6 +59,9 @@ class index extends Component {
     filterlga: [],
     filterlgavalue: "",
     filtercity: [],
+    butondisable:true,
+    snackbar:"",
+    snackbarresponse:"",
   };
   async filterforlga(state) {
     this.setState({ filterstate: state });
@@ -97,48 +104,76 @@ class index extends Component {
 
   }
   async getLga() {
-    this.setState({ loading: true });
+   
     await axios
-      .get("http://3.22.17.212:8000/api/v1/resManager/address/states/", {
+    .get("http://3.22.17.212:8000/api/v1/resManager/address/cities/", {
+      headers: {
+        Authorization: token,
+      },
+    })
+    .then((res) => {
+      Cities = res.data;
+      this.setState({ filtercity: Cities });
+      console.log("cities", Cities);
+    });
+    
+    
+  }
+  async deletecities(id) {
+    this.setState({ deleteDialogBox: false, selectedIndex: -1 });
+    await axios.delete(
+      "http://3.22.17.212:8000/api/v1/resManager/address/cities/" + id + "/",
+      {
         headers: {
           Authorization: token,
         },
-      })
-      .then((res) => {
-        states = res.data;
-        console.log("states", states);
-      });
-    await axios
-      .get("http://3.22.17.212:8000/api/v1/resManager/address/lgas/", {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        Lga = res.data;
+      }
+    ).then((response)=>
+    {
+      this.setState({ snackbar:true,snackbarresponse:response });
+  
+    }).catch((error)=>{
+      if (error.response) {
+        this.setState({snackbar:true,snackbarresponse:error.response})
+      }
 
-        this.setState({ selectedLga: Lga, });
-        console.log("lga", Lga);
-      });
+    })
+    this.getLga();
+  }
+  async getStateLga(){
     await axios
-      .get("http://3.22.17.212:8000/api/v1/resManager/address/cities/", {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        Cities = res.data;
-        this.setState({ filtercity: Cities });
-        console.log("cities", Cities);
-      });
+    .get("http://3.22.17.212:8000/api/v1/resManager/address/states/", {
+      headers: {
+        Authorization: token,
+      },
+    })
+    .then((res) => {
+      states = res.data;
+      console.log("states", states);
+    });
+    await axios
+    .get("http://3.22.17.212:8000/api/v1/resManager/address/lgas/", {
+      headers: {
+        Authorization: token,
+      },
+    })
+    .then((res) => {
+      Lga = res.data;
 
-    this.setState({ loading: false });
+      this.setState({ selectedLga: Lga, });
+      console.log("lga", Lga);
+    });
+ 
+
   }
   async componentDidMount() {
-     token1 = localStorage.getItem("Token");
-     token = "Token " + token1;
-     id = localStorage.getItem("id");
-    this.getLga();
+    this.setState({ loading: true });
+    token1 = localStorage.getItem("Token");
+    token = "Token " + token1;
+    id = localStorage.getItem("id");
+    await this.getLga();
+    await this.getStateLga();
+    this.setState({ loading: false });
   }
   isloading() {
     return (
@@ -195,8 +230,12 @@ class index extends Component {
       )
       .then((response) => {
         console.log(response);
+        this.setState({ snackbar:true,snackbarresponse:response });
         this.getLga();
-      });
+      })  .catch((error) => {
+        if (error.response) {
+          this.setState({snackbar:true,snackbarresponse:error.response})
+        }})
   }
   render() {
 
@@ -212,19 +251,23 @@ class index extends Component {
                 container
                 justify="space-between"
                 alignItems="center"
+                justify="center"
                 spacing={4}
               >
                 <Grid item>
                   <Typography variant="h4">Cities</Typography>
                 </Grid>
               </Grid>
-
+              <Typography variant="h4" gutterBottom align="center" justify="center">
+                Add a city
+              </Typography>
               <Grid
                 container
                 justify="flex-start"
                 direction="row"
                 alignItems="center"
-                style={{ marginTop: 20 }}
+                style={{ paddingTop: 10 }}
+                style={{ paddingBottom: 10 }}
                 spacing={2}
               >
                 <Grid item xs={3}>
@@ -267,12 +310,13 @@ class index extends Component {
                 </Grid>
                 <Grid item xs={3}>
                   <TextField
-                    size="small"
+                    size="medium"
                     label="Add City"
                     variant="outlined"
                     fullWidth
                     onChange={(event) => {
-                      this.setState({ addcity: event.target.value });
+                      event.target.value.length>0?
+                      this.setState({ addcity: event.target.value,butondisable:false }):this.setState({butondisable:true})
                     }}
                   />
                 </Grid>
@@ -280,6 +324,7 @@ class index extends Component {
                 <Grid item xs={3}>
                   <Fab
                     size="small"
+                    disabled={this.state.butondisable}
                     color="secondary"
                     onClick={() => {
                       this.addcity();
@@ -287,52 +332,79 @@ class index extends Component {
                   >
                     <AddIcon />
                   </Fab>
-                </Grid>
-                <Grid item xs={4}>
-                  <FormControl fullWidth variant="outlined" size="medium">
-                    <InputLabel id="states">State</InputLabel>
-                    <Select
-                      labelId="states"
-                      id="states"
-                      value={this.state.filterstate}
-                      onChange={(event) => {
-                        this.filterforlga(event.target.value);
-                      }}
-                      label="states"
-                      fullWidth
-                    >
-                      <MenuItem selected value="none">
-                        None
-                    </MenuItem>
-                      {states.map((state) => (
-                        <MenuItem value={state.id}>{state.stateName}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={4}>
-                  <FormControl fullWidth variant="outlined" size="medium">
-                    <InputLabel id="states">Lga</InputLabel>
-                    <Select
-                      labelId="Lga"
-                      id="Lga"
-                      value={this.state.filterlgavalue}
-                      onChange={(event) => {
-                        this.filtercity(event.target.value);
-                      }}
-                      label="Lga"
-                      fullWidth
-                    >
-                      <MenuItem selected value="none">
-                        None
-                    </MenuItem>
-                      {this.state.filterlga.map((lga) => (
-                        <MenuItem value={lga.id}>{lga.lgaName}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
 
+                </Grid>
+                <Grid>
+
+<Snackbar open={this.state.snackbar} autoHideDuration={6000} onClick={() => { this.setState({ snackbar: !this.state.snackbar }) }}>
+{this.state.snackbarresponse.status === 201 ?  <Alert onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }} severity="success">
+    City added sucessfully
+</Alert>:this.state.snackbarresponse.status===204? <Alert onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }} severity="success">
+    City deleted sucessfully
+</Alert>:<Alert onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }} severity="error">
+  Something went wrong please try again
+</Alert>}
+</Snackbar>
+</Grid> 
+                <Grid container align="center" justify="center" direction="row">
+                  <Typography variant="h5" gutterBottom >
+                    Filter city
+                  </Typography>
+                </Grid>
+                <Grid
+                  container
+                  justify="flex-start"
+                  direction="row"
+                  alignItems="center"
+                  style={{ marginTop: 10 }}
+                  spacing={2}
+                >
+                  <Grid item xs={4}>
+
+                    <FormControl fullWidth variant="outlined" size="small">
+                      <InputLabel id="states">State</InputLabel>
+                      <Select
+                        labelId="states"
+                        id="states"
+                        value={this.state.filterstate}
+                        onChange={(event) => {
+                          this.filterforlga(event.target.value);
+                        }}
+                        label="states"
+                        fullWidth
+                      >
+                        <MenuItem selected value="none">
+                          None
+                    </MenuItem>
+                        {states.map((state) => (
+                          <MenuItem value={state.id}>{state.stateName}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <FormControl fullWidth variant="outlined" size="small">
+                      <InputLabel id="states">Lga</InputLabel>
+                      <Select
+                        labelId="Lga"
+                        id="Lga"
+                        value={this.state.filterlgavalue}
+                        onChange={(event) => {
+                          this.filtercity(event.target.value);
+                        }}
+                        label="Lga"
+                        fullWidth
+                      >
+                        <MenuItem selected value="none">
+                          None
+                    </MenuItem>
+                        {this.state.filterlga.map((lga) => (
+                          <MenuItem value={lga.id}>{lga.lgaName}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </Grid>
                 <TableContainer
                   component={Paper}
                   style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }}
@@ -350,9 +422,22 @@ class index extends Component {
                         <TableRow key={row.id}>
                           <TableCell align="center">{row.cityName}</TableCell>
                           <TableCell align="center">
-                            <IconButton color="default" aria-label="delete">
+                            {/* <IconButton color="default" aria-label="delete">
                               <DeleteIcon fontSize="medium" />
-                            </IconButton>
+                            </IconButton> */}
+                            <Button
+                              color="primary"
+                              variant="outlined"
+                              onClick={() =>
+                                this.setState({
+                                  deleteDialogBox: true,
+                                  selectedIndex: index,
+                                  deletecity: row.id,
+                                })
+                              }
+                            >
+                              Delete
+                      </Button>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -369,16 +454,15 @@ class index extends Component {
             onClose={() => this.setState({ deleteDialogBox: false })}
             aria-labelledby="form-dialog-title"
           >
-            <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
+            <DialogTitle id="alert-dialog-title">{"Are you sure you want to delete this city?"}</DialogTitle>
             <DialogContent>
-              <DialogContentText>
-                All associated cities will also be deleted, do you want to
-                continue?
-              </DialogContentText>
+             
             </DialogContent>
             <DialogActions style={{ padding: 15 }}>
-              <Button style={{ width: 85 }} color="primary" variant="contained">
-                Agree
+              <Button style={{ width: 85 }} color="primary" variant="contained"  onClick={() =>
+                this.deletecities(this.state.deletecity)
+                }>
+              Delete
               </Button>
               <Button
                 color="secondary"
@@ -387,7 +471,7 @@ class index extends Component {
                   this.setState({ deleteDialogBox: false, selectedIndex: -1 })
                 }
               >
-                Disagree
+               Cancel
               </Button>
             </DialogActions>
           </Dialog>

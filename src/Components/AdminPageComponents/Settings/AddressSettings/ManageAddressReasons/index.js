@@ -8,14 +8,18 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from "@material-ui/core/IconButton";
 import PhoneIcon from '@material-ui/icons/Phone';
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-
+import { CircularProgress } from "@material-ui/core";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -23,7 +27,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import DeleteIcon from '@material-ui/icons/Delete';
 import axios from "axios";
-
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 const token1 = localStorage.getItem("Token");
 const token = "Token " + token1;
 const id = localStorage.getItem("id");
@@ -33,7 +38,9 @@ const cors = "https://cors-anywhere.herokuapp.com/"
 const styles = theme => ({
 
 })
-
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 class index extends Component {
 
     state = {
@@ -41,11 +48,17 @@ class index extends Component {
         selectedAddressReasons: [],
 
         addressReasonsArr: [],
+        disabledbutton:true,
+        loading:true,
         newAddressReason: "",
+        deleteid:"",
+        deleteDialogBox: false,
+        snackbar: "",
+        snackbarresponse: "",
     }
 
     async getAddressReasons() {
-        let response = await fetch(cors + api + "/api/v1/resManager/address/reasons",
+        let response = await fetch(api + "/api/v1/resManager/address/reasons/",
             {
                 headers: {
                     'Authorization': token
@@ -60,7 +73,9 @@ class index extends Component {
     }
 
     async componentDidMount() {
-        this.getAddressReasons();
+    
+        await this.getAddressReasons();
+        this.setState({loading:false});
     }
 
     render() {
@@ -75,6 +90,17 @@ class index extends Component {
         return (
             <div style={{ marginTop: 20 }}>
                 {/* <Paper style={{ padding: 20, height: '100vh' }}> */}
+                {this.state.loading?  <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        display="flex"
+        style={{ minHeight: "100vh" }}
+      >
+        <CircularProgress />
+      </Grid>:<>
                 <Grid container justify='space-between' alignItems='center' spacing={4}>
 
                     <Grid item>
@@ -125,13 +151,15 @@ class index extends Component {
                             size='medium'
                             fullWidth
                             onChange={(event) => {
-                                this.setState({ newAddressReason: event.target.value });
+                                event.target.value.length===0?this.setState({disabledbutton:true }):
+                                this.setState({ newAddressReason: event.target.value,disabledbutton:false });
                             }}
-                            value={this.state.newAddressReason}
+                            // value={this.state.newAddressReason}
                         />
                     </Grid>
                     <Grid item>
                         <Fab
+                        disabled={this.state.disabledbutton}
                             onClick={() => {
                                 this.addAddressReason();
                               }}
@@ -140,7 +168,18 @@ class index extends Component {
                             <AddIcon />
                         </Fab>
                     </Grid>
+                    <Grid>
 
+<Snackbar open={this.state.snackbar} autoHideDuration={6000} onClick={() => { this.setState({ snackbar: !this.state.snackbar }) }}>
+    {this.state.snackbarresponse.status === 201 ? <Alert onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }} severity="success">
+        AddressType added sucessfully
+</Alert> : this.state.snackbarresponse.status === 204 ? <Alert onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }} severity="success">
+AddressType deleted sucessfully
+</Alert> : <Alert onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }} severity="error">
+                Something went wrong please try again
+</Alert>}
+</Snackbar>
+</Grid>
                     <TableContainer component={Paper} style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }} elevation={5}>
                         <Table stickyHeader>
                             <TableHead>
@@ -153,15 +192,40 @@ class index extends Component {
                                 {this.state.allAddressReasons.map((row, index) => (
                                     <TableRow key={row.id}>
                                         <TableCell align="left">{row.addressReason}</TableCell>
-                                        <TableCell align="right"><Button variant='outlined' size='small' onClick = {()=>{this.deleteAddressReason(row.id)}} color = 'secondary'>Delete</Button>
+                                        <TableCell align="right"><Button variant='outlined' size='small' onClick = {()=>{this.setState({deleteDialogBox: true,deleteid:row.id})}} color = 'secondary'>Delete</Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
                         </Table>
                     </TableContainer>
-
-                </Grid>
+                    <Dialog
+            open={this.state.deleteDialogBox}
+            onClose={() => this.setState({ deleteDialogBox: false })}
+            aria-labelledby="form-dialog-title"
+          >
+            <DialogTitle id="alert-dialog-title">{"Are you sure you want to delete this city?"}</DialogTitle>
+            <DialogContent>
+             
+            </DialogContent>
+            <DialogActions style={{ padding: 15 }}>
+              <Button style={{ width: 85 }} color="primary" variant="contained"  onClick={() =>
+              this.deleteAddressReason(this.state.deleteid)
+                }>
+              Delete
+              </Button>
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={() =>
+                  this.setState({ deleteDialogBox: false, selectedIndex: -1 })
+                }
+              >
+               Cancel
+              </Button>
+            </DialogActions>
+          </Dialog>
+                </Grid></>}
                 {/* </Paper> */}
             </div>
         )
@@ -187,35 +251,20 @@ class index extends Component {
                     })
                 }
             );
-            response = await response.json();
+            this.setState({  snackbar: true, snackbarresponse: response });
+           
             console.log('AddAddressSuccess:', response);
             await this.getAddressReasons();
             this.setState({newAddressReason: ""})
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
+            this.setState({ snackbar: true, snackbarresponse: error.response })
         }
     }
 
-    // async deleteAddressReason(index) {
-    //     try {
-    //         let response = await fetch(api + "/api/v1/resManager/address/reasons/" + index + "/",
-    //             {
-    //                 method: 'DELETE',
-    //                 headers: {
-    //                     'Authorization': token,
-    //                     // 'Content-Type': 'application/json'
-    //                 }
-    //             }
-    //         );
-    //         response = await response.json();
-    //         console.log('delAddressSuccess:', response);
-    //         await this.getAddressReasons();
-    //     } catch (error) {
-    //         console.log("[!ON_REGISTER] " + error);
-    //     }
-    // }
-
+   
     async deleteAddressReason(index)  {
+        this.setState({ deleteDialogBox: false })
         try {
             let response = await axios.delete(
                 api + "/api/v1/resManager/address/reasons/" + index + "/",
@@ -227,11 +276,12 @@ class index extends Component {
                 },
               }
             );
-            response = await response.json();
+            this.setState({  snackbar: true, snackbarresponse: response });
             console.log('delAddressSuccess:', response);
             await this.getAddressReasons();
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
+            this.setState({ snackbar: true, snackbarresponse: error.response })
         }
           this.getAddressReasons();
     }

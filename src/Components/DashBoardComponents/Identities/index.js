@@ -72,7 +72,10 @@ class Identities extends Component {
     if (event.target.value.length > 0) {
       //  console.log(event.target.value);
       this.setState({ buttondisabled: "" });
-    } else {
+    }else if(event.target.value>250){
+      this.setState({ buttondisabled: "disabled" });
+    } 
+    else {
       this.setState({ buttondisabled: "disabled" });
     }
 
@@ -214,7 +217,7 @@ async getidentites(){
       <div>
         <Grid container justify="space-between" alignItems="center">
           <Grid item>
-            <h1>My Identities</h1>
+            <h1>Identities</h1>
           </Grid>
 
           <Grid item>
@@ -315,11 +318,11 @@ async getidentites(){
             onClose={() => this.setState({ addDialogOpen: false })}
             aria-labelledby="form-dialog-title"
           >
-            <DialogTitle id="form-dialog-title" justify="center">
+            <DialogTitle id="form-dialog-title" align='center' justify="center">
               Add Profile
             </DialogTitle>
             <DialogContent>
-              <DialogContentText>
+              <DialogContentText align='center'>
                 Enter the details of your identity
               </DialogContentText>
 
@@ -343,10 +346,11 @@ async getidentites(){
                 </Grid>
 
                 <Grid item fullWidth xs={12}>
+                <InputLabel id="dob">Date of birth</InputLabel>
                   <TextField
                     id="dob"
                     variant="outlined"
-                    helperText="Date of Birth"
+                    // label="Date of birth"
                     onChange={(event) => {
                       this.setState({ dob: event.target.value });
                     }}
@@ -506,19 +510,19 @@ async getidentites(){
               <TableHead>
                 <TableRow style={{ backgroundColor: "black" }}>
                   {[
-                    "Date",
-                    "Source",
+                    " Created Date",
                     "Full Name",
                     "Date of birth",
                     "Sex",
+                    "Source",
                     "Picture",
                     "Verified by",
                     "Update",
                     "History",
                   ].map((text, index) => (
                     <TableCell
-                      // style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                      align="left"
+                      style={{ fontWeight: "bolder",  }}
+                      align="center"
                     >
                       {text}
                     </TableCell>
@@ -528,14 +532,14 @@ async getidentites(){
               <TableBody>
                 {this.state.result.map((row, index) => (
                   <TableRow key={row.id}>
-                    <TableCell align="left">
+                    <TableCell align="center">
                       {new Date(row.created_on).toDateString()}
                     </TableCell>
-                    <TableCell align="left">{row.idSource}</TableCell>
-                    <TableCell align="left">{row.fullname}</TableCell>
-                    <TableCell align="left">{row.dob}</TableCell>
-                    <TableCell align="left">{row.sex}</TableCell>
-                    <TableCell align="left">
+                    <TableCell align="center">{row.fullname}</TableCell>
+                    <TableCell align="center">{row.dob}</TableCell>
+                    <TableCell align="center">{row.sex}</TableCell>
+                    <TableCell align="center">{row.source_name_field}</TableCell>
+                    <TableCell align="center">
                       <Grid
                         container
                         display="flex"
@@ -557,7 +561,7 @@ async getidentites(){
                         <Grid item>
                           <Button
                             size="small"
-                            color="primary"
+                            color="secondary"
                             variant="outlined"
                             onClick={() =>
                               this.setState(
@@ -597,7 +601,7 @@ async getidentites(){
                     <TableCell align="center">
                       <Button
                         size="small"
-                        color="primary"
+                        color="secondary"
                         variant="outlined"
                         onClick={() => this.getHistory(row.idSource)}
                       >
@@ -616,11 +620,11 @@ async getidentites(){
                 onClose={() => this.setState({ updateDialogOpen: false })}
                 aria-labelledby="form-dialog-title"
               >
-                <DialogTitle id="form-dialog-title">
+                <DialogTitle id="form-dialog-title" align='center'>
                   Update Identity
                 </DialogTitle>
                 <DialogContent>
-                  <DialogContentText>
+                  <DialogContentText align='center'>
                     Type in details to update
                   </DialogContentText>
 
@@ -645,6 +649,7 @@ async getidentites(){
                     </Grid>
 
                     <Grid item fullWidth xs={12}>
+                    {/* <InputLabel id="dob">Date of birth</InputLabel> */}
                       <TextField
                         id="dob"
                         label="Date of birth"
@@ -697,6 +702,7 @@ async getidentites(){
                       <TextField
                         id="updatereason"
                         label="Update Reason"
+                        helperText="update reason should be less than 250 characters"
                         // defaultValue={this.state.result[this.state.selectedIndex].idSource}
                         onChange={(event) => {
                           this.setState({ updatereason: event.target.value },this.reasonforupdatevalidcheck(event));
@@ -747,7 +753,7 @@ async getidentites(){
           onClose={() => this.setState({ historyDialogeOpen: false })}
           aria-labelledby="responsive-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">Identities History</DialogTitle>
+          <DialogTitle id="form-dialog-title" align='center'>Identities History</DialogTitle>
           {/* <DialogContent> */}
           <TableContainer p={3}>
             <Table stickyHeader>
@@ -763,8 +769,8 @@ async getidentites(){
                     "Update Reason",
                   ].map((text, index) => (
                     <TableCell
-                      // style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                      align="left"
+                      style={{ fontWeight: "bolder",  }}
+                      align="center"
                     >
                       {text}
                     </TableCell>

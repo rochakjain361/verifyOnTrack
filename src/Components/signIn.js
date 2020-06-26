@@ -11,6 +11,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import "typeface-roboto";
 import Typography from "@material-ui/core/Typography";
+import Link from '@material-ui/core/Link';
 import LandingPage from "../Components/LandingPage/index";
 import {
   BrowserRouter as Router,
@@ -20,6 +21,10 @@ import {
 } from "react-router-dom";
 import ValidationMessage from "./ValidationMessage";
 import Alert from "@material-ui/lab/Alert";
+import CardMedia from '@material-ui/core/CardMedia';
+import { Box } from "@material-ui/core";
+
+
 
 class signIn extends Component {
   constructor(props) {
@@ -39,128 +44,185 @@ class signIn extends Component {
   UserGreeting(props) {
     return <h1>Welcome back!</h1>;
   }
-  usernamevalidcheck = (event) => {
-    if (event.target.value.length > 0) {
+  usernamecheck = (event) => {
+    this.setState(
+      { username: event.target.value })
+    console.log(this.state.username)
+    if (event.target.value.length === 0) {
       //  console.log(event.target.value);
-      this.setState({ usernamevalid: true }, this.formvalid);
+      this.setState({ usernamevalid: true },);
+
+    } else {
+      this.setState({ usernamevalid: false },);
     }
-  };
-  passwordvalidcheck = (event) => {
-    if (event.target.value.length > 0) {
+  }
+  passwordcheck = (event) => {
+    if (event.target.value.length === 0) {
       //  console.log(event.target.value);
-      this.setState({ passwordvalid: true }, this.formvalid);
+      this.setState({ passwordvalid: true },);
+    }
+    else {
+      this.setState({ passwordvalid: false },);
+    }
+  }
+
+  formvalid() {
+    console.log("username", this.state.username)
+    if (this.state.username.length > 0) {
+      //  console.log(event.target.value);
+      this.setState({ usernamevalid: false },);
+    } else {
+      this.setState({ usernamevalid: true },);
+    }
+    if (this.state.password.length > 0) {
+      //  console.log(event.target.value);
+      this.setState({ passwordvalid: false },);
+    }
+    else {
+      this.setState({ passwordvalid: true },);
+    }
+    if (!this.state.usernamevalid && !this.state.passwordvalid) {
+      this.onSignInButtonPress()
     }
   };
-  formvalid = () => {
-    if (this.state.usernamevalid && this.state.passwordvalid) {
-      // console.log("////////////////////////////////")
-      this.setState({ submitDisabled: "" });
-    }
-  };
+
 
   render() {
     const { classes } = this.props;
 
     return (
-      <>
+      <Grid container
+        direction="row"
+        className={classes.root}
+        justify="center">
         <Grid
           container
-          component="main"
-          className={classes.root}
+          align="center"
           direction="row"
-          justify="center"
-        >
+          justify="center">
           <CssBaseline />
 
+          <Grid container
+            xs={6}
+            direction="column"
+            justify="center"
+            align="center" >
+            <Grid
+              item >
+
+              <img src="/images/VERIFY.png" width="185" height="185" alt="" />
+            </Grid>
+            <Grid item>
+
+              {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Suspendisse faucibus interdum posuere lorem ipsum dolor sit. Sapien et ligula ullamcorper malesuada proin libero. Sed felis eget velit aliquet sagittis. Odio tempor orci dapibus ultrices in iaculis nunc. Et sollicitudin ac orci phasellus. Lectus arcu bibendum at varius vel pharetra vel turpis. Quis lectus nulla at volutpat diam ut. Quis ipsum suspendisse ultrices gravida dictum fusce ut. Lacus sed turpis tincidunt id aliquet risus feugiat. Viverra adipiscing at in tellus integer feugiat scelerisque. Vitae suscipit tellus mauris a diam maecenas sed enim ut. Odio ut sem nulla pharetra diam sit. At imperdiet dui accumsan sit amet nulla facilisi. At in tellus integer feugiat scelerisque varius morbi. Viverra vitae congue eu consequat ac. Lacus vel facilisis */}
+            </Grid>
+
+          </Grid>
           <Grid
             container
-            xs={false}
-            sm={12}
-            md={12}
+            xs={6}
+            sm={6}
+            md={6}
             square
+            spacing={3}
             className={classes.mainImage}
             direction="row"
             justify="center"
+            
           >
-            <Grid
-              item
-              style={{ marginTop: 40, marginBottom: 40 }}
-              sm={6}
-              md={6}
+           <Grid container xs={6}
+            sm={6}
+            md={8}
+            direction="column"
+            align="center"
+            justify="center"
             >
               <Card
-                style={{ padding: 50, marginLeft: 40, marginRight: 40 }}
+                style={{ padding: 50,}}
+               
+                
+                spacing={3}
+
                 raised={true}
               >
-                {this.state.warning ? (
-                  <Alert severity="error">Wrong username or password</Alert>
-                ) : null}
-                <form className={classes.form} noValidate>
-                  <Typography
-                    // style={{ fontFamily: "Montserrat", fontWeight: "bold", }}
-                    variant="h4"
-                    gutterBottom
-                    color="primary"
-                  >
-                    Sign In
+                <Grid  spacing={2} justify="center" direction="row" align="center">
+                  {this.state.warning ? (
+                    <Alert severity="error">Wrong username or password</Alert>
+                  ) : null}
+
+                  <Grid item xs={12} md={12}>
+
+                    <Typography
+                      // style={{ fontFamily: "Montserrat", fontWeight: "bold", }}
+                      variant="h4"
+                      gutterBottom
+                      color="primary"
+
+
+                    >
+                      Sign In
                   </Typography>
 
-                  <Grid container spacing={1}>
-                    <Grid item xs={12}>
-                      <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        style={{ marginRight: 10 }}
-                        margin="dense"
-                        id="username"
-                        label="User Name"
-                        value={this.state.username}
-                        type="text"
-                        autoComplete="username"
-                        autoFocus
-                        fullWidth
-                        size="medium"
-                        onChange={(event) =>
-                          this.setState(
-                            { username: event.target.value },
-                            this.usernamevalidcheck(event)
-                          )
-                        }
-                      />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        style={{ marginRight: 10 }}
-                        margin="dense"
-                        label="Password"
-                        value={this.state.password}
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                        fullWidth
-                        size="small"
-                        onChange={(event) =>
-                          this.setState(
-                            { password: event.target.value },
-                            this.passwordvalidcheck(event)
-                          )
-                        }
-                      />
-                    </Grid>
                   </Grid>
+
+                  <Grid item xs={12} md={12}>
+                    <TextField
+                      variant="standard"
+                      margin="normal"
+                      required
+                      error={this.state.usernamevalid}
+                      // style={{ marginRight: 10 }}
+                      margin="dense"
+                      id="username"
+                      label="User Name"
+                      value={this.state.username}
+                      type="text"
+                      autoComplete="username"
+                      autoFocus
+                      fullWidth
+                      size="medium"
+                      helperText={this.state.usernamevalid ? "please enter your username" : ""}
+                      onChange={(event) =>
+                        this.usernamecheck(event)
+
+
+                      }
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} md={12}>
+                    <TextField
+                      variant="standard"
+                      margin="normal"
+                      required
+                      error={this.state.passwordvalid}
+                      // style={{ marginRight: 10 }}
+                      margin="dense"
+                      label="Password"
+                      value={this.state.password}
+                      type="password"
+                      id="password"
+                      autoComplete="current-password"
+                      fullWidth
+                      size="small"
+                      helperText={this.state.passwordvalid ? "please enter your password" : ""}
+                      onChange={(event) =>
+                        this.setState(
+                          { password: event.target.value }, this.passwordcheck(event)
+
+                        )
+                      }
+                    />
+                  </Grid>
+
 
                   <Grid container spacing={1} sm={12} md={12}>
                     <Grid item xs={12}>
                       <GradientButton
-                        onClick={this.onSignInButtonPress}
-                        title={"Sign In"}
+                        onClick={() => this.formvalid()}
+                        title={"SignIn"}
                         center
-                        disabled={this.state.submitDisabled}
+                        // disabled={this.state.submitDisabled}
                         style={{
                           marginTop: 16,
                           marginBottom: 16,
@@ -168,30 +230,29 @@ class signIn extends Component {
                           // fontWeight: "bold",
                           // fontSize: "18",
                           // color:"white"
-                          
+
                         }}
                         fullWidth
                       />
                     </Grid>
 
                     <Grid container xs={12} justify="center">
-                      <RouterLink
-                        title="Don't have an account? Sign Up"
-                        to="/signup"
-                      />
+
+                      <Link title="Don't have an account? Sign Up" href="/signup" >
+                        Don't have an account?SignUp
+                     </Link>
                     </Grid>
                   </Grid>
-                </form>
+
+                </Grid>
               </Card>
-            </Grid>
+              </Grid>
           </Grid>
         </Grid>
-        {/* {this.state.response ? (
-          <LandingPage data={this.state.response} />
-        ) : (
-          null
-        )} */}
-      </>
+      </Grid>
+
+
+
     );
   }
 
@@ -224,7 +285,7 @@ class signIn extends Component {
         this.setState({ response: data });
         if (data.user.is_admin) {
           this.props.history.push({
-            pathname: "/admin",
+            pathname: "/manageStates",
           });
         } else if (data.user.is_employer) {
           this.props.history.push({
@@ -265,3 +326,4 @@ const styles = (theme) => ({
 });
 
 export default withStyles(styles)(signIn);
+

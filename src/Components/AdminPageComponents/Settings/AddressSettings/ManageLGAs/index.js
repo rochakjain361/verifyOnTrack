@@ -26,14 +26,14 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { CircularProgress } from "@material-ui/core";
-
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import IconButton from "@material-ui/core/IconButton";
 import PhoneIcon from "@material-ui/icons/Phone";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import axios from "axios";
-
 let states = [];
 let Lga = [];
 
@@ -41,6 +41,9 @@ let token1 = "";
 let token = "";
 let id = "";
 let result = [];
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 class index extends Component {
   state = {
     states: "",
@@ -51,10 +54,13 @@ class index extends Component {
     selectedLga: [],
     sloading: false,
     disabled: true,
+    buttondiabled:true,
     deleteid: "",
+    snackbar:"",
+    snackbarresponse:"",
   };
   async getLga() {
-    this.setState({ loading: true });
+
     await axios
       .get("http://3.22.17.212:8000/api/v1/resManager/address/states/", {
         headers: {
@@ -76,59 +82,68 @@ class index extends Component {
         this.setState({ selectedLga: Lga });
         console.log("lga", Lga);
       });
-    this.setState({ loading: false });
+
   }
   async componentDidMount() {
+    this.setState({ loading: true });
     token1 = localStorage.getItem("Token");
-token = "Token " + token1;
-id = localStorage.getItem("id");
-    this.getLga();
+    token = "Token " + token1;
+    id = localStorage.getItem("id");
+    await this.getLga();
+    this.setState({ loading: false });
   }
   async filterStates(state) {
     this.setState({ selectedstate: state });
-    this.setState({ loading: true });
-    if(state!=="none"){
-    await axios
-      .get(
-        "http://3.22.17.212:8000/api/v1/resManager/address/lgas/?stateId=" +
+
+    if (state !== "none") {
+      await axios
+        .get(
+          "http://3.22.17.212:8000/api/v1/resManager/address/lgas/?stateId=" +
           state,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res) => {
-        this.setState({ selectedLga: res.data });
-        console.log("lga", res.data);
-        this.setState({ disabled: false });
-      });
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        )
+        .then((res) => {
+          this.setState({ selectedLga: res.data });
+          console.log("lga", res.data);
+          this.setState({ disabled: false });
+        });
     }
-    else{
-      this.setState({selectedLga: Lga});
-      this.setState({disabled:true})
-      
+    else {
+      this.setState({ selectedLga: Lga });
+      this.setState({ disabled: true })
+
     }
-    this.setState({ loading: false });
+
   }
   async deleteLga(id) {
-     this.setState({ deleteDialogBox: false, selectedIndex: -1 });
-    await axios.delete(
+    this.setState({ deleteDialogBox: false, selectedIndex: -1 });
+    axios.delete(
       "http://3.22.17.212:8000/api/v1/resManager/address/lgas/" + id + "/",
       {
         headers: {
           Authorization: token,
         },
       }
-    );
+    ).then((response)=>{
+      this.setState({ selectedstate:  "none",snackbar:true,snackbarresponse:response });
+    }).catch((error)=>{
+      if (error.response) {
+        this.setState({snackbar:true,snackbarresponse:error.response})
+      }
+
+    })
     this.getLga();
   }
   displayTable() {
     return (
       <>
-        <Grid container justify="space-between" alignItems="center" spacing={4}>
+        <Grid container justify="space-between" justify="center" align="center" spacing={4}>
           <Grid item>
-            <Typography variant="h4">LGAs</Typography>
+            <Typography variant="h4" >Local Government Areas(LGA)</Typography>
           </Grid>
         </Grid>
 
@@ -169,13 +184,15 @@ id = localStorage.getItem("id");
               size="medium"
               fullWidth
               onChange={(event) => {
-                this.setState({ newLga: event.target.value });
+                event.target.value.length===0?this.setState({buttondiabled:true}):
+                this.setState({ newLga: event.target.value,buttondiabled:false });
               }}
             />
           </Grid>
           <Grid item>
             <Fab
               size="small"
+              disabled={this.state.buttondiabled}
               color="secondary"
               onClick={() => {
                 this.addLga();
@@ -184,7 +201,19 @@ id = localStorage.getItem("id");
               <AddIcon />
             </Fab>
           </Grid>
+        
+        <Grid>
 
+          <Snackbar open={this.state.snackbar} autoHideDuration={6000} onClick={() => { this.setState({ snackbar: !this.state.snackbar }) }}>
+          {this.state.snackbarresponse.status === 201 ?  <Alert onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }} severity="success">
+              Lga added sucessfully
+      </Alert>:this.state.snackbarresponse.status===204? <Alert onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }} severity="success">
+              Lga deleted sucessfully
+      </Alert>:<Alert onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }} severity="error">
+            Something went wrong please try again
+      </Alert>}
+          </Snackbar>
+        </Grid> 
           <TableContainer
             component={Paper}
             style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }}
@@ -248,7 +277,7 @@ id = localStorage.getItem("id");
                   this.deleteLga(this.state.deleteid);
                 }}
               >
-                Agree
+                Delete
               </Button>
               <Button
                 color="secondary"
@@ -257,7 +286,7 @@ id = localStorage.getItem("id");
                   this.setState({ deleteDialogBox: false, selectedIndex: -1 })
                 }
               >
-                Disagree
+                Cancel
               </Button>
             </DialogActions>
           </Dialog>
@@ -284,8 +313,15 @@ id = localStorage.getItem("id");
       )
       .then((response) => {
         console.log(response);
+
+        this.setState({ selectedstate:  "none",snackbar:true,snackbarresponse:response });
+        this.setState({ disabled: true })
         this.getLga();
-      });
+      })
+      .catch((error) => {
+        if (error.response) {
+          this.setState({snackbar:true,snackbarresponse:error.response})
+        }})
   }
   isloading() {
     return (
