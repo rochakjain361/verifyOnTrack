@@ -5,7 +5,9 @@ import {
     CardContent,
     Typography,
     Grid,
-    TextField
+    TextField,
+    Paper,
+    Box
 } from '@material-ui/core/'
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -29,77 +31,96 @@ class index extends Component {
 
         return (
             <div>
-                <Card elevation={3}>
-                    <CardContent>
-                        <Typography variant='h5'>
-                            Profile Details
-                    </Typography>
+                <Grid container spacing={4} justify="center" alignItems="center" direction="column">
+                    <Grid item xs={6}>
+                        <Paper elevation={3} xs={6}>
 
-                        <Grid container justify='flex-start' spacing={4} style={{ marginTop: 20 }}>
 
-                            <Grid item xs={6}>
-                                <TextField
-                                    id="firstName"
-                                    label="First name"
-                                    variant="outlined"
-                                    type="text"
-                                    fullWidth
-                                    size='small'
-                                />
-                            </Grid>
 
-                            <Grid item xs={6}>
-                                <TextField
-                                    id="middleName"
-                                    label="Middle name"
-                                    variant="outlined"
-                                    type="text"
-                                    fullWidth
-                                    size='small'
-                                />
-                            </Grid>
+                            <Box p={5}>
+                                <Grid container
+                                    spacing={4}
+                                    direction="row"
+                                    justify="center"
+                                    alignItems="center"
 
-                            <Grid item xs={6}>
-                                <TextField
-                                    id="surname"
-                                    label="Surname"
-                                    variant="outlined"
-                                    type="text"
-                                    fullWidth
-                                    size='small'
-                                />
-                            </Grid>
+                                >
+                                    <Grid item xs={8}>
 
-                            <Grid item fullWidth xs={6}>
-                                <FormControl variant="outlined" fullWidth size='small'>
-                                    <InputLabel id="demo-simple-select-outlined-label">Age</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-outlined-label"
-                                        id="demo-simple-select-outlined"
-                                        //   value={age}
-                                        //   onChange={handleChange}
-                                        label="Age"
-                                    >
-                                        <MenuItem value={"Male"}>Male</MenuItem>
-                                        <MenuItem value={"Female"}>Female</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
+                                    <Typography variant='h5'  justify="center"
+                                    align="center">
+                                        Profile Details
+                            </Typography>
+                                    </Grid>
 
-                            <Grid item xs={6}>
-                                <TextField
-                                    id="surname"
-                                    variant="outlined"
-                                    type="date"
-                                    fullWidth
-                                    size='small'
-                                />
-                            </Grid>
+                                    <Grid item  xs={8}  >
 
-                        </Grid>
+                                        <TextField
+                                            id="firstName"
+                                            label="First name"
+                                            variant="outlined"
+                                            type="text"
+                                            fullWidth
+                                            size='small'
+                                        />
+                                    </Grid>
 
-                    </CardContent>
-                </Card>
+
+                                    <Grid item fullWidth xs={8}>
+                                        <TextField
+                                            id="middleName"
+                                            label="Middle name"
+                                            variant="outlined"
+                                            type="text"
+                                            fullWidth
+                                            size='small'
+                                        />
+                                    </Grid>
+
+                                    <Grid item  xs={8}>
+                                        <TextField
+                                            id="surname"
+                                            label="Surname"
+                                            variant="outlined"
+                                            type="text"
+                                            fullWidth
+                                            size='small'
+                                        />
+                                    </Grid>
+
+                                    <Grid item  xs={8}>
+                                        <FormControl variant="outlined" fullWidth size='small'>
+                                            <InputLabel id="demo-simple-select-outlined-label">Age</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-outlined-label"
+                                                id="demo-simple-select-outlined"
+                                                //   value={age}
+                                                //   onChange={handleChange}
+                                                label="Age"
+                                            >
+                                                <MenuItem value={"Male"}>Male</MenuItem>
+                                                <MenuItem value={"Female"}>Female</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+
+                                    <Grid item xs={8}>
+                                        <TextField
+                                            id="surname"
+                                            variant="outlined"
+                                            type="date"
+                                            fullWidth
+                                            size='small'
+                                        />
+                                    </Grid>
+
+
+                                </Grid>  </Box>
+
+
+                        </Paper>
+                    </Grid>
+                </Grid>
             </div>
         );
     }

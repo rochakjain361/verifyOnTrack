@@ -183,16 +183,18 @@ class index extends Component {
               variant="outlined"
               size="medium"
               fullWidth
+              // helperText="Select state first"
+              value={this.state.newLga}
               onChange={(event) => {
-                event.target.value.length===0?this.setState({buttondiabled:true}):
-                this.setState({ newLga: event.target.value,buttondiabled:false });
+               
+                this.setState({ newLga: event.target.value });
               }}
             />
           </Grid>
           <Grid item>
             <Fab
               size="small"
-              disabled={this.state.buttondiabled}
+              disabled={this.state.newLga.length<1}
               color="secondary"
               onClick={() => {
                 this.addLga();
@@ -315,7 +317,7 @@ class index extends Component {
         console.log(response);
 
         this.setState({ selectedstate:  "none",snackbar:true,snackbarresponse:response });
-        this.setState({ disabled: true })
+        this.setState({ disabled: true,newLga:"" })
         this.getLga();
       })
       .catch((error) => {

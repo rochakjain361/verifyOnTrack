@@ -262,16 +262,16 @@ class Addresses extends Component {
     bodyFormData.append("street_name", this.state.updatedstreet);
     bodyFormData.append("house_number", this.state.updatehousenumber);
     bodyFormData.append("address_hint1", this.state.updatedaddresshint1);
-    //  bodyFormData.append("address_hint2", this.state.addresshint2);
-    //  bodyFormData.append("address_hint3", this.state.addresshint3);
+     bodyFormData.append("address_hint2", this.state.updatedaddresshint2);
+      bodyFormData.append("address_hint3", this.state.updatedaddresshint3);
     bodyFormData.append(
       "google_coordinate1",
-      // "17.40"
+     
       this.state.location.latitude
     );
     bodyFormData.append(
       "google_coordinate2",
-      // "78.44"
+     
       this.state.location.longtitude
     );
     // bodyFormData.append("address_image", this.state.updatedimage);
@@ -391,6 +391,9 @@ class Addresses extends Component {
                                 updatedstreet: this.state.result[index].street_name,
                                 updatehousenumber: this.state.result[index].house_number,
                                 updatedaddresshint1: this.state.result[index].address_hint1,
+                                updatedaddresshint2: this.state.result[index].address_hint2,
+                                updatedaddresshint3: this.state.result[index].address_hint3,
+
                                 updatedimage: this.state.result[index].address_image,
                                 updatestartedlivinghere: this.state.result[index].since,
                                 updatedaddressestype: this.state.result[index].address_type,
@@ -674,7 +677,7 @@ class Addresses extends Component {
                                   });
                                   console.log(event.target.value);
                                 }}
-                                defaultValue={this.state.updatedaddresshint2}
+                                defaultValue={this.state.updatedaddresshint3}
                                 type="text"
                                 fullWidth
                               />
@@ -899,30 +902,7 @@ class Addresses extends Component {
                           />
                         </Grid>
 
-                        {/* <Grid item xs={12}>
-                          <Button
-                            variant="contained"
-                            color="default"
-                            startIcon={<CloudUploadIcon />}
-                          >
-                            Choose file
-                        </Button>
-                        </Grid> */}
-
-                        {/* <Grid item fullWidth xs={12}>
-                          <TextField
-                            id="addressImage"
-                            label="Choose Image"
-                            onChange={(event) => {
-                              this.setState({
-                                addressimage: event.target.files[0],
-                              });
-                              console.log(event.target.files[0]);
-                            }}
-                            type="file"
-                            fullWidth
-                          />
-                        </Grid> */}
+                     
 
                         <Grid item xs={12}>
                           <FormControl fullWidth>
@@ -1288,8 +1268,8 @@ class Addresses extends Component {
     bodyFormData.append("street_name", this.state.Streetname);
     bodyFormData.append("house_number", this.state.housenumber);
     bodyFormData.append("address_hint1", this.state.addresshint1);
-    //  bodyFormData.append("address_hint2", this.state.addresshint2);
-    //  bodyFormData.append("address_hint3", this.state.addresshint3);
+      bodyFormData.append("address_hint2", this.state.addresshint2);
+      bodyFormData.append("address_hint3", this.state.addresshint3);
     bodyFormData.append(
       "google_coordinate1",
       // "17.406"
@@ -1423,7 +1403,7 @@ class Addresses extends Component {
                   />
                 </Grid>
 
-                <Grid item xs={12}>
+                {/* <Grid item xs={12}>
                   <Button
                     variant="contained"
                     color="default"
@@ -1446,7 +1426,7 @@ class Addresses extends Component {
                     type="file"
                     fullWidth
                   />
-                </Grid>
+                </Grid> */}
 
                 <Grid item xs={12}>
                   <FormControl fullWidth>
@@ -1611,6 +1591,10 @@ class Addresses extends Component {
             </Box>
             <Box p={1} width={1 / 2}>
               <Map
+               initialCenter={{
+                lat:9.0765, 
+                lng:7.3986,
+              }}
                 google={this.props.google}
                 zoom={12}
                 onClick={this.onMarkerClick}
@@ -1665,12 +1649,13 @@ class Addresses extends Component {
     return (
       <>
         <Grid container spacing={3} justify="space-between">
-          <Grid item xs={6}>
-            <h1> Address</h1>
+          <Grid item xs={12}>
+          <Typography variant="h3" gutterBottom align="center">Address</Typography>
           </Grid>
           <Grid item xs={12}>
             <Paper style={{ padding: 20 }} elevation={3}>
-              <Typography variant="h5" gutterBottom align="center">
+            <Box p={1}   display="flex" flexDirection="column"  justifyContent='center' alignItems="center" style={{height: '50vh',}} >
+              <Typography variant="h4" gutterBottom align="center">
                 Add address to improve ratings.
               </Typography>
 
@@ -1683,6 +1668,7 @@ class Addresses extends Component {
                   Add New address
                 </Button>
               </Grid>
+              </Box>
             </Paper>
           </Grid>
         </Grid>

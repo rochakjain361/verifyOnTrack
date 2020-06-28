@@ -154,15 +154,15 @@ class index extends Component {
                                     size='medium'
                                     fullWidth
                                     onChange={(event) => {
-                                        event.target.value.length === 0 ? this.setState({ butttondisabled: true }) :
-                                            this.setState({ newAddressType: event.target.value, butttondisabled: false });
+                                       
+                                            this.setState({ newAddressType: event.target.value});
                                     }}
-                                // value={this.state.newAddressType}
+                                 value={this.state.newAddressType}
                                 />
                             </Grid>
                             <Grid item>
                                 <Fab
-                                    disabled={this.state.butttondisabled}
+                                    disabled={this.state.newAddressType.length<1}
                                     onClick={() => {
                                         this.addAddressType();
                                     }}
@@ -256,7 +256,7 @@ class index extends Component {
                     })
                 }
             );
-            this.setState({ snackbar: true, snackbarresponse: response });
+            this.setState({ snackbar: true, snackbarresponse: response,newAddressType:"" });
 
             console.log('AddAddressSuccess:', response);
             await this.getAddressTypes();

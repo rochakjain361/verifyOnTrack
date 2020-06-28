@@ -26,6 +26,7 @@ import { Label } from "@material-ui/core";
 import { CircularProgress } from "@material-ui/core";
 import InputLabel from '@material-ui/core/InputLabel';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 let token1 = "";
 let token = "";
@@ -38,7 +39,6 @@ class MyProfile extends Component {
     updateDialogOpen: false,
     addDialogOpen: false,
     selectedIndex: -1,
-
     isloading: false,
     updatedval: "",
     updatedfirstname: "",
@@ -70,7 +70,7 @@ class MyProfile extends Component {
       .then((res) => {
         result = res.data;
         this.setState({ result: result })
-        console.log("Profile Data",result);
+        console.log("Profile Data", result);
       });
   }
   async componentDidMount() {
@@ -94,15 +94,15 @@ class MyProfile extends Component {
     if (event.target.value.length > 0) {
       //  console.log(event.target.value);
       this.setState({ buttondisabled: "" });
-    } 
-    else if(event.target.value.length>250){
+    }
+    else if (event.target.value.length > 250) {
       this.setState({ buttondisabled: "disabled" });
 
     }
     else {
       this.setState({ buttondisabled: "disabled" });
     }
-    
+
 
 
   };
@@ -199,24 +199,30 @@ class MyProfile extends Component {
             ? (
               <div>
 
-                <Grid container spacing={3} justify="space-between" >
-                  <Grid item xs={6}>
-                    <h1>My Profile</h1>
-                  </Grid>
+                <Grid container spacing={3} direction="column"justify='center' align="center">
                   <Grid item xs={12}>
 
-                    <Paper style={{ padding: 20 }} elevation={3}>
-                      <Typography variant="h5" gutterBottom align='center'>
-                        Add job profiles to improve ratings.
+                    <Typography variant="h3" gutterBottom align="center">My Profile</Typography>
+                  </Grid>
+
+                  <Grid item xs={12}  >
+                     
+                    <Paper elevation={3} direction="column" >
+                      <Box p={3}   display="flex" flexDirection="column"  justifyContent='center' alignItems="center" style={{height: '50vh',}} >
+                     
+                          <Typography variant="h4" gutterBottom align='center' justify="center">
+                            Add  profiles to improve ratings.
                       </Typography>
 
-                      <Grid container justify='center' style={{ marginTop: 50 }}>
-                        <Button color="primary" variant='contained' onClick={() => this.setState({ addDialogOpen: true })}>
-                          Add New Job Profile
+                          <Button color="primary" variant='contained' onClick={() => this.setState({ addDialogOpen: true })}>
+                            Add New Job Profile
                         </Button>
-                      </Grid>
+                        
+                      </Box>
                     </Paper>
+                    
                   </Grid>
+
 
                 </Grid>
 
@@ -290,20 +296,19 @@ class MyProfile extends Component {
                         />
                       </Grid>
 
-                      <Grid item xs={12}>
-                        <Button
-                          variant="contained"
-                          color="default"
-                          startIcon={<CloudUploadIcon />}
-                        >
-                          Choose file
-                      </Button>
-                      </Grid>
+                    
 
                       <Grid item fullWidth xs={12}>
                         <TextField
                           id="chooseFile"
                           label="Choose File"
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                               <CloudUploadIcon />
+                              </InputAdornment>
+                            ),
+                          }}
                           onChange={(event) => {
                             this.setState({ initialfile: event.target.files[0] });
                             console.log(this.state.initialfile);
@@ -366,18 +371,18 @@ class MyProfile extends Component {
             ) : (
               <div>
                 <Paper elevation={2} style={{ marginTop: 20 }}>
-                
-                  
+
+
 
                   <Grid container
-                    direction="row" 
+                    direction="row"
                     justify="flex-start"
                     style={{ padding: 20 }} spacing={3}
-                    >
+                  >
                     <Grid container
-                    direction="row"
-                    justify="center"
-                    alignItems="center" xs={3}>
+                      direction="row"
+                      justify="center"
+                      alignItems="center" xs={3}>
                       <Avatar
                         src={this.state.result[0].picture}
                         style={{ height: "12rem", width: "12rem" }}
@@ -389,30 +394,35 @@ class MyProfile extends Component {
                       direction="column"
                       justify="center"
                       alignItems="center"
-                   
+
 
                       xs={6}>
-                     
-                        <Typography variant='h2'
-                        // style={{ fontFamily: "Montserrat", textTransform: 'capitalize' }}
-                        >
-                          {this.state.result[0].firstname} {this.state.result[0].middlename} {this.state.result[0].surname}
-                        </Typography>
 
-                        <Typography variant='h5'
-                        // style={{ fontFamily: "Montserrat" }}
-                        >
-                          Dob:{this.state.result[0].dob}
-                        </Typography>
+                      <Typography variant='h2'
+                      // style={{ fontFamily: "Montserrat", textTransform: 'capitalize' }}
+                      >
+                        {this.state.result[0].firstname} {this.state.result[0].middlename} {this.state.result[0].surname}
+                      </Typography>
 
-                        <Typography variant='h5'
-                        // style={{ fontFamily: "Montserrat" }}
-                        >
-                          email:{this.state.result[0].employee_email_field}
-                        </Typography>
+                      <Typography variant='h5'
+                      // style={{ fontFamily: "Montserrat" }}
+                      >
+                        {this.state.result[0].dob}
+                      </Typography>
+
+                      <Typography variant='h5'
+                      // style={{ fontFamily: "Montserrat" }}
+                      >
+                        {this.state.result[0].employee_email_field}
+                      </Typography>
+                      {/* <Typography variant='h5'
+                      
+                      >
+                        {this.state.result[0].ontrac_id}
+                      </Typography> */}
                     </Grid>
                   </Grid>
-                
+
                 </Paper>
                 <div style={{ marginTop: 50 }}>
                   {this.getTableOfEmployees()}
@@ -421,55 +431,8 @@ class MyProfile extends Component {
 
 
 
-                {/* <Box p={4}>
-              <Grid
-                container
-                // style={{backgroundColor:"red"}}
-              >
-                <Grid
-                  container
-                  spacing={0}
-                  direction="column"
-                  alignItems="center"
-                  justify="center"
-                  display="flex"
-                >
-                  <h1>My Profile</h1>
-                </Grid>
-                <Grid container spacing={3} m={3} p={3}>
-                  <Grid
-                    container
-                    xs={9}
-                    direction="column"
-                    justify="center"
-                    alignItems="center"
-                    // style={{backgroundColor:"red"}}
-                  >
-                    <Grid alignItems="left" elevation={6}>
-                      <h3>
-                        Name:{this.state.result[0].firstname} {result[0].middlename}
-                        {result[0].surname}
-                      </h3>
-                      <h4>Dob:{result[0].dob}</h4>
-                      <h4>Sex:{result[0].sex}</h4>
-                      <h4>date:{result[0].created_on}</h4>
-                      <h4>source:{result[0].source_name_field}</h4>
-                    </Grid>
-                  </Grid>
-
-                  <Grid item xs={3} alignItems="flex-end" justify="flex-end">
-                    <Avatar
-                      src={result[0].picture}
-                      style={{ height: "14rem", width: "14rem" }}
-                    >
-                      Picture
-                    </Avatar>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Box> */}
-
-                {/* {this.getTableOfEmployees()} */}
+              
+               
               </div>
             )}
       </>
@@ -510,13 +473,13 @@ class MyProfile extends Component {
                   "Sex",
                   "Date of birth",
                   "Source",
-                  "verifier",
-                  " Created On",
+                  "Verifier",
+                  "Created On",
                   "Update",
                   "History",
                 ].map((text, index) => (
                   <TableCell
-                     style={{ fontWeight: "bolder", }}
+                    style={{ fontWeight: "bolder", }}
                     align="center"
                   >
                     {text}
@@ -657,21 +620,20 @@ class MyProfile extends Component {
                         fullWidth
                       />
                     </Grid>
-
-                    <Grid item xs={12}>
-                      <Button
-                        variant="contained"
-                        color="default"
-                        startIcon={<CloudUploadIcon />}
-                      >
-                        Choose file
-                    </Button>
-                    </Grid>
+   
+                   
 
                     <Grid item fullWidth xs={12}>
                       <TextField
                         id="chooseFile"
                         label="Choose File"
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                             <CloudUploadIcon />
+                            </InputAdornment>
+                          ),
+                        }}
                         onChange={(event) => {
                           this.setState({ file: event.target.files[0] });
                           console.log(event.target.files[0]);
@@ -752,7 +714,7 @@ class MyProfile extends Component {
                     "Updated reason",
                   ].map((text, index) => (
                     <TableCell
-                       style={{ fontWeight: "bolder",  }}
+                      style={{ fontWeight: "bolder", }}
                       align="left"
                     >
                       {text}
@@ -767,7 +729,7 @@ class MyProfile extends Component {
                   <TableBody>
                     {history.map((row, index) => (
                       <TableRow key={row.id}>
-                         <TableCell align="left">
+                        <TableCell align="left">
                           <Avatar src={row.picture}>Picture</Avatar>
                         </TableCell>
                         <TableCell align="left">{row.firstname}</TableCell>
@@ -776,7 +738,7 @@ class MyProfile extends Component {
                         <TableCell align="left">
                           {new Date(row.dob).toDateString()}
                         </TableCell>
-                       
+
                         {/* <TableCell align="center">{row.source_name_field}</TableCell> */}
                         <TableCell align="left">{row.sex}</TableCell>{" "}
                         <TableCell component="th" align="left">

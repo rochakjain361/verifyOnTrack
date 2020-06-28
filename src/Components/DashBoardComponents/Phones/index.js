@@ -212,19 +212,52 @@ class Phones extends Component {
         {this.state.result.length === 0 ? (
           <>
             <Grid container spacing={3} justify="space-between">
-             
+              <Grid item xs={12} >
+
+            <Typography variant="h3" gutterBottom align="center">
+                Phones
+              </Typography>
+              </ Grid>
               <Grid item xs={12}>
                 <Paper style={{ padding: 20 }} elevation={3}>
+                <Box p={8}   display="flex" flexDirection="column"  justifyContent='center' alignItems="center" style={{height: '50vh',}} >
                   <Typography variant="h5" gutterBottom align="center">
                     Add phone details to improve ratings.
                   </Typography>
-
-                  
+                 
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                this.setState({ addDialogOpen: true });
+              }}
+            >
+              Add Phone
+            </Button>
+          
+                  </Box>
                 </Paper>
               </Grid>
             </Grid>
           </>
         ) : (
+          <>
+          <Grid container justify="space-between" alignItems="center">
+          <Grid item>
+            <h1>Phones </h1>
+          </Grid>
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                this.setState({ addDialogOpen: true });
+              }}
+            >
+              Add Phone
+            </Button>
+          </Grid>
+        </Grid>
           <TableContainer component={Paper} elevation={16}>
             <Table stickyHeader>
               <TableHead>
@@ -485,6 +518,8 @@ class Phones extends Component {
               </Dialog>
             )}
           </TableContainer>
+
+          </>
         )}
         <Dialog
           open={this.state.addDialogOpen}
@@ -492,7 +527,7 @@ class Phones extends Component {
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle id="form-dialog-title" align="center">
-            add new  phone data
+            Add new  phone data
           </DialogTitle>
 
           <DialogContent>
@@ -747,22 +782,7 @@ class Phones extends Component {
   gettable() {
     return (
       <>
-        <Grid container justify="space-between" alignItems="center">
-          <Grid item>
-            <h1>Phones </h1>
-          </Grid>
-          <Grid item>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                this.setState({ addDialogOpen: true });
-              }}
-            >
-              Add Phone
-            </Button>
-          </Grid>
-        </Grid>
+       
         {this.getPhones()}
       </>
     );

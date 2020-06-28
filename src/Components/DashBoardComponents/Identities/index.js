@@ -27,6 +27,9 @@ import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
 import { InputLabel } from "@material-ui/core";
 import FormControl from '@material-ui/core/FormControl';
+import Typography from "@material-ui/core/Typography";
+import GridListTile from '@material-ui/core/GridListTile';
+import GridList from '@material-ui/core/GridList';
 
 let token1 = "";
 
@@ -215,33 +218,21 @@ async getidentites(){
   render() {
     return (
       <div>
-        <Grid container justify="space-between" alignItems="center">
-          <Grid item>
-            <h1>Identities</h1>
-          </Grid>
-
-          <Grid item>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                this.setState({ addDialogOpen: true });
-              }}
-            >
-              Add Identity
-            </Button>
-          </Grid>
-        </Grid>
+        
         {this.state.loading ? this.isloading() : this.getTableOfEmployees()}
 
         <Dialog
-          fullWidth={"md"}
-          maxWidth={"md"}
+          //  fullWidth={"sm"}
+          //  maxWidth={"sm"}
           open={this.state.viewDialogeOpen}
           onClose={() => this.setState({ viewDialogeOpen: false })}
           aria-labelledby="responsive-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">View pictures</DialogTitle>
+          <DialogTitle id="form-dialog-title">
+          <Typography variant="subtitle1" gutterBottom align="center">
+          View pictures
+              </Typography>
+          </DialogTitle>
           <DialogContent>
             <Grid
               container
@@ -249,17 +240,22 @@ async getidentites(){
               justify="space-evenly"
               alignItems="center"
             >
+                    <GridList cellHeight={160} style={{height:500,width:500}} cols={3}>
               {this.state.pictureloading
                 ? this.isloading()
-                : pictures.map((picture, index) => (
-                    //  <image src={picture.picture}/>
-                    // <p> {picture.picture}</p>
-                    <Grid container>
-                      <Grid item xs={12}>
-                        {picture.picture}
-                      </Grid>
-                    </Grid>
-                  ))}
+                : pictures.map((pic, index) => (
+                  <GridListTile key={pic.id} cols={1}>
+                  <img src={pic.picture}  />
+                </GridListTile>
+                
+
+                  // <Grid container>
+                  //     <Grid item xs={12}>
+                  // <image src={pic.picture}/>
+                  //       {/* {pic.picture} */}
+                  //     </Grid>
+                  //   </Grid>
+                  ))} </GridList>
             </Grid>
           </DialogContent>
           <DialogActions style={{ padding: 15 }}>
@@ -448,7 +444,36 @@ async getidentites(){
   adddata() {
     return (
       <>
-        <h1>Add identity to increase your rating</h1>
+       <Grid item xs={12}>
+       <Typography variant="h3" gutterBottom align="center">
+                Identites
+              </Typography>
+       </Grid>
+      
+        <Grid item xs={12}>
+            <Paper style={{ padding: 20 }} elevation={3}>
+            <Box p={8}   display="flex" flexDirection="column"  justifyContent='center' alignItems="center" style={{height: '50vh',}} >
+              <Typography variant="h5" gutterBottom align="center">
+                Add Identites to improve ratings.
+              </Typography>
+
+              <Grid container justify="center" style={{ marginTop: 50 }}>
+              <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                this.setState({ addDialogOpen: true });
+              }}
+            >
+              Add Identity
+            </Button>
+          
+        </Grid>
+              </Grid>
+              </Box>
+            </Paper>
+          </Grid>
       </>
     );
   }
@@ -476,6 +501,7 @@ async getidentites(){
   }
   async postpictures(id) {
 
+    this.setState({ uploadDialougeOpen: false });
     let headers = {
       headers: {
         Authorization: token,
@@ -495,7 +521,6 @@ async getidentites(){
       .then((response) => {
         console.log(response);
       });
-    this.setState({ uploadDialougeOpen: false });
     await this.getidentites();
   }
 
@@ -505,6 +530,24 @@ async getidentites(){
         {this.state.result.length === 0 ? (
           this.adddata()
         ) : (
+          <>
+          <Grid container justify="space-between" alignItems="center">
+          <Grid item>
+            <h1>Identities</h1>
+          </Grid>
+
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                this.setState({ addDialogOpen: true });
+              }}
+            >
+              Add Identity
+            </Button>
+          </Grid>
+        </Grid>
           <TableContainer component={Paper} elevation={16}>
             <Table stickyHeader>
               <TableHead>
@@ -744,6 +787,7 @@ async getidentites(){
               </Dialog>
             )}
           </TableContainer>
+          </>
         )}
 
         <Dialog

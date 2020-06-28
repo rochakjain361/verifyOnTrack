@@ -11,11 +11,16 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Grid from '@material-ui/core/Grid';
 
-import Address from '../Address'
-import Identity from '../Identity'
-import MyProfile from '../MyProfile'
-import Phone from '../Phone'
-import MyJob from '../MyJob'
+// import Address from '../Address'
+// import Identity from '../Identity'
+// import MyProfile from '../MyProfile'
+// import Phone from '../Phone'
+// import MyJob from '../MyJob'
+import MyProfile from "../../DashBoardComponents/MyProfile/index"
+import Addresses from "../../DashBoardComponents/Addresses/index"
+import Identities from "../../DashBoardComponents/Identities/index"
+import Phones from "../../DashBoardComponents/Phones/index"
+import MyJobProfile from "../../DashBoardComponents/MyJobProfile/index"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,13 +50,13 @@ function getStepContent(step) {
         case 0:
             return <MyProfile />;
         case 1:
-            return <Address />;
+            return <Addresses />;
         case 2:
-            return <Identity />;
+            return <Identities />;
         case 3:
-            return <Phone />;
+            return <Phones />;
         case 4:
-            return <MyJob />;
+            return <MyJobProfile/>;
         default:
             return 'Unknown step';
     }
@@ -134,18 +139,20 @@ export default function HorizontalLinearStepper() {
             <div>
                 {activeStep === steps.length ? (
                     <div>
+                        <Grid container justify="center">
                         <Typography className={classes.instructions}>
                             All steps completed - you&apos;re finished
                         </Typography>
                         <Button onClick={handleReset} className={classes.button}>
                             Reset
-                        </Button>
+                        </Button></Grid>
                     </div>
                 ) : (
                         <div style={{ padding: 20 }}>
+                            <Grid></Grid>
                             <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
                             <div style={{marginTop: 20}}>
-                                <Grid container justify='flex-end'>
+                                <Grid container  justify="space-evenly" alignItems="center">
                                 <Button style={{minWidth: 200}} size='medium' variant="contained" color='default' disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
                                     Back
                                 </Button>

@@ -276,9 +276,9 @@ export class index extends Component {
               size="medium"
               fullWidth
              
-              // value={this.state.stateName}
-              onChange={(event) => {event.target.value.length===0?this.setState({newstatedisabled:"disabled"}):
-                this.setState({ stateName: event.target.value,newstatedisabled:"" })
+               value={this.state.stateName}
+              onChange={(event) => {
+                this.setState({ stateName: event.target.value,newstatedisabled:"" },console.log(this.state.stateName.length))
               }}
             />
           </Grid>
@@ -286,7 +286,7 @@ export class index extends Component {
             <Fab
               size="small"
               color="secondary"
-              disabled={this.state.newstatedisabled}
+              disabled={this.state.stateName.length<1}
               onClick={() => {
                 this.addState();
               }}

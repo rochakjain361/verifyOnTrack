@@ -151,15 +151,15 @@ class index extends Component {
                             size='medium'
                             fullWidth
                             onChange={(event) => {
-                                event.target.value.length===0?this.setState({disabledbutton:true }):
-                                this.setState({ newAddressReason: event.target.value,disabledbutton:false });
+                               
+                                this.setState({ newAddressReason: event.target.value });
                             }}
-                            // value={this.state.newAddressReason}
+                             value={this.state.newAddressReason}
                         />
                     </Grid>
                     <Grid item>
                         <Fab
-                        disabled={this.state.disabledbutton}
+                        disabled={this.state.newAddressReason.length<1}
                             onClick={() => {
                                 this.addAddressReason();
                               }}
@@ -251,7 +251,7 @@ AddressType deleted sucessfully
                     })
                 }
             );
-            this.setState({  snackbar: true, snackbarresponse: response });
+            this.setState({  snackbar: true, snackbarresponse: response,newAddressReason:"" });
            
             console.log('AddAddressSuccess:', response);
             await this.getAddressReasons();

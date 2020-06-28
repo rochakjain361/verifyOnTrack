@@ -62,6 +62,7 @@ class index extends Component {
     butondisable:true,
     snackbar:"",
     snackbarresponse:"",
+    addcity:""
   };
   async filterforlga(state) {
     this.setState({ filterstate: state });
@@ -230,11 +231,11 @@ class index extends Component {
       )
       .then((response) => {
         console.log(response);
-        this.setState({ snackbar:true,snackbarresponse:response });
+        this.setState({ snackbar:true,snackbarresponse:response,addcity:"" });
         this.getLga();
       })  .catch((error) => {
         if (error.response) {
-          this.setState({snackbar:true,snackbarresponse:error.response})
+          this.setState({snackbar:true,snackbarresponse:error.response,})
         }})
   }
   render() {
@@ -314,9 +315,10 @@ class index extends Component {
                     label="Add City"
                     variant="outlined"
                     fullWidth
+                    value={this.state.addcity}
                     onChange={(event) => {
-                      event.target.value.length>0?
-                      this.setState({ addcity: event.target.value,butondisable:false }):this.setState({butondisable:true})
+                     
+                      this.setState({ addcity: event.target.value,butondisable:false })
                     }}
                   />
                 </Grid>
@@ -324,7 +326,7 @@ class index extends Component {
                 <Grid item xs={3}>
                   <Fab
                     size="small"
-                    disabled={this.state.butondisable}
+                    disabled={this.state.addcity.length<1}
                     color="secondary"
                     onClick={() => {
                       this.addcity();
