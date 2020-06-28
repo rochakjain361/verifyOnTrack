@@ -293,7 +293,7 @@ class signIn extends Component {
           });
         } else {
           this.props.history.push({
-            pathname: "/dashboard",
+            pathname: "/workflow",
           });
         }
       } else {

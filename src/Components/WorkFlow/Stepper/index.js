@@ -34,6 +34,8 @@ import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import Box from '@material-ui/core/Box';
 import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
+import  { useState, useEffect } from 'react';
+import axios from "axios";
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -120,11 +122,14 @@ function getStepContent(step) {
     },
 });
 
-export default function HorizontalLinearStepper() {
+export default function HorizontalLinearStepper(props) {
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
     const [skipped, setSkipped] = React.useState(new Set());
     const steps = getSteps();
+    const [Token,setToken]=React.useState("");
+  const [Token1,setToken1]=React.useState("");
+  const [id,setid]=React.useState("");
     const ColorlibConnector = withStyles({
         alternativeLabel: {
             top: 22,
@@ -148,6 +153,11 @@ export default function HorizontalLinearStepper() {
             borderRadius: 1,
         },
     })(StepConnector);
+    useEffect(() => {
+        setToken1(localStorage.getItem("Token"));
+        setToken("Token " + Token1);
+        setid(localStorage.getItem("id"));
+      });
 
     const isStepOptional = (step) => {
         return step === 1;
@@ -167,7 +177,29 @@ export default function HorizontalLinearStepper() {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
         setSkipped(newSkipped);
     };
-
+    const logout = async () => {
+       
+        let headers = {
+          headers: {
+            Authorization: Token,
+            "Content-Type": "multipart/form-data",
+          },
+        };
+        await axios
+          .post(
+            "http://3.22.17.212:8000/api/v1/accounts/auth/logout",
+            {},
+    
+            headers
+          )
+          .then((response) => {
+            localStorage.clear();
+            console.log(response);
+          });
+    
+        console.log("////////////////////////////////////////");
+        props.history.push('/signin')
+      }
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
@@ -202,7 +234,7 @@ export default function HorizontalLinearStepper() {
                     <Typography display='block' variant="h5" className={classes.title}>
                         Verify OnTrac
                     </Typography>
-                    <Button color="inherit" variant='outlined' size='medium'>Logout</Button>
+                    <Button color="inherit" variant='outlined' size='medium' onClick={()=>logout()}>Logout</Button>
                 </Toolbar>
             </AppBar>
 

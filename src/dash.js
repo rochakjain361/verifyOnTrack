@@ -46,6 +46,8 @@ import EmployementCodes from "./Components/DashBoardComponents/MyCodes/Employeme
 import HomeIcon from '@material-ui/icons/Home';
 import PaymentIcon from '@material-ui/icons/Payment';
 import PhoneIcon from '@material-ui/icons/Phone';
+import  { useState, useEffect } from 'react';
+
 const drawerWidth = 240;
 let token1 = "";
 
@@ -139,12 +141,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MiniDrawer() {
+export default function MiniDrawer(props) {
+  // const { classes } = this.props;
+
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [auth, setAuth] = React.useState(true);
+  const [Token,setToken]=React.useState("");
+  const [Token1,setToken1]=React.useState("");
+  const [id,setid]=React.useState("");
   // const [anchorEl, setAnchorEl] = React.useState(false);
+  useEffect(() => {
+    setToken1(localStorage.getItem("Token"));
+    setToken("Token " + Token1);
+    setid(localStorage.getItem("id"));
+  });
 
   const [open1, setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
@@ -166,7 +178,7 @@ export default function MiniDrawer() {
     console.log(token);
     let headers = {
       headers: {
-        Authorization: token,
+        Authorization: Token,
         "Content-Type": "multipart/form-data",
       },
     };
@@ -183,9 +195,7 @@ export default function MiniDrawer() {
       });
 
     console.log("////////////////////////////////////////");
-    this.props.history.push({
-      pathname: "/signin",
-    });
+    props.history.push('/signin')
   }
 
   return (
