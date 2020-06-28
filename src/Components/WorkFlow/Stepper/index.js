@@ -31,7 +31,7 @@ import WorkOutlineIcon from '@material-ui/icons/WorkOutline';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import Box from '@material-ui/core/Box';
-
+import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -127,13 +127,13 @@ export default function HorizontalLinearStepper() {
         active: {
           '& $line': {
             backgroundImage:
-              'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
+              'linear-gradient( 95deg,#757ce8 0%,#3f50b5 50%,#002884 100%)',
           },
         },
         completed: {
           '& $line': {
             backgroundImage:
-              'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
+              'linear-gradient( 95deg,#6fbf73 0%,#4caf50 50%,#357a38 100%)',
           },
         },
         line: {
@@ -213,20 +213,28 @@ export default function HorizontalLinearStepper() {
             </Stepper>
             <div>
                 {activeStep === steps.length ? (
-                    <div>
-                        <Grid container justify="center">
-                        <Typography className={classes.instructions}>
+                   <Box m={3} p={2}>
+                        <Grid container spacing={3} direction="column" align="center" justify="center">
+                            <Grid item xs={12}>
+
+                        <Typography justify="center" align="center" >
                             All steps completed - you&apos;re finished
-                        </Typography>
-                        <Button onClick={handleReset} className={classes.button}>
+                        </Typography></Grid>
+                        <Grid item xs={12}>
+                        <Button  size='medium'  variant="contained" color='primary' disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
+                                <><ArrowBackIcon />Previous</>
+                                </Button>
+                        <Button size='medium'  onClick={handleReset} variant="contained" color="primary" className={classes.button} >
+                            <SettingsBackupRestoreIcon/>
                             Reset
                         </Button></Grid>
-                    </div>
+                            </Grid>
+                    </Box>
                 ) : (
                         <Box p={1}>
                            
                             <Box m={3} p={2}>
-                                <Grid container  justify="space-evenly" alignItems="center">
+                                <Grid container  justify="space-between" alignItems="center">
                                 <Button style={{minWidth: 200}} size='medium'  variant="contained" color='primary' disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
                                 <><ArrowBackIcon />Previous</>
                                 </Button>
