@@ -902,7 +902,22 @@ class Addresses extends Component {
                           />
                         </Grid>
 
-                     
+                        <Grid item fullWidth xs={12}>
+                          <TextField
+                            id="street"
+                            label="Street"
+                            onChange={(event) =>
+                              this.setState(
+                                {
+                                  Streetname: event.target.value,
+                                }
+                                // this.reasonforupdatevalidcheck(event)
+                              )
+                            }
+                            type="text"
+                            fullWidth
+                          />
+                        </Grid>
 
                         <Grid item xs={12}>
                           <FormControl fullWidth>
@@ -1034,22 +1049,7 @@ class Addresses extends Component {
                           />
                         </Grid>
 
-                        <Grid item fullWidth xs={12}>
-                          <TextField
-                            id="street"
-                            label="Street"
-                            onChange={(event) =>
-                              this.setState(
-                                {
-                                  Streetname: event.target.value,
-                                }
-                                // this.reasonforupdatevalidcheck(event)
-                              )
-                            }
-                            type="text"
-                            fullWidth
-                          />
-                        </Grid>
+                       
                         {/* <Grid container justify="flex-start" direction="row">
                         <Grid class="w3-container">
                           <p>
@@ -1299,8 +1299,8 @@ class Addresses extends Component {
   addAddressForm() {
     return (
       <Dialog
-        // fullWidth={"md"}
-        // maxWidth={"md"}
+        fullWidth={"md"}
+        maxWidth={"md"}
         open={this.state.addDialogOpen}
         onClose={() => this.setState({ addDialogOpen: false })}
         aria-labelledby="responsive-dialog-title"
@@ -1398,6 +1398,22 @@ class Addresses extends Component {
                       this.setState({ housenumber: event.target.value });
                       console.log(event.target.value);
                     }}
+                    type="text"
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item fullWidth xs={12}>
+                  <TextField
+                    id="street"
+                    label="Street"
+                    onChange={(event) =>
+                      this.setState(
+                        {
+                          Streetname: event.target.value,
+                        }
+                        // this.reasonforupdatevalidcheck(event)
+                      )
+                    }
                     type="text"
                     fullWidth
                   />
@@ -1554,22 +1570,7 @@ class Addresses extends Component {
                   />
                 </Grid>
 
-                <Grid item fullWidth xs={12}>
-                  <TextField
-                    id="street"
-                    label="Street"
-                    onChange={(event) =>
-                      this.setState(
-                        {
-                          Streetname: event.target.value,
-                        }
-                        // this.reasonforupdatevalidcheck(event)
-                      )
-                    }
-                    type="text"
-                    fullWidth
-                  />
-                </Grid>
+             
                 {/* <Grid container justify="flex-start" direction="row">
                   <Grid class="w3-container">
                     <p>

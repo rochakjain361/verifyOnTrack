@@ -10,7 +10,10 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Grid from '@material-ui/core/Grid';
-
+import clsx from 'clsx';
+import {  withStyles } from '@material-ui/core/styles';
+import StepConnector from '@material-ui/core/StepConnector';
+import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 // import Address from '../Address'
 // import Identity from '../Identity'
 // import MyProfile from '../MyProfile'
@@ -21,6 +24,13 @@ import Addresses from "../../DashBoardComponents/Addresses/index"
 import Identities from "../../DashBoardComponents/Identities/index"
 import Phones from "../../DashBoardComponents/Phones/index"
 import MyJobProfile from "../../DashBoardComponents/MyJobProfile/index"
+import HomeIcon from '@material-ui/icons/Home';
+import PaymentIcon from '@material-ui/icons/Payment';
+import PhoneIcon from '@material-ui/icons/Phone';
+import WorkOutlineIcon from '@material-ui/icons/WorkOutline';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import Box from '@material-ui/core/Box';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -60,14 +70,80 @@ function getStepContent(step) {
         default:
             return 'Unknown step';
     }
-}
+}function ColorlibStepIcon(props) {
+    const classes = useColorlibStepIconStyles();
+    const { active, completed } = props;
+  
+    const icons = {
+      1: <PersonOutlineIcon />,
+      2: <HomeIcon />,
+      3: <PaymentIcon />,
+      4: <PhoneIcon />,
+      5: <WorkOutlineIcon />,
+    };
+  
+    return (
+      <div
+        className={clsx(classes.root, {
+          [classes.active]: active,
+          [classes.completed]: completed,
+        })}
+      >
+        {icons[String(props.icon)]}
+      </div>
+    );
+  }const useColorlibStepIconStyles = makeStyles({
+    root: {
+      backgroundColor: '#ccc',
+      zIndex: 1,
+      color: '#fff',
+      width: 50,
+      height: 50,
+      display: 'flex',
+      borderRadius: '50%',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    active: {
+      backgroundImage:
+        'linear-gradient( 136deg, #757ce8 0%, #3f50b5 50%, #002884 100%)',
+      boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
+    },
+    completed: {
+      backgroundImage:
+        'linear-gradient( 136deg, #6fbf73 0%, #4caf50 50%, #357a38 100%)',
+    },
+  });
 
 export default function HorizontalLinearStepper() {
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
     const [skipped, setSkipped] = React.useState(new Set());
     const steps = getSteps();
-
+    const ColorlibConnector = withStyles({
+        alternativeLabel: {
+          top: 22,
+        },
+        active: {
+          '& $line': {
+            backgroundImage:
+              'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
+          },
+        },
+        completed: {
+          '& $line': {
+            backgroundImage:
+              'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
+          },
+        },
+        line: {
+          height: 3,
+          border: 0,
+          backgroundColor: '#eaeaf0',
+          borderRadius: 1,
+        },
+      })(StepConnector);
+      
     const isStepOptional = (step) => {
         return step === 1;
     };
@@ -115,9 +191,9 @@ export default function HorizontalLinearStepper() {
         <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar>
-                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                    {/* <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                         <MenuIcon />
-                    </IconButton>
+                    </IconButton> */}
                     <Typography display='block' variant="h5" className={classes.title}>
                         Verify OnTrac
                     </Typography>
@@ -125,13 +201,12 @@ export default function HorizontalLinearStepper() {
                 </Toolbar>
             </AppBar>
 
-            <Stepper activeStep={activeStep}>
+            <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
                 {steps.map((label, index) => {
-                    const stepProps = {};
-                    const labelProps = {};
+                   
                     return (
-                        <Step key={label} {...stepProps}>
-                            <StepLabel {...labelProps}>{label}</StepLabel>
+                        <Step key={label} >
+                            <StepLabel  StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
                         </Step>
                     );
                 })}
@@ -148,15 +223,13 @@ export default function HorizontalLinearStepper() {
                         </Button></Grid>
                     </div>
                 ) : (
-                        <div style={{ padding: 20 }}>
-                            <Grid></Grid>
-                            <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
-                            <div style={{marginTop: 20}}>
+                        <Box p={1}>
+                           
+                            <Box m={3} p={2}>
                                 <Grid container  justify="space-evenly" alignItems="center">
-                                <Button style={{minWidth: 200}} size='medium' variant="contained" color='default' disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
-                                    Back
+                                <Button style={{minWidth: 200}} size='medium'  variant="contained" color='primary' disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
+                                <><ArrowBackIcon />Previous</>
                                 </Button>
-
                                 <Button
                                 style={{minWidth: 200}}
                                     variant="contained"
@@ -165,11 +238,12 @@ export default function HorizontalLinearStepper() {
                                     className={classes.button}
                                     size='medium'
                                 >
-                                    {activeStep === steps.length - 1 ? 'Finish' : 'Save & Next'}
+                                    {activeStep === steps.length - 1 ? 'Finish' : <>Next<ArrowForwardIcon/></>}
                                 </Button>
                                 </Grid>
-                            </div>
-                        </div>
+                            </Box>
+                            <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+                        </Box>
                     )}
             </div>
         </div>
