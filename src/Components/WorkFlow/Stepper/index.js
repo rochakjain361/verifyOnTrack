@@ -11,7 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Grid from '@material-ui/core/Grid';
 import clsx from 'clsx';
-import {  withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import StepConnector from '@material-ui/core/StepConnector';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 // import Address from '../Address'
@@ -19,6 +19,7 @@ import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 // import MyProfile from '../MyProfile'
 // import Phone from '../Phone'
 // import MyJob from '../MyJob'
+import Verification from '../Verification/index'
 import MyProfile from "../../DashBoardComponents/MyProfile/index"
 import Addresses from "../../DashBoardComponents/Addresses/index"
 import Identities from "../../DashBoardComponents/Identities/index"
@@ -32,6 +33,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import Box from '@material-ui/core/Box';
 import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -45,14 +47,14 @@ const useStyles = makeStyles((theme) => ({
     },
     menuButton: {
         marginRight: theme.spacing(2),
-      },
-      title: {
+    },
+    title: {
         flexGrow: 1,
-      },
+    },
 }));
 
 function getSteps() {
-    return ['Profile', 'Address', 'Identity', 'Phone', 'MyJob'];
+    return ['Profile', 'Address', 'Identity', 'Phone', 'MyJob','verification'];
 }
 
 function getStepContent(step) {
@@ -66,54 +68,57 @@ function getStepContent(step) {
         case 3:
             return <Phones />;
         case 4:
-            return <MyJobProfile/>;
+            return <MyJobProfile />;
+        case 5:
+            return <Verification />;
         default:
             return 'Unknown step';
     }
-}function ColorlibStepIcon(props) {
+} function ColorlibStepIcon(props) {
     const classes = useColorlibStepIconStyles();
     const { active, completed } = props;
-  
+
     const icons = {
-      1: <PersonOutlineIcon />,
-      2: <HomeIcon />,
-      3: <PaymentIcon />,
-      4: <PhoneIcon />,
-      5: <WorkOutlineIcon />,
+        1: <PersonOutlineIcon />,
+        2: <HomeIcon />,
+        3: <PaymentIcon />,
+        4: <PhoneIcon />,
+        5: <WorkOutlineIcon />,
+        6: <VerifiedUserIcon />
     };
-  
+
     return (
-      <div
-        className={clsx(classes.root, {
-          [classes.active]: active,
-          [classes.completed]: completed,
-        })}
-      >
-        {icons[String(props.icon)]}
-      </div>
+        <div
+            className={clsx(classes.root, {
+                [classes.active]: active,
+                [classes.completed]: completed,
+            })}
+        >
+            {icons[String(props.icon)]}
+        </div>
     );
-  }const useColorlibStepIconStyles = makeStyles({
+} const useColorlibStepIconStyles = makeStyles({
     root: {
-      backgroundColor: '#ccc',
-      zIndex: 1,
-      color: '#fff',
-      width: 50,
-      height: 50,
-      display: 'flex',
-      borderRadius: '50%',
-      justifyContent: 'center',
-      alignItems: 'center',
+        backgroundColor: '#ccc',
+        zIndex: 1,
+        color: '#fff',
+        width: 50,
+        height: 50,
+        display: 'flex',
+        borderRadius: '50%',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     active: {
-      backgroundImage:
-        'linear-gradient( 136deg, #757ce8 0%, #3f50b5 50%, #002884 100%)',
-      boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
+        backgroundImage:
+            'linear-gradient( 136deg, #757ce8 0%, #3f50b5 50%, #002884 100%)',
+        boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
     },
     completed: {
-      backgroundImage:
-        'linear-gradient( 136deg, #6fbf73 0%, #4caf50 50%, #357a38 100%)',
+        backgroundImage:
+            'linear-gradient( 136deg, #6fbf73 0%, #4caf50 50%, #357a38 100%)',
     },
-  });
+});
 
 export default function HorizontalLinearStepper() {
     const classes = useStyles();
@@ -122,28 +127,28 @@ export default function HorizontalLinearStepper() {
     const steps = getSteps();
     const ColorlibConnector = withStyles({
         alternativeLabel: {
-          top: 22,
+            top: 22,
         },
         active: {
-          '& $line': {
-            backgroundImage:
-              'linear-gradient( 95deg,#757ce8 0%,#3f50b5 50%,#002884 100%)',
-          },
+            '& $line': {
+                backgroundImage:
+                    'linear-gradient( 95deg,#757ce8 0%,#3f50b5 50%,#002884 100%)',
+            },
         },
         completed: {
-          '& $line': {
-            backgroundImage:
-              'linear-gradient( 95deg,#6fbf73 0%,#4caf50 50%,#357a38 100%)',
-          },
+            '& $line': {
+                backgroundImage:
+                    'linear-gradient( 95deg,#6fbf73 0%,#4caf50 50%,#357a38 100%)',
+            },
         },
         line: {
-          height: 3,
-          border: 0,
-          backgroundColor: '#eaeaf0',
-          borderRadius: 1,
+            height: 3,
+            border: 0,
+            backgroundColor: '#eaeaf0',
+            borderRadius: 1,
         },
-      })(StepConnector);
-      
+    })(StepConnector);
+
     const isStepOptional = (step) => {
         return step === 1;
     };
@@ -203,51 +208,56 @@ export default function HorizontalLinearStepper() {
 
             <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
                 {steps.map((label, index) => {
-                   
+
                     return (
                         <Step key={label} >
-                            <StepLabel  StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+                            <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
                         </Step>
                     );
                 })}
             </Stepper>
             <div>
                 {activeStep === steps.length ? (
-                   <Box m={3} p={2}>
+                    <Box m={3} p={2}>
                         <Grid container spacing={3} direction="column" align="center" justify="center">
                             <Grid item xs={12}>
 
+                                {/* <Typography justify="center" align="center" >
+                                    All steps completed - you&apos;re finished
+                        </Typography> */}
                         <Typography justify="center" align="center" >
-                            All steps completed - you&apos;re finished
-                        </Typography></Grid>
-                        <Grid item xs={12}>
-                        <Button  size='medium'  variant="contained" color='primary' disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
-                                <><ArrowBackIcon />Previous</>
-                                </Button>
-                        <Button size='medium'  onClick={handleReset} variant="contained" color="primary" className={classes.button} >
-                            <SettingsBackupRestoreIcon/>
+                                    You will be notified soon by mail
+                        </Typography>
+                        </Grid>
+                            <Grid item xs={12}>
+                                <Grid container justify="space-between" alignItems="center">
+                                    <Button size='medium' variant="contained" color='primary' disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
+                                        <><ArrowBackIcon />Previous</>
+                                    </Button>
+                                    <Button size='medium' onClick={handleReset} variant="contained" color="primary" className={classes.button} >
+                                        <SettingsBackupRestoreIcon />
                             Reset
-                        </Button></Grid>
-                            </Grid>
+                        </Button></Grid></Grid>
+                        </Grid>
                     </Box>
                 ) : (
                         <Box p={1}>
-                           
+
                             <Box m={3} p={2}>
-                                <Grid container  justify="space-between" alignItems="center">
-                                <Button style={{minWidth: 200}} size='medium'  variant="contained" color='primary' disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
-                                <><ArrowBackIcon />Previous</>
-                                </Button>
-                                <Button
-                                style={{minWidth: 200}}
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={handleNext}
-                                    className={classes.button}
-                                    size='medium'
-                                >
-                                    {activeStep === steps.length - 1 ? 'Finish' : <>Next<ArrowForwardIcon/></>}
-                                </Button>
+                                <Grid container justify="space-between" alignItems="center">
+                                    <Button style={{ minWidth: 200 }} size='medium' variant="contained" color='primary' disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
+                                        <><ArrowBackIcon />Previous</>
+                                    </Button>
+                                    <Button
+                                        style={{ minWidth: 200 }}
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={handleNext}
+                                        className={classes.button}
+                                        size='medium'
+                                    >
+                                        {activeStep === steps.length - 1 ? 'Finish' : <>Next<ArrowForwardIcon /></>}
+                                    </Button>
                                 </Grid>
                             </Box>
                             <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>

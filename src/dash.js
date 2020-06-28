@@ -24,7 +24,7 @@ import { Container, Button, Grid } from "@material-ui/core";
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import axios from "axios";
-
+import InfoIcon from '@material-ui/icons/Info';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import PersonIcon from "@material-ui/icons/Person";
 import WorkIcon from "@material-ui/icons/Work";
@@ -32,7 +32,7 @@ import MessageIcon from "@material-ui/icons/Message";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import CodeIcon from "@material-ui/icons/Code";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-
+import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import Dashboard from "./Components/DashBoardComponents/Dashboard";
 import Addresses from "./Components/DashBoardComponents/Addresses";
 import Identities from "./Components/DashBoardComponents/Identities";
@@ -43,7 +43,9 @@ import Outbox from "./Components/DashBoardComponents/Messages/Outbox";
 import MyProfile from "./Components/DashBoardComponents/MyProfile";
 import AccessCodes from "./Components/DashBoardComponents/MyCodes/AccessCodes";
 import EmployementCodes from "./Components/DashBoardComponents/MyCodes/EmployementCodes";
-
+import HomeIcon from '@material-ui/icons/Home';
+import PaymentIcon from '@material-ui/icons/Payment';
+import PhoneIcon from '@material-ui/icons/Phone';
 const drawerWidth = 240;
 let token1 = "";
 
@@ -251,7 +253,7 @@ export default function MiniDrawer() {
           onClick={() => setOpen1(!open1)}
         >
           <ListItemIcon>
-            <PersonIcon style={{ color: "white" }} />
+            <InfoIcon style={{ color: "white" }} />
           </ListItemIcon>
           <ListItemText primary="My Info" className={classes.textColor} />
           {open1 ? (
@@ -265,6 +267,9 @@ export default function MiniDrawer() {
           <List component="div" disablePadding>
             <Link to="/profiles" className={classes.link}>
               <ListItem button className={classes.nested}>
+              <ListItemIcon>
+              <PersonOutlineIcon style={{ color: "white" }} />
+            </ListItemIcon>
                 <ListItemText
                   primary="Profiles"
                   className={classes.textColor}
@@ -274,6 +279,9 @@ export default function MiniDrawer() {
 
             <Link to="/addresses" className={classes.link}>
               <ListItem button className={classes.nested}>
+              <ListItemIcon>
+              <HomeIcon style={{ color: "white" }} />
+            </ListItemIcon>
                 <ListItemText
                   primary="Addresses"
                   className={classes.textColor}
@@ -283,6 +291,9 @@ export default function MiniDrawer() {
 
             <Link to="/identities" className={classes.link}>
               <ListItem button className={classes.nested}>
+              <ListItemIcon>
+              <PaymentIcon style={{ color: "white" }} />
+            </ListItemIcon>
                 <ListItemText
                   primary="Identities"
                   className={classes.textColor}
@@ -292,6 +303,9 @@ export default function MiniDrawer() {
 
             <Link to="/phones" className={classes.link}>
               <ListItem button className={classes.nested}>
+              <ListItemIcon>
+              <PhoneIcon style={{ color: "white" }} />
+            </ListItemIcon>
                 <ListItemText
                   primary="Phones"
                   className={classes.textColor}

@@ -34,18 +34,18 @@ class App extends React.PureComponent {
               <Route exact path='/workflow' component={Stepper} />
 
               {/* Employee PAGE PATHS */}
-              <Route exact path='/Homepage' component={LandingPage} />
-              <Route exact path='/addresses' component={LandingPage} />
-              <Route exact path='/Identities' component={LandingPage} />
-              <Route exact path='/Phones' component={LandingPage} />
-              <Route exact path='/MyJobProfile' component={LandingPage} />
-              <Route exact path='/employeeInbox' component={LandingPage} />
-              <Route exact path='/employeeOutbox' component={LandingPage} />
-              <Route exact path='/profiles' component={LandingPage} />
-              <Route exact path='/dashboard' component={LandingPage} />
-              <Route exact path='/employeeAccessCodes' component={LandingPage} />
-              <Route exact path='/employeeAccessCodes' component={LandingPage} />
-              <Route exact path='/employeeEmployementCodes' component={LandingPage} />
+              <Route exact path='/Homepage' component={dash} />
+              <Route exact path='/addresses' component={dash} />
+              <Route exact path='/Identities' component={dash} />
+              <Route exact path='/Phones' component={dash} />
+              <Route exact path='/MyJobProfile' component={dash} />
+              <Route exact path='/employeeInbox' component={dash} />
+              <Route exact path='/employeeOutbox' component={dash} />
+              <Route exact path='/profiles' component={dash} />
+              <Route exact path='/dashboard' component={dash} />
+              <Route exact path='/employeeAccessCodes' component={dash} />
+              <Route exact path='/employeeAccessCodes' component={dash} />
+              <Route exact path='/employeeEmployementCodes' component={dash} />
 
               {/* Employer Page Paths */}
               <Route exact path='/employer' component={EmployerLandingPage} />
