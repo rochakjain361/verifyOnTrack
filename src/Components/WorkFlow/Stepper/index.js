@@ -59,7 +59,7 @@ function getSteps() {
     return ['Profile', 'Address', 'Identity', 'Phone', 'MyJob','Approval'];
 }
 
-function getStepContent(step) {
+function getStepContent(step,props) {
     switch (step) {
         case 0:
             return <MyProfile />;
@@ -72,7 +72,7 @@ function getStepContent(step) {
         case 4:
             return <MyJobProfile />;
         case 5:
-            return <Verification />;
+            return <Verification data={props.location.state.detail.user.info_provided_field}/>;
         default:
             return 'Unknown step';
     }
@@ -131,21 +131,23 @@ export default function HorizontalLinearStepper(props) {
    }
    else if(props.location.state.detail.user.info_provided_field.address===false){
          setActiveStep(1)
-       console.log("activeStep",activeStep)
+     
    }
    else if(props.location.state.detail.user.info_provided_field.identity===false){
-    setActiveStep(3)
+    setActiveStep(2)
    }
    else if(props.location.state.detail.user.info_provided_field.phone===false){
-    setActiveStep(4)
+    setActiveStep(3)
    }
    else if(props.location.state.detail.user.info_provided_field.jobHistory===false){
-    setActiveStep(5)
+    setActiveStep(4)
    }  else {
-    setActiveStep(6)
+    setActiveStep(5)
    }  });
   
-    
+    const initialset=()=>{
+        
+    }
     
    
     const [skipped, setSkipped] = React.useState(new Set());
@@ -178,7 +180,7 @@ export default function HorizontalLinearStepper(props) {
     })(StepConnector);
     
     useEffect( () => {
-        console.log("currentStep",currentStep);
+        // console.log("currentStep",currentStep);
     // initialstep(props.location.state.detail.user.info_provided_field);
         
         
@@ -323,7 +325,7 @@ export default function HorizontalLinearStepper(props) {
                                     </Button>
                                 </Grid>
                             </Box>
-                            <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+                            <Typography className={classes.instructions}>{getStepContent(activeStep,props)}</Typography>
                         </Box>
                     )}
             </div>
