@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function getSteps() {
-    return ['Profile', 'Address', 'Identity', 'Phone', 'MyJob','verification'];
+    return ['Profile', 'Address', 'Identity', 'Phone', 'MyJob','Approval'];
 }
 
 function getStepContent(step) {
@@ -123,13 +123,36 @@ function getStepContent(step) {
 });
 
 export default function HorizontalLinearStepper(props) {
+    
     const classes = useStyles();
-    const [activeStep, setActiveStep] = React.useState(0);
+    const [activeStep, setActiveStep] = React.useState( );
+    const [currentStep,setCurrentStep]=React.useState(()=>{  if(props.location.state.detail.user.info_provided_field.profile===false){
+        setActiveStep(0)
+   }
+   else if(props.location.state.detail.user.info_provided_field.address===false){
+         setActiveStep(1)
+       console.log("activeStep",activeStep)
+   }
+   else if(props.location.state.detail.user.info_provided_field.identity===false){
+    setActiveStep(3)
+   }
+   else if(props.location.state.detail.user.info_provided_field.phone===false){
+    setActiveStep(4)
+   }
+   else if(props.location.state.detail.user.info_provided_field.jobHistory===false){
+    setActiveStep(5)
+   }  else {
+    setActiveStep(6)
+   }  });
+  
+    
+    
+   
     const [skipped, setSkipped] = React.useState(new Set());
     const steps = getSteps();
     const [Token,setToken]=React.useState("");
-  const [Token1,setToken1]=React.useState("");
-  const [id,setid]=React.useState("");
+    const [Token1,setToken1]=React.useState("");
+    const [id,setid]=React.useState("");
     const ColorlibConnector = withStyles({
         alternativeLabel: {
             top: 22,
@@ -137,13 +160,13 @@ export default function HorizontalLinearStepper(props) {
         active: {
             '& $line': {
                 backgroundImage:
-                    'linear-gradient( 95deg,#757ce8 0%,#3f50b5 50%,#002884 100%)',
+                'linear-gradient( 95deg,#757ce8 0%,#3f50b5 50%,#002884 100%)',
             },
         },
         completed: {
             '& $line': {
                 backgroundImage:
-                    'linear-gradient( 95deg,#6fbf73 0%,#4caf50 50%,#357a38 100%)',
+                'linear-gradient( 95deg,#6fbf73 0%,#4caf50 50%,#357a38 100%)',
             },
         },
         line: {
@@ -153,12 +176,18 @@ export default function HorizontalLinearStepper(props) {
             borderRadius: 1,
         },
     })(StepConnector);
-    useEffect(() => {
+    
+    useEffect( () => {
+        console.log("currentStep",currentStep);
+    // initialstep(props.location.state.detail.user.info_provided_field);
+        
+        
         setToken1(localStorage.getItem("Token"));
         setToken("Token " + Token1);
         setid(localStorage.getItem("id"));
-      });
-
+        // setActiveStep(2);
+    });
+    
     const isStepOptional = (step) => {
         return step === 1;
     };
@@ -280,6 +309,8 @@ export default function HorizontalLinearStepper(props) {
                                     <Button style={{ minWidth: 200 }} size='medium' variant="contained" color='primary' disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
                                         <><ArrowBackIcon />Previous</>
                                     </Button>
+                                   
+                                    <Typography variant="h3" gutterBottom align="center">{steps[activeStep]}</Typography>
                                     <Button
                                         style={{ minWidth: 200 }}
                                         variant="contained"

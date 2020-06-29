@@ -31,7 +31,7 @@ export class index extends Component {
                 <Grid container direction="column" justify="center" alignItems="center" >
                     <Grid item xs={12}>
                         <Typography justify="center" align="center" >
-                            Please request for verification if all details are entered.
+                            Please request for approval if all details are entered.
 
                         </Typography>
                     </Grid>
@@ -44,10 +44,10 @@ export class index extends Component {
                                 this.setState({ requestconfirmationDialogBox: true });
                             }}
                         >
-                            Request VerifyOnTrac Evaluation
+                            Submit for approval
                 </Button>
                     </Grid>
-                    <Grid item xs={12}>
+                    {/* <Grid item xs={12}>
                         <Button
                             variant="contained"
                             color="secondary"
@@ -57,7 +57,7 @@ export class index extends Component {
                         >
                             Request Cancel Evaluation Request
                   </Button>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </div>
         )

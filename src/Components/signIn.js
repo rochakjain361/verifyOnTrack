@@ -294,6 +294,7 @@ class signIn extends Component {
         } else {
           this.props.history.push({
             pathname: "/workflow",
+            state: { detail: data }
           });
         }
       } else {

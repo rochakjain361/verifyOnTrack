@@ -445,9 +445,7 @@ async getidentites(){
     return (
       <>
        <Grid item xs={12}>
-       <Typography variant="h3" gutterBottom align="center">
-                Identites
-              </Typography>
+     
        </Grid>
       
         <Grid item xs={12}>
@@ -531,10 +529,10 @@ async getidentites(){
           this.adddata()
         ) : (
           <>
-          <Grid container justify="space-between" alignItems="center">
-          <Grid item>
-            <h1>Identities</h1>
-          </Grid>
+          <Grid container direction="column" justify="center" alignItems="flex-end">
+            <Box p={2}>
+
+         
 
           <Grid item>
             <Button
@@ -543,10 +541,11 @@ async getidentites(){
               onClick={() => {
                 this.setState({ addDialogOpen: true });
               }}
-            >
+              >
               Add Identity
             </Button>
           </Grid>
+              </Box>
         </Grid>
           <TableContainer component={Paper} elevation={16}>
             <Table stickyHeader>
