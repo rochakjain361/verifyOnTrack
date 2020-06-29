@@ -309,7 +309,7 @@ export default function HorizontalLinearStepper(props) {
                             <Box m={3} p={2}>
                                 <Grid container justify="space-between" alignItems="center">
                                     <Button style={{ minWidth: 200 }} size='medium' variant="contained" color='primary' disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
-                                        <><ArrowBackIcon />Previous</>
+                                    {activeStep === steps.length - 1 ? null : <><ArrowBackIcon />Previous</>}  
                                     </Button>
                                    
                                     <Typography variant="h3" gutterBottom align="center">{steps[activeStep]}</Typography>

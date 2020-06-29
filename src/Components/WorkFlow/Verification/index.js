@@ -14,9 +14,9 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import axios from "axios";
-let token1="";
-let token="";
-let id="";
+let token1 = "";
+let token = "";
+let id = "";
 export class index extends Component {
     constructor(props) {
         super(props)
@@ -24,39 +24,41 @@ export class index extends Component {
         this.state = {
             requestconfirmationDialogBox: false,
             confirmationDialogBox: false,
-           
-
+            approval: false,
         }
     }
     componentDidMount() {
-       
+
         token1 = localStorage.getItem("Token");
         token = "Token " + token1;
         id = localStorage.getItem("id");
-       
+
     }
     async requestconfirmation() {
-       
+
         console.log(token);
-    
+
         let headers = {
-          headers: {
-            Authorization: token,
-          },
+            headers: {
+                Authorization: token,
+            },
         };
         //  let bodyFormData = new FormData();
         await axios
-          .post(
-            "http://3.22.17.212:8000/api/v1/codes/approval/new-code",
-            "",
-    
-            headers
-          )
-          .then((response) => {
-            console.log(response);
-          });
-          
-      }
+            .post(
+                "http://3.22.17.212:8000/api/v1/codes/approval/new-code",
+                "",
+
+                headers
+            )
+            .then((response) => {
+                console.log(response);
+                if (response.status === 200) {
+                    this.setState({ approval: true })
+                }
+            });
+
+    }
     render() {
 
         return (
@@ -70,13 +72,14 @@ export class index extends Component {
                     </Grid>
                     <Grid item xs={12}>
                         <Button
-                        // disabled={!this.props.data.profile||!this.props.data.address||!this.props.data.phone||!this.props.data.jobHistory}
-   
+                            // disabled={!this.props.data.profile||!this.props.data.address||!this.props.data.phone||!this.props.data.jobHistory}
+                            disabled={this.state.approval}
                             style={{ maxHeight: 30 }}
                             variant="contained"
                             color="primary"
                             onClick={() => {
-                                this.setState({ requestconfirmationDialogBox: true });
+                                this.requestconfirmation()
+
                             }}
                         >
                             Submit for approval
