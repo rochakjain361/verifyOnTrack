@@ -16,6 +16,8 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import { Button } from "@material-ui/core";
 import Input from "@material-ui/core/Input";
+import Link from '@material-ui/core/Link';
+
 
 // import ValidationMessage from './ValidationMessage';
 function ValidationMessage(props) {
@@ -34,6 +36,7 @@ class signUp extends Component {
     designation: "",
     companyName: "",
     firstname: "",
+    firstnamevalid:false,
     middlename: "",
     surname: "",
     username: "",
@@ -48,6 +51,16 @@ class signUp extends Component {
     formValid: "disabled",
     submitDisabled: "disabled",
   };
+  validatefirstname=(firstname)=>{
+   console.log(firstname)
+    let firstnameValid = true;
+    if (firstname.length < 1) {
+      firstnameValid = false;
+      
+    }
+    this.setState({ firstnamevalid:firstnameValid  }, this.validateForm);
+    console.log("firstnamevalid",this.state.firstnamevalid)
+  }
   validateUsername = () => {
     const { username } = this.state;
     let usernameValid = true;
@@ -56,9 +69,11 @@ class signUp extends Component {
     if (username.length < 5) {
       usernameValid = false;
       errorMsg.username = "Must be at least 5 characters long";
+     
     }
+  
 
-    this.setState({ usernameValid, errorMsg }, this.validateForm);
+    this.setState({  usernameValid,errorMsg}, this.validateForm);
   };
 
   updateEmail = (email) => {
@@ -124,6 +139,7 @@ class signUp extends Component {
   };
   validateForm = () => {
     const {
+      firstnamevalid,
       usernameValid,
       emailValid,
       passwordValid,
@@ -131,9 +147,10 @@ class signUp extends Component {
     } = this.state;
     this.setState({
       formValid:
-        usernameValid && emailValid && passwordValid && passwordConfirmValid,
+        firstnamevalid&&usernameValid && emailValid && passwordValid && passwordConfirmValid,
     });
     if (
+      this.state.firstnamevalid&&
       this.state.username &&
       this.state.emailValid &&
       this.state.passwordValid &&
@@ -174,9 +191,10 @@ class signUp extends Component {
                   variant="h4"
                   gutterBottom
                   color="primary"
-                  style={{ fontFamily: "Montserrat", fontWeight: "bold" }}
+                  align="center"
+                  // style={{ fontFamily: "Montserrat", fontWeight: "bold" }}
                 >
-                  Register
+                Sign Up
                 </Typography>
 
                 <Grid container spacing={1}>
@@ -237,7 +255,7 @@ class signUp extends Component {
                       label="First Name"
                       value={this.state.firstname}
                       onChange={(event) =>
-                        this.setState({ firstname: event.target.value })
+                        this.setState({ firstname: event.target.value },this.validatefirstname(event.target.value))
                       }
                       type="text"
                       autoComplete="firstname"
@@ -413,12 +431,16 @@ class signUp extends Component {
                         marginBottom: 16,
                         fontFamily: "Montserrat",
                         fontWeight: "bold",
+                        
                       }}
                       fullWidth
                     />
                   </Grid>
                   <Grid container xs={12} justify="center">
-                    <RouterLink title="Have an account? Sign In" to="/" />
+                    {/* <RouterLink title="Have an account? Sign In" to="/" /> */}
+                    <Link title="Don't have an account? Sign Up" href="/signin" >
+                    Have an account? Sign In
+           </Link>
                   </Grid>
                 </Grid>
               </form>
@@ -473,8 +495,30 @@ class signUp extends Component {
         },
       });
       console.log("..................................................");
-      response = await response.json();
       console.log("response", response);
+      response = await response.json();
+      if(response.token){
+        localStorage.setItem("Token", response.token);
+        localStorage.setItem("id", response.user.id);
+
+       
+        if (response.user.is_admin) {
+          this.props.history.push({
+            pathname: "/admin",
+          });
+        } else if (response.user.is_employer) {
+          this.props.history.push({
+            pathname: "/employer",
+          });
+        } else {
+          this.props.history.push({
+            pathname: "/dashboard",
+          });
+        }
+      } else {
+        this.setState({ warning: true });
+      
+      }
     } catch (error) {
       console.log("[!ON_REGISTER] " + error);
     }
