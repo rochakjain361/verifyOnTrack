@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function getSteps() {
-    return ['Profile', 'Address', 'Identity', 'Phone', 'MyJob','Approval'];
+    return ['Profile', 'Address', 'Identity', 'Phone', 'MyJob'];
 }
 
 function getStepContent(step,props) {
@@ -71,8 +71,8 @@ function getStepContent(step,props) {
             return <Phones />;
         case 4:
             return <MyJobProfile />;
-        case 5:
-            return <Verification data={props.location.state.detail.user.info_provided_field}/>;
+        // case 5:
+        //     return <Verification data={props.location.state.detail.user.info_provided_field}/>;
         default:
             return 'Unknown step';
     }
@@ -86,7 +86,7 @@ function getStepContent(step,props) {
         3: <PaymentIcon />,
         4: <PhoneIcon />,
         5: <WorkOutlineIcon />,
-        6: <VerifiedUserIcon />
+        // 6: <VerifiedUserIcon />
     };
 
     return (
@@ -123,7 +123,32 @@ function getStepContent(step,props) {
 });
 
 export default function HorizontalLinearStepper(props) {
-    
+  const requestconfirmation=  async ()=> {
+
+        
+
+        let headers = {
+            headers: {
+                Authorization: Token,
+            },
+        };
+        //  let bodyFormData = new FormData();
+        await axios
+            .post(
+                "http://3.22.17.212:8000/api/v1/codes/approval/new-code",
+                "",
+
+                headers
+            )
+            .then((response) => {
+                console.log(response);
+                if (response.status === 200) {
+                    setApproval(true)
+                }
+            });
+
+    }
+    const [Approval,setApproval]=React.useState(false);
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState( );
     const [currentStep,setCurrentStep]=React.useState(()=>{  if(props.location.state.detail.user.info_provided_field.profile===false){
@@ -145,9 +170,7 @@ export default function HorizontalLinearStepper(props) {
     setActiveStep(5)
    }  });
   
-    const initialset=()=>{
-        
-    }
+  
     
    
     const [skipped, setSkipped] = React.useState(new Set());
@@ -282,6 +305,39 @@ export default function HorizontalLinearStepper(props) {
             <div>
                 {activeStep === steps.length ? (
                     <Box m={3} p={2}>
+                        {Approval===false? <Grid container direction="column" justify="center" alignItems="center" >
+                    <Grid item xs={12}>
+                        <Typography justify="center" align="center" >
+                            Please request for approval if all details are entered.
+
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Button
+                            // disabled={!this.props.data.profile||!this.props.data.address||!this.props.data.phone||!this.props.data.jobHistory}
+                            
+                            style={{ maxHeight: 30 }}
+                            variant="contained"
+                            color="primary"
+                            onClick={() => {
+                                requestconfirmation()
+
+                            }}
+                        >
+                            Submit for approval
+                </Button>
+                    </Grid>
+                    
+                                <Grid container justify="space-between" alignItems="center">
+                                    <Button size='medium' variant="contained" color='primary' disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
+                                        <><ArrowBackIcon />Previous</>
+                                    </Button>
+                                    <Button size='medium' onClick={handleReset} variant="contained" color="primary" className={classes.button} >
+                                        <SettingsBackupRestoreIcon />
+                            Reset
+                        </Button></Grid>
+                  
+                </Grid>:
                         <Grid container spacing={3} direction="column" align="center" justify="center">
                             <Grid item xs={12}>
 
@@ -292,16 +348,8 @@ export default function HorizontalLinearStepper(props) {
                                     You will be notified soon by mail
                         </Typography>
                         </Grid>
-                            <Grid item xs={12}>
-                                <Grid container justify="space-between" alignItems="center">
-                                    <Button size='medium' variant="contained" color='primary' disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
-                                        <><ArrowBackIcon />Previous</>
-                                    </Button>
-                                    <Button size='medium' onClick={handleReset} variant="contained" color="primary" className={classes.button} >
-                                        <SettingsBackupRestoreIcon />
-                            Reset
-                        </Button></Grid></Grid>
-                        </Grid>
+                            
+                        </Grid>}
                     </Box>
                 ) : (
                         <Box p={1}>
@@ -309,7 +357,7 @@ export default function HorizontalLinearStepper(props) {
                             <Box m={3} p={2}>
                                 <Grid container justify="space-between" alignItems="center">
                                     <Button style={{ minWidth: 200 }} size='medium' variant="contained" color='primary' disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
-                                    {activeStep === steps.length - 1 ? null : <><ArrowBackIcon />Previous</>}  
+                                  <><ArrowBackIcon />Previous</> 
                                     </Button>
                                    
                                     <Typography variant="h3" gutterBottom align="center">{steps[activeStep]}</Typography>
