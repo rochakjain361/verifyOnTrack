@@ -17,6 +17,7 @@ import theme from './theme';
 import dash from './dash'
 import Stepper from './Components/WorkFlow/Stepper'
 import ApprovalCodes from './Components/AdminPageComponents/ManageCodes/ApprovalCodes';
+import Job from './Components/AdminPageComponents/ManageCodes/Pages/Job';
 
 class App extends React.PureComponent {
   render() {
@@ -72,6 +73,7 @@ class App extends React.PureComponent {
               <Route exact path='/manageJobCategories' component={AdminLandingPage} />
               <Route exact path='/manageJobLeavingReasons' component={AdminLandingPage} />
               <Route exact path='/approvalCodes' component={AdminLandingPage} />
+              <Route exact path='/approvaljobs' component={Job} />
 
             </Switch>
           </div>

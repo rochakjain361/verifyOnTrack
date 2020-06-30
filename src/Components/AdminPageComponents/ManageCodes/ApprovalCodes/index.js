@@ -30,6 +30,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import ViewPagesComponent from '../ViewPagesComponent'
 
 const token1 = localStorage.getItem("Token");
 const token = "Token " + token1;
@@ -66,6 +67,8 @@ class index extends Component {
         assignedToMeCheck: false,
         pendingApprovalRequestCheck: false,
         assignDialog: false,
+        viewDialog: false,
+        viewLogic: true,
         adminByRadio: "searchByEmail",
 
         allCodes: [],
@@ -176,7 +179,9 @@ class index extends Component {
 
 
                     <Grid item xs={4}>
-                        <Button color='secondary' variant='contained' onClick={() => this.setState({ assignDialog: true })} fullWidth>  Create New code </Button>
+                        <Button color='secondary' variant='contained'
+                            onClick={() => this.setState({ viewDialog: true })}
+                            fullWidth>  Create New code </Button>
                     </Grid>
 
                     <Grid container direction='row' spacing={2}>
@@ -232,6 +237,7 @@ class index extends Component {
                                     <TableCell align="left">Code Status</TableCell>
                                     <TableCell align="left">Last Updated</TableCell>
                                     <TableCell align="left">Actions</TableCell>
+                                    <TableCell align="left">View</TableCell>
                                 </TableRow>
                             </TableHead>
                             {this.tableDisplayLogic()}
@@ -240,6 +246,7 @@ class index extends Component {
 
                 </Grid>
                 {this.assignAdminDialog()}
+                {this.viewDialogBox()}
 
             </div>
         )
@@ -286,150 +293,182 @@ class index extends Component {
     // }
 
     allCodesTable() {
-        return(
+        return (
+
             <TableBody>
-                                {this.state.allCodes.map((row, index) => (
-                                    <TableRow key={row.id}>
-                                        <TableCell align="left">{row.createdOn}</TableCell>
-                                        <TableCell align="left">{row.codeString}</TableCell>
-                                        <TableCell align="left">{row.assigned_to_name_field.name}</TableCell>
-                                        <TableCell align="left">{row.user_field.name}</TableCell>
-                                        <TableCell align="left">{row.is_employer_field}</TableCell>
-                                        <TableCell align="left">{row.codeStatus}</TableCell>
-                                        <TableCell align="left">{new Date(row.statusChangeDate).toDateString()}</TableCell>
-                                        <TableCell align="left">
-                                            <FormControl variant="outlined" size='small' fullWidth>
-                                                <InputLabel id="actionSelect">Status</InputLabel>
-                                                <Select
-                                                    labelId="actionSelect"
-                                                    id="actionSelect"
-                                                    // value={this.state.actions}
-                                                    // onChange={(event) => { event.target.value }}
-                                                    label="Status"
-                                                >
-                                                    <MenuItem value={"assignAdmin"}>Assign Admin</MenuItem>
-                                                    <MenuItem value={"reassignAdmin"}>Reassign Admin</MenuItem>
-                                                    <MenuItem value={"view"}>View and approve</MenuItem>
-                                                </Select>
-                                            </FormControl></TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
+                {this.state.allCodes.map((row, index) => (
+                    <TableRow key={row.id}>
+                        <TableCell align="left">{row.createdOn}</TableCell>
+                        <TableCell align="left">{row.codeString}</TableCell>
+                        <TableCell align="left">{row.assigned_to_name_field.name}</TableCell>
+                        <TableCell align="left">{row.user_field.name}</TableCell>
+                        <TableCell align="left">{row.is_employer_field ? ('Yes') : ('No')}</TableCell>
+                        <TableCell align="left">{row.codeStatus}</TableCell>
+                        <TableCell align="left">{new Date(row.statusChangeDate).toDateString()}</TableCell>
+                        <TableCell align="left">
+                            {
+                                row.showAssignTo_field ?
+                                    (
+                                        <Button 
+                                        variant='outlined' 
+                                        color='secondary'
+                                        onClick={() => this.setState({ assignDialog: true })} 
+                                        >
+                                            Assign Admin
+                                        </Button>
+                                    )
+                                    :
+                                    (
+                                        <Button variant='outlined' color='secondary' onClick={() => this.setState({ assignDialog: true })} >
+                                            Reassign Admin
+                                        </Button>
+                                    )}
+                        </TableCell>
+                        {/* {row.viewApprove_field !== "False" ? (this.setState({viewLogic: true})) : null} */}
+                        <TableCell align="left">
+                        <Button variant='outlined' color='primary' disabled={this.state.viewLogic}>
+                            View &amp; approve
+                        </Button>
+                    </TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+
         );
     }
 
     assignedToMeTable() {
-        return(
+        return (
+
             <TableBody>
-                                {this.state.assignedToMe.map((row, index) => (
-                                    <TableRow key={row.id}>
-                                        <TableCell align="left">{row.createdOn}</TableCell>
-                                        <TableCell align="left">{row.codeString}</TableCell>
-                                        <TableCell align="left">{row.assigned_to_name_field.name}</TableCell>
-                                        <TableCell align="left">{row.user_field.name}</TableCell>
-                                        <TableCell align="left">{row.is_employer_field}</TableCell>
-                                        <TableCell align="left">{row.codeStatus}</TableCell>
-                                        <TableCell align="left">{new Date(row.statusChangeDate).toDateString()}</TableCell>
-                                        <TableCell align="left">
-                                            <FormControl variant="outlined" size='small' fullWidth>
-                                                <InputLabel id="actionSelect">Status</InputLabel>
-                                                <Select
-                                                    labelId="actionSelect"
-                                                    id="actionSelect"
-                                                    // value={this.state.actions}
-                                                    // onChange={(event) => { event.target.value }}
-                                                    label="Status"
-                                                >
-                                                    <MenuItem value={"assignAdmin"}>Assign Admin</MenuItem>
-                                                    <MenuItem value={"reassignAdmin"}>Reassign Admin</MenuItem>
-                                                    <MenuItem value={"view"}>View and approve</MenuItem>
-                                                </Select>
-                                            </FormControl></TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
+                {this.state.assignedToMe.map((row, index) => (
+                    <TableRow key={row.id}>
+                        <TableCell align="left">{row.createdOn}</TableCell>
+                        <TableCell align="left">{row.codeString}</TableCell>
+                        <TableCell align="left">{row.assigned_to_name_field.name}</TableCell>
+                        <TableCell align="left">{row.user_field.name}</TableCell>
+                        <TableCell align="left">{row.is_employer_field ? ('Yes') : ('No')}</TableCell>
+                        <TableCell align="left">{row.codeStatus}</TableCell>
+                        <TableCell align="left">{new Date(row.statusChangeDate).toDateString()}</TableCell>
+                        <TableCell align="left">
+                            {
+                                row.showAssignTo_field ?
+                                    (
+                                        <Button variant='outlined' color='secondary' onClick={() => this.setState({ assignDialog: true })} >
+                                            Assign Admin
+                                        </Button>
+                                    )
+                                    :
+                                    (
+                                        <Button variant='outlined' color='secondary' onClick={() => this.setState({ assignDialog: true })} >
+                                            Reassign Admin
+                                        </Button>
+                                    )}
+                        </TableCell>
+                        {/* {row.viewApprove_field !== "False" ? (this.setState({viewLogic: true})) : null} */}
+                        <TableCell align="left">
+                        <Button variant='outlined' color='primary' disabled={this.state.viewLogic}>
+                            View &amp; approve
+                        </Button>
+                    </TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+
         );
     }
 
     pendingApprovalTable() {
-        return(
+        return (
+
             <TableBody>
-                                {this.state.pendingApprovalRequests.map((row, index) => (
-                                    <TableRow key={row.id}>
-                                        <TableCell align="left">{row.createdOn}</TableCell>
-                                        <TableCell align="left">{row.codeString}</TableCell>
-                                        <TableCell align="left">{row.assigned_to_name_field.name}</TableCell>
-                                        <TableCell align="left">{row.user_field.name}</TableCell>
-                                        <TableCell align="left">{row.is_employer_field}</TableCell>
-                                        <TableCell align="left">{row.codeStatus}</TableCell>
-                                        <TableCell align="left">{new Date(row.statusChangeDate).toDateString()}</TableCell>
-                                        <TableCell align="left">
-                                            <FormControl variant="outlined" size='small' fullWidth>
-                                                <InputLabel id="actionSelect">Status</InputLabel>
-                                                <Select
-                                                    labelId="actionSelect"
-                                                    id="actionSelect"
-                                                    // value={this.state.actions}
-                                                    // onChange={(event) => { event.target.value }}
-                                                    label="Status"
-                                                >
-                                                    <MenuItem value={"assignAdmin"}>Assign Admin</MenuItem>
-                                                    <MenuItem value={"reassignAdmin"}>Reassign Admin</MenuItem>
-                                                    <MenuItem value={"view"}>View and approve</MenuItem>
-                                                </Select>
-                                            </FormControl></TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
+                {this.state.pendingApprovalRequests.map((row, index) => (
+                    <TableRow key={row.id}>
+                        <TableCell align="left">{row.createdOn}</TableCell>
+                        <TableCell align="left">{row.codeString}</TableCell>
+                        <TableCell align="left">{row.assigned_to_name_field.name}</TableCell>
+                        <TableCell align="left">{row.user_field.name}</TableCell>
+                        <TableCell align="left">{row.is_employer_field ? ('Yes') : ('No')}</TableCell>
+                        <TableCell align="left">{row.codeStatus}</TableCell>
+                        <TableCell align="left">{new Date(row.statusChangeDate).toDateString()}</TableCell>
+                        <TableCell align="left">
+                            {
+                                row.showAssignTo_field ?
+                                    (
+                                        <Button variant='outlined' color='secondary' onClick={() => this.setState({ assignDialog: true })} >
+                                            Assign Admin
+                                        </Button>
+                                    )
+                                    :
+                                    (
+                                        <Button variant='outlined' color='secondary' onClick={() => this.setState({ assignDialog: true })} >
+                                            Reassign Admin
+                                        </Button>
+                                    )}
+                        </TableCell>
+                        {/* {row.viewApprove_field !== "False" ? (this.setState({viewLogic: true})) : null} */}
+                        <TableCell align="left">
+                        <Button variant='outlined' color='primary' disabled={this.state.viewLogic}>
+                            View &amp; approve
+                        </Button>
+                    </TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+
         );
     }
 
     bothRequestsTable() {
-        return(
+        return (
+
             <TableBody>
-                                {this.state.bothRequests.map((row, index) => (
-                                    <TableRow key={row.id}>
-                                        <TableCell align="left">{row.createdOn}</TableCell>
-                                        <TableCell align="left">{row.codeString}</TableCell>
-                                        <TableCell align="left">{row.assigned_to_name_field.name}</TableCell>
-                                        <TableCell align="left">{row.user_field.name}</TableCell>
-                                        <TableCell align="left">{row.is_employer_field}</TableCell>
-                                        <TableCell align="left">{row.codeStatus}</TableCell>
-                                        <TableCell align="left">{new Date(row.statusChangeDate).toDateString()}</TableCell>
-                                        <TableCell align="left">
-                                            <FormControl variant="outlined" size='small' fullWidth>
-                                                <InputLabel id="actionSelect">Status</InputLabel>
-                                                <Select
-                                                    labelId="actionSelect"
-                                                    id="actionSelect"
-                                                    // value={this.state.actions}
-                                                    // onChange={(event) => { event.target.value }}
-                                                    label="Status"
-                                                >
-                                                    <MenuItem value={"assignAdmin"}>Assign Admin</MenuItem>
-                                                    <MenuItem value={"reassignAdmin"}>Reassign Admin</MenuItem>
-                                                    <MenuItem value={"view"}>View and approve</MenuItem>
-                                                </Select>
-                                            </FormControl></TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
+                {this.state.bothRequests.map((row, index) => (
+                    <TableRow key={row.id}>
+                        <TableCell align="left">{row.createdOn}</TableCell>
+                        <TableCell align="left">{row.codeString}</TableCell>
+                        <TableCell align="left">{row.assigned_to_name_field.name}</TableCell>
+                        <TableCell align="left">{row.user_field.name}</TableCell>
+                        <TableCell align="left">{row.is_employer_field ? ('Yes') : ('No')}</TableCell>
+                        <TableCell align="left">{row.codeStatus}</TableCell>
+                        <TableCell align="left">{new Date(row.statusChangeDate).toDateString()}</TableCell>
+                        <TableCell align="left">
+                            {
+                                row.showAssignTo_field ?
+                                    (
+                                        <Button variant='outlined' color='secondary' onClick={() => this.setState({ assignDialog: true })} >
+                                            Assign Admin
+                                        </Button>
+                                    )
+                                    :
+                                    (
+                                        <Button variant='outlined' color='secondary' onClick={() => this.setState({ assignDialog: true })} >
+                                            Reassign Admin
+                                        </Button>
+                                    )}
+                        </TableCell>
+                        {/* {row.viewApprove_field !== "False" ? (this.setState({viewLogic: true})) : null} */}
+                        <TableCell align="left">
+                        <Button variant='outlined' color='primary' disabled={this.state.viewLogic}>
+                            View &amp; approve
+                        </Button>
+                    </TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+
         );
     }
 
     tableDisplayLogic() {
-        if(this.state.assignedToMeCheck = true){
-            return(this.assignedToMeTable())
-        }
-        else if(this.state.pendingApprovalRequestCheck = true){
-            return(this.pendingApprovalTable())
-        }
-        else if(this.state.assignedToMeCheck == true && this.state.pendingApprovalRequestCheck == true){
-            return(this.bothRequestsTable())
-        }
-        else {
-            return(this.allCodesTable())
-        }
+        return (
+            this.state.assignedToMeCheck ?
+                (this.state.assignedToMeCheck && this.state.pendingApprovalRequestCheck ?
+                    (this.bothRequestsTable()) : (this.assignedToMeTable()))
+                :
+                (this.state.assignedToMeCheck || this.state.pendingApprovalRequestCheck) ?
+                    (this.pendingApprovalTable()) : (this.allCodesTable())
+        );
     }
 
     assignAdminDialog() {
@@ -447,7 +486,7 @@ class index extends Component {
                 open={this.state.assignDialog}
                 onClose={() => this.setState({ assignDialog: false })}
                 aria-labelledby="form-dialog-title"
-                // style={{ minWidth: 600 }}
+            // style={{ minWidth: 600 }}
             >
                 <DialogTitle id="form-dialog-title" align='center'>
                     Assign Admin
@@ -463,7 +502,7 @@ class index extends Component {
                         direction="row"
                         alignItems="center"
                         spacing={3}
-                        // style={{ padding: 20 }}
+                    // style={{ padding: 20 }}
                     >
 
                         <Grid item xs={12}>
@@ -546,6 +585,29 @@ class index extends Component {
                     >
                         Cancel
               </Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
+
+    viewDialogBox() {
+        return (
+            <Dialog
+                open={this.state.viewDialog}
+                onClose={() => this.setState({ viewDialog: false })}
+                aria-labelledby="form-dialog-title"
+            // style={{ minWidth: 600 }}
+            >
+                <DialogTitle id="form-dialog-title" align='center'>
+                    View and approve
+            </DialogTitle>
+                <DialogContent>
+
+                    <ViewPagesComponent />
+
+                </DialogContent>
+
+                <DialogActions style={{ padding: 15 }}>  
                 </DialogActions>
             </Dialog>
         );

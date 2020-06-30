@@ -239,9 +239,9 @@ class myJobProfile extends Component {
     titleHeaderWhenNoRecordsExist() {
         return (
             <Grid container spacing={3} justify="space-between" >
-                <Grid item xs={6}>
+                {/* <Grid item xs={6}>
                     <h1>My Job Profile</h1>
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12}>
 
                     <Paper style={{ padding: 20 }} elevation={3}>
@@ -264,9 +264,9 @@ class myJobProfile extends Component {
     titleHeaderWhenRecordsExist() {
         return (
             <Grid container spacing={3} justify="space-between" >
-                <Grid item xs={6}>
+                {/* <Grid item xs={6}>
                     <h1>My Job Profile</h1>
-                </Grid>
+                </Grid> */}
                 <Grid item xs={3}>
                     <Button color="secondary" style={{ marginTop: 25, marginLeft: 32 }} variant='contained' onClick={() => { this.setState({ addDialogOpen: true }) }} >
                         Add New Job History
