@@ -214,9 +214,7 @@ class Phones extends Component {
             <Grid container spacing={3} justify="space-between">
               <Grid item xs={12} >
 
-            <Typography variant="h3" gutterBottom align="center">
-                Phones
-              </Typography>
+          
               </ Grid>
               <Grid item xs={12}>
                 <Paper style={{ padding: 20 }} elevation={3}>
@@ -242,10 +240,9 @@ class Phones extends Component {
           </>
         ) : (
           <>
-          <Grid container justify="space-between" alignItems="center">
-          <Grid item>
-            <h1>Phones </h1>
-          </Grid>
+          <Grid container direction="column" justify="center" alignItems="flex-end">
+         <Box p={2}>
+
           <Grid item>
             <Button
               variant="contained"
@@ -253,10 +250,11 @@ class Phones extends Component {
               onClick={() => {
                 this.setState({ addDialogOpen: true });
               }}
-            >
+              >
               Add Phone
             </Button>
           </Grid>
+              </Box>
         </Grid>
           <TableContainer component={Paper} elevation={16}>
             <Table stickyHeader>
@@ -265,8 +263,8 @@ class Phones extends Component {
                   {/* Date, Source, Fullname, DOB, Sex, Picture, VerifiedBy, Actions */}
                   <TableCell align="center"  style={{ fontWeight: "bolder", }}>Phone</TableCell>
                   <TableCell align="center"  style={{ fontWeight: "bolder", }}>IMEI</TableCell>
-                  <TableCell align="center"  style={{ fontWeight: "bolder", }}>default phone</TableCell>
-                  <TableCell align="center"  style={{ fontWeight: "bolder", }}>source</TableCell>
+                  <TableCell align="center"  style={{ fontWeight: "bolder", }}>Default phone</TableCell>
+                  <TableCell align="center"  style={{ fontWeight: "bolder", }}>Source</TableCell>
                   <TableCell align="center"  style={{ fontWeight: "bolder", }}>VerifiedBy</TableCell>
                   <TableCell align="center"  style={{ fontWeight: "bolder", }}>Start Date</TableCell>
                   {/* <TableCell align="center">IdNumber</TableCell> */}

@@ -200,10 +200,7 @@ class MyProfile extends Component {
               <div>
 
                 <Grid container spacing={3} direction="column"justify='center' align="center">
-                  <Grid item xs={12}>
-
-                    <Typography variant="h3" gutterBottom align="center">My Profile</Typography>
-                  </Grid>
+                 
 
                   <Grid item xs={12}  >
                      
