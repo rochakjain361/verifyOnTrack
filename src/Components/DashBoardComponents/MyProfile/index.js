@@ -199,25 +199,25 @@ class MyProfile extends Component {
             ? (
               <div>
 
-                <Grid container spacing={3} direction="column"justify='center' align="center">
-                 
+                <Grid container spacing={3} direction="column" justify='center' align="center">
+
 
                   <Grid item xs={12}  >
-                     
+
                     <Paper elevation={3} direction="column" >
-                      <Box p={3}   display="flex" flexDirection="column"  justifyContent='center' alignItems="center" style={{height: '50vh',}} >
-                     
-                          <Typography variant="h4" gutterBottom align='center' justify="center">
-                            Add  profiles to improve ratings.
+                      <Box p={3} display="flex" flexDirection="column" justifyContent='center' alignItems="center" style={{ height: '50vh', }} >
+
+                        <Typography variant="h4" gutterBottom align='center' justify="center">
+                          Add  profiles to improve ratings.
                       </Typography>
 
-                          <Button color="primary" variant='contained' onClick={() => this.setState({ addDialogOpen: true })}>
-                            Add New Job Profile
+                        <Button color="primary" variant='contained' onClick={() => this.setState({ addDialogOpen: true })}>
+                          Add New Job Profile
                         </Button>
-                        
+
                       </Box>
                     </Paper>
-                    
+
                   </Grid>
 
 
@@ -293,7 +293,7 @@ class MyProfile extends Component {
                         />
                       </Grid>
 
-                    
+
 
                       <Grid item fullWidth xs={12}>
                         <TextField
@@ -302,7 +302,7 @@ class MyProfile extends Component {
                           InputProps={{
                             startAdornment: (
                               <InputAdornment position="start">
-                               <CloudUploadIcon />
+                                <CloudUploadIcon />
                               </InputAdornment>
                             ),
                           }}
@@ -428,8 +428,8 @@ class MyProfile extends Component {
 
 
 
-              
-               
+
+
               </div>
             )}
       </>
@@ -617,8 +617,8 @@ class MyProfile extends Component {
                         fullWidth
                       />
                     </Grid>
-   
-                   
+
+
 
                     <Grid item fullWidth xs={12}>
                       <TextField
@@ -627,7 +627,7 @@ class MyProfile extends Component {
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                             <CloudUploadIcon />
+                              <CloudUploadIcon />
                             </InputAdornment>
                           ),
                         }}
