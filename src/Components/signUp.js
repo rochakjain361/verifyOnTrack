@@ -50,16 +50,28 @@ class signUp extends Component {
     errorMsg: {},
     formValid: "disabled",
     submitDisabled: "disabled",
+    Dob:"",
+    gender:"",
+    dobValue:false,
+    genderValue:false,
+    companyvalid:false
   };
   validatefirstname = (firstname) => {
-    console.log(firstname)
+    console.log(firstname.length)
     let firstnameValid = true;
-    if (firstname.length < 1) {
+    if (firstname.length ===0) {
       firstnameValid = false;
-
+      
     }
+    console.log("/////////////",firstnameValid)
     this.setState({ firstnamevalid: firstnameValid }, this.validateForm);
-    console.log("firstnamevalid", this.state.firstnamevalid)
+    
+  }
+  companyvalue =(event)=>{
+    if(event.target.value.length>0){this.setState({companyvalid:true},this.validateForm,console.log("////////////",this.state.companyvalid))}
+    else{
+      this.setState({companyvalid:false},this.validateForm)
+    }
   }
   validateUsername = () => {
     const { username } = this.state;
@@ -73,7 +85,7 @@ class signUp extends Component {
     }
 
 
-    this.setState({ usernameValid, errorMsg }, this.validateForm);
+    this.setState({ usernameValid,errorMsg }, this.validateForm);
   };
 
   updateEmail = (email) => {
@@ -124,7 +136,14 @@ class signUp extends Component {
   updatePasswordConfirm = (passwordConfirm) => {
     this.setState({ passwordConfirm }, this.validatePasswordConfirm);
   };
+genderValidation =(data)=>{
+  if(data.target.value.length>0){this.setState({genderValue:true},this.validateForm)}
 
+}
+dobeval =(data)=>{
+  if(data.target.value.length>0){this.setState({dobValue:true},this.validateForm)}
+
+}
   validatePasswordConfirm = () => {
     const { passwordConfirm, password } = this.state;
     let passwordConfirmValid = true;
@@ -149,15 +168,45 @@ class signUp extends Component {
       formValid:
         firstnamevalid && usernameValid && emailValid && passwordValid && passwordConfirmValid,
     });
+    // console.log("123456",this.state.firstnamevalid ,
+    //   this.state.usernameValid ,
+    //   this.state.emailValid ,
+    //   this.state.passwordValid,
+    //   this.state.passwordConfirmValid,
+    //   this.state.genderValue,
+    //   this.state.dobValue)
+      if(this.state.designation==="Employee"){
     if (
       this.state.firstnamevalid &&
-      this.state.username &&
+      this.state.usernameValid &&
       this.state.emailValid &&
       this.state.passwordValid &&
-      this.state.passwordConfirmValid
+      this.state.passwordConfirmValid&&
+      this.state.genderValue&&
+      this.state.dobValue
+     
+     
     ) {
-      this.setState({ submitDisabled: "" });
+      this.setState({ submitDisabled: false });
+    }else{
+      this.setState({ submitDisabled: true });
     }
+  }else if(this.state.designation==="Employer"){
+    if (
+      this.state.firstnamevalid &&
+      this.state.usernameValid &&
+      this.state.emailValid &&
+      this.state.passwordValid &&
+      this.state.passwordConfirmValid&&
+      this.state.companyvalid
+      
+     
+    ) {
+      this.setState({ submitDisabled: false });
+    }else{
+      this.setState({ submitDisabled: true });
+    }
+  }
   };
   render() {
     const { classes } = this.props;
@@ -169,6 +218,7 @@ class signUp extends Component {
         className={classes.root}
         direction="row"
         justify="center"
+
       >
         <CssBaseline />
         <Grid
@@ -180,6 +230,7 @@ class signUp extends Component {
           className={classes.mainImage}
           direction="row"
           justify="center"
+
         >
           <Grid item style={{ marginTop: 40, marginBottom: 40 }} sm={6} md={6}>
             <Card
@@ -197,9 +248,9 @@ class signUp extends Component {
                   Sign Up
                 </Typography>
 
-                <Grid container spacing={1}>
+                <Grid container spacing={2}>
                   <Grid item xs={12}>
-                    <FormControl fullWidth variant="outlined">
+                    <FormControl fullWidth variant="outlined" size="small">
                       <InputLabel id="demo-simple-select-outlined-label">
                         Designation
                       </InputLabel>
@@ -232,8 +283,10 @@ class signUp extends Component {
                         id="companyName"
                         label="Company Name"
                         value={this.state.companyName}
-                        onChange={(event) =>
+                        onChange={(event) =>{
                           this.setState({ companyName: event.target.value })
+                          this.companyvalue(event)
+                        }
                         }
                         type="text"
                         autoComplete="companyName"
@@ -254,8 +307,10 @@ class signUp extends Component {
                       id="firstname"
                       label="First Name"
                       value={this.state.firstname}
-                      onChange={(event) =>
-                        this.setState({ firstname: event.target.value }, this.validatefirstname(event.target.value))
+                      onChange={(event) =>{
+                        this.setState({ firstname: event.target.value }, )
+                        this.validatefirstname(event.target.value)
+                      }
                       }
                       type="text"
                       autoComplete="firstname"
@@ -361,19 +416,21 @@ class signUp extends Component {
                       size="small"
                     />
                   </Grid>
+                  {this.state.designation === "Employee" ? <>
                   <Grid item fullWidth xs={12}>
 
-                    <FormControl fullWidth>
-                      <InputLabel id="gender">&nbsp;&nbsp;&nbsp;Gender</InputLabel>
+                    <FormControl  variant="outlined" fullWidth size="small">
+                      <InputLabel htmlFor="gender" >Gender</InputLabel>
                       <Select
+
                         label="gender"
-                        id="gender"
-                        variant="outlined"
+                        margin="dense"
+                       
                         // value={age}
-                        onChange={(event) => {
-                          this.setState({ gender: event.target.value });
-                          console.log(this.state.gender);
-                        }}
+                        onChange={(event) => { 
+                          this.setState({ gender: event.target.value, },this.genderValidation(event))
+                          }
+                        }
                       >
                         <MenuItem value={"Male"}>Male</MenuItem>
                         <MenuItem value={"Female"}>Female</MenuItem>
@@ -381,21 +438,27 @@ class signUp extends Component {
                     </FormControl>
 
                   </Grid>
+                
                   <Grid item fullWidth xs={12}>
-                  <InputLabel id="gender">&nbsp;&nbsp;&nbsp;Date of birth</InputLabel>
-                        <TextField
-                          id="dob"
-                          variant="outlined"
-                          // label="Date of birth"
-                          // defaultValue={result[this.state.selectedIndex].dob}
-                          onChange={(event) => {
-                            this.setState({ Dob: event.target.value });
-                            console.log(this.state.Dob);
-                          }}
-                          type="date"
-                          fullWidth
-                        />
-                      </Grid>
+                   
+                    <TextField
+                      id="dob"
+                      size="small"
+                      variant="outlined"
+                      label="Date of birth"
+                      format={false}
+                      margin="dense"
+                      InputLabelProps={{ shrink: true, required: true }}
+                      // defaultValue={result[this.state.selectedIndex].dob}
+                      onChange={(event) => {
+                        this.setState({ Dob: event.target.value }, this.dobeval(event))
+                       
+                      
+                      }}
+                      type="date"
+                      fullWidth
+                    />
+                  </Grid></>:null}
                   <Grid item xs={12}>
                     <ValidationMessage
                       valid={this.state.passwordValid}
@@ -500,6 +563,8 @@ class signUp extends Component {
           username: this.state.username,
           email: this.state.email,
           password: this.state.password,
+          dob:this.state.Dob,
+          sex:this.state.gender,
         };
       }
       else if (this.state.designation === "Employer") {
@@ -513,6 +578,7 @@ class signUp extends Component {
           username: this.state.username,
           email: this.state.email,
           password: this.state.password,
+         
         };
       }
       else apiEndpoint += "/admin/register";
