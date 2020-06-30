@@ -168,6 +168,9 @@ export default function HorizontalLinearStepper(props) {
     setActiveStep(4)
    }  else {
     setActiveStep(5)
+    if(props.location.state.detail.user.accountStatus==="Approval In Progress"){
+    setApproval(true)
+    }
    }  });
   
   

@@ -292,10 +292,19 @@ class signIn extends Component {
             pathname: "/employer",
           });
         } else {
+          if(data.user.accountStatus=="Approved"){
+            console.log("accountStatus",data.user.accountStatus)
+            this.props.history.push({
+              pathname: "/dashboard",
+            });
+        }else{
+          console.log("accountStatus",data.user.accountStatus)
           this.props.history.push({
             pathname: "/workflow",
             state: { detail: data }
           });
+        
+        }
         }
       } else {
         this.setState({ warning: true });
