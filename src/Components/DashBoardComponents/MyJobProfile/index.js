@@ -227,9 +227,8 @@ class myJobProfile extends Component {
         return (
             <div>
                 {
-                    this.state.isloading ?
-                        (this.isloading()) : (false ?
-                            (this.state.titleHeaderWhenRecordsExist()) : (this.titleHeaderWhenRecordsExist()))
+                    this.state.isloading ? (this.isloading()) : (false ?
+                    (this.titleHeaderWhenRecordsExist()) : (this.titleHeaderWhenNoRecordsExist()))
                 }
                 {this.addJoBHistoryDialog()}
                 {this.editJobHistoryDialog()}
