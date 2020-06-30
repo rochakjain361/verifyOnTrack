@@ -142,7 +142,7 @@ class index extends Component {
               name="searchCategory"
               // value={value}
               onChange={(event) => {
-                this.setState({ employerby: event.target.value });
+                this.setState({ employerby: event.target.value })
               }}
             >
               <Grid container direction="row" style={{ marginTop: 10 }}>
