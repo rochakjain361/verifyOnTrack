@@ -36,7 +36,7 @@ class signUp extends Component {
     designation: "",
     companyName: "",
     firstname: "",
-    firstnamevalid:false,
+    firstnamevalid: false,
     middlename: "",
     surname: "",
     username: "",
@@ -51,15 +51,15 @@ class signUp extends Component {
     formValid: "disabled",
     submitDisabled: "disabled",
   };
-  validatefirstname=(firstname)=>{
-   console.log(firstname)
+  validatefirstname = (firstname) => {
+    console.log(firstname)
     let firstnameValid = true;
     if (firstname.length < 1) {
       firstnameValid = false;
-      
+
     }
-    this.setState({ firstnamevalid:firstnameValid  }, this.validateForm);
-    console.log("firstnamevalid",this.state.firstnamevalid)
+    this.setState({ firstnamevalid: firstnameValid }, this.validateForm);
+    console.log("firstnamevalid", this.state.firstnamevalid)
   }
   validateUsername = () => {
     const { username } = this.state;
@@ -69,11 +69,11 @@ class signUp extends Component {
     if (username.length < 5) {
       usernameValid = false;
       errorMsg.username = "Must be at least 5 characters long";
-     
-    }
-  
 
-    this.setState({  usernameValid,errorMsg}, this.validateForm);
+    }
+
+
+    this.setState({ usernameValid, errorMsg }, this.validateForm);
   };
 
   updateEmail = (email) => {
@@ -147,10 +147,10 @@ class signUp extends Component {
     } = this.state;
     this.setState({
       formValid:
-        firstnamevalid&&usernameValid && emailValid && passwordValid && passwordConfirmValid,
+        firstnamevalid && usernameValid && emailValid && passwordValid && passwordConfirmValid,
     });
     if (
-      this.state.firstnamevalid&&
+      this.state.firstnamevalid &&
       this.state.username &&
       this.state.emailValid &&
       this.state.passwordValid &&
@@ -192,9 +192,9 @@ class signUp extends Component {
                   gutterBottom
                   color="primary"
                   align="center"
-                  // style={{ fontFamily: "Montserrat", fontWeight: "bold" }}
+                // style={{ fontFamily: "Montserrat", fontWeight: "bold" }}
                 >
-                Sign Up
+                  Sign Up
                 </Typography>
 
                 <Grid container spacing={1}>
@@ -255,7 +255,7 @@ class signUp extends Component {
                       label="First Name"
                       value={this.state.firstname}
                       onChange={(event) =>
-                        this.setState({ firstname: event.target.value },this.validatefirstname(event.target.value))
+                        this.setState({ firstname: event.target.value }, this.validatefirstname(event.target.value))
                       }
                       type="text"
                       autoComplete="firstname"
@@ -361,7 +361,41 @@ class signUp extends Component {
                       size="small"
                     />
                   </Grid>
+                  <Grid item fullWidth xs={12}>
 
+                    <FormControl fullWidth>
+                      <InputLabel id="gender">&nbsp;&nbsp;&nbsp;Gender</InputLabel>
+                      <Select
+                        label="gender"
+                        id="gender"
+                        variant="outlined"
+                        // value={age}
+                        onChange={(event) => {
+                          this.setState({ gender: event.target.value });
+                          console.log(this.state.gender);
+                        }}
+                      >
+                        <MenuItem value={"Male"}>Male</MenuItem>
+                        <MenuItem value={"Female"}>Female</MenuItem>
+                      </Select>
+                    </FormControl>
+
+                  </Grid>
+                  <Grid item fullWidth xs={12}>
+                  <InputLabel id="gender">&nbsp;&nbsp;&nbsp;Date of birth</InputLabel>
+                        <TextField
+                          id="dob"
+                          variant="outlined"
+                          // label="Date of birth"
+                          // defaultValue={result[this.state.selectedIndex].dob}
+                          onChange={(event) => {
+                            this.setState({ Dob: event.target.value });
+                            console.log(this.state.Dob);
+                          }}
+                          type="date"
+                          fullWidth
+                        />
+                      </Grid>
                   <Grid item xs={12}>
                     <ValidationMessage
                       valid={this.state.passwordValid}
@@ -424,14 +458,14 @@ class signUp extends Component {
                     <GradientButton
                       onClick={this.onRegisterButtonPress}
                       title={"Sign Up"}
-                      disabled = {this.state.submitDisabled}
+                      disabled={this.state.submitDisabled}
                       center
                       style={{
                         marginTop: 16,
                         marginBottom: 16,
                         fontFamily: "Montserrat",
                         fontWeight: "bold",
-                        
+
                       }}
                       fullWidth
                     />
@@ -439,7 +473,7 @@ class signUp extends Component {
                   <Grid container xs={12} justify="center">
                     {/* <RouterLink title="Have an account? Sign In" to="/" /> */}
                     <Link title="Don't have an account? Sign Up" href="/signin" >
-                    Have an account? Sign In
+                      Have an account? Sign In
            </Link>
                   </Grid>
                 </Grid>
@@ -457,7 +491,7 @@ class signUp extends Component {
       let apiEndpoint =
         "http://3.22.17.212:8000/api/v1/accounts/auth";
       var requestBody;
-      if (this.state.designation === "Employee"){
+      if (this.state.designation === "Employee") {
         apiEndpoint += "/employee/register";
         requestBody = {
           firstname: this.state.firstname,
@@ -466,8 +500,9 @@ class signUp extends Component {
           username: this.state.username,
           email: this.state.email,
           password: this.state.password,
-        };}
-      else if (this.state.designation === "Employer"){
+        };
+      }
+      else if (this.state.designation === "Employer") {
         apiEndpoint += "/employer/register";
         requestBody = {
           designation: this.state.designation,
@@ -478,10 +513,11 @@ class signUp extends Component {
           username: this.state.username,
           email: this.state.email,
           password: this.state.password,
-        };}
+        };
+      }
       else apiEndpoint += "/admin/register";
 
-      
+
 
       console.log("reqestBody", requestBody);
 
@@ -491,17 +527,17 @@ class signUp extends Component {
         headers: {
           "Content-Type": "application/json",
           Accept: "*/*",
-         
+
         },
       });
       console.log("..................................................");
       console.log("response", response);
       response = await response.json();
-      if(response.token){
+      if (response.token) {
         localStorage.setItem("Token", response.token);
         localStorage.setItem("id", response.user.id);
 
-       
+
         if (response.user.is_admin) {
           this.props.history.push({
             pathname: "/admin",
@@ -512,12 +548,13 @@ class signUp extends Component {
           });
         } else {
           this.props.history.push({
-            pathname: "/dashboard",
+            pathname: "/workflow",
+            state: { detail: response }
           });
         }
       } else {
         this.setState({ warning: true });
-      
+
       }
     } catch (error) {
       console.log("[!ON_REGISTER] " + error);
