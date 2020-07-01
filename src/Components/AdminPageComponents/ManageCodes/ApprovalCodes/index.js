@@ -76,6 +76,7 @@ class index extends Component {
         viewDialog: false,
         viewLogic: true,
         adminByRadio: "searchByEmail",
+        adminIndex: '',
 
         allCodes: [],
         assignedToMe: [],
@@ -321,14 +322,20 @@ class index extends Component {
                                         <Button 
                                         variant='outlined' 
                                         color='secondary'
-                                        onClick={() => this.setState({ assignDialog: true })} 
+                                        onClick={() => {this.setState({ assignDialog: true })
+                                                        this.setState({adminIndex: row.id})}} 
                                         >
                                             Assign Admin
                                         </Button>
                                     )
                                     :
                                     (
-                                        <Button variant='outlined' color='secondary' onClick={() => this.setState({ assignDialog: true })} >
+                                        <Button 
+                                        variant='outlined' 
+                                        color='secondary' 
+                                        onClick={() => {this.setState({ assignDialog: true })
+                                                        this.setState({ adminIndex: row.id})}} 
+                                        >
                                             Reassign Admin
                                         </Button>
                                     )}
@@ -562,6 +569,7 @@ class index extends Component {
                                     options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
                                     groupBy={(option) => option.firstLetter}
                                     getOptionLabel={(option) => option.username}
+                                    // onChange={this.setState({})}
                                     fullWidth
                                     renderInput={(params) => <TextField {...params} label="Username" variant="outlined" />}
                                 />
