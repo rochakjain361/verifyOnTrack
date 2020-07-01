@@ -23,12 +23,14 @@ import ValidationMessage from "./ValidationMessage";
 import Alert from "@material-ui/lab/Alert";
 import CardMedia from '@material-ui/core/CardMedia';
 import { Box } from "@material-ui/core";
+import ReCAPTCHA from "react-google-recaptcha";
 
 
 
 class signIn extends Component {
   constructor(props) {
     super(props);
+    this._reCaptchaRef = React.createRef();
     this.onSignInButtonPress = this.onSignInButtonPress.bind(this);
   }
 
@@ -81,11 +83,19 @@ class signIn extends Component {
     else {
       this.setState({ passwordvalid: true },);
     }
-    if (!this.state.usernamevalid && !this.state.passwordvalid) {
+    if(this.state.value===null){
+      this.setState({capthavalid:false})
+    }
+    if (!this.state.usernamevalid && !this.state.passwordvalid&&!this.state.capthavalid) {
       this.onSignInButtonPress()
     }
   };
+  handleChange = value => {
+    console.log("Captcha value:", value);
+    this.setState({ value });
 
+    if (value === null) this.setState({ expired: "true" });
+  };
 
   render() {
     const { classes } = this.props;
@@ -128,24 +138,24 @@ class signIn extends Component {
             className={classes.mainImage}
             direction="row"
             justify="center"
-            
+
           >
-           <Grid container xs={6}
-            sm={6}
-            md={8}
-            direction="column"
-            align="center"
-            justify="center"
+            <Grid container xs={6}
+              sm={6}
+              md={8}
+              direction="column"
+              align="center"
+              justify="center"
             >
               <Card
-                style={{ padding: 50,}}
-               
-                
+                style={{ padding: 50, }}
+
+
                 spacing={3}
 
                 raised={true}
               >
-                <Grid  spacing={2} justify="center" direction="row" align="center">
+                <Grid spacing={2} justify="center" direction="row" align="center">
                   {this.state.warning ? (
                     <Alert severity="error">Wrong username or password</Alert>
                   ) : null}
@@ -214,6 +224,20 @@ class signIn extends Component {
                       }
                     />
                   </Grid>
+                  <Grid item xs={12} md={12}>
+                    <Box p={2}>
+
+                      <ReCAPTCHA
+                        style={{ display: "inline-block" }}
+                        theme="light"
+                        // ref={this._reCaptchaRef}
+                        sitekey={"6LdDrqsZAAAAABrsnwXy1KB8r1dhblamd3rFz7wd"}
+                        onChange={this.handleChange}
+                      // asyncScriptOnLoad={this.asyncScriptOnLoad}
+                      />
+                    </Box>
+                  </Grid>
+
 
 
                   <Grid container spacing={1} sm={12} md={10}>
@@ -246,7 +270,7 @@ class signIn extends Component {
 
                 </Grid>
               </Card>
-              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
@@ -292,19 +316,19 @@ class signIn extends Component {
             pathname: "/employer",
           });
         } else {
-          if(data.user.accountStatus=="Approved"){
-            console.log("accountStatus",data.user.accountStatus)
+          if (data.user.accountStatus == "Approved") {
+            console.log("accountStatus", data.user.accountStatus)
             this.props.history.push({
               pathname: "/dashboard",
             });
-        }else{
-          console.log("accountStatus",data.user.accountStatus)
-          this.props.history.push({
-            pathname: "/workflow",
-            state: { detail: data }
-          });
-        
-        }
+          } else {
+            console.log("accountStatus", data.user.accountStatus)
+            this.props.history.push({
+              pathname: "/workflow",
+              state: { detail: data }
+            });
+
+          }
         }
       } else {
         this.setState({ warning: true });
@@ -326,8 +350,8 @@ const styles = (theme) => ({
   mainImage: {
     // backgroundImage: "url(/images/mainImage2.jpg)",
     backgroundRepeat: "no-repeat",
-    
-    backgroundColor:"#3f50b5",
+
+    backgroundColor: "#3f50b5",
     //   theme.palette.type === "light"
     //     ? theme.palette.grey[50]
     //     : theme.palette.grey[900],
