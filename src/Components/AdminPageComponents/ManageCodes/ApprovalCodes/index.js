@@ -32,6 +32,12 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import ViewPagesComponent from '../ViewPagesComponent'
 
+import Profile from '../Pages/Profile'
+import Address from '../Pages/Address'
+import Identity from '../Pages/Identity'
+import Phone from '../Pages/Phone'
+import Job from '../Pages/Job'
+
 const token1 = localStorage.getItem("Token");
 const token = "Token " + token1;
 const id = localStorage.getItem("id");
@@ -76,6 +82,9 @@ class index extends Component {
         pendingApprovalRequests: [],
         bothRequests: [],
 
+        userID: '',
+        approvalCode: '',
+
         selectedRequest: [],
 
         adminList: [],
@@ -112,7 +121,7 @@ class index extends Component {
     }
 
     async fetchAssignedToMe() {
-        let response = await fetch(api + "/api/v1/codes/approval/codes?minee=true",
+        let response = await fetch(api + "/api/v1/codes/approval/codes?mine=true",
             {
                 headers: {
                     'Authorization': token
@@ -326,7 +335,12 @@ class index extends Component {
                         </TableCell>
                         {/* {row.viewApprove_field !== "False" ? (this.setState({viewLogic: true})) : null} */}
                         <TableCell align="left">
-                        <Button variant='outlined' color='primary' disabled={this.state.viewLogic}>
+                        <Button variant='outlined' color='primary'
+                        onClick={()=> {this.setState({userID: row.user})
+                                       this.setState({approvalCode: row.codeString})
+                                    }}
+                        // disabled={this.state.viewLogic}
+                        >
                             View &amp; approve
                         </Button>
                     </TableCell>
@@ -367,7 +381,9 @@ class index extends Component {
                         </TableCell>
                         {/* {row.viewApprove_field !== "False" ? (this.setState({viewLogic: true})) : null} */}
                         <TableCell align="left">
-                        <Button variant='outlined' color='primary' disabled={this.state.viewLogic}>
+                        <Button variant='outlined' color='primary' 
+                        // disabled={this.state.viewLogic}
+                        >
                             View &amp; approve
                         </Button>
                     </TableCell>
@@ -408,7 +424,10 @@ class index extends Component {
                         </TableCell>
                         {/* {row.viewApprove_field !== "False" ? (this.setState({viewLogic: true})) : null} */}
                         <TableCell align="left">
-                        <Button variant='outlined' color='primary' disabled={this.state.viewLogic}>
+                        <Button variant='outlined' color='primary'
+                        // onClick={()=>}
+                        //  disabled={this.state.viewLogic}
+                         >
                             View &amp; approve
                         </Button>
                     </TableCell>
@@ -449,7 +468,9 @@ class index extends Component {
                         </TableCell>
                         {/* {row.viewApprove_field !== "False" ? (this.setState({viewLogic: true})) : null} */}
                         <TableCell align="left">
-                        <Button variant='outlined' color='primary' disabled={this.state.viewLogic}>
+                        <Button variant='outlined' color='primary' 
+                        // disabled={this.state.viewLogic}
+                        >
                             View &amp; approve
                         </Button>
                     </TableCell>
@@ -603,7 +624,7 @@ class index extends Component {
             </DialogTitle>
                 <DialogContent>
 
-                    <ViewPagesComponent />
+                    <ViewPagesComponent user={this.state.userID} approval={this.state.approvalCode}/>
 
                 </DialogContent>
 

@@ -37,15 +37,15 @@ function getSteps() {
 function getStepContent(step) {
     switch (step) {
         case 0:
-            return <Profile/>;
+            return <Profile />;
         case 1:
-            return <Address/>;
+            return <Address />;
         case 2:
-            return <Identity/>;
+            return <Identity />;
         case 3:
-            return <Phone/>;
+            return <Phone />;
         case 4:
-            return <Job/>;
+            return <Job />;
         default:
             return 'Unknown step';
     }
