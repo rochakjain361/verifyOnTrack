@@ -20,6 +20,8 @@ class index extends React.Component{
 
     state = {
       profiles: [],
+      user: '',
+      approval: ''
     }
 
     // constructor(props) {
