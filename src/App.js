@@ -20,6 +20,7 @@ import ApprovalCodes from './Components/AdminPageComponents/ManageCodes/Approval
 import Job from './Components/AdminPageComponents/ManageCodes/Pages/Job';
 
 class App extends React.PureComponent {
+ 
   render() {
     return (
       <ThemeProvider theme={theme}>

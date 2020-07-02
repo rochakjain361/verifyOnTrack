@@ -180,9 +180,7 @@ class index extends Component {
             </RadioGroup>
           </FormControl>
         </Grid>
-        <Button onClick={() => this.searchemail(this.state.dummyvalue)}>
-          check
-        </Button>
+       
 
         {this.state.employerby === "searchByEmail" ? (
           <Grid item xs={12}>

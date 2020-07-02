@@ -17,7 +17,7 @@ import Select from "@material-ui/core/Select";
 import { Button } from "@material-ui/core";
 import Input from "@material-ui/core/Input";
 import Link from '@material-ui/core/Link';
-
+import axios from "axios";
 
 // import ValidationMessage from './ValidationMessage';
 function ValidationMessage(props) {
@@ -50,27 +50,27 @@ class signUp extends Component {
     errorMsg: {},
     formValid: "disabled",
     submitDisabled: "disabled",
-    Dob:"",
-    gender:"",
-    dobValue:false,
-    genderValue:false,
-    companyvalid:false
+    Dob: "",
+    gender: "",
+    dobValue: false,
+    genderValue: false,
+    companyvalid: false
   };
   validatefirstname = (firstname) => {
     console.log(firstname.length)
     let firstnameValid = true;
-    if (firstname.length ===0) {
+    if (firstname.length === 0) {
       firstnameValid = false;
-      
+
     }
-    console.log("/////////////",firstnameValid)
+    console.log("/////////////", firstnameValid)
     this.setState({ firstnamevalid: firstnameValid }, this.validateForm);
-    
+
   }
-  companyvalue =(event)=>{
-    if(event.target.value.length>0){this.setState({companyvalid:true},this.validateForm,console.log("////////////",this.state.companyvalid))}
-    else{
-      this.setState({companyvalid:false},this.validateForm)
+  companyvalue = (event) => {
+    if (event.target.value.length > 0) { this.setState({ companyvalid: true }, this.validateForm, console.log("////////////", this.state.companyvalid)) }
+    else {
+      this.setState({ companyvalid: false }, this.validateForm)
     }
   }
   validateUsername = () => {
@@ -85,7 +85,7 @@ class signUp extends Component {
     }
 
 
-    this.setState({ usernameValid,errorMsg }, this.validateForm);
+    this.setState({ usernameValid, errorMsg }, this.validateForm);
   };
 
   updateEmail = (email) => {
@@ -136,14 +136,15 @@ class signUp extends Component {
   updatePasswordConfirm = (passwordConfirm) => {
     this.setState({ passwordConfirm }, this.validatePasswordConfirm);
   };
-genderValidation =(data)=>{
-  if(data.target.value.length>0){this.setState({genderValue:true},this.validateForm)}
+  genderValidation = (data) => {
+    if (data.target.value.length > 0) { this.setState({ genderValue: true }, this.validateForm) }
 
-}
-dobeval =(data)=>{
-  if(data.target.value.length>0){this.setState({dobValue:true},this.validateForm)}
+  }
+  dobeval = (data) => {
+    if (data.target.value.length > 0) { this.setState({ dobValue: true }, this.validateForm) }
 
-}
+  }
+ 
   validatePasswordConfirm = () => {
     const { passwordConfirm, password } = this.state;
     let passwordConfirmValid = true;
@@ -175,38 +176,38 @@ dobeval =(data)=>{
     //   this.state.passwordConfirmValid,
     //   this.state.genderValue,
     //   this.state.dobValue)
-      if(this.state.designation==="Employee"){
-    if (
-      this.state.firstnamevalid &&
-      this.state.usernameValid &&
-      this.state.emailValid &&
-      this.state.passwordValid &&
-      this.state.passwordConfirmValid&&
-      this.state.genderValue&&
-      this.state.dobValue
-     
-     
-    ) {
-      this.setState({ submitDisabled: false });
-    }else{
-      this.setState({ submitDisabled: true });
+    if (this.state.designation === "Employee") {
+      if (
+        this.state.firstnamevalid &&
+        this.state.usernameValid &&
+        this.state.emailValid &&
+        this.state.passwordValid &&
+        this.state.passwordConfirmValid &&
+        this.state.genderValue &&
+        this.state.dobValue
+
+
+      ) {
+        this.setState({ submitDisabled: false });
+      } else {
+        this.setState({ submitDisabled: true });
+      }
+    } else if (this.state.designation === "Employer") {
+      if (
+        this.state.firstnamevalid &&
+        this.state.usernameValid &&
+        this.state.emailValid &&
+        this.state.passwordValid &&
+        this.state.passwordConfirmValid &&
+        this.state.companyvalid
+
+
+      ) {
+        this.setState({ submitDisabled: false });
+      } else {
+        this.setState({ submitDisabled: true });
+      }
     }
-  }else if(this.state.designation==="Employer"){
-    if (
-      this.state.firstnamevalid &&
-      this.state.usernameValid &&
-      this.state.emailValid &&
-      this.state.passwordValid &&
-      this.state.passwordConfirmValid&&
-      this.state.companyvalid
-      
-     
-    ) {
-      this.setState({ submitDisabled: false });
-    }else{
-      this.setState({ submitDisabled: true });
-    }
-  }
   };
   render() {
     const { classes } = this.props;
@@ -283,7 +284,7 @@ dobeval =(data)=>{
                         id="companyName"
                         label="Company Name"
                         value={this.state.companyName}
-                        onChange={(event) =>{
+                        onChange={(event) => {
                           this.setState({ companyName: event.target.value })
                           this.companyvalue(event)
                         }
@@ -307,8 +308,8 @@ dobeval =(data)=>{
                       id="firstname"
                       label="First Name"
                       value={this.state.firstname}
-                      onChange={(event) =>{
-                        this.setState({ firstname: event.target.value }, )
+                      onChange={(event) => {
+                        this.setState({ firstname: event.target.value },)
                         this.validatefirstname(event.target.value)
                       }
                       }
@@ -375,7 +376,9 @@ dobeval =(data)=>{
                       id="username"
                       label="Username"
                       value={this.state.username}
-                      onChange={(event) =>
+                      onChange={(event) => 
+
+                      
                         this.setState(
                           { username: event.target.value },
                           this.validateUsername
@@ -417,48 +420,48 @@ dobeval =(data)=>{
                     />
                   </Grid>
                   {this.state.designation === "Employee" ? <>
-                  <Grid item fullWidth xs={12}>
+                    <Grid item fullWidth xs={12}>
 
-                    <FormControl  variant="outlined" fullWidth size="small">
-                      <InputLabel htmlFor="gender" >Gender</InputLabel>
-                      <Select
+                      <FormControl variant="outlined" fullWidth size="small">
+                        <InputLabel htmlFor="gender" >Gender</InputLabel>
+                        <Select
 
-                        label="gender"
-                        margin="dense"
-                       
-                        // value={age}
-                        onChange={(event) => { 
-                          this.setState({ gender: event.target.value, },this.genderValidation(event))
+                          label="gender"
+                          margin="dense"
+
+                          // value={age}
+                          onChange={(event) => {
+                            this.setState({ gender: event.target.value, }, this.genderValidation(event))
                           }
-                        }
-                      >
-                        <MenuItem value={"Male"}>Male</MenuItem>
-                        <MenuItem value={"Female"}>Female</MenuItem>
-                      </Select>
-                    </FormControl>
+                          }
+                        >
+                          <MenuItem value={"Male"}>Male</MenuItem>
+                          <MenuItem value={"Female"}>Female</MenuItem>
+                        </Select>
+                      </FormControl>
 
-                  </Grid>
-                
-                  <Grid item fullWidth xs={12}>
-                   
-                    <TextField
-                      id="dob"
-                      size="small"
-                      variant="outlined"
-                      label="Date of birth"
-                      format={false}
-                      margin="dense"
-                      InputLabelProps={{ shrink: true, required: true }}
-                      // defaultValue={result[this.state.selectedIndex].dob}
-                      onChange={(event) => {
-                        this.setState({ Dob: event.target.value }, this.dobeval(event))
-                       
-                      
-                      }}
-                      type="date"
-                      fullWidth
-                    />
-                  </Grid></>:null}
+                    </Grid>
+
+                    <Grid item fullWidth xs={12}>
+
+                      <TextField
+                        id="dob"
+                        size="small"
+                        variant="outlined"
+                        label="Date of birth"
+                        format={false}
+                        margin="dense"
+                        InputLabelProps={{ shrink: true, required: true }}
+                        // defaultValue={result[this.state.selectedIndex].dob}
+                        onChange={(event) => {
+                          this.setState({ Dob: event.target.value }, this.dobeval(event))
+
+
+                        }}
+                        type="date"
+                        fullWidth
+                      />
+                    </Grid></> : null}
                   <Grid item xs={12}>
                     <ValidationMessage
                       valid={this.state.passwordValid}
@@ -563,8 +566,8 @@ dobeval =(data)=>{
           username: this.state.username,
           email: this.state.email,
           password: this.state.password,
-          dob:this.state.Dob,
-          sex:this.state.gender,
+          dob: this.state.Dob,
+          sex: this.state.gender,
         };
       }
       else if (this.state.designation === "Employer") {
@@ -578,7 +581,7 @@ dobeval =(data)=>{
           username: this.state.username,
           email: this.state.email,
           password: this.state.password,
-         
+
         };
       }
       else apiEndpoint += "/admin/register";

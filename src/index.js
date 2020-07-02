@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-
+window.$IP = '3.22.17.212'
 ReactDOM.render(
     <App />,
   document.getElementById('root')
