@@ -38,7 +38,7 @@ import Addresses from "./Components/DashBoardComponents/Addresses";
 import Identities from "./Components/DashBoardComponents/Identities";
 import Phones from "./Components/DashBoardComponents/Phones";
 import MyJobProfile from "./Components/DashBoardComponents/MyJobProfile";
-import Inbox from "./Components/DashBoardComponents/Messages/Inbox";
+import Index from "./Components/DashBoardComponents/Messages/Inbox";
 import Outbox from "./Components/DashBoardComponents/Messages/Outbox";
 import MyProfile from "./Components/DashBoardComponents/MyProfile";
 import AccessCodes from "./Components/DashBoardComponents/MyCodes/AccessCodes";
@@ -464,7 +464,7 @@ export default function MiniDrawer(props) {
 
               <Route exact path="/employeeInbox">
                 <Container>
-                  <Inbox />
+                  <Index/>
                 </Container>
               </Route>
 

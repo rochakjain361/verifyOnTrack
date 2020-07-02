@@ -84,7 +84,7 @@ class index extends Component {
 
         userID: '',
         approvalCode: '',
-
+currentid:"",
         selectedRequest: [],
 
         adminList: [],
@@ -321,7 +321,9 @@ class index extends Component {
                                         <Button 
                                         variant='outlined' 
                                         color='secondary'
-                                        onClick={() => this.setState({ assignDialog: true })} 
+                                        onClick={() =>  {
+                                            console.log("row.id///////////",row.id)
+                                            this.asignadmin(row.id)} }
                                         >
                                             Assign Admin
                                         </Button>
@@ -368,7 +370,7 @@ class index extends Component {
                             {
                                 row.showAssignTo_field ?
                                     (
-                                        <Button variant='outlined' color='secondary' onClick={() => this.setState({ assignDialog: true })} >
+                                        <Button variant='outlined' color='secondary' onClick={() =>  this.asignadmin(row.id)} >
                                             Assign Admin
                                         </Button>
                                     )
@@ -437,7 +439,11 @@ class index extends Component {
 
         );
     }
+asignadmin(id){
+    
+    this.setState({assignDialog:true,currentid:id});
 
+}
     bothRequestsTable() {
         return (
 
@@ -455,7 +461,7 @@ class index extends Component {
                             {
                                 row.showAssignTo_field ?
                                     (
-                                        <Button variant='outlined' color='secondary' onClick={() => this.setState({ assignDialog: true })} >
+                                        <Button variant='outlined' color='secondary' onClick={() => {  this.asignadmin(row.id)} }>
                                             Assign Admin
                                         </Button>
                                     )
@@ -492,8 +498,8 @@ class index extends Component {
         );
     }
 
-    assignAdminDialog() {
-
+    assignAdminDialog(id) {
+console.log("qqqqqqqqqqqqqq",id)
         const options = this.state.adminList.map((option) => {
             const firstLetter = option.username[0].toUpperCase();
             return {

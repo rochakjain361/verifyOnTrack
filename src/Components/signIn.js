@@ -26,14 +26,14 @@ import { Box } from "@material-ui/core";
 import ReCAPTCHA from "react-google-recaptcha";
 
 
-
+let IP=window.$IP;
 class signIn extends Component {
   constructor(props) {
     super(props);
     this._reCaptchaRef = React.createRef();
     this.onSignInButtonPress = this.onSignInButtonPress.bind(this);
   }
-
+  
   state = {
     username: "",
     password: "",
@@ -98,8 +98,9 @@ class signIn extends Component {
   };
 
   render() {
+    
     const { classes } = this.props;
-
+   
     return (
       <Grid container
         direction="row"
@@ -281,8 +282,10 @@ class signIn extends Component {
   }
 
   async onSignInButtonPress() {
+console.log("///////",window.$IP)
+ 
     try {
-      let apiEndpoint = "http://3.22.17.212:8000/api/v1/accounts/auth/login";
+       let apiEndpoint = "http://"+window.$IP+":8000/api/v1/accounts/auth/login";
 
       var requestBody = {
         username: this.state.username,
