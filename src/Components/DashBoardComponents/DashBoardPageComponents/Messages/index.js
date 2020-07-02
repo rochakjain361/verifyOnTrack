@@ -58,7 +58,7 @@ class index extends Component {
             variant="contained"
             color="secondary"
           >
-            <Button
+            {/* <Button
               disabled={this.state.inboxButtonDisable}
               style={{ minWidth: 75 }}
               onClick={() =>
@@ -79,9 +79,9 @@ class index extends Component {
                   inboxButtonDisable: false,
                 })
               }
-            >
+            >s
               Outbox
-            </Button>
+            </Button> */}
           </ButtonGroup>
           </Grid>
         </Grid>
@@ -180,59 +180,9 @@ class index extends Component {
     );
   }
 
-  outboxMessageDescription() {
-    return (
-      <div>
-        <Grid container justify="space-between">
-          <Typography>Initiated by Outbox</Typography>
-          <Typography variant="caption">04/07/2020</Typography>
-        </Grid>
-        <Typography variant="body2" display="block">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </Typography>
-      </div>
-    );
-  }
+  
 
-  messageOutbox() {
-    return (
-      <div>
-        <Paper variant="outlined" style={{ marginTop: 20 }}>
-          <Grid container style={{ padding: 10 }} alignItems="center">
-            <Grid item xs={1}>
-              <MessageIcon />
-            </Grid>
-            <Grid item xs={11}>
-              <>{this.outboxMessageDescription()}</>
-            </Grid>
-          </Grid>
-        </Paper>
-
-        <Paper variant="outlined" style={{ marginTop: 10 }}>
-          <Grid container style={{ padding: 10 }} alignItems="center">
-            <Grid item xs={1}>
-              <MessageIcon />
-            </Grid>
-            <Grid item xs={11}>
-              <>{this.outboxMessageDescription()}</>
-            </Grid>
-          </Grid>
-        </Paper>
-
-        <Paper variant="outlined" style={{ marginTop: 10 }}>
-          <Grid container style={{ padding: 10 }} alignItems="center">
-            <Grid item xs={1}>
-              <MessageIcon />
-            </Grid>
-            <Grid item xs={11}>
-              <>{this.outboxMessageDescription()}</>
-            </Grid>
-          </Grid>
-        </Paper>
-      </div>
-    );
-  }
+ 
 }
 
 export default withStyles(styles)(index);
