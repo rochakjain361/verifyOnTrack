@@ -31,7 +31,7 @@ class index extends Component {
     token = "Token " + token1;
     id = localStorage.getItem("id");
     await axios
-      .get("http://3.22.17.212:8000/api/v1/messages/outbox", {
+      .get("http://3.22.17.212:8000/api/v1/messages/", {
         headers: {
           Authorization: token,
         },
@@ -49,42 +49,7 @@ class index extends Component {
 
     return (
       <div style={{ marginTop: 10 }}>
-        <Grid container justify="center">
-          <Grid item>
-          <ButtonGroup
-          style={{marginTop: 20}}
-            disableElevation
-            size="medium"
-            variant="contained"
-            color="secondary"
-          >
-            {/* <Button
-              disabled={this.state.inboxButtonDisable}
-              style={{ minWidth: 75 }}
-              onClick={() =>
-                this.setState({
-                  outboxButtonDisable: false,
-                  inboxButtonDisable: true,
-                })
-              }
-            >
-              Inbox
-            </Button>
-            <Button
-              style={{ minWidth: 75 }}
-              disabled={this.state.outboxButtonDisable}
-              onClick={() =>
-                this.setState({
-                  outboxButtonDisable: true,
-                  inboxButtonDisable: false,
-                })
-              }
-            >s
-              Outbox
-            </Button> */}
-          </ButtonGroup>
-          </Grid>
-        </Grid>
+       
         {this.state.inboxButtonDisable
           ? this.messageInbox()
           : this.messageOutbox()}

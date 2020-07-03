@@ -116,7 +116,7 @@ export default function Datatable(props) {
             <Dialog fullWidth={"sm"}
           maxWidth={"sm"}
           open={viewDetailsButton} onClose={() => {Closeviewbutton() }} >
-                    <DialogTitle id="codegenerator">{"Message Details"}</DialogTitle>
+                    <DialogTitle id="codegenerator" align="center">{"Message Details"}</DialogTitle>
                     {Message.length === 0 ? <Grid
                                 container
                                 spacing={0}
@@ -134,11 +134,13 @@ export default function Datatable(props) {
                                 <Card style={{ minWidth: 400, marginTop: 10 }} elevation={4} variant="outlined" >
                                     <CardContent>
                                         <Typography variant="h5" component="h2">Initiated by:{row.initiated_by_field}</Typography>
-                                        <Typography style={{ fontSize: 14 }} color="textSecondary" gutterBottom>{row.initialDate_field}</Typography>
+                                        
 
                                         <Typography style={{ marginBottom: 12 }} color="textSecondary">Message Category: {row.msgCategory_field}</Typography>
-                                        
+                                        <Grid container justify="space-between">
                                         <Typography variant="body2" component="p">{row.message}</Typography>
+                                        <Typography variant="caption" alignItems="flex-end" style={{ fontSize: 14 }} color="textSecondary" >{row.initialDate_field}</Typography>
+                                        </Grid>
                                     </CardContent>
                                 </Card>
                                

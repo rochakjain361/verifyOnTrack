@@ -71,9 +71,10 @@ class index extends Component {
     phone: false,
     jobHistory: false,
     viewDialog: false,
-    codedetails:"",
-    codes:[],
-    pendingcodes:[],
+    codedetails: "",
+    codes: [],
+    pendingcodes: [],
+    status:""
   };
 
   isloading() {
@@ -102,7 +103,7 @@ class index extends Component {
     await axios
       .get(
         `http://3.22.17.212:80008000/api/v1/accounts/employer?username=` +
-          username,
+        username,
 
         {
           headers: {
@@ -150,37 +151,37 @@ class index extends Component {
                   value="searchByEmail"
                   control={<Radio />}
                   label="Email"
-                  //   onChange={this.setState({
-                  //     choicecompany: false,
-                  //     choiceusername: false,
-                  //     choiceemail: true,
-                  //   })}
+                //   onChange={this.setState({
+                //     choicecompany: false,
+                //     choiceusername: false,
+                //     choiceemail: true,
+                //   })}
                 />
                 <FormControlLabel
                   value="searchByUsername"
                   control={<Radio />}
                   label="Username"
-                  //   onChange={this.setState({
-                  //     choicecompany: false,
-                  //     choiceusername: true,
-                  //     choiceemail: false,
-                  //   })}
+                //   onChange={this.setState({
+                //     choicecompany: false,
+                //     choiceusername: true,
+                //     choiceemail: false,
+                //   })}
                 />
                 <FormControlLabel
                   value="searchByCompany"
                   control={<Radio />}
                   label="Company"
-                  //   onChange={this.setState({
-                  //     choicecompany: true,
-                  //     choiceusername: false,
-                  //     choiceemail: false,
-                  //   })}
+                //   onChange={this.setState({
+                //     choicecompany: true,
+                //     choiceusername: false,
+                //     choiceemail: false,
+                //   })}
                 />
               </Grid>
             </RadioGroup>
           </FormControl>
         </Grid>
-       
+
 
         {this.state.employerby === "searchByEmail" ? (
           <Grid item xs={12}>
@@ -231,37 +232,37 @@ class index extends Component {
             />
           </Grid>
         ) : (
-          <Grid item xs={12}>
-            <Autocomplete
-              options={companys}
-              getOptionLabel={(option) => option.companyName}
-              size="small"
-              id="comapny"
-              Company
-              value={this.state.companyvalue}
-              onChange={(event, value) => {
-                this.setState({ companyvalue: value });
-                console.log("companyvalue", value);
-                // this.setState({ employerid: value.id });
-              }}
-              inputValue={this.state.dummyvalue}
-              onInputChange={(event, newInputValue) => {
-                this.setState({ dummyvalue: newInputValue });
-                // console.log(newInputValue);
-              }}
-              renderInput={(params) => (
-                <TextField {...params} label="Company" margin="normal" />
-              )}
-            />
-          </Grid>
-        )}
+              <Grid item xs={12}>
+                <Autocomplete
+                  options={companys}
+                  getOptionLabel={(option) => option.companyName}
+                  size="small"
+                  id="comapny"
+                  Company
+                  value={this.state.companyvalue}
+                  onChange={(event, value) => {
+                    this.setState({ companyvalue: value });
+                    console.log("companyvalue", value);
+                    // this.setState({ employerid: value.id });
+                  }}
+                  inputValue={this.state.dummyvalue}
+                  onInputChange={(event, newInputValue) => {
+                    this.setState({ dummyvalue: newInputValue });
+                    // console.log(newInputValue);
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Company" margin="normal" />
+                  )}
+                />
+              </Grid>
+            )}
       </>
     );
   }
   async componentDidMount() {
-     token1 = localStorage.getItem("Token");
- token = "Token " + token1;
- id = localStorage.getItem("id");
+    token1 = localStorage.getItem("Token");
+    token = "Token " + token1;
+    id = localStorage.getItem("id");
     await axios
       .get("http://3.22.17.212:8000/api/v1/codes/access/codes", {
         headers: {
@@ -270,7 +271,7 @@ class index extends Component {
       })
       .then((res) => {
         codes = res.data;
-        this.setState({codes:res.data})
+        this.setState({ codes: res.data })
         console.log("codes", codes);
       });
     await axios
@@ -281,7 +282,7 @@ class index extends Component {
       })
       .then((res) => {
         pendingcodes = res.data;
-        this.setState({pendingcodes:res.data})
+        this.setState({ pendingcodes: res.data })
         console.log("pendingcodes", pendingcodes);
       });
     await axios
@@ -331,7 +332,7 @@ class index extends Component {
     this.setState({ loading: false });
   }
   async getcode(codeid) {
- 
+
     this.setState({ viewDialog: true });
     await axios
       .get(
@@ -347,7 +348,7 @@ class index extends Component {
         this.setState({ codedetails: res.data });
         console.log("codedetails", this.state.codedetails.canAccessProfile);
       });
-    
+
   }
   async postcode() {
     this.setState({
@@ -366,8 +367,8 @@ class index extends Component {
       ? this.state.employerby === "searchByEmail"
         ? bodyFormData.append("employer", this.state.emailsvalue.id)
         : this.state.employerby === "searchByUsername"
-        ? bodyFormData.append("employer", this.state.usernamevalue.id)
-        : bodyFormData.append("employer", this.state.companyvalue.id)
+          ? bodyFormData.append("employer", this.state.usernamevalue.id)
+          : bodyFormData.append("employer", this.state.companyvalue.id)
       : bodyFormData.append("forAdmin", this.state.isadmin);
 
     bodyFormData.append("employee", id);
@@ -388,6 +389,29 @@ class index extends Component {
       .then((response) => {
         console.log(response);
       });
+  }
+  async updatestatus(id){
+    let headers = {
+      headers: {
+        Authorization: token,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    let bodyFormData = new FormData();
+    bodyFormData.append("codeStatus", this.state.status);
+    console.log("check",this.state.status,id)
+   
+
+    await axios
+      .put(
+        "http://3.22.17.212:8000/api/v1/codes/emp/update-code/"+id,
+        bodyFormData,
+        headers
+      )
+      .then((response) => {
+        console.log(response);
+      });
+      // await this.getidentites();
   }
   gettable() {
     return (
@@ -452,115 +476,113 @@ class index extends Component {
               <TableBody>
                 {this.state.opencodes
                   ? this.state.codes.map((row, index) => (
-                      <TableRow key={row.id}>
-                        <TableCell align="left"> {new Date(row.createdOn).toDateString()}</TableCell>   
-                        <TableCell align="left">{row.codeString}</TableCell>
-                        <TableCell align="left">
-                          {row.employer_company_field}
-                        </TableCell>
-                        <TableCell align="left">{row.codeStatus}</TableCell>
-                        <TableCell align="left">
+                    <TableRow key={row.id}>
+                      <TableCell align="left"> {new Date(row.createdOn).toDateString()}</TableCell>
+                      <TableCell align="left">{row.codeString}</TableCell>
+                      <TableCell align="left">
+                        {row.employer_company_field}
+                      </TableCell>
+                      <TableCell align="left">{row.codeStatus}</TableCell>
+                      <TableCell align="left">
                         {new Date(row.statusChangeDate).toDateString()}
-                        </TableCell>
-                        <TableCell align="left">
-                          <Button
-                            size="small"
-                            color="primary"
-                            variant="outlined"
-                            onClick={() => this.getcode(row.id)}
-                          >
-                            View Details
+                      </TableCell>
+                      <TableCell align="left">
+                        <Button
+                          size="small"
+                          color="primary"
+                          variant="outlined"
+                          onClick={() => this.getcode(row.id)}
+                        >
+                          View Details
                           </Button>
-                        </TableCell>
-                        <TableCell align="left">
-                          <FormControl
-                            style={{ minWidth: 85 }}
-                            variant="outlined"
-                            size="small"
-                            fullWidth
+                      </TableCell>
+                      <TableCell align="left">
+                      <FormControl variant="outlined" size="medium"  style={{ minWidth: 85 }}
+                          fullWidth >
+                          <InputLabel id="demo-simple-select-outlined-label">Status</InputLabel>
+                          <Select
+                            labelId="demo-simple-select-outlined-label"
+                            id="demo-simple-select-outlined"
+                             value={this.state.value}
+                             onChange={(event)=>{this.setState({status:event.target.value})}}
+                            label="Status"
                           >
-                            <InputLabel id="">Status</InputLabel>
-                            <Select
-                              labelId="statusOptionsEmployeeField"
-                              id="statusOptionsEmployeeField"
-                              fullWidth
-                              // value={age}
-                              // onChange={handleChange}
-                            >
-                              {row.status_options_employee_field.map((val) =>
-                                val.map((i) => (
-                                  <MenuItem value={i}>{i}</MenuItem>
-                                ))
-                              )}
-                            </Select>
-                          </FormControl>
-                        </TableCell>
-                        <TableCell align="right">
-                          <Button
-                            size="small"
-                            color="secondary"
-                            variant="outlined"
-                          >
-                            Update
+                            <MenuItem value="">
+                              <em>None</em>
+                            </MenuItem>
+                            {row.status_options_employee_field.map((val) =>
+                              <MenuItem value={val.status}>{val.action}</MenuItem>
+                            )}
+
+                          </Select>
+                        </FormControl>
+                      </TableCell>
+                      <TableCell align="right">
+                        <Button
+                          size="small"
+                          color="secondary"
+                          variant="outlined"
+                          onClick={()=>{this.updatestatus(row.id)}}
+                        >
+                          Update
                           </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))
+                      </TableCell>
+                    </TableRow>
+                  ))
                   : pendingcodes.map((row, index) => (
-                      <TableRow key={row.id}>
-                        <TableCell align="left"> {new Date(row.createdOn).toDateString()}</TableCell>
-                        <TableCell align="left">{row.codeString}</TableCell>
-                        <TableCell align="left">
-                          {row.employer_company_field}
-                        </TableCell>
-                        <TableCell align="left">{row.codeStatus}</TableCell>
-                        <TableCell align="left">
-                          {new Date(row.statusChangeDate).toDateString()}
-                        </TableCell>
-                        <TableCell align="left">
-                          <Button
-                            size="small"
-                            color="primary"
-                            variant="outlined"
-                            onClick={() => this.getcode(row.id)}
-                          >
-                            View Details
+                    <TableRow key={row.id}>
+                      <TableCell align="left"> {new Date(row.createdOn).toDateString()}</TableCell>
+                      <TableCell align="left">{row.codeString}</TableCell>
+                      <TableCell align="left">
+                        {row.employer_company_field}
+                      </TableCell>
+                      <TableCell align="left">{row.codeStatus}</TableCell>
+                      <TableCell align="left">
+                        {new Date(row.statusChangeDate).toDateString()}
+                      </TableCell>
+                      <TableCell align="left">
+                        <Button
+                          size="small"
+                          color="primary"
+                          variant="outlined"
+                          onClick={() => this.getcode(row.id)}
+                        >
+                          View Details
                           </Button>
-                        </TableCell>
-                        <TableCell align="left">
-                          <FormControl
-                            style={{ minWidth: 85 }}
-                            variant="outlined"
-                            size="small"
-                            fullWidth
+                      </TableCell>
+                      <TableCell align="left">
+                        <FormControl variant="outlined" size="medium"  style={{ minWidth: 85 }}
+                          fullWidth >
+                          <InputLabel id="demo-simple-select-outlined-label">Status</InputLabel>
+                          <Select
+                            labelId="demo-simple-select-outlined-label"
+                            id="demo-simple-select-outlined"
+                             value={this.state.value}
+                             onChange={(event)=>{this.setState({state:event.target.value})}}
+                            label="Status"
                           >
-                            <InputLabel id="">Status</InputLabel>
-                            <Select
-                              labelId="statusOptionsEmployeeField"
-                              id="statusOptionsEmployeeField"
-                              fullWidth
-                              // value={age}
-                              // onChange={handleChange}
-                            >
-                              {row.status_options_employee_field.map((val) =>
-                                val.map((i) => (
-                                  <MenuItem value={i}>{i}</MenuItem>
-                                ))
-                              )}
-                            </Select>
-                          </FormControl>
-                        </TableCell>
-                        <TableCell align="right">
-                          <Button
-                            size="small"
-                            color="secondary"
-                            variant="outlined"
-                          >
-                            Update
+                            <MenuItem value="">
+                              <em>None</em>
+                            </MenuItem>
+                            {row.status_options_employee_field.map((val) =>
+                              <MenuItem value={val.status}>{val.action}</MenuItem>
+                            )}
+
+                          </Select>
+                        </FormControl>
+                      </TableCell>
+                      <TableCell align="right">
+                        <Button
+                          size="small"
+                          color="secondary"
+                          variant="outlined"
+                          onClick={()=>{this.updatestatus(row.id)}}
+                        >
+                          Update
                           </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -747,7 +769,7 @@ class index extends Component {
                           {this.state.codedetails.createdOn}
                         </TableCell>
                         <TableCell align="center">
-                          
+
                           {this.state.codedetails.codeString}
                         </TableCell>
                         <TableCell align="center">

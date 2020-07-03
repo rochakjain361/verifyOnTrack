@@ -18,7 +18,8 @@ import { Button } from "@material-ui/core";
 import Input from "@material-ui/core/Input";
 import Link from '@material-ui/core/Link';
 import axios from "axios";
-
+import { Box } from "@material-ui/core";
+import ReCAPTCHA from "react-google-recaptcha";
 // import ValidationMessage from './ValidationMessage';
 function ValidationMessage(props) {
   if (!props.valid) {
@@ -54,10 +55,13 @@ class signUp extends Component {
     gender: "",
     dobValue: false,
     genderValue: false,
-    companyvalid: false
+    companyvalid: false,
+    capthavalid:false,
+    captha:"",
   };
   validatefirstname = (firstname) => {
     console.log(firstname.length)
+    
     let firstnameValid = true;
     if (firstname.length === 0) {
       firstnameValid = false;
@@ -157,18 +161,24 @@ class signUp extends Component {
 
     this.setState({ passwordConfirmValid, errorMsg }, this.validateForm);
   };
+  handleChange = value => {
+    console.log("Captcha value:", value);
+    this.setState({captha:value,capthavalid:true},this.validateForm)
+
+    if (value === null) this.setState({ expired: "true" });
+  };
   validateForm = () => {
-    const {
-      firstnamevalid,
-      usernameValid,
-      emailValid,
-      passwordValid,
-      passwordConfirmValid,
-    } = this.state;
-    this.setState({
-      formValid:
-        firstnamevalid && usernameValid && emailValid && passwordValid && passwordConfirmValid,
-    });
+    // const {
+    //   // firstnamevalid,
+    //   usernameValid,
+    //   emailValid,
+    //   passwordValid,
+    //   passwordConfirmValid,
+    // } = this.state;
+    // this.setState({
+    //   formValid:this.state.firstnamevalid&&
+    //      usernameValid && emailValid && passwordValid && passwordConfirmValid,
+    // });
     // console.log("123456",this.state.firstnamevalid ,
     //   this.state.usernameValid ,
     //   this.state.emailValid ,
@@ -185,6 +195,7 @@ class signUp extends Component {
         this.state.passwordConfirmValid &&
         this.state.genderValue &&
         this.state.dobValue
+        &&this.state.capthavalid
 
 
       ) {
@@ -198,8 +209,8 @@ class signUp extends Component {
         this.state.usernameValid &&
         this.state.emailValid &&
         this.state.passwordValid &&
-        this.state.passwordConfirmValid &&
-        this.state.companyvalid
+        this.state.passwordConfirmValid 
+        &&this.state.companyvalid
 
 
       ) {
@@ -209,6 +220,7 @@ class signUp extends Component {
       }
     }
   };
+  
   render() {
     const { classes } = this.props;
 
@@ -309,7 +321,7 @@ class signUp extends Component {
                       label="First Name"
                       value={this.state.firstname}
                       onChange={(event) => {
-                        this.setState({ firstname: event.target.value },)
+                        this.setState({ firstname: event.target.value })
                         this.validatefirstname(event.target.value)
                       }
                       }
@@ -517,8 +529,21 @@ class signUp extends Component {
                       size="small"
                     />
                   </Grid>
-                </Grid>
+                  <Grid item xs={12} >
+                    
 
+                      <ReCAPTCHA
+                        style={{ display: "inline-block" }}
+                        theme="light"
+                        // ref={this._reCaptchaRef}
+                        sitekey={"6LdDrqsZAAAAABrsnwXy1KB8r1dhblamd3rFz7wd"}
+                        onChange={this.handleChange}
+                      // asyncScriptOnLoad={this.asyncScriptOnLoad}
+                      />
+                    
+                  </Grid>
+                </Grid>
+                
                 <Grid container spacing={1}>
                   <Grid item xs={12}>
                     <GradientButton
