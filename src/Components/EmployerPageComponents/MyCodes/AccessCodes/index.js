@@ -51,6 +51,7 @@ class index extends Component {
     state = {
         generateNewEmployementCodeDialog: false,
         codeDetailsDialog: false,
+        employeeDetailsDialog: false,
         pendingCodesCheck: false,
 
         employeeByRadio: "searchByPhone",
@@ -84,7 +85,7 @@ class index extends Component {
             });
         response = await response.json();
         console.log('allCodesSuccess:', response)
-        this.setState({ allCodes: response });
+        this.setState({allCodes: response})
     }
 
     async fetchPendingCodes() {
@@ -111,8 +112,8 @@ class index extends Component {
     //     this.setState({ phones: response });
     // }
 
-    async fetchEmployeeOntracId() {
-        let response = await fetch(api + "/api/v1/accounts/employee?ontrac_id",
+    async fetchEmployeeOntracId(data) {
+        let response = await fetch(api + "/api/v1/accounts/employee?ontrac_id=" + data,
             {
                 headers: {
                     'Authorization': token
@@ -135,6 +136,11 @@ class index extends Component {
         console.log('codeDetailsSuccess:', response)
         this.setState({ codeDetails: response });
         console.log('codeblahblah:', this.state.codeDetails)
+    }
+
+    viewEmployeeDetails(id) {
+        // this.viewEmployeeDetailsDialog()
+        this.setState({ employeeDetailsDialog: true })
     }
 
     async componentDidMount() {
@@ -219,11 +225,12 @@ class index extends Component {
                                     <TableCell align="left">View</TableCell>
                                     {/* <TableCell align="left"></TableCell> */}
                                     <TableCell align="left">Actions</TableCell>
-                                    <TableCell align="left">Update</TableCell>
+                                    {/* <TableCell align="left">Update</TableCell> */}
                                 </TableRow>
                             </TableHead>
                             {this.tableDisplayLogic()}
                             {this.viewCodeDetails()}
+                            {this.viewEmployeeDetailsDialog()}
                         </Table>
                     </TableContainer>
 
@@ -238,8 +245,7 @@ class index extends Component {
     }
 
     allCodesTable() {
-
-        return (
+       return (
             <TableBody>
                 {this.state.allCodes.map((row, index) => (
                     <TableRow key={row.id}>
@@ -249,21 +255,30 @@ class index extends Component {
                         <TableCell align="left">{row.codeStatus}</TableCell>
                         <TableCell align="left">{new Date(row.statusChangeDate).toDateString()}</TableCell>
                         <TableCell align="left">
-                            <Button size='small' color="primary" variant="outlined" style={{ minWidth: 120 }}>Employee Details</Button>
+                            <Button
+                                size='small'
+                                color="primary"
+                                variant="outlined"
+                                style={{ minWidth: 120 }}
+                            >
+                                Employee Details
+                            </Button>
+
                             <Button
                                 size='small'
                                 color="primary"
                                 variant="outlined"
                                 onClick={() => this.fetchCodeDetails(row.id)}
                                 style={{ minWidth: 120, marginTop: 10 }}
-                            >Code Details</Button>
+                            >Code Details
+                            </Button>
                         </TableCell>
                         {/* <TableCell align="left"></TableCell> */}
                         <TableCell align="left">
-                            <Button size='small' color="primary" variant="outlined" style={{ minWidth: 120 }}>{row.status_options_employer_field[0]}</Button>
-                            <Button size='small' color="primary" variant="outlined" style={{ minWidth: 120, marginTop: 10 }}>{row.status_options_employer_field[1]}</Button>
+                            <Button size='small' color="primary" variant="outlined" style={{ minWidth: 120 }}>{row.status_options_employer_field[0].action}</Button>
+                            <Button size='small' color="primary" variant="outlined" style={{ minWidth: 120, marginTop: 10 }}>{row.status_options_employer_field[1].action}</Button>
                         </TableCell>
-                        <TableCell align="right"><Button size='small' color="secondary" variant="outlined">Update</Button></TableCell>
+                        {/* <TableCell align="right"><Button size='small' color="secondary" variant="outlined">Update</Button></TableCell> */}
                     </TableRow>
                 ))}
             </TableBody>
@@ -272,33 +287,41 @@ class index extends Component {
 
     openCodesTable() {
         return (
-            <TableBody>
-                {this.state.pendingCodes.map((row, index) => (
-                    <TableRow key={row.id}>
-                        <TableCell align="left">{new Date(row.created_on).toDateString()}</TableCell>
-                        <TableCell align="left">{row.codeString}</TableCell>
-                        <TableCell align="left">{row.employee_name_field.name}</TableCell>
-                        <TableCell align="left">{row.codeStatus}</TableCell>
-                        <TableCell align="left">{new Date(row.statusChangeDate).toDateString()}</TableCell>
-                        <TableCell align="left"><Button size='small' color="primary" variant="outlined">View Code Details</Button></TableCell>
-                        <TableCell align="left"><Button size='small' color="primary" variant="outlined">View Employee Details</Button></TableCell>
-                        <TableCell align="left"><FormControl style={{ minWidth: 85 }} variant="outlined" size='small' fullWidth>
-                            <InputLabel id="status" fullWidth>Status</InputLabel>
-                            <Select
-                                labelId="statusOptionsEmployeeField"
-                                id="statusOptionsEmployeeField"
-                            // value={age}
-                            // onChange={handleChange}
-                            >
-                                <MenuItem value={10}>Resend Request</MenuItem>
-                                <MenuItem value={20}>Cancel Request</MenuItem>
-
-                            </Select>
-                        </FormControl></TableCell>
-                        <TableCell align="right"><Button size='small' color="secondary" variant="outlined">Update</Button></TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
+                <TableBody>
+                    {this.state.pendingCodes.map((row, index) => (
+                        <TableRow key={row.id}>
+                            <TableCell align="left">{new Date(row.createdOn).toDateString()}</TableCell>
+                            <TableCell align="left">{row.codeString}</TableCell>
+                            <TableCell align="left">{row.employee_name_field.name}</TableCell>
+                            <TableCell align="left">{row.codeStatus}</TableCell>
+                            <TableCell align="left">{new Date(row.statusChangeDate).toDateString()}</TableCell>
+                            <TableCell align="left">
+                                <Button 
+                                size='small' 
+                                color="default" 
+                                variant="contained" 
+                                style={{ minWidth: 120 }}
+                                onClick={() => this.viewEmployeeDetails(row.id)}
+                                >
+                                    Employee Details
+                                    </Button>
+                                <Button
+                                    size='small'
+                                    color="default"
+                                    variant="contained"
+                                    onClick={() => this.fetchCodeDetails(row.id)}
+                                    style={{ minWidth: 120, marginTop: 10 }}
+                                >Code Details</Button>
+                            </TableCell>
+                            {/* <TableCell align="left"></TableCell> */}
+                            <TableCell align="left">
+                                <Button size='small' color="primary" variant="outlined" style={{ minWidth: 120 }}>{row.status_options_employer_field[0].action}</Button>
+                                <Button size='small' color="secondary" variant="outlined" style={{ minWidth: 120, marginTop: 10 }}>{row.status_options_employer_field[1].action}</Button>
+                            </TableCell>
+                            {/* <TableCell align="right"><Button size='small' color="secondary" variant="outlined">Update</Button></TableCell> */}
+                        </TableRow>
+                    ))}
+                </TableBody>
         );
     }
 
@@ -317,9 +340,33 @@ class index extends Component {
 
                     </DialogContent>
                     <DialogActions style={{ padding: 15 }}>
-                        <Button color="secondary" variant="contained" onClick={() => this.setState({ generateNewEmployementCodeDialog: false, selectedIndex: -1 })}>
+                        <Button color="secondary" variant="contained"
+                            onClick={() =>
+                                this.setState({ generateNewEmployementCodeDialog: false, selectedIndex: -1 })
+                            }>
                             Generate One-time Code
                         </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        );
+    }
+
+    viewEmployeeDetailsDialog(id) {
+        return (
+            <div>
+                <Dialog open={this.state.employeeDetailsDialog} onClose={() => this.setState({ employeeDetailsDialog: false })} >
+                    <DialogTitle id="employeeDetails">{"Employee Details"}</DialogTitle>
+                    <DialogContent>
+
+                    </DialogContent>
+                    <DialogActions style={{ padding: 15 }}>
+                        <Button color="secondary" variant="contained"
+                            onClick={() =>
+                                this.setState({ employeeDetailsDialog: false, selectedIndex: -1 })
+                            }>
+                            Close
+                    </Button>
                     </DialogActions>
                 </Dialog>
             </div>
@@ -369,9 +416,13 @@ class index extends Component {
                                         id="searchByOntracId"
                                         label="OnTrac Id"
                                         variant="outlined"
+                                        // helperText="Incorrect entry."
                                         fullWidth
                                         // value={this.state.generateCodeData}
-                                        onChange={(event) => this.setState({ generateCodeOnTracId: event.target.value })}
+                                        onChange={(event) => {
+                                            this.setState({ generateCodeData: event.target.value })
+                                            // this.fetchEmployeeOntracId(this.state.generateCodeData)
+                                        }}
                                     />
                                 </Grid>
                             ) : (
@@ -383,7 +434,7 @@ class index extends Component {
                                             type='number'
                                             fullWidth
                                             // value={this.state.generateCodeData}
-                                            onChange={(event) => this.setState({ generateCodePhone: event.target.value })}
+                                            onChange={(event) => this.setState({ generateCodeData: event.target.value })}
                                         />
                                     </Grid>)}
 
@@ -395,48 +446,48 @@ class index extends Component {
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
-                                                    // checked={employeeProfile}
-                                                     onChange={this.setState({codeRatings: !this.state.codeRatings})}
+                                                    checked={this.state.codeRatings}
+                                                    onChange={()=> this.setState({codeRatings: !this.state.codeRatings})}
                                                     name="ratings" />}
                                             label="Ratings"
                                         />
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
-                                                    // checked={jobProfile}
-                                                    onChange={this.setState({codeAddress: true})}
+                                                checked={this.state.codeAddress}
+                                                    onChange={()=> this.setState({codeAddress: !this.state.codeAddress})}
                                                     name="address" />}
                                             label="Address"
                                         />
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
-                                                    // checked={jobProfile}
-                                                 onChange={this.setState({codeProfile: true})}
+                                                checked={this.state.codeProfile}
+                                                    onChange={()=> this.setState({codeProfile: !this.state.codeProfile})}
                                                     name="profile" />}
                                             label="Profile"
                                         />
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
-                                                    // checked={jobProfile}
-                                                     onChange={this.setState({codeIdentities: true})}
+                                                checked={this.state.codeIdentities}
+                                                    onChange={()=> this.setState({codeIdentities: !this.state.codeIdentities})}
                                                     name="identites" />}
                                             label="Identities"
                                         />
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
-                                                    // checked={jobProfile}
-                                                     onChange={this.setState({codePhones: true})}
+                                                checked={this.state.codePhones}
+                                                    onChange={()=> this.setState({codePhones: !this.state.codePhones})}
                                                     name="phones" />}
                                             label="Phones"
                                         />
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
-                                                    // checked={jobProfile}
-                                                     onChange={this.setState({codeJobHistory: true})}
+                                                checked={this.state.codeJobHistory}
+                                                    onChange={()=> this.setState({codeJobHistory: !this.state.codeJobHistory})}
                                                     name="jobHistory" />}
                                             label="Job History"
                                         />
@@ -447,11 +498,34 @@ class index extends Component {
                         </Grid>
 
                     </DialogContent>
-                    <DialogActions style={{ padding: 15 }}>
-                        <Button color="secondary" variant="contained" onClick={() => this.setState({ generateNewEmployementCodeDialog: false, selectedIndex: -1 })}>
+                    {this.state.employeeByRadio !== 'searchByOntracId' ? (
+                        <DialogActions style={{ padding: 15 }}>
+                            <Button
+                                color="secondary"
+                                variant="contained"
+                                onClick={() => this.fetchEmployeeOntracId(this.state.generateCodeData)}
+                            >
+                                Generate One-time Code
+                                 </Button>
+                        </DialogActions>
+                    ) : (
+                            <DialogActions style={{ padding: 15 }}>
+                                <Button
+                                    color="secondary"
+                                    variant="contained"
+                                // onClick={() => this.fetchEmployeeOntracId(this.state.generateCodeData)}
+                                >
+                                    Generate One-time Code
+                                 </Button>
+                            </DialogActions>)}
+                    {/* <DialogActions style={{ padding: 15 }}>
+                        <Button 
+                        color="secondary" 
+                        variant="contained" 
+                        onClick={() => console.log('gen:',this.state.generateCodeData)}>
                             Generate One-time Code
                          </Button>
-                    </DialogActions>
+                    </DialogActions> */}
                 </Dialog>
             </div>
         );

@@ -34,24 +34,27 @@ function getSteps() {
     return ['Profile', 'Addresses', 'Identities', 'Phones', 'Jobs'];
 }
 
-function getStepContent(step) {
+function getStepContent(step, user, approval) {
     switch (step) {
         case 0:
-            return <Profile />;
+            return <Profile user={user} approval={approval}/>;
         case 1:
-            return <Address />;
+            return <Address user={user} approval={approval}/>;
         case 2:
-            return <Identity />;
+            return <Identity user={user} approval={approval}/>;
         case 3:
-            return <Phone />;
+            return <Phone user={user} approval={approval}/>;
         case 4:
-            return <Job />;
+            return <Job user={user} approval={approval}/>;
         default:
             return 'Unknown step';
     }
 }
 
-export default function VerticalLinearStepper() {
+export default function VerticalLinearStepper(props) {
+    const user = props.user;
+    const approval = props.approval;
+    console.log('user:',user, approval)
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
@@ -75,7 +78,7 @@ export default function VerticalLinearStepper() {
                     <Step key={label}>
                         <StepLabel>{label}</StepLabel>
                         <StepContent>
-                            <Typography>{getStepContent(index)}</Typography>
+                            <Typography>{getStepContent(index, user, approval)}</Typography>
                             <div className={classes.actionsContainer}>
                                 <div>
                                     <Button

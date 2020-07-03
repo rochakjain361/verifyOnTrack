@@ -84,17 +84,19 @@ class index extends Component {
         bothRequests: [],
 
         userID: '',
+        assignAdminId: '',
         approvalCode: '',
-currentid:"",
+        currentid: "",
+        enteredUsername: '',
         selectedRequest: [],
 
         adminList: [],
     }
 
-    // constructor(props) {
-    //     super(props);
-    //     this.generateNewEmployementCodeButton = this.generateNewEmployementCodeButton.bind(this);
-    //   } 
+    constructor(props) {
+        super(props);
+        this.allCodesTable = this.allCodesTable.bind(this);
+    }
 
     async fetchAdminList() {
         let response = await fetch(api + "/api/v1/accounts/admins",
@@ -164,7 +166,6 @@ currentid:"",
         await this.fetchBothRequests();
         await this.fetchPendingApprovalRequests();
         await this.fetchAdminList()
-        // await this.fetchAdminList();
     }
 
     render() {
@@ -188,11 +189,11 @@ currentid:"",
                     </Grid>
 
 
-                    <Grid item xs={4}>
+                    {/* <Grid item xs={4}>
                         <Button color='secondary' variant='contained'
                             onClick={() => this.setState({ viewDialog: true })}
                             fullWidth>  Create New code </Button>
-                    </Grid>
+                    </Grid> */}
 
                     <Grid container direction='row' spacing={2}>
                         <Grid item >
@@ -251,11 +252,12 @@ currentid:"",
                                 </TableRow>
                             </TableHead>
                             {this.tableDisplayLogic()}
+                            {/* {this.allTablesLogic()} */}
                         </Table>
                     </TableContainer>
 
                 </Grid>
-                {this.assignAdminDialog()}
+                {this.assignAdminDialog(id)}
                 {this.viewDialogBox()}
 
             </div>
@@ -264,20 +266,17 @@ currentid:"",
 
     // allTablesLogic() {
 
-    //     if (this.state.assignedToMeCheck = true) {
-    //         return (this.setState({ selectedRequest: this.state.assignedToMe }));
+    //     if (this.state.assignedToMeCheck && this.state.pendingApprovalRequestCheck) {
+    //         this.setState({ selectedRequest: this.state.bothRequests })
     //     }
-
-    //     else if (this.state.pendingApprovalRequestCheck = true) {
-    //         return (this.setState({ selectedRequest: this.state.pendingApprovalRequestCheck }));
+    //     else if (this.state.pendingApprovalRequestCheck) {
+    //         this.setState({ selectedRequest: this.state.pendingApprovalRequestCheck })
     //     }
-
-    //     else if (this.state.assignedToMeCheck == true && this.state.pendingApprovalRequestCheck == true) {
-    //         return (this.setState({ selectedRequest: this.state.bothRequests }));
+    //     else if (this.state.assignedToMeCheck) {
+    //         this.setState({ selectedRequest: this.state.assignedToMe })
     //     }
-
     //     else {
-    //         return (this.setState({ selectedRequest: this.state.allCodes }));
+    //         this.setState({ selectedRequest: this.state.allCodes })
     //     }
     // }
 
@@ -303,14 +302,15 @@ currentid:"",
     // }
 
     allCodesTable() {
+        console.log("allCodes", this.state.allCodes)
         return (
-
             <TableBody>
                 {this.state.allCodes.map((row, index) => (
                     <TableRow key={row.id}>
                         <TableCell align="left">{row.createdOn}</TableCell>
                         <TableCell align="left">{row.codeString}</TableCell>
-                        <TableCell align="left">{row.assigned_to_name_field.name}</TableCell>
+                        {row.assigned_to_name_field ? <TableCell align="left">{row.assigned_to_name_field.name}</TableCell> : <div />}
+                        {/* <TableCell align="left">{row.assigned_to_name_field.name}</TableCell> */}
                         <TableCell align="left">{row.user_field.name}</TableCell>
                         <TableCell align="left">{row.is_employer_field ? ('Yes') : ('No')}</TableCell>
                         <TableCell align="left">{row.codeStatus}</TableCell>
@@ -319,42 +319,48 @@ currentid:"",
                             {
                                 row.showAssignTo_field ?
                                     (
-                                        <Button 
-                                        variant='outlined' 
-                                        color='secondary'
-                                        onClick={() =>  {
-                                            console.log("row.id///////////",row.id)
-                                            this.asignadmin(row.id)} }
+                                        <Button
+                                            variant='outlined'
+                                            color='secondary'
+                                            onClick={() => {
+                                                console.log("row.id///////////", row.id)
+                                                this.assignadminTableButton(row.id)
+                                            }}
                                         >
                                             Assign Admin
                                         </Button>
                                     )
                                     :
                                     (
-                                        <Button 
-                                        variant='outlined' 
-                                        color='secondary' 
-                                        onClick={() => {this.setState({ assignDialog: true })
-                                                        this.setState({ adminIndex: row.id})}} 
+                                        <Button
+                                            variant='outlined'
+                                            color='secondary'
+                                            onClick={() => {
+                                                this.setState({ assignDialog: true })
+                                                this.setState({ adminIndex: row.id })
+                                            }}
                                         >
                                             Reassign Admin
                                         </Button>
                                     )}
                         </TableCell>
                         {/* {row.viewApprove_field !== "False" ? (this.setState({viewLogic: true})) : null} */}
-                        <TableCell align="left">
-                        <Button variant='outlined' color='primary'
-                        onClick={()=> {this.setState({userID: row.user})
-                                       this.setState({approvalCode: row.codeString})
-                                    }}
-                        // disabled={this.state.viewLogic}
-                        >
-                            View &amp; approve
+                        < TableCell align="left" >
+                            <Button variant='outlined' color='primary'
+                                onClick={() => {
+                                    this.setState({ userID: row.user })
+                                    this.setState({ approvalCode: row.codeString })
+                                    this.viewAndApprove(row.id, row.codeString)
+                                }}
+                            // disabled={this.state.viewLogic}
+                            >
+                                View &amp; approve
                         </Button>
-                    </TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
+                        </TableCell>
+                    </TableRow >
+                ))
+                }
+            </TableBody >
 
         );
     }
@@ -376,7 +382,7 @@ currentid:"",
                             {
                                 row.showAssignTo_field ?
                                     (
-                                        <Button variant='outlined' color='secondary' onClick={() =>  this.asignadmin(row.id)} >
+                                        <Button variant='outlined' color='secondary' onClick={() => this.assignadminTableButton(row.id)} >
                                             Assign Admin
                                         </Button>
                                     )
@@ -389,12 +395,12 @@ currentid:"",
                         </TableCell>
                         {/* {row.viewApprove_field !== "False" ? (this.setState({viewLogic: true})) : null} */}
                         <TableCell align="left">
-                        <Button variant='outlined' color='primary' 
-                        // disabled={this.state.viewLogic}
-                        >
-                            View &amp; approve
+                            <Button variant='outlined' color='primary'
+                            // disabled={this.state.viewLogic}
+                            >
+                                View &amp; approve
                         </Button>
-                    </TableCell>
+                        </TableCell>
                     </TableRow>
                 ))}
             </TableBody>
@@ -432,24 +438,31 @@ currentid:"",
                         </TableCell>
                         {/* {row.viewApprove_field !== "False" ? (this.setState({viewLogic: true})) : null} */}
                         <TableCell align="left">
-                        <Button variant='outlined' color='primary'
-                        // onClick={()=>}
-                        //  disabled={this.state.viewLogic}
-                         >
-                            View &amp; approve
+                            <Button variant='outlined' color='primary'
+                            // onClick={()=>}
+                            //  disabled={this.state.viewLogic}
+                            >
+                                View &amp; approve
                         </Button>
-                    </TableCell>
+                        </TableCell>
                     </TableRow>
                 ))}
             </TableBody>
 
         );
     }
-asignadmin(id){
-    
-    this.setState({assignDialog:true,currentid:id});
+    assignadminTableButton(id) {
 
-}
+        this.setState({ assignDialog: true, currentid: id });
+
+    }
+
+    viewAndApprove(id, code) {
+        console.log('viewID:', id)
+        console.log('viewCode:', code)
+        this.setState({ viewDialog: true });
+    }
+
     bothRequestsTable() {
         return (
 
@@ -467,7 +480,7 @@ asignadmin(id){
                             {
                                 row.showAssignTo_field ?
                                     (
-                                        <Button variant='outlined' color='secondary' onClick={() => {  this.asignadmin(row.id)} }>
+                                        <Button variant='outlined' color='secondary' onClick={() => { this.assignadminTableButton(row.id) }}>
                                             Assign Admin
                                         </Button>
                                     )
@@ -480,12 +493,12 @@ asignadmin(id){
                         </TableCell>
                         {/* {row.viewApprove_field !== "False" ? (this.setState({viewLogic: true})) : null} */}
                         <TableCell align="left">
-                        <Button variant='outlined' color='primary' 
-                        // disabled={this.state.viewLogic}
-                        >
-                            View &amp; approve
+                            <Button variant='outlined' color='primary'
+                            // disabled={this.state.viewLogic}
+                            >
+                                View &amp; approve
                         </Button>
-                    </TableCell>
+                        </TableCell>
                     </TableRow>
                 ))}
             </TableBody>
@@ -505,7 +518,7 @@ asignadmin(id){
     }
 
     assignAdminDialog(id) {
-console.log("qqqqqqqqqqqqqq",id)
+        console.log("qqqqqqqqqqqqqq", id)
         const options = this.state.adminList.map((option) => {
             const firstLetter = option.username[0].toUpperCase();
             return {
@@ -569,7 +582,7 @@ console.log("qqqqqqqqqqqqqq",id)
 
                         {this.state.adminByRadio !== 'searchByUsername' ? (
                             <Grid item xs={12}>
-                                <Autocomplete
+                                {/* <Autocomplete
                                     id="grouped-demo"
                                     options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
                                     groupBy={(option) => option.firstLetter}
@@ -577,16 +590,72 @@ console.log("qqqqqqqqqqqqqq",id)
                                     // onChange={this.setState({})}
                                     fullWidth
                                     renderInput={(params) => <TextField {...params} label="Username" variant="outlined" />}
+                                /> */}
+                                <Autocomplete
+                                    options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
+                                    getOptionLabel={(option) => option.username}
+                                    groupBy={(option) => option.firstLetter}
+                                    id="adminUsername"
+                                    Username
+                                    fullWidth
+                                    value={this.state.selectedstate}
+                                    onChange={(event, value) => {
+                                        this.setState({ selectedstate: value });
+                                        this.setState({ assignAdminId: value['id'] })
+                                        console.log("selectedstate", value);
+                                        console.log("assignAdminID", this.state.assignAdminId);
+                                    }}
+                                    inputValue={this.state.enteredUsername}
+                                    onInputChange={(event, newInputValue) => {
+                                        this.setState({ enteredUsername: newInputValue });
+                                        // console.log(newInputValue);
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Username"
+                                            margin="normal"
+                                            variant="outlined"
+                                        />
+                                    )}
                                 />
                             </Grid>) : (
                                 <Grid item xs={12}>
-                                    <Autocomplete
+                                    {/* <Autocomplete
                                         id="grouped-demo"
                                         options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
                                         groupBy={(option) => option.firstLetter}
                                         getOptionLabel={(option) => option.email}
                                         fullWidth
                                         renderInput={(params) => <TextField {...params} label="Email" variant="outlined" />}
+                                    /> */}
+                                    <Autocomplete
+                                        options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
+                                        getOptionLabel={(option) => option.email}
+                                        groupBy={(option) => option.firstLetter}
+                                        id="adminEmail"
+                                        Username
+                                        fullWidth
+                                        value={this.state.selectedstate}
+                                        onChange={(event, value) => {
+                                            this.setState({ selectedstate: value });
+                                            this.setState({ assignAdminId: value['id'] })
+                                            console.log("selectedstate", value);
+                                            console.log("assignAdminID", this.state.assignAdminId);
+                                        }}
+                                        inputValue={this.state.enteredUsername}
+                                        onInputChange={(event, newInputValue) => {
+                                            this.setState({ enteredUsername: newInputValue });
+                                            // console.log(newInputValue);
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="Email"
+                                                margin="normal"
+                                                variant="outlined"
+                                            />
+                                        )}
                                     />
                                 </Grid>)}
 
@@ -599,11 +668,9 @@ console.log("qqqqqqqqqqqqqq",id)
                         color="primary"
                         variant="contained"
                         disabled={this.state.buttondisabled}
-                    // onClick={() => {
-                    //   this.updateidentites(
-                    //     this.state.result[this.state.selectedIndex].idSource
-                    //   );
-                    // }}
+                        onClick={() =>
+                            this.assignAdmin(id)
+                        }
                     >
                         Assign
               </Button>
@@ -637,14 +704,47 @@ console.log("qqqqqqqqqqqqqq",id)
             </DialogTitle>
                 <DialogContent>
 
-                    <ViewPagesComponent user={this.state.userID} approval={this.state.approvalCode}/>
+                    <ViewPagesComponent user={this.state.userID} approval={this.state.approvalCode} />
 
                 </DialogContent>
 
-                <DialogActions style={{ padding: 15 }}>  
+                <DialogActions style={{ padding: 15 }}>
                 </DialogActions>
             </Dialog>
         );
+    }
+
+    async assignAdmin(id) {
+
+        let bodyData = {
+            'assigned_to': this.state.assignAdminId
+        }
+
+        console.log('Body data:', bodyData)
+
+        try {
+            let response = await fetch(api + '/api/v1/codes/approval/' + id + '/assignto',
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bodyData)
+                }
+            );
+            response = await response.json();
+            console.log('assignAdminSuccess:', response);
+
+            await this.fetchAllCodes();
+            await this.fetchAssignedToMe();
+            await this.fetchBothRequests();
+            await this.fetchPendingApprovalRequests();
+            this.setState({ selectedstate: '' })
+
+        } catch (error) {
+            console.log("[!ON_REGISTER] " + error);
+        }
     }
 }
 
