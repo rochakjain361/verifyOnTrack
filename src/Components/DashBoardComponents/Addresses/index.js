@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
@@ -40,7 +40,7 @@ let history = [];
 let token1 = "";
 let token = "";
 let id = "";
-class Addresses extends Component {
+class Addresses extends PureComponent {
   constructor(props) {
     super(props);
     //uncomment the below 2 lines after finishing address
