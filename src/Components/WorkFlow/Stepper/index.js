@@ -14,11 +14,7 @@ import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
 import StepConnector from '@material-ui/core/StepConnector';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
-// import Address from '../Address'
-// import Identity from '../Identity'
-// import MyProfile from '../MyProfile'
-// import Phone from '../Phone'
-// import MyJob from '../MyJob'
+
 import Verification from '../Verification/index'
 import MyProfile from "../../DashBoardComponents/MyProfile/index"
 import Addresses from "../../DashBoardComponents/Addresses/index"
@@ -35,6 +31,7 @@ import Box from '@material-ui/core/Box';
 import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import { useState, useEffect } from 'react';
+import { Paper } from '@material-ui/core'
 import axios from "axios";
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -58,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
 function getSteps() {
     return ['Profile', 'Address', 'Identity', 'Phone', 'MyJob'];
 }
+
 
 function getStepContent(step, props) {
     switch (step) {
@@ -151,6 +149,7 @@ export default function HorizontalLinearStepper(props) {
     const [Approval, setApproval] = React.useState(false);
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState();
+    // const [profileDone, setProfiledone] = React.useState(false);
     const [currentStep, setCurrentStep] = React.useState(() => {
         if (props.location.state.detail.user.info_provided_field.profile === false) {
             setActiveStep(0)
@@ -217,7 +216,10 @@ export default function HorizontalLinearStepper(props) {
         setid(localStorage.getItem("id"));
         // setActiveStep(2);
     });
+// const profileCheck=()=>{
+//     setProfiledone(true)
 
+// }
     const isStepOptional = (step) => {
         return step === 1;
     };
@@ -225,12 +227,18 @@ export default function HorizontalLinearStepper(props) {
     const isStepSkipped = (step) => {
         return skipped.has(step);
     };
+    const apiCheck =()=>{
+        console.log("check suceeded")
+    }
 
     const handleNext = () => {
         let newSkipped = skipped;
         if (isStepSkipped(activeStep)) {
             newSkipped = new Set(newSkipped.values());
             newSkipped.delete(activeStep);
+        }
+        if(activeStep===steps.length - 1){
+            apiCheck()
         }
 
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -295,55 +303,67 @@ export default function HorizontalLinearStepper(props) {
                 </Toolbar>
             </AppBar>
 
-           
+
             <div>
                 {activeStep === steps.length ? (
                     <Box m={3} p={2}>
-                        {Approval === false ? <Grid container direction="column" justify="center" alignItems="center" >
-                            <Grid item xs={12}>
-                                <Typography justify="center" align="center" >
-                                    Please request for approval if all details are entered.
+                        {Approval === false ? <Grid spacing={3} container direction="column"  >
 
-                        </Typography>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Button
-                                    // disabled={!this.props.data.profile||!this.props.data.address||!this.props.data.phone||!this.props.data.jobHistory}
 
-                                    style={{ maxHeight: 30 }}
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => {
-                                        requestconfirmation()
-
-                                    }}
-                                >
-                                    Submit for approval
-                           </Button>
-                            </Grid>
-
-                            <Grid container justify="space-between" alignItems="center">
-                                <Button size='medium' variant="contained" color='primary' disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
-                                    <><ArrowBackIcon />Previous</>
-                                </Button>
-                                <Button size='medium' onClick={handleReset} variant="contained" color="primary" className={classes.button} >
-                                    <SettingsBackupRestoreIcon />
+                            <Grid item xs={12}  >
+                                <Grid container direction="row" justify="space-between" alignItems="center">
+                                    <Grid item  >
+                                        <Button size='medium' variant="contained" color='primary' disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
+                                            <><ArrowBackIcon />Previous</>
+                                        </Button></Grid>
+                                    <Grid item  >
+                                        <Button size='medium' onClick={handleReset} variant="contained" color="primary" className={classes.button} >
+                                            <SettingsBackupRestoreIcon />
                             Reset
-                        </Button></Grid>
 
+                        </Button> </Grid></Grid></Grid>
+                            <Grid container spacing={3} direction="column" justify='center' align="center">
+
+
+                                <Grid item xs={12}  >
+
+                                    <Paper elevation={3} direction="column" >
+                                        <Box p={3} display="flex" flexDirection="column" justifyContent='center' alignItems="center" style={{ height: '50vh', }} >
+
+                                           
+                                            
+
+
+                                                <Button
+
+                                                    variant="contained"
+                                                    color="primary"
+                                                    onClick={() => {
+                                                        requestconfirmation()
+
+                                                    }}
+                                                >
+                                                    Submit for approval
+                           </Button>
+                            
+                                                <Typography justify="center" align="center" >
+                                                    Please request for approval if all details are entered.
+                                                </Typography>
+                                            
+                                           </Box></Paper></Grid>
+                            </Grid>
                         </Grid> :
-                            <Grid container spacing={3} direction="column" align="center" justify="center">
-                                <Grid item xs={12}>
+                            <Grid container spacing={3} direction="column" justify='center' align="center">
 
-                                    {/* <Typography justify="center" align="center" >
-                                    All steps completed - you&apos;re finished
-                        </Typography> */}
-                                    <Typography justify="center" align="center" >
-                                        You will be notified soon by mail
-                        </Typography>
-                                </Grid>
 
-                            </Grid>}
+                                <Grid item xs={12}  >
+
+                                    <Paper elevation={3} direction="column" >
+                                        <Box p={3} display="flex" flexDirection="column" justifyContent='center' alignItems="center" style={{ height: '50vh', }} >
+
+                                            <Typography variant="h4" gutterBottom align='center' justify="center">
+                                                You will be notified by mail soon.
+                             </Typography></Box></Paper></Grid></Grid>}
                     </Box>
                 ) : (
                         <Box p={1}>
@@ -368,15 +388,15 @@ export default function HorizontalLinearStepper(props) {
                                 </Grid>
                             </Box>
                             <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
-                {steps.map((label, index) => {
+                                {steps.map((label, index) => {
 
-                    return (
-                        <Step key={label} >
-                            <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
-                        </Step>
-                    );
-                })}
-            </Stepper>
+                                    return (
+                                        <Step key={label} >
+                                            <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+                                        </Step>
+                                    );
+                                })}
+                            </Stepper>
                             <Typography className={classes.instructions}>{getStepContent(activeStep, props)}</Typography>
                         </Box>
                     )}

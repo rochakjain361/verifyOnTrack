@@ -404,7 +404,7 @@ class index extends Component {
 
     await axios
       .put(
-        "http://3.22.17.212:8000/api/v1/codes/emp/update-code/"+id,
+        "http://3.22.17.212:8000/api/v1/codes/access/update-code/"+id,
         bodyFormData,
         headers
       )
@@ -511,7 +511,7 @@ class index extends Component {
                               <em>None</em>
                             </MenuItem>
                             {row.status_options_employee_field.map((val) =>
-                              <MenuItem value={val.status}>{val.action}</MenuItem>
+                              <MenuItem value={val.status}>{"status"+val.status}{val.action}</MenuItem>
                             )}
 
                           </Select>
@@ -557,8 +557,8 @@ class index extends Component {
                           <Select
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
-                             value={this.state.value}
-                             onChange={(event)=>{this.setState({state:event.target.value})}}
+                             value={this.state.status}
+                             onChange={(event)=>{this.setState({status:event.target.value})}}
                             label="Status"
                           >
                             <MenuItem value="">
