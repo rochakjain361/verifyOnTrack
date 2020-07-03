@@ -423,7 +423,9 @@ export default function MiniDrawer(props) {
             </Link>
           </List>
         </Collapse>
+
       </Drawer>
+
       <main className={classes.content}>
             <Toolbar />
             <Switch>
