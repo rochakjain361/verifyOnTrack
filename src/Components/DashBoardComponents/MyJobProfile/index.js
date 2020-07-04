@@ -363,6 +363,7 @@ class myJobProfile extends Component {
                         }
 
                         <Grid item xs={6}>
+                        <InputLabel id="dob">Start Date</InputLabel>
                             <input
                                 class="w3-input"
                                 type="date"
@@ -375,7 +376,7 @@ class myJobProfile extends Component {
                         </Grid>
 
                         <Grid item xs={6}>
-
+                        {/* <InputLabel id="dob">End Date</InputLabel> */}
 
                             <input
                                 class="w3-input"
