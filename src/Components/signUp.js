@@ -548,7 +548,7 @@ class signUp extends Component {
                     />
                   </Grid>
                   <Grid item xs={12} >
-                    
+                    <Grid container justify="center" alignItems="center">
 
                       <ReCAPTCHA
                         style={{ display: "inline-block" }}
@@ -558,7 +558,7 @@ class signUp extends Component {
                         onChange={this.handleChange}
                       // asyncScriptOnLoad={this.asyncScriptOnLoad}
                       />
-                    
+                    </Grid>
                   </Grid>
                 </Grid>
                 

@@ -27,13 +27,17 @@ import { CircularProgress } from "@material-ui/core";
 import InputLabel from '@material-ui/core/InputLabel';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import {Snackbar} from '@material-ui/core'
+import MuiAlert from '@material-ui/lab/Alert';
 
 let token1 = "";
 let token = "";
 let id = "";
 let result = [];
 let history = []
-
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 class MyProfile extends Component {
   state = {
     updateDialogOpen: false,
@@ -59,6 +63,9 @@ class MyProfile extends Component {
     file: null,
     gender: "",
     result: [],
+    addsnackbar:false,
+    addresponse:[]
+
   };
   async getprofiledata() {
     await axios
@@ -127,16 +134,6 @@ class MyProfile extends Component {
     console.log("firstname1",this.state.firstname)
 
   }
-
-  // async updatedetails(){
-  //   console.log("///////////////////////////////////////////////");
-  //  let data = {
-  //     employee: this.state.id,
-  //     update_reason: this.state.updatedReasonforupdating,
-  //     sex: this.state.updatedsex,
-  //     dob: this.state.updatedDob,
-  //   };
-
   async updatedetails() {
     this.setState({
       updateDialogOpen: false,
@@ -164,6 +161,7 @@ class MyProfile extends Component {
       )
       .then((response) => {
         console.log(response);
+       
       });
     await this.getprofiledata();
   }
@@ -190,8 +188,29 @@ class MyProfile extends Component {
       )
       .then((response) => {
         console.log(response);
+        this.setState({addresponse:response.status})
+        this.setState({ addsnackbar: true })
       });
     await this.getprofiledata();
+  }
+  addsnackbar() {
+
+
+    return (
+      this.state.addresponse === 200 ?
+        (<div>
+
+          <Snackbar open={this.state.addsnackbar} autoHideDuration={300} onClick={() =>  this.setState({ addsnackbar: false }) }>
+            <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addasnackbar }) }} severity="success">
+              Profile added sucessfully
+      </Alert>
+          </Snackbar>
+        </div>) : (<Snackbar open={this.state.addsnackbar} autoHideDuration={300} onClick={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }}>
+          <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }} severity="error">
+            Something went wrong please try again
+      </Alert>
+        </Snackbar>))
+
   }
   isloading() {
     return (
@@ -390,7 +409,9 @@ class MyProfile extends Component {
                       Cancel
                 </Button>
                   </DialogActions>
-                </Dialog>}
+                </Dialog>
+                }
+                {this.addsnackbar()}
               </div>
             ) : (
               <div>
@@ -712,6 +733,7 @@ class MyProfile extends Component {
                 </DialogActions>
               </Dialog>
             )}
+            
         </TableContainer>
 
         <Dialog
@@ -794,6 +816,7 @@ class MyProfile extends Component {
   render() {
    
     return <>{this.state.isloading ? this.isloading() : this.tabledata()}</>;
+   
   }
 }
 

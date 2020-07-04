@@ -341,19 +341,7 @@ async getidentites(){
                   />
                 </Grid>
 
-                <Grid item fullWidth xs={12}>
-                <InputLabel id="dob">Date of birth</InputLabel>
-                  <TextField
-                    id="dob"
-                    variant="outlined"
-                    // label="Date of birth"
-                    onChange={(event) => {
-                      this.setState({ dob: event.target.value });
-                    }}
-                    type="date"
-                    fullWidth
-                  />
-                </Grid>
+                
 
                 <Grid item fullWidth xs={12}>
                   <FormControl fullWidth>
@@ -403,6 +391,19 @@ async getidentites(){
                       ))}
                     </Select>
                   </FormControl>
+                </Grid>
+                <Grid item fullWidth xs={12}>
+                <InputLabel id="dob">Date of birth</InputLabel>
+                  <TextField
+                    id="dob"
+                    // variant="outlined"
+                    // label="Date of birth"
+                    onChange={(event) => {
+                      this.setState({ dob: event.target.value });
+                    }}
+                    type="date"
+                    fullWidth
+                  />
                 </Grid>
               </Grid>
             </DialogContent>
