@@ -133,10 +133,10 @@ export default function Datatable(props) {
                          { Message.map((row) => <Grid item xs={12}>
                                 <Card style={{ minWidth: 400, marginTop: 10 }} elevation={4} variant="outlined" >
                                     <CardContent>
-                                        <Typography variant="h5" component="h2">Initiated by:{row.initiated_by_field}</Typography>
+                                        <Typography variant="h5" component="h2">{row.initiated_by_field}</Typography>
                                         <Typography style={{ fontSize: 14 }} color="textSecondary" gutterBottom>{row.initialDate_field}</Typography>
 
-                                        <Typography style={{ marginBottom: 12 }} color="textSecondary">Message Category: {row.msgCategory_field}</Typography>
+                                        <Typography style={{ marginBottom: 12 }} color="textSecondary"> {row.msgCategory_field}</Typography>
                                         
                                         <Typography variant="body2" component="p">{row.message}</Typography>
                                     </CardContent>

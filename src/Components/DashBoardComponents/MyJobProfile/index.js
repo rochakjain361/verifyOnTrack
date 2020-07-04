@@ -235,10 +235,10 @@ class myJobProfile extends Component {
     render() {
         return (
             <div>
-                {this.state.myJobHistory.length === 0 ? (this.titleHeaderWhenNoRecordsExist()) : (this.titleHeaderWhenRecordsExist())}
-                {/* {
+                {/* {this.state.myJobHistory.length === 0 ? (this.titleHeaderWhenNoRecordsExist()) : (this.titleHeaderWhenRecordsExist())} */}
+                {
                     this.state.isloading ? (this.isloading()) : this.state.myJobHistory.length === 0 ? (this.titleHeaderWhenNoRecordsExist()) : (this.titleHeaderWhenRecordsExist())
-                } */}
+                }
                 {this.addJoBHistoryDialog()}
                 {this.editJobHistoryDialog()}
             </div>
@@ -362,6 +362,7 @@ class myJobProfile extends Component {
                         }
 
                         <Grid item xs={6}>
+                        <InputLabel id="dob">Start Date</InputLabel>
                             <input
                                 class="w3-input"
                                 type="date"
@@ -374,7 +375,7 @@ class myJobProfile extends Component {
                         </Grid>
 
                         <Grid item xs={6}>
-
+                        {/* <InputLabel id="dob">End Date</InputLabel> */}
 
                             <input
                                 class="w3-input"

@@ -331,9 +331,12 @@ export default function HorizontalLinearStepper(props) {
                                         <Box p={3} display="flex" flexDirection="column" justifyContent='center' alignItems="center" style={{ height: '50vh', }} >
 
                                            
-                                            
+                                            <Grid container spacing={2} direction="column" >
 
-
+                                        <Typography justify="center"  align="center" >
+                                                   By submitting for approval you acknowlege that all the information provided by you is authentic and can be verified by our team.
+                                                </Typography>
+                                                <br/>
                                                 <Button
 
                                                     variant="contained"
@@ -344,11 +347,9 @@ export default function HorizontalLinearStepper(props) {
                                                     }}
                                                 >
                                                     Submit for approval
-                           </Button>
+                           </Button></Grid>
                             
-                                                <Typography justify="center" align="center" >
-                                                    Please request for approval if all details are entered.
-                                                </Typography>
+                                               
                                             
                                            </Box></Paper></Grid>
                             </Grid>

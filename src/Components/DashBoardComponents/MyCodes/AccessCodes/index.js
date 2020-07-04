@@ -336,7 +336,7 @@ class index extends Component {
     this.setState({ viewDialog: true });
     await axios
       .get(
-        "http://3.22.17.212:8000/api/v1/codes/access/code/" + codeid,
+        "http://3.22.17.212:8000/api/v1/codes/access/codes/" + codeid,
 
         {
           headers: {
@@ -421,7 +421,7 @@ class index extends Component {
             <Typography variant="h4">Access Codes</Typography>
           </Grid>
 
-          <Grid item xs={4}>
+          {/* <Grid item xs={4}>
             <Button
               color="secondary"
               variant="contained"
@@ -432,9 +432,9 @@ class index extends Component {
             >
               Create New code
             </Button>
-          </Grid>
+          </Grid> */}
 
-          <Grid item>
+          <Grid item xs={12}>
             <FormControlLabel
               control={
                 <Checkbox
@@ -503,7 +503,7 @@ class index extends Component {
                           <Select
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
-                             value={this.state.value}
+                             value={this.state.status}
                              onChange={(event)=>{this.setState({status:event.target.value})}}
                             label="Status"
                           >
@@ -511,7 +511,7 @@ class index extends Component {
                               <em>None</em>
                             </MenuItem>
                             {row.status_options_employee_field.map((val) =>
-                              <MenuItem value={val.status}>{"status"+val.status}{val.action}</MenuItem>
+                              <MenuItem value={val.status}>{val.action}</MenuItem>
                             )}
 
                           </Select>
@@ -725,8 +725,8 @@ class index extends Component {
             </DialogActions>
           </Dialog>
           <Dialog
-            fullWidth={"md"}
-            maxWidth={"md"}
+            fullWidth={"lg"}
+            maxWidth={"lg"}
             open={this.state.viewDialog}
             onClose={() => this.setState({ viewDialog: false })}
             aria-labelledby="responsive-dialog-title"

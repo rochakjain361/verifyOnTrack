@@ -26,7 +26,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { useEffect } from 'react';
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import Dashboard from './Components/EmployerPageComponents/Dashboard'
-import Inbox from './Components/EmployerPageComponents/Messages/Inbox'
+import Index from './Components/EmployerPageComponents/Messages/Inbox/index'
 import Outbox from './Components/EmployerPageComponents/Messages/Outbox'
 import AccessCodes from './Components/EmployerPageComponents/MyCodes/AccessCodes'
 import EmployementCodes from './Components/EmployerPageComponents/MyCodes/EmployementCodes'
@@ -317,7 +317,7 @@ export default function MiniDrawer(props) {
 
                     <Collapse in={open2} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding>
-                            <Link to="/employeeInbox" className={classes.link}>
+                            <Link to="/employerInbox" className={classes.link}>
                                 <ListItem button className={classes.nested}>
                                     <ListItemText
                                         primary="Inbox"
@@ -326,14 +326,14 @@ export default function MiniDrawer(props) {
                                 </ListItem>
                             </Link>
 
-                            <Link to="/employeeOutbox" className={classes.link}>
+                            {/* <Link to="/employeeOutbox" className={classes.link}>
                                 <ListItem button className={classes.nested}>
                                     <ListItemText
                                         primary="Outbox"
                                         className={classes.textColor}
                                     />
                                 </ListItem>
-                            </Link>
+                            </Link> */}
                         </List>
                     </Collapse>
 
@@ -352,15 +352,15 @@ export default function MiniDrawer(props) {
 
               <Route exact path="/employerInbox">
                 <Container>
-                  <Inbox />
+                  <Index />
                 </Container>
               </Route>
 
-              <Route exact path="/employerOutbox">
+              {/* <Route exact path="/employerOutbox">
                 <Container>
                   <Outbox />
                 </Container>
-              </Route>
+              </Route> */}
 
               <Route exact path="/employerAccessCodes">
                 <Container>
