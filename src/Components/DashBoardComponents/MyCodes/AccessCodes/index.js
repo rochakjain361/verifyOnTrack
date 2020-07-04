@@ -420,20 +420,6 @@ class index extends Component {
           <Grid item xs={8}>
             <Typography variant="h4">Access Codes</Typography>
           </Grid>
-
-          {/* <Grid item xs={4}>
-            <Button
-              color="secondary"
-              variant="contained"
-              onClick={() =>
-                this.setState({ generateNewEmployementCodeDialog: true })
-              }
-              fullWidth
-            >
-              Create New code
-            </Button>
-          </Grid> */}
-
           <Grid item xs={12}>
             <FormControlLabel
               control={
