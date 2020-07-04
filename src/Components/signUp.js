@@ -18,7 +18,8 @@ import { Button } from "@material-ui/core";
 import Input from "@material-ui/core/Input";
 import Link from '@material-ui/core/Link';
 import axios from "axios";
-
+import { Box } from "@material-ui/core";
+import ReCAPTCHA from "react-google-recaptcha";
 // import ValidationMessage from './ValidationMessage';
 function ValidationMessage(props) {
   if (!props.valid) {
@@ -54,17 +55,37 @@ class signUp extends Component {
     gender: "",
     dobValue: false,
     genderValue: false,
-    companyvalid: false
+    companyvalid: false,
+    capthavalid:false,
+    captha:"",
   };
-  validatefirstname = (firstname) => {
-    console.log(firstname.length)
+  validatefirstname = (firstname1) => {
+    console.log(firstname1.length)
+    firstname1=firstname1.charAt(0).toUpperCase()+firstname1.slice(1)
+   
+    console.log("firstname",firstname1)
+    this.setState({firstname:firstname1})
     let firstnameValid = true;
-    if (firstname.length === 0) {
+    if (firstname1.length === 0) {
       firstnameValid = false;
 
     }
     console.log("/////////////", firstnameValid)
     this.setState({ firstnamevalid: firstnameValid }, this.validateForm);
+
+  }
+  Capitalizemiddlename=(middlename1)=>{
+    middlename1=middlename1.charAt(0).toUpperCase()+middlename1.slice(1)
+   
+    console.log("middlename",middlename1)
+    this.setState({ middlename: middlename1 })
+
+  }
+  capitalizelastname=(lastname1)=>{
+    lastname1=lastname1.charAt(0).toUpperCase()+lastname1.slice(1)
+   
+    console.log("lastname1",lastname1)
+    this.setState({ surname: lastname1 })
 
   }
   companyvalue = (event) => {
@@ -75,6 +96,7 @@ class signUp extends Component {
   }
   validateUsername = () => {
     const { username } = this.state;
+    
     let usernameValid = true;
     let errorMsg = { ...this.state.errorMsg };
 
@@ -157,18 +179,24 @@ class signUp extends Component {
 
     this.setState({ passwordConfirmValid, errorMsg }, this.validateForm);
   };
+  handleChange = value => {
+    console.log("Captcha value:", value);
+    this.setState({captha:value,capthavalid:true},this.validateForm)
+
+    if (value === null) this.setState({ expired: "true" });
+  };
   validateForm = () => {
-    const {
-      firstnamevalid,
-      usernameValid,
-      emailValid,
-      passwordValid,
-      passwordConfirmValid,
-    } = this.state;
-    this.setState({
-      formValid:
-        firstnamevalid && usernameValid && emailValid && passwordValid && passwordConfirmValid,
-    });
+    // const {
+    //   // firstnamevalid,
+    //   usernameValid,
+    //   emailValid,
+    //   passwordValid,
+    //   passwordConfirmValid,
+    // } = this.state;
+    // this.setState({
+    //   formValid:this.state.firstnamevalid&&
+    //      usernameValid && emailValid && passwordValid && passwordConfirmValid,
+    // });
     // console.log("123456",this.state.firstnamevalid ,
     //   this.state.usernameValid ,
     //   this.state.emailValid ,
@@ -185,6 +213,7 @@ class signUp extends Component {
         this.state.passwordConfirmValid &&
         this.state.genderValue &&
         this.state.dobValue
+        &&this.state.capthavalid
 
 
       ) {
@@ -198,8 +227,8 @@ class signUp extends Component {
         this.state.usernameValid &&
         this.state.emailValid &&
         this.state.passwordValid &&
-        this.state.passwordConfirmValid &&
-        this.state.companyvalid
+        this.state.passwordConfirmValid 
+        &&this.state.companyvalid
 
 
       ) {
@@ -209,6 +238,7 @@ class signUp extends Component {
       }
     }
   };
+  
   render() {
     const { classes } = this.props;
 
@@ -309,7 +339,7 @@ class signUp extends Component {
                       label="First Name"
                       value={this.state.firstname}
                       onChange={(event) => {
-                        this.setState({ firstname: event.target.value },)
+                       
                         this.validatefirstname(event.target.value)
                       }
                       }
@@ -331,7 +361,7 @@ class signUp extends Component {
                       label="Middle Name"
                       value={this.state.middlename}
                       onChange={(event) =>
-                        this.setState({ middlename: event.target.value })
+                       this.Capitalizemiddlename(event.target.value)
                       }
                       type="text"
                       autoComplete="middlename"
@@ -352,7 +382,7 @@ class signUp extends Component {
                       label="Surname"
                       value={this.state.surname}
                       onChange={(event) =>
-                        this.setState({ surname: event.target.value })
+                       this.capitalizelastname(event.target.value)
                       }
                       type="text"
                       autoComplete="surname"
@@ -381,7 +411,7 @@ class signUp extends Component {
                       
                         this.setState(
                           { username: event.target.value },
-                          this.validateUsername
+                          this.validateUsername(event)
                         )
                       }
                       type="text"
@@ -517,8 +547,21 @@ class signUp extends Component {
                       size="small"
                     />
                   </Grid>
-                </Grid>
+                  <Grid item xs={12} >
+                    
 
+                      <ReCAPTCHA
+                        style={{ display: "inline-block" }}
+                        theme="light"
+                        // ref={this._reCaptchaRef}
+                        sitekey={"6LdDrqsZAAAAABrsnwXy1KB8r1dhblamd3rFz7wd"}
+                        onChange={this.handleChange}
+                      // asyncScriptOnLoad={this.asyncScriptOnLoad}
+                      />
+                    
+                  </Grid>
+                </Grid>
+                
                 <Grid container spacing={1}>
                   <Grid item xs={12}>
                     <GradientButton

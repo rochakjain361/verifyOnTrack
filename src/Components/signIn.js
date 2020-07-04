@@ -42,6 +42,8 @@ class signIn extends Component {
     submitDisabled: "disabled",
     warning: false,
     response: "",
+    captha:"",
+    capthavalid:false,
   };
   UserGreeting(props) {
     return <h1>Welcome back!</h1>;
@@ -83,16 +85,19 @@ class signIn extends Component {
     else {
       this.setState({ passwordvalid: true },);
     }
-    if(this.state.value===null){
+    if(this.state.captha===""){
+      console.log("captha",this.state.captha)
       this.setState({capthavalid:false})
+    }else{
+      this.setState({capthavalid:true})
     }
-    if (!this.state.usernamevalid && !this.state.passwordvalid&&!this.state.capthavalid) {
+    if (!this.state.usernamevalid && !this.state.passwordvalid&&this.state.capthavalid) {
       this.onSignInButtonPress()
     }
   };
   handleChange = value => {
     console.log("Captcha value:", value);
-    this.setState({ value });
+    this.setState({captha:value,capthavalid:true})
 
     if (value === null) this.setState({ expired: "true" });
   };
@@ -164,7 +169,7 @@ class signIn extends Component {
                   <Grid item xs={12} md={12}>
 
                     <Typography
-                      // style={{ fontFamily: "Montserrat", fontWeight: "bold", }}
+                       style={{ fontWeight: "bold", }}
                       variant="h4"
                       gutterBottom
                       color="primary"
@@ -226,6 +231,10 @@ class signIn extends Component {
                     />
                   </Grid>
                   <Grid item xs={12} md={12}>
+                  <ValidationMessage
+                      valid={!this.state.capthavalid}
+                      // message={"please check this box"}
+                    />
                     <Box p={2}>
 
                       <ReCAPTCHA
@@ -354,7 +363,9 @@ const styles = (theme) => ({
     // backgroundImage: "url(/images/mainImage2.jpg)",
     backgroundRepeat: "no-repeat",
 
-    backgroundColor: "#3f50b5",
+    // backgroundColor: "#3f50b5",
+    backgroundColor:"#2196f3"
+  ,
     //   theme.palette.type === "light"
     //     ? theme.palette.grey[50]
     //     : theme.palette.grey[900],

@@ -106,6 +106,27 @@ class MyProfile extends Component {
 
 
   };
+  capitalizelastname(lastname1){
+    lastname1=lastname1.charAt(0).toUpperCase()+lastname1.slice(1)
+   
+    this.setState({ lastname: lastname1 })
+    console.log("lastname1",lastname1)
+
+  }
+  capitalizemiddlename(middlename1){
+    middlename1=middlename1.charAt(0).toUpperCase()+middlename1.slice(1)
+   
+    this.setState({ middlename: middlename1 })
+    console.log("middlename1",this.state.middlename)
+
+  }
+  capitalizefirstname(firstname1){
+    firstname1=firstname1.charAt(0).toUpperCase()+firstname1.slice(1)
+   
+    this.setState({ firstname: firstname1 })
+    console.log("firstname1",this.state.firstname)
+
+  }
 
   // async updatedetails(){
   //   console.log("///////////////////////////////////////////////");
@@ -191,6 +212,7 @@ class MyProfile extends Component {
   }
 
   tabledata() {
+    
     return (
       <>
         {
@@ -233,7 +255,7 @@ class MyProfile extends Component {
               </DialogTitle>
                   <DialogContent>
                     <DialogContentText>
-                      Enter the details of your profile to be updated
+                      Enter the details of your profile to be added
                 </DialogContentText>
 
                     <Grid container justify='flex-start' direction='row' alignItems='center' spacing={3}>
@@ -241,10 +263,12 @@ class MyProfile extends Component {
                         <TextField
                           id="firstName"
                           label="First Name"
+                          value={this.state.firstname}
                           // defaultValue={result[this.state.selectedIndex].firstname}
                           onChange={(event) => {
-                            this.setState({ firstname: event.target.value });
-                            console.log(this.state.firstname);
+                            this.capitalizefirstname(event.target.value)
+                            // this.setState({ firstname: event.target.value });
+                            // console.log(this.state.firstname);
                           }}
                           type="text"
                           fullWidth
@@ -255,10 +279,12 @@ class MyProfile extends Component {
                         <TextField
                           id="middleName"
                           label="Middle Name"
+                          value={this.state.middlename}
                           // defaultValue={result[this.state.selectedIndex].middlename}
                           onChange={(event) => {
-                            this.setState({ middlename: event.target.value });
-                            console.log(this.state.middlename);
+                            this.capitalizemiddlename(event.target.value)
+                           
+                            // console.log(this.state.middlename);
                           }}
                           type="text"
                           fullWidth
@@ -269,10 +295,11 @@ class MyProfile extends Component {
                         <TextField
                           id="surname"
                           label="Surname"
+                          value={this.state.lastname}
                           // defaultValue={result[this.state.selectedIndex].surname}
                           onChange={(event) => {
-                            this.setState({ lastname: event.target.value });
-                            console.log(this.state.lastname);
+                            this.capitalizelastname(event.target.value)
+                            // console.log(this.state.lastname);
                           }}
                           type="text"
                           fullWidth
@@ -765,6 +792,7 @@ class MyProfile extends Component {
     );
   }
   render() {
+   
     return <>{this.state.isloading ? this.isloading() : this.tabledata()}</>;
   }
 }

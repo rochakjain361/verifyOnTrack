@@ -39,7 +39,7 @@ import Identitiestitle from "./Components/DashBoardComponents/Identities/title";
 import PhoneTitle from "./Components/DashBoardComponents/Phones/title";
 import MyJobProfile from "./Components/DashBoardComponents/MyJobProfile";
 import Index from "./Components/DashBoardComponents/Messages/Inbox";
-import Outbox from "./Components/DashBoardComponents/Messages/Outbox";
+// import Outbox from "./Components/DashBoardComponents/Messages/Outbox";
 import Profiletitle from "./Components/DashBoardComponents/MyProfile/title";
 import AccessCodes from "./Components/DashBoardComponents/MyCodes/AccessCodes";
 import EmployementCodes from "./Components/DashBoardComponents/MyCodes/EmployementCodes";
@@ -413,14 +413,14 @@ export default function MiniDrawer(props) {
               </ListItem>
             </Link>
 
-            <Link to="/employeeOutbox" className={classes.link}>
+            {/* <Link to="/employeeOutbox" className={classes.link}>
               <ListItem button className={classes.nested}>
                 <ListItemText
                   primary="Outbox"
                   className={classes.textColor}
                 />
               </ListItem>
-            </Link>
+            </Link> */}
           </List>
         </Collapse>
 
@@ -472,11 +472,11 @@ export default function MiniDrawer(props) {
                 </Container>
               </Route>
 
-              <Route exact path="/employeeOutbox">
+              {/* <Route exact path="/employeeOutbox">
                 <Container>
                   <Outbox />
                 </Container>
-              </Route>
+              </Route> */}
 
               <Route exact path="/employeeAccessCodes">
                 <Container>

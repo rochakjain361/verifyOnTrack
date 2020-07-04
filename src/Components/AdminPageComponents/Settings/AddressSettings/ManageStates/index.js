@@ -161,14 +161,14 @@ export class index extends Component {
 
     return (
       this.state.addresponse === 201 ?
-        (<Grid>
+        (<div>
 
-          <Snackbar open={this.state.addsnackbar} autoHideDuration={6000} onClick={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }}>
+          <Snackbar open={this.state.addsnackbar} autoHideDuration={300} onClick={() =>  this.setState({ addsnackbar: false }) }>
             <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addasnackbar }) }} severity="success">
               State added sucessfully
       </Alert>
           </Snackbar>
-        </Grid>) : (<Snackbar open={this.state.addsnackbar} autoHideDuration={6000} onClick={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }}>
+        </div>) : (<Snackbar open={this.state.addsnackbar} autoHideDuration={300} onClick={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }}>
           <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }} severity="error">
             Something went wrong please try again
       </Alert>
@@ -180,14 +180,14 @@ export class index extends Component {
 
     return (
       this.state.deleteresponse === 204 ?
-        (<Grid>
+        (<div>
 
-          <Snackbar open={this.state.deletesnackbar} autoHideDuration={6000} onClick={() => { this.setState({ deletesnackbar: !this.state.deletesnackbar }) }}>
+          <Snackbar open={this.state.deletesnackbar} autoHideDuration={300} onClick={() =>  this.setState({ deletesnackbar: !this.state.deletesnackbar }) }>
             <Alert onClose={() => { this.setState({ deletesnackbar: !this.state.deletesnackbar }) }} severity="success">
               State deleted sucessfully
       </Alert>
           </Snackbar>
-        </Grid>) : (<Snackbar open={this.state.deletesnackbar} autoHideDuration={6000} onClick={() => { this.setState({ deletesnackbar: !this.state.deletesnackbar }) }}>
+        </div>) : (<Snackbar open={this.state.deletesnackbar} autoHideDuration={300} onClick={() => { this.setState({ deletesnackbar: !this.state.deletesnackbar }) }}>
           <Alert onClose={() => { this.setState({ deletesnackbar: !this.state.deletesnackbar }) }} severity="error">
             Something went wrong please try again
       </Alert>
