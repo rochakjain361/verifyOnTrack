@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles';
-import { TextField, Paper, Grid, Typography, Button, TableContainer, FormControlLabel, Checkbox, FormControl, Select, InputLabel, MenuItem } from '@material-ui/core/';
+import { TextField, Paper, Grid, Typography, Button, TableContainer, FormControlLabel, Checkbox, FormControl, Select, InputLabel, MenuItem, Divider } from '@material-ui/core/';
 
 import {
     Table,
@@ -19,6 +19,24 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+
+import PersonIcon from '@material-ui/icons/Person';
+import HomeIcon from '@material-ui/icons/Home';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import PaymentIcon from '@material-ui/icons/Payment';
+import PhoneIcon from '@material-ui/icons/Phone';
+import WorkIcon from '@material-ui/icons/Work';
+
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+import Profile from '../Pages/Profile'
+import Address from '../Pages/Address'
+import Identity from '../Pages/Identity'
+import Phone from '../Pages/Phone'
+import Job from '../Pages/Job'
 
 const token1 = localStorage.getItem("Token");
 const token = "Token " + token1;
@@ -43,8 +61,11 @@ const rows = [
 ];
 
 const styles = theme => ({
-
+    demo: {
+        backgroundColor: theme.palette.background.paper,
+    },
 })
+
 
 class index extends Component {
 
@@ -62,6 +83,7 @@ class index extends Component {
         phones: [],
         onTracId: [],
         codeDetails: [],
+        employeeDetailsData: [],
 
         codeRatings: false,
         codeAddress: false,
@@ -74,7 +96,7 @@ class index extends Component {
     constructor(props) {
         super(props);
         this.allCodesTable = this.allCodesTable.bind(this);
-      }
+    }
 
     async fetchAllCodes() {
         let response = await fetch(api + "/api/v1/codes/access/codes",
@@ -126,7 +148,7 @@ class index extends Component {
 
     async fetchCodeDetails(id) {
         this.setState({ codeDetailsDialog: true })
-        let response = await fetch(api + "/api/v1/codes/access/" + id,
+        let response = await fetch(api + "/api/v1/codes/access/codes/" + id,
             {
                 headers: {
                     'Authorization': token
@@ -253,15 +275,19 @@ class index extends Component {
                         <TableCell align="left">{new Date(row.statusChangeDate).toDateString()}</TableCell>
                         <TableCell align="left">
 
-                            {row.codeStatus == "AccessGranted" || row.codeStatus == "GrantViewed" ? (<Button
-                                size='small'
-                                color="default"
-                                variant="contained"
-                                style={{ minWidth: 120 }}
-                                onClick={() => this.viewEmployeeDetails(row.id)}
-                            >
-                                Employee Details
-                            </Button>) : <div />}
+                            {row.codeStatus == "AccessGranted" || row.codeStatus == "GrantViewed" ? (
+                                <Button
+                                    size='small'
+                                    color="default"
+                                    variant="contained"
+                                    style={{ minWidth: 120 }}
+                                    onClick={() => {
+                                        this.setState({ employeeDetailsData: this.state.allCodes[index] }, () => console.log('employeeDetailsData;', this.state.employeeDetailsData))
+                                        this.viewEmployeeDetails(row.id)
+                                    }}
+                                >
+                                    Employee Details
+                                </Button>) : <div />}
 
                             <Button
                                 size='small'
@@ -269,34 +295,41 @@ class index extends Component {
                                 variant="contained"
                                 onClick={() => this.fetchCodeDetails(row.id)}
                                 style={{ minWidth: 120, marginTop: 10 }}
-                            >Code Details</Button>
+                            >Code Details
+                            </Button>
                         </TableCell>
-                        {/* <TableCell align="left"></TableCell> */}
+
                         <TableCell align="left">
 
-                            <Button
-                                size='small'
-                                color="primary"
-                                variant="outlined"
-                                style={{ minWidth: 120 }}
-                                onClick={()=> this.postAccessCodeStatus(row.status_options_employer_field[0].status)}
-                            >
-                                {row.status_options_employer_field[0].action}
-                            </Button>
+                            <Grid container justify='row'>
+                                <Grid item xs={12}>
+                                    <Button
+                                        size='small'
+                                        color="primary"
+                                        variant="outlined"
+                                        style={{ minWidth: 120 }}
+                                        onClick={() => this.postAccessCodeStatus(row.status_options_employer_field[0].status)}
+                                    >
+                                        {/* {row.status_options_employer_field[0].action} */}
+                                    </Button>
+                                </Grid>
 
-                            <Button
-                                size='small'
-                                color="secondary"
-                                variant="outlined"
-                                style={{ minWidth: 120, marginTop: 10 }}
-                                onClick={()=> this.postAccessCodeStatus(row.status_options_employer_field[1].status)}
+                                <Grid item xs={12}>
+                                    <Button
+                                        size='small'
+                                        color="secondary"
+                                        variant="outlined"
+                                        style={{ minWidth: 120, marginTop: 10 }}
+                                        onClick={() => this.postAccessCodeStatus(row.status_options_employer_field[1].status)}
 
-                            >
-                                {row.status_options_employer_field[1].action}
-                            </Button>
+                                    >
+                                        {/* {row.status_options_employer_field[1].action} */}
+                                    </Button>
+                                </Grid>
+
+                            </Grid>
 
                         </TableCell>
-                        {/* <TableCell align="right"><Button size='small' color="secondary" variant="outlined">Update</Button></TableCell> */}
                     </TableRow>
                 ))}
             </TableBody>
@@ -331,12 +364,10 @@ class index extends Component {
                                 style={{ minWidth: 120, marginTop: 10 }}
                             >Code Details</Button>
                         </TableCell>
-                        {/* <TableCell align="left"></TableCell> */}
                         <TableCell align="left">
                             <Button size='small' color="primary" variant="outlined" style={{ minWidth: 120 }}>{row.status_options_employer_field[0].action}</Button>
                             <Button size='small' color="secondary" variant="outlined" style={{ minWidth: 120, marginTop: 10 }}>{row.status_options_employer_field[1].action}</Button>
                         </TableCell>
-                        {/* <TableCell align="right"><Button size='small' color="secondary" variant="outlined">Update</Button></TableCell> */}
                     </TableRow>
                 ))}
             </TableBody>
@@ -508,7 +539,146 @@ class index extends Component {
                     <DialogTitle id="employeeDetails">{"Employee Details"}</DialogTitle>
                     <DialogContent>
 
+                        {/* <Paper variant='outlined' style={{ padding: 20 }}> */}
+                        {/* <Grid container justify='space-between' direction='row' alignItems='center' spacing={2}>
 
+                                <Typography>Code Id:</Typography>
+                                <Typography>Created On:</Typography>
+
+                            </Grid> */}
+
+                        <Grid container justify='flex-start' direction='row' alignItems='center' spacing={2}>
+
+
+                            <Grid item xs={6}>
+                                <TextField
+                                    id="=viewEmployeeName"
+                                    label="Employee Name"
+                                    // defaultValue={this.state.employeeDetailsData.employee_name_field.name}
+                                    type="text"
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    fullWidth
+                                    size='small'
+                                    variant='outlined'
+                                />
+                            </Grid>
+
+                            <Grid item xs={6}>
+                                <TextField
+                                    id="=viewCodeString"
+                                    label="Code String"
+                                    defaultValue={this.state.employeeDetailsData['codeString']}
+                                    type="text"
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    fullWidth
+                                    size='small'
+                                    variant='outlined'
+                                />
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <Typography variant="subtitle1" fontWeight='bold'>
+                                    Access granted for:
+                                    </Typography>
+
+                                <ExpansionPanel style={{ marginTop: 10 }}>
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                    >
+                                        <ListItemIcon>
+                                            <PersonIcon />
+                                        </ListItemIcon>
+                                        <Typography variant='subtitle2'>Profiles</Typography>
+                                    </ExpansionPanelSummary>
+                                    <ExpansionPanelDetails>
+                                        <Profile />
+                                    </ExpansionPanelDetails>
+                                </ExpansionPanel>
+
+                                <ExpansionPanel style={{ marginTop: 10 }}>
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                    >
+                                        <ListItemIcon>
+                                            <HomeIcon />
+                                        </ListItemIcon>
+                                        <Typography variant='subtitle2'>Addresses</Typography>
+                                    </ExpansionPanelSummary>
+                                    <ExpansionPanelDetails>
+                                        <Address />
+                                    </ExpansionPanelDetails>
+                                </ExpansionPanel>
+
+                                <ExpansionPanel style={{ marginTop: 10 }}>
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                    >
+                                        <ListItemIcon>
+                                            <PaymentIcon />
+                                        </ListItemIcon>
+                                        <Typography variant='subtitle2'>Identities</Typography>
+                                    </ExpansionPanelSummary>
+                                    <ExpansionPanelDetails>
+                                        <Identity />
+                                    </ExpansionPanelDetails>
+                                </ExpansionPanel>
+
+                                <ExpansionPanel style={{ marginTop: 10 }}>
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                    >
+                                        <ListItemIcon>
+                                            <PhoneIcon />
+                                        </ListItemIcon>
+                                        <Typography variant='subtitle2'>Phones</Typography>
+                                    </ExpansionPanelSummary>
+                                    <ExpansionPanelDetails>
+                                        <Phone />
+                                    </ExpansionPanelDetails>
+                                </ExpansionPanel>
+
+                                <ExpansionPanel style={{ marginTop: 10 }}>
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                    >
+                                        <ListItemIcon>
+                                            <WorkIcon />
+                                        </ListItemIcon>
+                                        <Typography variant='subtitle2'>Job profile history</Typography>
+                                    </ExpansionPanelSummary>
+                                    <ExpansionPanelDetails>
+                                        <Job />
+                                    </ExpansionPanelDetails>
+                                </ExpansionPanel>
+
+                                {/* <ExpansionPanel disabled>
+                                        <ExpansionPanelSummary
+                                            expandIcon={<ExpandMoreIcon />}
+                                            aria-controls="panel3a-content"
+                                            id="panel3a-header"
+                                        >
+                                            <Typography className={classes.heading}>Disabled Expansion Panel</Typography>
+                                        </ExpansionPanelSummary>
+                                    </ExpansionPanel> */}
+
+                            </Grid>
+
+                        </Grid>
+                        {/* </Paper> */}
 
                     </DialogContent>
                     <DialogActions style={{ padding: 15 }}>
