@@ -30,6 +30,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Typography from "@material-ui/core/Typography";
 import GridListTile from '@material-ui/core/GridListTile';
 import GridList from '@material-ui/core/GridList';
+import {Snackbar} from '@material-ui/core'
+import MuiAlert from '@material-ui/lab/Alert';
 
 let token1 = "";
 
@@ -38,7 +40,9 @@ let id = "";
 // let result = [];
 let history = [];
 let pictures = [];
-
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 class Identities extends Component {
   constructor(props) {
     super(props);
@@ -68,6 +72,10 @@ class Identities extends Component {
       pictureloading: "false",
       result:[],
       buttondisabled: "disabled",
+      addsnackbar:false,
+      addresponse:"",
+      updateresponse:"",
+      updatesnackbar:false,
     };
     // this.updateidentites= this.updateidentites.bind();
   }
@@ -84,6 +92,45 @@ class Identities extends Component {
 
 
   };
+  addsnackbar() {
+
+
+    return (
+      this.state.addresponse === 200 ?
+        (<div>
+
+          <Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ addsnackbar: false }) }>
+            <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addasnackbar }) }} severity="success">
+              Profile added sucessfully
+      </Alert>
+          </Snackbar>
+        </div>) : (<Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }}>
+          <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }} severity="error">
+            Something went wrong please try again
+      </Alert>
+        </Snackbar>))
+
+  }
+  updatesnackbar() {
+
+
+    return (
+      this.state.updateresponse === 200 ?
+        (<div>
+          {console.log("//////////////////////////////////////")}
+
+          <Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ updatesnackbar: false }) }>
+            <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="success">
+              Profile updated sucessfully
+      </Alert>
+          </Snackbar>
+        </div>) : (<Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }}>
+          <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="error">
+            Something went wrong please try again
+      </Alert>
+        </Snackbar>))
+
+  }
 async getidentites(){
   await axios
     .get(
@@ -307,6 +354,7 @@ async getidentites(){
                 </Box>
           </DialogContent>
         </Dialog>
+        {this.updatesnackbar()}
 
         {
           <Dialog
@@ -438,6 +486,8 @@ async getidentites(){
             </DialogActions>
           </Dialog>
         }
+        {this.addsnackbar()}
+
       </div>
     );
   }

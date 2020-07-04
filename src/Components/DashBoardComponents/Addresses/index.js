@@ -129,14 +129,6 @@ class Addresses extends PureComponent {
     );
 
   }
-  // updateonMarkerClick(props, marker, e) {
-  //   console.log(e.latLng.lat(),e.latLng.lng());
-  //   this.setState({
-  //       location: {updatedlatitude: e.latLng.lat(),
-  //     updatedlongititude: e.latLng.lng()},
-  //   });
-
-  // }
   reasonforupdatevalidcheck = (event) => {
     if (event.target.value.length > 0) {
       //  console.log(event.target.value);
@@ -477,6 +469,7 @@ class Addresses extends PureComponent {
                   </TableBody>
                 </Table>
               </TableContainer>
+             
               {this.state.selectedIndex === -1 ? (
                 <div />
               ) : (
@@ -811,6 +804,7 @@ class Addresses extends PureComponent {
                           this.setState({
                             updateDialogOpen: false,
                             selectedIndex: -1,
+                            updatedreason:""
                           })
                         }
                       >
@@ -818,7 +812,10 @@ class Addresses extends PureComponent {
                   </Button>
                     </DialogActions>
                   </Dialog>
+                  
                 )}
+                 {this.updatesnackbar()}
+                 {this.addsnackbar()}
               <Dialog
                 fullWidth={"md"}
                 maxWidth={"md"}
