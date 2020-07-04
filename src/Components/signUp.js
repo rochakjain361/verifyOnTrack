@@ -59,16 +59,33 @@ class signUp extends Component {
     capthavalid:false,
     captha:"",
   };
-  validatefirstname = (firstname) => {
-    console.log(firstname.length)
-    
+  validatefirstname = (firstname1) => {
+    console.log(firstname1.length)
+    firstname1=firstname1.charAt(0).toUpperCase()+firstname1.slice(1)
+   
+    console.log("firstname",firstname1)
+    this.setState({firstname:firstname1})
     let firstnameValid = true;
-    if (firstname.length === 0) {
+    if (firstname1.length === 0) {
       firstnameValid = false;
 
     }
     console.log("/////////////", firstnameValid)
     this.setState({ firstnamevalid: firstnameValid }, this.validateForm);
+
+  }
+  Capitalizemiddlename=(middlename1)=>{
+    middlename1=middlename1.charAt(0).toUpperCase()+middlename1.slice(1)
+   
+    console.log("middlename",middlename1)
+    this.setState({ middlename: middlename1 })
+
+  }
+  capitalizelastname=(lastname1)=>{
+    lastname1=lastname1.charAt(0).toUpperCase()+lastname1.slice(1)
+   
+    console.log("lastname1",lastname1)
+    this.setState({ surname: lastname1 })
 
   }
   companyvalue = (event) => {
@@ -79,6 +96,7 @@ class signUp extends Component {
   }
   validateUsername = () => {
     const { username } = this.state;
+    
     let usernameValid = true;
     let errorMsg = { ...this.state.errorMsg };
 
@@ -321,7 +339,7 @@ class signUp extends Component {
                       label="First Name"
                       value={this.state.firstname}
                       onChange={(event) => {
-                        this.setState({ firstname: event.target.value })
+                       
                         this.validatefirstname(event.target.value)
                       }
                       }
@@ -343,7 +361,7 @@ class signUp extends Component {
                       label="Middle Name"
                       value={this.state.middlename}
                       onChange={(event) =>
-                        this.setState({ middlename: event.target.value })
+                       this.Capitalizemiddlename(event.target.value)
                       }
                       type="text"
                       autoComplete="middlename"
@@ -364,7 +382,7 @@ class signUp extends Component {
                       label="Surname"
                       value={this.state.surname}
                       onChange={(event) =>
-                        this.setState({ surname: event.target.value })
+                       this.capitalizelastname(event.target.value)
                       }
                       type="text"
                       autoComplete="surname"
@@ -393,7 +411,7 @@ class signUp extends Component {
                       
                         this.setState(
                           { username: event.target.value },
-                          this.validateUsername
+                          this.validateUsername(event)
                         )
                       }
                       type="text"
