@@ -31,7 +31,7 @@ class index extends Component {
     token = "Token " + token1;
     id = localStorage.getItem("id");
     await axios
-      .get("http://3.22.17.212:8000/api/v1/messages/outbox", {
+      .get("http://3.22.17.212:8000/api/v1/messages/", {
         headers: {
           Authorization: token,
         },
@@ -49,42 +49,7 @@ class index extends Component {
 
     return (
       <div style={{ marginTop: 10 }}>
-        <Grid container justify="center">
-          <Grid item>
-          <ButtonGroup
-          style={{marginTop: 20}}
-            disableElevation
-            size="medium"
-            variant="contained"
-            color="secondary"
-          >
-            <Button
-              disabled={this.state.inboxButtonDisable}
-              style={{ minWidth: 75 }}
-              onClick={() =>
-                this.setState({
-                  outboxButtonDisable: false,
-                  inboxButtonDisable: true,
-                })
-              }
-            >
-              Inbox
-            </Button>
-            <Button
-              style={{ minWidth: 75 }}
-              disabled={this.state.outboxButtonDisable}
-              onClick={() =>
-                this.setState({
-                  outboxButtonDisable: true,
-                  inboxButtonDisable: false,
-                })
-              }
-            >
-              Outbox
-            </Button>
-          </ButtonGroup>
-          </Grid>
-        </Grid>
+       
         {this.state.inboxButtonDisable
           ? this.messageInbox()
           : this.messageOutbox()}
@@ -180,59 +145,9 @@ class index extends Component {
     );
   }
 
-  outboxMessageDescription() {
-    return (
-      <div>
-        <Grid container justify="space-between">
-          <Typography>Initiated by Outbox</Typography>
-          <Typography variant="caption">04/07/2020</Typography>
-        </Grid>
-        <Typography variant="body2" display="block">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </Typography>
-      </div>
-    );
-  }
+  
 
-  messageOutbox() {
-    return (
-      <div>
-        <Paper variant="outlined" style={{ marginTop: 20 }}>
-          <Grid container style={{ padding: 10 }} alignItems="center">
-            <Grid item xs={1}>
-              <MessageIcon />
-            </Grid>
-            <Grid item xs={11}>
-              <>{this.outboxMessageDescription()}</>
-            </Grid>
-          </Grid>
-        </Paper>
-
-        <Paper variant="outlined" style={{ marginTop: 10 }}>
-          <Grid container style={{ padding: 10 }} alignItems="center">
-            <Grid item xs={1}>
-              <MessageIcon />
-            </Grid>
-            <Grid item xs={11}>
-              <>{this.outboxMessageDescription()}</>
-            </Grid>
-          </Grid>
-        </Paper>
-
-        <Paper variant="outlined" style={{ marginTop: 10 }}>
-          <Grid container style={{ padding: 10 }} alignItems="center">
-            <Grid item xs={1}>
-              <MessageIcon />
-            </Grid>
-            <Grid item xs={11}>
-              <>{this.outboxMessageDescription()}</>
-            </Grid>
-          </Grid>
-        </Paper>
-      </div>
-    );
-  }
+ 
 }
 
 export default withStyles(styles)(index);

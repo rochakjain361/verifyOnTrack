@@ -23,15 +23,17 @@ import ValidationMessage from "./ValidationMessage";
 import Alert from "@material-ui/lab/Alert";
 import CardMedia from '@material-ui/core/CardMedia';
 import { Box } from "@material-ui/core";
+import ReCAPTCHA from "react-google-recaptcha";
 
 
-
+let IP=window.$IP;
 class signIn extends Component {
   constructor(props) {
     super(props);
+    this._reCaptchaRef = React.createRef();
     this.onSignInButtonPress = this.onSignInButtonPress.bind(this);
   }
-
+  
   state = {
     username: "",
     password: "",
@@ -40,6 +42,8 @@ class signIn extends Component {
     submitDisabled: "disabled",
     warning: false,
     response: "",
+    captha:"",
+    capthavalid:false,
   };
   UserGreeting(props) {
     return <h1>Welcome back!</h1>;
@@ -81,15 +85,27 @@ class signIn extends Component {
     else {
       this.setState({ passwordvalid: true },);
     }
-    if (!this.state.usernamevalid && !this.state.passwordvalid) {
+    if(this.state.captha===""){
+      console.log("captha",this.state.captha)
+      this.setState({capthavalid:false})
+    }else{
+      this.setState({capthavalid:true})
+    }
+    if (!this.state.usernamevalid && !this.state.passwordvalid&&this.state.capthavalid) {
       this.onSignInButtonPress()
     }
   };
+  handleChange = value => {
+    console.log("Captcha value:", value);
+    this.setState({captha:value,capthavalid:true})
 
+    if (value === null) this.setState({ expired: "true" });
+  };
 
   render() {
+    
     const { classes } = this.props;
-
+   
     return (
       <Grid container
         direction="row"
@@ -128,24 +144,24 @@ class signIn extends Component {
             className={classes.mainImage}
             direction="row"
             justify="center"
-            
+
           >
-           <Grid container xs={6}
-            sm={6}
-            md={8}
-            direction="column"
-            align="center"
-            justify="center"
+            <Grid container xs={6}
+              sm={6}
+              md={8}
+              direction="column"
+              align="center"
+              justify="center"
             >
               <Card
-                style={{ padding: 50,}}
-               
-                
+                style={{ padding: 50, }}
+
+
                 spacing={3}
 
                 raised={true}
               >
-                <Grid  spacing={2} justify="center" direction="row" align="center">
+                <Grid spacing={2} justify="center" direction="row" align="center">
                   {this.state.warning ? (
                     <Alert severity="error">Wrong username or password</Alert>
                   ) : null}
@@ -153,7 +169,7 @@ class signIn extends Component {
                   <Grid item xs={12} md={12}>
 
                     <Typography
-                      // style={{ fontFamily: "Montserrat", fontWeight: "bold", }}
+                       style={{ fontWeight: "bold", }}
                       variant="h4"
                       gutterBottom
                       color="primary"
@@ -214,6 +230,24 @@ class signIn extends Component {
                       }
                     />
                   </Grid>
+                  <Grid item xs={12} md={12}>
+                  <ValidationMessage
+                      valid={!this.state.capthavalid}
+                      // message={"please check this box"}
+                    />
+                    <Box p={2}>
+
+                      <ReCAPTCHA
+                        style={{ display: "inline-block" }}
+                        theme="light"
+                        // ref={this._reCaptchaRef}
+                        sitekey={"6LdDrqsZAAAAABrsnwXy1KB8r1dhblamd3rFz7wd"}
+                        onChange={this.handleChange}
+                      // asyncScriptOnLoad={this.asyncScriptOnLoad}
+                      />
+                    </Box>
+                  </Grid>
+
 
 
                   <Grid container spacing={1} sm={12} md={10}>
@@ -246,7 +280,7 @@ class signIn extends Component {
 
                 </Grid>
               </Card>
-              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
@@ -257,8 +291,10 @@ class signIn extends Component {
   }
 
   async onSignInButtonPress() {
+console.log("///////",window.$IP)
+ 
     try {
-      let apiEndpoint = "http://3.22.17.212:8000/api/v1/accounts/auth/login";
+       let apiEndpoint = "http://"+window.$IP+":8000/api/v1/accounts/auth/login";
 
       var requestBody = {
         username: this.state.username,
@@ -292,9 +328,19 @@ class signIn extends Component {
             pathname: "/employer",
           });
         } else {
-          this.props.history.push({
-            pathname: "/workflow",
-          });
+          if (data.user.accountStatus == "Approved") {
+            console.log("accountStatus", data.user.accountStatus)
+            this.props.history.push({
+              pathname: "/dashboard",
+            });
+          } else {
+            console.log("accountStatus", data.user.accountStatus)
+            this.props.history.push({
+              pathname: "/workflow",
+              state: { detail: data }
+            });
+
+          }
         }
       } else {
         this.setState({ warning: true });
@@ -316,8 +362,10 @@ const styles = (theme) => ({
   mainImage: {
     // backgroundImage: "url(/images/mainImage2.jpg)",
     backgroundRepeat: "no-repeat",
-    
-    backgroundColor:"#3f50b5",
+
+    // backgroundColor: "#3f50b5",
+    backgroundColor:"#2196f3"
+  ,
     //   theme.palette.type === "light"
     //     ? theme.palette.grey[50]
     //     : theme.palette.grey[900],

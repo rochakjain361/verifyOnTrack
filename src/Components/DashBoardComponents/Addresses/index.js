@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
@@ -40,7 +40,7 @@ let history = [];
 let token1 = "";
 let token = "";
 let id = "";
-class Addresses extends Component {
+class Addresses extends PureComponent {
   constructor(props) {
     super(props);
     //uncomment the below 2 lines after finishing address
@@ -298,18 +298,20 @@ class Addresses extends Component {
           this.addaddress()
         ) : (
             <Grid container justify="space-between" alignItems="center">
-              <Grid container justify="space-between" alignItems="center">
+              <Grid container justify="center" direction="column" alignItems="flex-end">
              
-                <h1>Address</h1>
+              <Box p={2}>
+
                 
 
                 <Button
                   color="primary"
                   variant="contained"
                   onClick={() => this.setState({ addDialogOpen: true })}
-                >
+                  >
                   Add New address
               </Button>
+                  </Box>
               </Grid>
               <TableContainer component={Paper} elevation={16} p={0}>
                 <Table stickyHeader>
@@ -1650,9 +1652,7 @@ class Addresses extends Component {
     return (
       <>
         <Grid container spacing={3} justify="space-between">
-          <Grid item xs={12}>
-          <Typography variant="h3" gutterBottom align="center">Address</Typography>
-          </Grid>
+         
           <Grid item xs={12}>
             <Paper style={{ padding: 20 }} elevation={3}>
             <Box p={1}   display="flex" flexDirection="column"  justifyContent='center' alignItems="center" style={{height: '50vh',}} >

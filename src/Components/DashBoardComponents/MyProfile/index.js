@@ -106,6 +106,27 @@ class MyProfile extends Component {
 
 
   };
+  capitalizelastname(lastname1){
+    lastname1=lastname1.charAt(0).toUpperCase()+lastname1.slice(1)
+   
+    this.setState({ lastname: lastname1 })
+    console.log("lastname1",lastname1)
+
+  }
+  capitalizemiddlename(middlename1){
+    middlename1=middlename1.charAt(0).toUpperCase()+middlename1.slice(1)
+   
+    this.setState({ middlename: middlename1 })
+    console.log("middlename1",this.state.middlename)
+
+  }
+  capitalizefirstname(firstname1){
+    firstname1=firstname1.charAt(0).toUpperCase()+firstname1.slice(1)
+   
+    this.setState({ firstname: firstname1 })
+    console.log("firstname1",this.state.firstname)
+
+  }
 
   // async updatedetails(){
   //   console.log("///////////////////////////////////////////////");
@@ -191,6 +212,7 @@ class MyProfile extends Component {
   }
 
   tabledata() {
+    
     return (
       <>
         {
@@ -199,28 +221,25 @@ class MyProfile extends Component {
             ? (
               <div>
 
-                <Grid container spacing={3} direction="column"justify='center' align="center">
-                  <Grid item xs={12}>
+                <Grid container spacing={3} direction="column" justify='center' align="center">
 
-                    <Typography variant="h3" gutterBottom align="center">My Profile</Typography>
-                  </Grid>
 
                   <Grid item xs={12}  >
-                     
+
                     <Paper elevation={3} direction="column" >
-                      <Box p={3}   display="flex" flexDirection="column"  justifyContent='center' alignItems="center" style={{height: '50vh',}} >
-                     
-                          <Typography variant="h4" gutterBottom align='center' justify="center">
-                            Add  profiles to improve ratings.
+                      <Box p={3} display="flex" flexDirection="column" justifyContent='center' alignItems="center" style={{ height: '50vh', }} >
+
+                        <Typography variant="h4" gutterBottom align='center' justify="center">
+                          Add  profiles to improve ratings.
                       </Typography>
 
-                          <Button color="primary" variant='contained' onClick={() => this.setState({ addDialogOpen: true })}>
-                            Add New Job Profile
+                        <Button color="primary" variant='contained' onClick={() => this.setState({ addDialogOpen: true })}>
+                          Add New Job Profile
                         </Button>
-                        
+
                       </Box>
                     </Paper>
-                    
+
                   </Grid>
 
 
@@ -236,7 +255,7 @@ class MyProfile extends Component {
               </DialogTitle>
                   <DialogContent>
                     <DialogContentText>
-                      Enter the details of your profile to be updated
+                      Enter the details of your profile to be added
                 </DialogContentText>
 
                     <Grid container justify='flex-start' direction='row' alignItems='center' spacing={3}>
@@ -244,10 +263,12 @@ class MyProfile extends Component {
                         <TextField
                           id="firstName"
                           label="First Name"
+                          value={this.state.firstname}
                           // defaultValue={result[this.state.selectedIndex].firstname}
                           onChange={(event) => {
-                            this.setState({ firstname: event.target.value });
-                            console.log(this.state.firstname);
+                            this.capitalizefirstname(event.target.value)
+                            // this.setState({ firstname: event.target.value });
+                            // console.log(this.state.firstname);
                           }}
                           type="text"
                           fullWidth
@@ -258,10 +279,12 @@ class MyProfile extends Component {
                         <TextField
                           id="middleName"
                           label="Middle Name"
+                          value={this.state.middlename}
                           // defaultValue={result[this.state.selectedIndex].middlename}
                           onChange={(event) => {
-                            this.setState({ middlename: event.target.value });
-                            console.log(this.state.middlename);
+                            this.capitalizemiddlename(event.target.value)
+                           
+                            // console.log(this.state.middlename);
                           }}
                           type="text"
                           fullWidth
@@ -272,10 +295,11 @@ class MyProfile extends Component {
                         <TextField
                           id="surname"
                           label="Surname"
+                          value={this.state.lastname}
                           // defaultValue={result[this.state.selectedIndex].surname}
                           onChange={(event) => {
-                            this.setState({ lastname: event.target.value });
-                            console.log(this.state.lastname);
+                            this.capitalizelastname(event.target.value)
+                            // console.log(this.state.lastname);
                           }}
                           type="text"
                           fullWidth
@@ -296,7 +320,7 @@ class MyProfile extends Component {
                         />
                       </Grid>
 
-                    
+
 
                       <Grid item fullWidth xs={12}>
                         <TextField
@@ -305,7 +329,7 @@ class MyProfile extends Component {
                           InputProps={{
                             startAdornment: (
                               <InputAdornment position="start">
-                               <CloudUploadIcon />
+                                <CloudUploadIcon />
                               </InputAdornment>
                             ),
                           }}
@@ -431,8 +455,8 @@ class MyProfile extends Component {
 
 
 
-              
-               
+
+
               </div>
             )}
       </>
@@ -620,8 +644,8 @@ class MyProfile extends Component {
                         fullWidth
                       />
                     </Grid>
-   
-                   
+
+
 
                     <Grid item fullWidth xs={12}>
                       <TextField
@@ -630,7 +654,7 @@ class MyProfile extends Component {
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                             <CloudUploadIcon />
+                              <CloudUploadIcon />
                             </InputAdornment>
                           ),
                         }}
@@ -768,6 +792,7 @@ class MyProfile extends Component {
     );
   }
   render() {
+   
     return <>{this.state.isloading ? this.isloading() : this.tabledata()}</>;
   }
 }

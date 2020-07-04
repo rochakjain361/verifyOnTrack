@@ -34,19 +34,20 @@ import CodeIcon from "@material-ui/icons/Code";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import Dashboard from "./Components/DashBoardComponents/Dashboard";
-import Addresses from "./Components/DashBoardComponents/Addresses";
-import Identities from "./Components/DashBoardComponents/Identities";
-import Phones from "./Components/DashBoardComponents/Phones";
+import Addresstitle from "./Components/DashBoardComponents/Addresses/title";
+import Identitiestitle from "./Components/DashBoardComponents/Identities/title";
+import PhoneTitle from "./Components/DashBoardComponents/Phones/title";
 import MyJobProfile from "./Components/DashBoardComponents/MyJobProfile";
-import Inbox from "./Components/DashBoardComponents/Messages/Inbox";
-import Outbox from "./Components/DashBoardComponents/Messages/Outbox";
-import MyProfile from "./Components/DashBoardComponents/MyProfile";
+import Index from "./Components/DashBoardComponents/Messages/Inbox";
+// import Outbox from "./Components/DashBoardComponents/Messages/Outbox";
+import Profiletitle from "./Components/DashBoardComponents/MyProfile/title";
 import AccessCodes from "./Components/DashBoardComponents/MyCodes/AccessCodes";
 import EmployementCodes from "./Components/DashBoardComponents/MyCodes/EmployementCodes";
 import HomeIcon from '@material-ui/icons/Home';
 import PaymentIcon from '@material-ui/icons/Payment';
 import PhoneIcon from '@material-ui/icons/Phone';
 import  { useState, useEffect } from 'react';
+import { Title } from '@material-ui/icons';
 
 const drawerWidth = 240;
 let token1 = "";
@@ -412,17 +413,19 @@ export default function MiniDrawer(props) {
               </ListItem>
             </Link>
 
-            <Link to="/employeeOutbox" className={classes.link}>
+            {/* <Link to="/employeeOutbox" className={classes.link}>
               <ListItem button className={classes.nested}>
                 <ListItemText
                   primary="Outbox"
                   className={classes.textColor}
                 />
               </ListItem>
-            </Link>
+            </Link> */}
           </List>
         </Collapse>
+
       </Drawer>
+
       <main className={classes.content}>
             <Toolbar />
             <Switch>
@@ -434,25 +437,26 @@ export default function MiniDrawer(props) {
 
               <Route exact path="/profiles">
                 <Container>
-                  <MyProfile />
+                <Profiletitle/>
                 </Container>
               </Route>
 
               <Route exact path="/addresses">
                 <Container>
-                  <Addresses />
+                  <Addresstitle />
                 </Container>
               </Route>
 
               <Route exact path="/identities">
                 <Container>
-                  <Identities />
+                  <Identitiestitle />
                 </Container>
               </Route>
 
               <Route exact path="/Phones">
                 <Container>
-                  <Phones />
+                  {/* <Phones /> */}
+                  <PhoneTitle/>
                 </Container>
               </Route>
 
@@ -464,15 +468,15 @@ export default function MiniDrawer(props) {
 
               <Route exact path="/employeeInbox">
                 <Container>
-                  <Inbox />
+                  <Index/>
                 </Container>
               </Route>
 
-              <Route exact path="/employeeOutbox">
+              {/* <Route exact path="/employeeOutbox">
                 <Container>
                   <Outbox />
                 </Container>
-              </Route>
+              </Route> */}
 
               <Route exact path="/employeeAccessCodes">
                 <Container>

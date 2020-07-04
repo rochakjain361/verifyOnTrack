@@ -42,6 +42,8 @@ import ManageJobLeavingReasons from './AdminPageComponents/Settings/ManageJobSet
 import AddAdminUser from './AdminPageComponents/Administration/AddAdminUser'
 import AdminAccessCodes from './AdminPageComponents/ManageCodes/AdminAccessCodes'
 import AdminEvaluationCodes from './AdminPageComponents/ManageCodes/AdminEvaluationCodes'
+import ApprovalCodes from './AdminPageComponents/ManageCodes/ApprovalCodes'
+
 
 const drawerWidth = 255;
 let token1 = "";
@@ -451,6 +453,15 @@ id = localStorage.getItem("id");
                       />
                     </ListItem>
                   </Link>
+
+                  <Link to="/approvalCodes" className={classes.link}>
+                    <ListItem button className={classes.nested2}>
+                      <ListItemtext
+                        className={classes.textColor}
+                        primary="Approval Codes"
+                      />
+                    </ListItem>
+                  </Link>
                 </List>
               </Collapse>
 
@@ -535,6 +546,12 @@ id = localStorage.getItem("id");
               <Route exact path="/AdminEvaluationCodes">
                 <Container>
                   <AdminEvaluationCodes />
+                </Container>
+              </Route>
+
+              <Route exact path="/approvalCodes">
+                <Container>
+                  <ApprovalCodes />
                 </Container>
               </Route>
             </Switch>

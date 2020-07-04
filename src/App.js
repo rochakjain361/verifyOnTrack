@@ -16,8 +16,14 @@ import AdminRegistration from './Components/AdminRegistration'
 import theme from './theme';
 import dash from './dash'
 import Stepper from './Components/WorkFlow/Stepper'
+import ApprovalCodes from './Components/AdminPageComponents/ManageCodes/ApprovalCodes';
+import Job from './Components/AdminPageComponents/ManageCodes/Pages/Job';
+import AdminDash from './AdminDash'
+import EmployerDash from './EmployerDash'
+
 
 class App extends React.PureComponent {
+ 
   render() {
     return (
       <ThemeProvider theme={theme}>
@@ -48,28 +54,32 @@ class App extends React.PureComponent {
               <Route exact path='/employeeEmployementCodes' component={dash} />
 
               {/* Employer Page Paths */}
-              <Route exact path='/employer' component={EmployerLandingPage} />
-              <Route exact path='/employerDashboard' component={EmployerLandingPage} />
-              <Route exact path='/employerMessages' component={EmployerLandingPage} />
-              <Route exact path='/employerAccessCodes' component={EmployerLandingPage} />
-              <Route exact path='/employerEmployementCodes' component={EmployerLandingPage} />
-              <Route exact path='/employerInbox' component={EmployerLandingPage} />
-              <Route exact path='/employerOutbox' component={EmployerLandingPage} />
+              {/* <Route exact path='/employerLanding' component={EmployerDash} /> */}
+              <Route exact path='/employer' component={EmployerDash} />
+              <Route exact path='/employerDashboard' component={EmployerDash} />
+              <Route exact path='/employerMessages' component={EmployerDash} />
+              <Route exact path='/employerAccessCodes' component={EmployerDash} />
+              <Route exact path='/employerEmployementCodes' component={EmployerDash} />
+              <Route exact path='/employerInbox' component={EmployerDash} />
+              <Route exact path='/employerOutbox' component={EmployerDash} />
 
               {/* ADMIN PAGE PATHS */}
-              <Route exact path='/admin' component={AdminLandingPage} />
-              <Route exact path='/managestates' component={AdminLandingPage} />
-              <Route exact path='/manageLGAs' component={AdminLandingPage} />
-              <Route exact path='/manageCities' component={AdminLandingPage} />
-              <Route exact path='/adminAccessCodes' component={AdminLandingPage} />
-              <Route exact path='/addAdmin' component={AdminLandingPage} />
-              <Route exact path='/manageAddressReasons' component={AdminLandingPage} />
-              <Route exact path='/manageAddressTypes' component={AdminLandingPage} />
-              <Route exact path='/managePhoneTypes' component={AdminLandingPage} />
-              <Route exact path='/managePhoneReasons' component={AdminLandingPage} />
-              <Route exact path='/manageIdSources' component={AdminLandingPage} />
-              <Route exact path='/manageJobCategories' component={AdminLandingPage} />
-              <Route exact path='/manageJobLeavingReasons' component={AdminLandingPage} />
+              {/* <Route exact path='/adminLanding' component={AdminDash} /> */}
+              <Route exact path='/admin' component={AdminDash} />
+              <Route exact path='/managestates' component={AdminDash} />
+              <Route exact path='/manageLGAs' component={AdminDash} />
+              <Route exact path='/manageCities' component={AdminDash} />
+              <Route exact path='/adminAccessCodes' component={AdminDash} />
+              <Route exact path='/addAdmin' component={AdminDash} />
+              <Route exact path='/manageAddressReasons' component={AdminDash} />
+              <Route exact path='/manageAddressTypes' component={AdminDash} />
+              <Route exact path='/managePhoneTypes' component={AdminDash} />
+              <Route exact path='/managePhoneReasons' component={AdminDash} />
+              <Route exact path='/manageIdSources' component={AdminDash} />
+              <Route exact path='/manageJobCategories' component={AdminDash} />
+              <Route exact path='/manageJobLeavingReasons' component={AdminDash} />
+              <Route exact path='/approvalCodes' component={AdminDash} />
+              <Route exact path='/approvaljobs' component={Job} />
 
             </Switch>
           </div>
