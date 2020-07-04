@@ -69,6 +69,7 @@ class myJobProfile extends Component {
     constructor(props) {
         super(props);
         this.addJobProfile = this.addJobProfile.bind(this);
+        this.getTableOfEmployees = this.getTableOfEmployees.bind(this);
     }
 
 
@@ -235,10 +236,10 @@ class myJobProfile extends Component {
     render() {
         return (
             <div>
-                {this.state.myJobHistory.length === 0 ? (this.titleHeaderWhenNoRecordsExist()) : (this.titleHeaderWhenRecordsExist())}
-                {/* {
+                {/* {this.state.myJobHistory.length === 0 ? (this.titleHeaderWhenNoRecordsExist()) : (this.titleHeaderWhenRecordsExist())} */}
+                {
                     this.state.isloading ? (this.isloading()) : this.state.myJobHistory.length === 0 ? (this.titleHeaderWhenNoRecordsExist()) : (this.titleHeaderWhenRecordsExist())
-                } */}
+                }
                 {this.addJoBHistoryDialog()}
                 {this.editJobHistoryDialog()}
             </div>
