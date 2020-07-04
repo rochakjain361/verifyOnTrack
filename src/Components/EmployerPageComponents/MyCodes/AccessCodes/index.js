@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles';
-import { TextField, Paper, Grid, Typography, Button, TableContainer, FormControlLabel, Checkbox, FormControl, Select, InputLabel, MenuItem, Divider } from '@material-ui/core/';
+import { TextField, CircularProgress, Paper, Grid, Typography, Button, TableContainer, FormControlLabel, Checkbox, FormControl, Select, InputLabel, MenuItem, Divider } from '@material-ui/core/';
 
 import {
     Table,
@@ -26,6 +26,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import PaymentIcon from '@material-ui/icons/Payment';
 import PhoneIcon from '@material-ui/icons/Phone';
 import WorkIcon from '@material-ui/icons/Work';
+import StarsIcon from '@material-ui/icons/Stars';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -37,28 +38,12 @@ import Address from '../Pages/Address'
 import Identity from '../Pages/Identity'
 import Phone from '../Pages/Phone'
 import Job from '../Pages/Job'
+import Ratings from '../Pages/Ratings';
 
 const token1 = localStorage.getItem("Token");
 const token = "Token " + token1;
 const id = localStorage.getItem("id");
 const api = "http://3.22.17.212:8000"
-
-const rows = [
-    {
-        "createdOn": "09/12/2020",
-        "codeString": "testCodeString1",
-        "employeeCompanyField": "testEmployeeCompanyField1",
-        "codeStatus": "testCodeStatu1s",
-        "statusChangeDate": "09/12/2020",
-    },
-    {
-        "createdOn": "09/12/2020",
-        "codeString": "testCodeString1",
-        "employeeCompanyField": "testEmployeeCompanyField1",
-        "codeStatus": "testCodeStatus2",
-        "statusChangeDate": "09/12/2020",
-    }
-];
 
 const styles = theme => ({
     demo: {
@@ -85,12 +70,17 @@ class index extends Component {
         codeDetails: [],
         employeeDetailsData: [],
 
+        enteredOntracId: '',
+        employeeVotId: '',
+        selectedstate: '',
+
         codeRatings: false,
         codeAddress: false,
         codeProfile: false,
         codeIdentities: false,
         codePhones: false,
-        codeJobHistory: false
+        codeJobHistory: false,
+        isLoading: true,
     }
 
     constructor(props) {
@@ -134,8 +124,19 @@ class index extends Component {
     //     this.setState({ phones: response });
     // }
 
-    async fetchEmployeeOntracId(data) {
-        let response = await fetch(api + "/api/v1/accounts/employee?ontrac_id=" + data,
+    async fetchEmployeeOntracId() {
+        let response = await fetch(api + "/api/v1/accounts/employee?ontrac_id",
+            {
+                headers: {
+                    'Authorization': token
+                }
+            });
+        response = await response.json();
+        console.log('OTIDSuccess:', response)
+        this.setState({ onTracId: response });
+    }
+    async selectedEmployeeOntracId() {
+        let response = await fetch(api + "/api/v1/accounts/employee?ontrac_id",
             {
                 headers: {
                     'Authorization': token
@@ -146,19 +147,19 @@ class index extends Component {
         this.setState({ onTracId: response });
     }
 
-    async fetchCodeDetails(id) {
-        this.setState({ codeDetailsDialog: true })
-        let response = await fetch(api + "/api/v1/codes/access/codes/" + id,
-            {
-                headers: {
-                    'Authorization': token
-                }
-            });
-        response = await response.json();
-        console.log('codeDetailsSuccess:', response)
-        this.setState({ codeDetails: response });
-        console.log('codeDetailsDialog:', this.state.codeDetails)
-    }
+    // async fetchCodeDetails(id) {
+    //     this.setState({ codeDetailsDialog: true })
+    //     let response = await fetch(api + "/api/v1/codes/access/codes/" + id,
+    //         {
+    //             headers: {
+    //                 'Authorization': token
+    //             }
+    //         });
+    //     response = await response.json();
+    //     console.log('codeDetailsSuccess:', response)
+    //     this.setState({ codeDetails: response });
+    //     console.log('codeDetailsDialog:', this.state.codeDetails)
+    // }
 
     viewEmployeeDetails(id) {
         // this.viewEmployeeDetailsDialog()
@@ -174,92 +175,115 @@ class index extends Component {
 
         await this.fetchAllCodes();
         // await this.fetchEmployeePhones();
-        // await this.fetchEmployeeOntracId();
+        await this.fetchEmployeeOntracId();
         await this.fetchPendingCodes();
         // await this.fetchCodeDetails();
 
+        this.setState({ isLoading: false })
+
+    }
+
+    isloading() {
+        return (
+            <>
+                <Grid
+                    container
+                    spacing={0}
+                    direction="column"
+                    alignItems="center"
+                    justify="center"
+                    display="flex"
+                    style={{ minHeight: "0vh" }}
+                >
+                    <CircularProgress />
+                </Grid>
+            </>
+        );
     }
 
     render() {
 
         const { classes } = this.props;
 
-        const defaultProps = {
-            options: top100Films,
-            getOptionLabel: (option) => option.title,
-        };
-
         return (
-            <div style={{ marginTop: 20, marginRight: 20 }}>
+            <>
+            {
+                this.state.isLoading ? (this.isloading()) :
+                    (
+                        <div style={{ marginTop: 20, marginRight: 20 }}>
 
-                <Grid container justify='space-between' alignItems='center' spacing={4}>
+                            <Grid container justify='space-between' alignItems='center' spacing={4}>
 
-                    <Grid item xs={8}>
-                        <Typography variant='h4'>
-                            Access Codes
-                                </Typography>
-                    </Grid>
+                                <Grid item xs={8}>
+                                    <Typography variant='h4'>
+                                        Access Codes
+                                    </Typography>
+                                </Grid>
 
-                    <Grid item xs={4}>
-                        <Button
-                            color='secondary'
-                            variant='contained'
-                            onClick={() => this.setState({ generateNewEmployementCodeDialog: !this.state.generateNewEmployementCodeDialog })}
-                            fullWidth
-                        >
-                            Create New code
-                        </Button>
-                    </Grid>
+                                <Grid item xs={4}>
+                                    <Button
+                                        color='secondary'
+                                        variant='contained'
+                                        onClick={() => this.setState({ generateNewEmployementCodeDialog: !this.state.generateNewEmployementCodeDialog })}
+                                        fullWidth
+                                    >
+                                        Create New code
+                            </Button>
+                                </Grid>
 
-                    <Grid item >
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={this.state.pendingCodesCheck}
-                                    onChange={event => {
-                                        this.setState({ pendingCodesCheck: !this.state.pendingCodesCheck })
-                                        console.log('check1:', this.state.pendingCodesCheck)
-                                    }}
-                                    name="checkedB"
-                                    color="primary"
-                                />
-                            }
-                            label="Show open codes"
-                        />
-                    </Grid>
+                                <Grid item >
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.state.pendingCodesCheck}
+                                                onChange={event => {
+                                                    this.setState({ pendingCodesCheck: !this.state.pendingCodesCheck })
+                                                    console.log('check1:', this.state.pendingCodesCheck)
+                                                }}
+                                                name="checkedB"
+                                                color="primary"
+                                            />
+                                        }
+                                        label="Show open codes"
+                                    />
+                                </Grid>
 
-                </Grid>
+                            </Grid>
 
-                <Grid container justify='flex-start' alignItems='center' spacing={2}>
+                            <Grid container justify='flex-start' alignItems='center' spacing={2}>
 
-                    <TableContainer component={Paper} style={{ maxWidth: '94%', marginTop: 20, marginLeft: 10, marginRight: 10 }} elevation={5}>
-                        <Table stickyHeader>
-                            <TableHead>
-                                <TableRow style={{ backgroundColor: 'black' }}>
-                                    <TableCell align="left">Date</TableCell>
-                                    <TableCell align="left">Code</TableCell>
-                                    <TableCell align="left">Employee</TableCell>
-                                    <TableCell align="left">Code Status</TableCell>
-                                    <TableCell align="left">Last Updated</TableCell>
-                                    <TableCell align="left">View</TableCell>
-                                    {/* <TableCell align="left"></TableCell> */}
-                                    <TableCell align="left">Actions</TableCell>
-                                    {/* <TableCell align="left">Update</TableCell> */}
-                                </TableRow>
-                            </TableHead>
-                            {this.tableDisplayLogic()}
-                            {this.viewCodeDetails()}
-                            {this.viewEmployeeDetailsDialog()}
-                        </Table>
-                    </TableContainer>
+                                <TableContainer component={Paper} style={{ maxWidth: '94%', marginTop: 20, marginLeft: 10, marginRight: 10 }} elevation={5}>
+                                    <Table stickyHeader>
+                                        <TableHead>
+                                            <TableRow style={{ backgroundColor: 'black' }}>
+                                                <TableCell align="left">Date</TableCell>
+                                                <TableCell align="left">Code</TableCell>
+                                                <TableCell align="left">Employee</TableCell>
+                                                <TableCell align="left">Code Status</TableCell>
+                                                <TableCell align="left">Last Updated</TableCell>
+                                                <TableCell align="left">View</TableCell>
+                                                {/* <TableCell align="left"></TableCell> */}
+                                                <TableCell align="left">Actions</TableCell>
+                                                {/* <TableCell align="left">Update</TableCell> */}
+                                            </TableRow>
+                                        </TableHead>
+                                        {this.tableDisplayLogic()}
+                                        {this.viewCodeDetails()}
+                                        {this.viewEmployeeDetailsDialog()}
+                                    </Table>
+                                </TableContainer>
 
-                </Grid>
-                {/* </Paper> */}
+                            </Grid>
+                            {/* </Paper> */}
 
-                {/* GENERATE NEW CODE DIALOG DATA */}
-                {this.generateAccessCode()}
+                            {/* GENERATE NEW CODE DIALOG DATA */}
+                            {this.generateAccessCode()}
 
-            </div>
+                        </div>
+                    )
+            }
+            </>
+
         )
     }
 
@@ -282,7 +306,8 @@ class index extends Component {
                                     variant="contained"
                                     style={{ minWidth: 120 }}
                                     onClick={() => {
-                                        this.setState({ employeeDetailsData: this.state.allCodes[index] }, () => console.log('employeeDetailsData;', this.state.employeeDetailsData))
+                                        this.setState({ employeeDetailsData: this.state.allCodes[index] },
+                                            () => console.log('employeeDetailsData;', this.state.employeeDetailsData))
                                         this.viewEmployeeDetails(row.id)
                                     }}
                                 >
@@ -293,7 +318,10 @@ class index extends Component {
                                 size='small'
                                 color="default"
                                 variant="contained"
-                                onClick={() => this.fetchCodeDetails(row.id)}
+                                onClick={() =>
+                                    this.setState({ codeDetails: this.state.allCodes[index], codeDetailsDialog: true })
+                                    // this.fetchCodeDetails(row.id)
+                                }
                                 style={{ minWidth: 120, marginTop: 10 }}
                             >Code Details
                             </Button>
@@ -347,26 +375,37 @@ class index extends Component {
                         <TableCell align="left">{row.codeStatus}</TableCell>
                         <TableCell align="left">{new Date(row.statusChangeDate).toDateString()}</TableCell>
                         <TableCell align="left">
+
+                            {row.codeStatus == "AccessGranted" || row.codeStatus == "GrantViewed" ? (
+                                <Button
+                                    size='small'
+                                    color="default"
+                                    variant="contained"
+                                    style={{ minWidth: 120 }}
+                                    onClick={() => {
+                                        this.setState({ employeeDetailsData: this.state.allCodes[index] },
+                                            () => console.log('employeeDetailsData;', this.state.employeeDetailsData))
+                                        this.viewEmployeeDetails(row.id)
+                                    }}
+                                >
+                                    Employee Details
+                                </Button>) : <div />}
+
                             <Button
                                 size='small'
                                 color="default"
                                 variant="contained"
-                                style={{ minWidth: 120 }}
-                                onClick={() => this.viewEmployeeDetails(row.id)}
-                            >
-                                Employee Details
-                                    </Button>
-                            <Button
-                                size='small'
-                                color="default"
-                                variant="contained"
-                                onClick={() => this.fetchCodeDetails(row.id)}
+                                onClick={() =>
+                                    this.setState({ codeDetails: this.state.allCodes[index], codeDetailsDialog: true })
+                                    // this.fetchCodeDetails(row.id)
+                                }
                                 style={{ minWidth: 120, marginTop: 10 }}
-                            >Code Details</Button>
+                            >Code Details
+                        </Button>
                         </TableCell>
                         <TableCell align="left">
-                            <Button size='small' color="primary" variant="outlined" style={{ minWidth: 120 }}>{row.status_options_employer_field[0].action}</Button>
-                            <Button size='small' color="secondary" variant="outlined" style={{ minWidth: 120, marginTop: 10 }}>{row.status_options_employer_field[1].action}</Button>
+                            {/* <Button size='small' color="primary" variant="outlined" style={{ minWidth: 120 }}>{row.status_options_employer_field[0].action}</Button> */}
+                            {/* <Button size='small' color="secondary" variant="outlined" style={{ minWidth: 120, marginTop: 10 }}>{row.status_options_employer_field[1].action}</Button> */}
                         </TableCell>
                     </TableRow>
                 ))}
@@ -400,7 +439,7 @@ class index extends Component {
                                     <TextField
                                         id="=viewCreatedOn"
                                         label="Created on"
-                                        defaultValue={this.state.codeDetails['createdOn']}
+                                        defaultValue={new Date(this.state.codeDetails['createdOn']).toDateString()}
                                         type="text"
                                         InputProps={{
                                             readOnly: true,
@@ -414,7 +453,7 @@ class index extends Component {
                                     <TextField
                                         id="=viewLastUpdated"
                                         label="Last updated"
-                                        defaultValue={this.state.codeDetails['statusChangeDate']}
+                                        defaultValue={new Date(this.state.codeDetails['statusChangeDate']).toDateString()}
                                         type="text"
                                         InputProps={{
                                             readOnly: true,
@@ -554,7 +593,7 @@ class index extends Component {
                                 <TextField
                                     id="=viewEmployeeName"
                                     label="Employee Name"
-                                    // defaultValue={this.state.employeeDetailsData.employee_name_field.name}
+                                    defaultValue={this.state.employeeDetailsData.employee_name_field}
                                     type="text"
                                     InputProps={{
                                         readOnly: true,
@@ -585,7 +624,7 @@ class index extends Component {
                                     Access granted for:
                                     </Typography>
 
-                                <ExpansionPanel style={{ marginTop: 10 }}>
+                                <ExpansionPanel style={{ marginTop: 10 }} disabled={this.state.canAccessProfile}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -597,11 +636,11 @@ class index extends Component {
                                         <Typography variant='subtitle2'>Profiles</Typography>
                                     </ExpansionPanelSummary>
                                     <ExpansionPanelDetails>
-                                        <Profile />
+                                        <Profile userId={this.state.employeeDetailsData['employee']} code={this.state.employeeDetailsData['codeString']} />
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
-                                <ExpansionPanel style={{ marginTop: 10 }}>
+                                <ExpansionPanel style={{ marginTop: 10 }} disabled={this.state.canAccessAddresses}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -613,11 +652,11 @@ class index extends Component {
                                         <Typography variant='subtitle2'>Addresses</Typography>
                                     </ExpansionPanelSummary>
                                     <ExpansionPanelDetails>
-                                        <Address />
+                                        <Address userId={this.state.employeeDetailsData['employee']} code={this.state.employeeDetailsData['codeString']} />
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
-                                <ExpansionPanel style={{ marginTop: 10 }}>
+                                <ExpansionPanel style={{ marginTop: 10 }} disabled={this.state.canAccessIdentities}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -629,11 +668,11 @@ class index extends Component {
                                         <Typography variant='subtitle2'>Identities</Typography>
                                     </ExpansionPanelSummary>
                                     <ExpansionPanelDetails>
-                                        <Identity />
+                                        <Identity userId={this.state.employeeDetailsData['employee']} code={this.state.employeeDetailsData['codeString']} />
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
-                                <ExpansionPanel style={{ marginTop: 10 }}>
+                                <ExpansionPanel style={{ marginTop: 10 }} disabled={this.state.canAccessPhones}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -645,11 +684,11 @@ class index extends Component {
                                         <Typography variant='subtitle2'>Phones</Typography>
                                     </ExpansionPanelSummary>
                                     <ExpansionPanelDetails>
-                                        <Phone />
+                                        <Phone userId={this.state.employeeDetailsData['employee']} code={this.state.employeeDetailsData['codeString']} />
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
-                                <ExpansionPanel style={{ marginTop: 10 }}>
+                                <ExpansionPanel style={{ marginTop: 10 }} disabled={this.state.canAccessJobHistory}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -661,7 +700,23 @@ class index extends Component {
                                         <Typography variant='subtitle2'>Job profile history</Typography>
                                     </ExpansionPanelSummary>
                                     <ExpansionPanelDetails>
-                                        <Job />
+                                        <Job userId={this.state.employeeDetailsData['employee']} code={this.state.employeeDetailsData['codeString']} />
+                                    </ExpansionPanelDetails>
+                                </ExpansionPanel>
+
+                                <ExpansionPanel style={{ marginTop: 10 }} disabled={this.state.canAccessRatings}>
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                    >
+                                        <ListItemIcon>
+                                            <StarsIcon />
+                                        </ListItemIcon>
+                                        <Typography variant='subtitle2'>Ratings</Typography>
+                                    </ExpansionPanelSummary>
+                                    <ExpansionPanelDetails>
+                                        <Ratings userId={this.state.employeeDetailsData['employee']} code={this.state.employeeDetailsData['codeString']} />
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
@@ -695,6 +750,13 @@ class index extends Component {
     }
 
     generateAccessCode() {
+        const options = this.state.onTracId.map((option) => {
+            const firstLetter = option.username[0].toUpperCase();
+            return {
+                firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
+                ...option,
+            };
+        });
         return (
             <div>
                 <Dialog open={this.state.generateNewEmployementCodeDialog} onClose={() => this.setState({ generateNewEmployementCodeDialog: false })} >
@@ -745,6 +807,44 @@ class index extends Component {
                                             // this.fetchEmployeeOntracId(this.state.generateCodeData)
                                         }}
                                     />
+
+                                    {/* <Autocomplete
+                                        id="combo-box-demo"
+                                        options={this.state.onTracId}
+                                        getOptionLabel={(option) => option.ontrac_id}
+                                        style={{ width: 300 }}
+                                        renderInput={(params) => <TextField {...params} label="Verify OnTrac Id" variant="outlined" />}
+                                        fullWidth
+                                        onChange={}
+                                    /> */}
+
+                                    {/* <Autocomplete
+                                        id="searchByOntracId"
+                                        options={this.state.onTracId}
+                                        getOptionLabel={(VOTId) => VOTId.ontrac_id}
+                                        Username
+                                        fullWidth
+                                        value={this.state.selectedstate}
+                                        onChange={(event, value) => {
+                                            this.setState({ selectedstate: value['ontrac_id'] })
+                                            this.setState({ employeeVotId: value })
+                                            console.log("selectedstate", value);
+                                            console.log("employeeVotId", this.state.employeeVotId);
+                                        }}
+                                        inputValue={this.state.enteredOntracId}
+                                        onInputChange={(event, newInputValue) => {
+                                            this.setState({ enteredOntracId: newInputValue });
+                                            // console.log(newInputValue);
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="Verify OnTrac Id"
+                                                margin="normal"
+                                                variant="outlined"
+                                            />
+                                        )}
+                                    /> */}
                                 </Grid>
                             ) : (
                                     <Grid item xs={12}>
