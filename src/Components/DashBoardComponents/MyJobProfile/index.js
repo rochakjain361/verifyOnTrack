@@ -69,6 +69,7 @@ class myJobProfile extends Component {
     constructor(props) {
         super(props);
         this.addJobProfile = this.addJobProfile.bind(this);
+        this.getTableOfEmployees = this.getTableOfEmployees.bind(this);
     }
 
 
