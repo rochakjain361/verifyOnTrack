@@ -34,7 +34,7 @@ function getSteps() {
     return ['Profile', 'Addresses', 'Identities', 'Phones', 'Jobs'];
 }
 
-function getStepContent(step, user, approval) {
+function getStepContent(step, user, approval, viewId) {
     switch (step) {
         case 0:
             return <Profile user={user} approval={approval}/>;

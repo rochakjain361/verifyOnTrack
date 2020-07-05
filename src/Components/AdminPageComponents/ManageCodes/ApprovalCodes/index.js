@@ -84,6 +84,7 @@ class index extends Component {
         bothRequests: [],
 
         userID: '',
+        viewId: '',
         assignAdminId: '',
         approvalCode: '',
         currentid: "",
@@ -348,8 +349,7 @@ class index extends Component {
                         < TableCell align="left" >
                             <Button variant='outlined' color='primary'
                                 onClick={() => {
-                                    this.setState({ userID: row.user })
-                                    this.setState({ approvalCode: row.codeString })
+                                    this.setState({ userID: row.user, approvalCode: row.codeString, viewId: row.id})
                                     this.viewAndApprove(row.id, row.codeString)
                                 }}
                             // disabled={this.state.viewLogic}
@@ -518,7 +518,6 @@ class index extends Component {
     }
 
     assignAdminDialog(id) {
-        console.log("qqqqqqqqqqqqqq", id)
         const options = this.state.adminList.map((option) => {
             const firstLetter = option.username[0].toUpperCase();
             return {
@@ -704,7 +703,7 @@ class index extends Component {
             </DialogTitle>
                 <DialogContent>
 
-                    <ViewPagesComponent user={this.state.userID} approval={this.state.approvalCode} />
+                    <ViewPagesComponent user={this.state.userID} approval={this.state.approvalCode} viewId={this.state.viewId} />
 
                 </DialogContent>
 

@@ -33,8 +33,6 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 
-
-
 const rows = [
     {
         "startDate": "2016-12-01",
@@ -123,6 +121,8 @@ class myJobProfile extends Component {
         editJobDialogRating: 0,
         editJobDialogUpdateReason: '',
 
+        verificationData: [],
+
         availableCompanies: [],
         check: false,
         companyOptionDisable: false,
@@ -143,7 +143,6 @@ class myJobProfile extends Component {
     }
 
     async getMyJobProfileHistory(index) {
-        // this.setState({ viewDialogOpen: true });
         let response = await fetch(api + "/api/v1/employees/" + id + "/jobs/" + index + "/history",
             {
                 headers: {
@@ -154,9 +153,10 @@ class myJobProfile extends Component {
         console.log('viewHistorySuccess:', response)
         this.setState({ viewMyJobHistories: response });
         console.log("created_on:",)
+        this.setState({ isLoading: false })
     }
     updateMyJob(index) {
-        this.setState({editActionsOpen: true})
+        this.setState({ editActionsOpen: true })
         // console.log('jobIndex:',index)
     }
 
@@ -363,7 +363,7 @@ class myJobProfile extends Component {
                         }
 
                         <Grid item xs={6}>
-                        <InputLabel id="dob">Start Date</InputLabel>
+                            <InputLabel id="dob">Start Date</InputLabel>
                             <input
                                 class="w3-input"
                                 type="date"
@@ -376,7 +376,7 @@ class myJobProfile extends Component {
                         </Grid>
 
                         <Grid item xs={6}>
-                        {/* <InputLabel id="dob">End Date</InputLabel> */}
+                            {/* <InputLabel id="dob">End Date</InputLabel> */}
 
                             <input
                                 class="w3-input"
@@ -695,7 +695,7 @@ class myJobProfile extends Component {
                                 fullWidth
                                 multiline
                                 rows={3}
-                                // value={this.state.editJobDialogUpdateReason}
+                                value={this.state.editJobDialogUpdateReason}
                                 onChange={event => this.setState({ editJobDialogUpdateReason: event.target.value })}
                             />
                         </Grid>
@@ -704,10 +704,12 @@ class myJobProfile extends Component {
 
                 </DialogContent>
                 <DialogActions>
-                    <Button style={{ width: 85 }} onClick={() => {
-                        this.editJobProfile(this.state.updateJobId)
-                        // console.log("hello",this.state.myJobHistory[this.state.updateJobId])
-                    }} color="primary" variant="contained">
+                    <Button
+                        disabled={this.state.editJobDialogUpdateReason}
+                        style={{ width: 85 }} onClick={() => {
+                            this.editJobProfile(this.state.updateJobId)
+                            // console.log("hello",this.state.myJobHistory[this.state.updateJobId])
+                        }} color="primary" variant="contained">
                         Edit
                             </Button>
                     <Button color="secondary" variant="contained" onClick={() => this.setState({ editActionsOpen: false, selectedIndex: -1 })}>
@@ -724,42 +726,47 @@ class myJobProfile extends Component {
                 <DialogTitle id="form-dialog-title">Job History</DialogTitle>
                 {/* <DialogContent> */}
 
-                <Table stickyHeader>
-                    <TableHead>
-                        <TableRow style={{ backgroundColor: "black" }}>
-                            {['Created on',
-                                'Update Reason',
-                                'Job Description',
-                                'Job Category',
-                            ].map((text, index) => (
-                                <TableCell
-                                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                                    align="left"
-                                >
-                                    {text}
-                                </TableCell>
-                            ))}
-                        </TableRow>
-                    </TableHead>
+                {this.state.isloading ? this.isloading() : (
+                    <>
+                        <Table stickyHeader>
+                            <TableHead>
+                                <TableRow style={{ backgroundColor: "black" }}>
+                                    {['Created on',
+                                        'Update Reason',
+                                        'Job Description',
+                                        'Job Category',
+                                    ].map((text, index) => (
+                                        <TableCell
+                                            style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                                            align="left"
+                                        >
+                                            {text}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            </TableHead>
 
-                    <TableBody>
-                        {this.state.viewMyJobHistories.map((row, index) => (
-                            <TableRow key={row.id}>
-                                <TableCell align="left">{new Date(this.state.viewMyJobHistories[0].created_on).toDateString()}</TableCell>
-                                <TableCell align="left">{this.state.viewMyJobHistories[0].update_reason}</TableCell>
-                                <TableCell align="left">{this.state.viewMyJobHistories[0].jobDescription}</TableCell>
-                                <TableCell align="left">{this.state.viewMyJobHistories[0].jobCategory}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                            <TableBody>
+                                {this.state.viewMyJobHistories.map((row, index) => (
+                                    <TableRow key={row.id}>
+                                        <TableCell align="left">{new Date(this.state.viewMyJobHistories[0].created_on).toDateString()}</TableCell>
+                                        <TableCell align="left">{this.state.viewMyJobHistories[0].update_reason}</TableCell>
+                                        <TableCell align="left">{this.state.viewMyJobHistories[0].jobDescription}</TableCell>
+                                        <TableCell align="left">{this.state.viewMyJobHistories[0].jobCategory}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
 
-                {/* </DialogContent> */}
-                <DialogActions>
-                    <Button color="secondary" variant="contained" onClick={() => this.setState({ viewDialogOpen: false, selectedIndex: -1 })}>
-                        Close
+                        {/* </DialogContent> */}
+                        <DialogActions>
+                            <Button color="secondary" variant="contained" onClick={() => this.setState({ viewDialogOpen: false, selectedIndex: -1 })}>
+                                Close
                         </Button>
-                </DialogActions>
+                        </DialogActions>
+                    </>
+                )}
+
             </Dialog>
         )
     }
@@ -776,6 +783,7 @@ class myJobProfile extends Component {
                                 <TableCell align="left">Employer</TableCell>
                                 <TableCell align="left">Position</TableCell>
                                 <TableCell align="left">VON-Status</TableCell>
+                                <TableCell align="left">View</TableCell>
                                 <TableCell align="left">Actions</TableCell>
 
                             </TableRow>
@@ -792,29 +800,61 @@ class myJobProfile extends Component {
                                         <Button
                                             color="primary"
                                             variant="outlined"
+                                            fullWidth
                                             onClick={() => {
                                                 this.getMyJobProfileHistory(row.id);
                                                 this.setState({
-                                                    viewDialogOpen: true,
-
+                                                    viewDialogOpen: true
                                                 });
                                             }
                                             }
                                         >
                                             History
                                     </Button>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Grid container justify='column'>
+                                            <Grid item>
+                                                <Button
+                                                    style={{ minWidth: 200 }}
+                                                    variant="outlined"
+                                                    color="secondary"
+                                                    onClick={() => {
+                                                        this.setState({ updateMyJobData: this.state.myJobHistory[index], updateJobId: row.id },
+                                                            () => { console.log('updateMyJobData:', this.state.updateMyJobData, this.state.updateJobId) })
+                                                        this.updateMyJob(index)
+                                                    }}
+                                                >
+                                                    Update
+                                                </Button>
+                                            </Grid>
 
-                                        <Button
-                                            style={{ marginLeft: 10 }}
-                                            variant="outlined"
-                                            color="secondary"
-                                            onClick={()=> {this.setState({updateMyJobData: this.state.myJobHistory[index], updateJobId: row.id}, 
-                                                            ()=> {console.log('updateMyJobData:',this.state.updateMyJobData,this.state.updateJobId)})
-                                                            this.updateMyJob(index)
-                                                            }}
-                                        >
-                                            Update
-                                    </Button>
+                                            <Grid item>
+                                                {row.show_employer_ver_field == "True" ? (
+                                                    <Button
+                                                        style={{ marginTop: 5, minWidth: 200 }}
+                                                        variant="outlined"
+                                                        color="secondary"
+                                                        // onClick={() => {this.setState({ verificationData: this.state.myJobHistory[index] },
+                                                        //     () => { console.log('verificationData:', this.state.verificationData})}
+                                                        onClick={() => {
+                                                            this.setState({ verificationData: this.state.myJobHistory[index] },
+                                                                () => {
+                                                                    console.log('verificationData:', this.state.verificationData,
+                                                                        'ee_employer', this.state.verificationData['employer_id_field'],
+                                                                        'ee_employee', this.state.verificationData['employee'],
+                                                                        'category: "Employment Verification"',
+                                                                        'requestJobProfile: "true"',
+                                                                        'job_profile:', this.state.verificationData['id'])
+                                                                })
+                                                            this.employerVerification()
+                                                        }}
+                                                    >
+                                                        Get Employer Verification
+                                                    </Button>
+                                                ) : <div />}
+                                            </Grid>
+                                        </Grid>
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -956,9 +996,34 @@ class myJobProfile extends Component {
         console.log('EditJobSuccess:', response);
 
         await this.getJobProfiles();
-        await this.setState({editActionsOpen: false})
+        await this.setState({ editActionsOpen: false })
     }
 
+    async employerVerification() {
+
+        let bodyData = {
+            'ee_employer': this.state.verificationData['employer_id_field'],
+            'ee_employee': this.state.verificationData['employee'],
+            'category': 'Employment Verification',
+            'requestJobProfile': "true",
+            'job_profile:': this.state.verificationData['id']
+        }
+        console.log('verificationBody:', bodyData)
+
+        let response = await fetch('http://3.22.17.212:8000/api/v1/codes/emp/new-code',
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': token,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(bodyData)
+            });
+        response = await response.json(bodyData);
+        console.log('verificationSuccess:', response);
+
+        // await this.getJobProfiles();
+    }
 }
 
 export default myJobProfile
