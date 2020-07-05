@@ -55,26 +55,30 @@ export class index extends Component {
             selectedPosition: "",
             positionCategory: "",
             selectedIndex: "",
-
-            addSnackbar: false,
-            deletedSnackbar: false,
-            errorSnackbar: false,
             deleteDialogBox: false,
+
+            snackbar: "",
+            snackbarresponse: "",
+
+            addresponse: "",
+            deleteresponse: "",
         };
     }
     isloading() {
         return (
-            <Grid
-                container
-                spacing={0}
-                direction="column"
-                alignItems="center"
-                justify="center"
-                display="flex"
-                style={{ minHeight: "100vh" }}
-            >
-                <CircularProgress />
-            </Grid>
+            <>
+                <Grid
+                    container
+                    spacing={0}
+                    direction="column"
+                    alignItems="center"
+                    justify="center"
+                    display="flex"
+                    style={{ minHeight: "0vh" }}
+                >
+                    <CircularProgress />
+                </Grid>
+            </>
         );
     }
     async getPositions() {
@@ -91,6 +95,7 @@ export class index extends Component {
             });
         this.setState({ loading: false });
     }
+
     async componentDidMount() {
         token1 = localStorage.getItem("Token");
         token = "Token " + token1;
@@ -98,41 +103,62 @@ export class index extends Component {
 
         this.getPositions();
     }
-    async addPosition() {
-        console.log('boom', this.state.positionCategory)
-        let headers = {
-            headers: {
-                Authorization: token,
-                "Content-Type": "multipart/form-data",
-            },
-        };
-        let bodyFormData = new FormData();
-        bodyFormData.append("positionCategory", this.state.positionCategory);
 
-        await axios
-            .post(
-                "http://3.22.17.212:8000/api/v1/resManager/job/categories/",
-                bodyFormData,
-                headers
-            )
-            .then((response) => {
-                console.log(response);
-                this.getPositions();    
-            });
-            await this.setState({ deletedSnackbar: true })
+    async addPosition() {
+        let bodyData = {
+            'positionCategory': this.state.positionCategory,
+        }
+
+        console.log('Body data:', bodyData)
+
+        try {
+            let response = await fetch('http://3.22.17.212:8000/api/v1/resManager/job/categories/',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'positionCategory': this.state.positionCategory,
+                    })
+                }
+            );
+            await this.getPositions();
+            this.setState({ snackbar: true, snackbarresponse: response, newAddressType: "" });
+            console.log('AddJobCatSuccess:', response);
+        } catch (error) {
+            console.log("[!ON_REGISTER] " + error);
+            this.setState({ snackbar: true, snackbarresponse: error.response })
+        }
     }
-    async deletePosition(id) {
-        // console.log("......",id)
-        await axios.delete(
-            "http://3.22.17.212:8000/api/v1/resManager/job/categories/" + id + "/",
-            {
-                headers: {
-                    Authorization: token,
-                },
-            }
-        );
+
+    async deletePosition(index) {
+        this.setState({ deleteDialogBox: false })
+        try {
+            let response = await axios.delete(
+                "http://3.22.17.212:8000/api/v1/resManager/job/categories/" +
+                index +
+                "/",
+                {
+
+                    headers: {
+                        Authorization: token,
+                        // 'Content-Type': 'application/json'
+                    },
+                }
+            );
+            console.log('delCatSuccess:', response);
+            await this.getPositions();
+            this.setState({ snackbar: true, snackbarresponse: response });
+        } catch (error) {
+            console.log("[!ON_REGISTER] " + error);
+            this.setState({ snackbar: true, snackbarresponse: error.response })
+        }
         this.getPositions();
     }
+
+
     displaytable() {
         return (
             <>
@@ -187,10 +213,12 @@ export class index extends Component {
                             onChange={(event) => {
                                 this.setState({ positionCategory: event.target.value });
                             }}
+                            value={this.state.positionCategory}
                         />
                     </Grid>
                     <Grid item>
                         <Fab
+                            disabled={this.state.positionCategory.length < 1}
                             size="small"
                             color="secondary"
                             onClick={() => {
@@ -223,14 +251,14 @@ export class index extends Component {
                                                 variant="outlined"
                                                 onClick={() => {
                                                     this.setState({
-                                                      deleteDialogBox: true,
-                                                      selectedIndex: index,
-                                                      deleteid: row.id,
+                                                        deleteDialogBox: true,
+                                                        selectedIndex: index,
+                                                        deleteid: row.id,
                                                     });
-                                                  }}
+                                                }}
                                             >
                                                 Delete
-                      </Button>
+                                            </Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -243,74 +271,81 @@ export class index extends Component {
         );
     }
 
-    handleDeleteClose = (event, reason) => {
-        if (reason === 'clickaway') {
-          return;
-        }
-    
-        this.setState({ deletedSnackbar: false });
-      };
-
-    addSnackbar() {
+    snackBar() {
         return (
-            <div>
-                <Snackbar open={this.state.deletedSnackbar} autoHideDuration={3000} onClose={this.handleDeleteClose}>
-                    <Alert severity="success" onClose={this.handleDeleteClose}>
-                    Successfully added!
-        </Alert>
-                </Snackbar>
-            </div>
+            <Snackbar
+                open={this.state.snackbar}
+                autoHideDuration={6000}
+                onClick={() => { this.setState({ snackbar: !this.state.snackbar }) }}
+            >
+                {this.state.snackbarresponse.status === 201 ?
+                    <Alert
+                        onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }}
+                        severity="success"
+                    >
+                        Added sucessfully
+                </Alert> :
+                    this.state.snackbarresponse.status === 204 ?
+                        <Alert
+                            onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }}
+                            severity="success">
+                            Deleted sucessfully
+                </Alert> :
+                        <Alert
+                            onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }}
+                            severity="error"
+                        >
+                            Something went wrong please try again
+                </Alert>}
+            </Snackbar>
         );
     }
 
     deleteDialog(selectedIndex) {
-        return(
-        <div>
-        <Dialog
-        open={this.state.deleteDialogBox}
-        onClose={() => this.setState({ deleteDialogBox: false })}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-          Current entry will be deleted, do you want to
-        continue?
+        return (
+            <div>
+                <Dialog
+                    open={this.state.deleteDialogBox}
+                    onClose={() => this.setState({ deleteDialogBox: false })}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Current entry will be deleted, do you want to
+                            continue?
           </DialogContentText>
-        </DialogContent>
-        <DialogActions style={{ padding: 15 }}>
-          <Button
-            style={{ width: 85 }}
-            color="primary"
-            variant="contained"
-            onClick={() => {
-                this.deletePosition(this.state.deleteid);
-                this.setState({deleteDialogBox: false})
-              }}
-          >
-            Delete
+                    </DialogContent>
+                    <DialogActions style={{ padding: 15 }}>
+                        <Button
+                            style={{ width: 85 }}
+                            color="primary"
+                            variant="contained"
+                            onClick={() => {
+                                this.deletePosition(this.state.deleteid);
+                                this.setState({ deleteDialogBox: false })
+                            }}
+                        >
+                            Delete
           </Button>
-          <Button
-            color="secondary"
-            variant="contained"
-            onClick={()=> this.setState({deleteDialogBox: false})}
-          >
-            Cancel
+                        <Button
+                            color="secondary"
+                            variant="contained"
+                            onClick={() => this.setState({ deleteDialogBox: false })}
+                        >
+                            Cancel
           </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+                    </DialogActions>
+                </Dialog>
+            </div>
         );
     }
 
     render() {
         return (
             <div style={{ marginTop: 20 }}>
-                {/* <Paper style={{ padding: 20, height: '100vh' }}> */}
                 {this.state.loading ? this.isloading() : this.displaytable()}
-
-                {/* </Paper> */}
-                {this.addSnackbar()}
+                {this.snackBar()}
             </div>
         );
     }

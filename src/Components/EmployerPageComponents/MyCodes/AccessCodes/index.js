@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles';
-import { TextField, Paper, Grid, Typography, Button, TableContainer, FormControlLabel, Checkbox, FormControl, Select, InputLabel, MenuItem, Divider } from '@material-ui/core/';
+import { TextField, CircularProgress, Paper, Grid, Typography, Button, TableContainer, FormControlLabel, Checkbox, FormControl, Select, InputLabel, MenuItem, Divider } from '@material-ui/core/';
 
 import {
     Table,
@@ -26,6 +26,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import PaymentIcon from '@material-ui/icons/Payment';
 import PhoneIcon from '@material-ui/icons/Phone';
 import WorkIcon from '@material-ui/icons/Work';
+import StarsIcon from '@material-ui/icons/Stars';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -37,28 +38,14 @@ import Address from '../Pages/Address'
 import Identity from '../Pages/Identity'
 import Phone from '../Pages/Phone'
 import Job from '../Pages/Job'
+import Ratings from '../Pages/Ratings';
+
+import axios from 'axios'
 
 const token1 = localStorage.getItem("Token");
 const token = "Token " + token1;
 const id = localStorage.getItem("id");
 const api = "http://3.22.17.212:8000"
-
-const rows = [
-    {
-        "createdOn": "09/12/2020",
-        "codeString": "testCodeString1",
-        "employeeCompanyField": "testEmployeeCompanyField1",
-        "codeStatus": "testCodeStatu1s",
-        "statusChangeDate": "09/12/2020",
-    },
-    {
-        "createdOn": "09/12/2020",
-        "codeString": "testCodeString1",
-        "employeeCompanyField": "testEmployeeCompanyField1",
-        "codeStatus": "testCodeStatus2",
-        "statusChangeDate": "09/12/2020",
-    }
-];
 
 const styles = theme => ({
     demo: {
@@ -84,13 +71,22 @@ class index extends Component {
         onTracId: [],
         codeDetails: [],
         employeeDetailsData: [],
+        selectedOnTracId: [],
+
+        enteredOntracId: '',
+        employeeVotId: '',
+        selectedstate: '',
+        status: '',
+        employeeName: '',
 
         codeRatings: false,
         codeAddress: false,
         codeProfile: false,
         codeIdentities: false,
         codePhones: false,
-        codeJobHistory: false
+        codeJobHistory: false,
+        isLoading: true,
+        // codeButton: true
     }
 
     constructor(props) {
@@ -134,8 +130,8 @@ class index extends Component {
     //     this.setState({ phones: response });
     // }
 
-    async fetchEmployeeOntracId(data) {
-        let response = await fetch(api + "/api/v1/accounts/employee?ontrac_id=" + data,
+    async fetchEmployeeOntracId() {
+        let response = await fetch(api + "/api/v1/accounts/employee?ontrac_id",
             {
                 headers: {
                     'Authorization': token
@@ -145,20 +141,31 @@ class index extends Component {
         console.log('OTIDSuccess:', response)
         this.setState({ onTracId: response });
     }
-
-    async fetchCodeDetails(id) {
-        this.setState({ codeDetailsDialog: true })
-        let response = await fetch(api + "/api/v1/codes/access/codes/" + id,
+    async selectedEmployeeOntracId() {
+        let response = await fetch(api + "/api/v1/accounts/employee?ontrac_id",
             {
                 headers: {
                     'Authorization': token
                 }
             });
         response = await response.json();
-        console.log('codeDetailsSuccess:', response)
-        this.setState({ codeDetails: response });
-        console.log('codeDetailsDialog:', this.state.codeDetails)
+        console.log('OTIDSuccess:', response)
+        // this.setState({ selectedOnTracId: response, codeButton: false });
     }
+
+    // async fetchCodeDetails(id) {
+    //     this.setState({ codeDetailsDialog: true })
+    //     let response = await fetch(api + "/api/v1/codes/access/codes/" + id,
+    //         {
+    //             headers: {
+    //                 'Authorization': token
+    //             }
+    //         });
+    //     response = await response.json();
+    //     console.log('codeDetailsSuccess:', response)
+    //     this.setState({ codeDetails: response });
+    //     console.log('codeDetailsDialog:', this.state.codeDetails)
+    // }
 
     viewEmployeeDetails(id) {
         // this.viewEmployeeDetailsDialog()
@@ -174,92 +181,114 @@ class index extends Component {
 
         await this.fetchAllCodes();
         // await this.fetchEmployeePhones();
-        // await this.fetchEmployeeOntracId();
+        await this.fetchEmployeeOntracId();
         await this.fetchPendingCodes();
         // await this.fetchCodeDetails();
 
+        this.setState({ isLoading: false })
+
+    }
+
+    isloading() {
+        return (
+            <>
+                <Grid
+                    container
+                    spacing={0}
+                    direction="column"
+                    alignItems="center"
+                    justify="center"
+                    display="flex"
+                    style={{ minHeight: "0vh" }}
+                >
+                    <CircularProgress />
+                </Grid>
+            </>
+        );
     }
 
     render() {
 
         const { classes } = this.props;
 
-        const defaultProps = {
-            options: top100Films,
-            getOptionLabel: (option) => option.title,
-        };
-
         return (
-            <div style={{ marginTop: 20, marginRight: 20 }}>
+            <>
+                {
+                    this.state.isLoading ? (this.isloading()) :
+                        (
+                            <div style={{ marginTop: 20, marginRight: 20 }}>
 
-                <Grid container justify='space-between' alignItems='center' spacing={4}>
+                                <Grid container justify='space-between' alignItems='center' spacing={4}>
 
-                    <Grid item xs={8}>
-                        <Typography variant='h4'>
-                            Access Codes
-                                </Typography>
-                    </Grid>
+                                    <Grid item xs={8}>
+                                        <Typography variant='h4'>
+                                            Access Codes
+                                    </Typography>
+                                    </Grid>
 
-                    <Grid item xs={4}>
-                        <Button
-                            color='secondary'
-                            variant='contained'
-                            onClick={() => this.setState({ generateNewEmployementCodeDialog: !this.state.generateNewEmployementCodeDialog })}
-                            fullWidth
-                        >
-                            Create New code
-                        </Button>
-                    </Grid>
+                                    <Grid item xs={4}>
+                                        <Button
+                                            color='secondary'
+                                            variant='contained'
+                                            onClick={() => this.setState({ generateNewEmployementCodeDialog: !this.state.generateNewEmployementCodeDialog })}
+                                            fullWidth
+                                        >
+                                            Create New code
+                            </Button>
+                                    </Grid>
 
-                    <Grid item >
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={this.state.pendingCodesCheck}
-                                    onChange={event => {
-                                        this.setState({ pendingCodesCheck: !this.state.pendingCodesCheck })
-                                        console.log('check1:', this.state.pendingCodesCheck)
-                                    }}
-                                    name="checkedB"
-                                    color="primary"
-                                />
-                            }
-                            label="Show open codes"
-                        />
-                    </Grid>
+                                    <Grid item >
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={this.state.pendingCodesCheck}
+                                                    onChange={event => {
+                                                        this.setState({ pendingCodesCheck: !this.state.pendingCodesCheck })
+                                                        console.log('check1:', this.state.pendingCodesCheck)
+                                                    }}
+                                                    name="checkedB"
+                                                    color="primary"
+                                                />
+                                            }
+                                            label="Show open codes"
+                                        />
+                                    </Grid>
 
-                </Grid>
+                                </Grid>
 
-                <Grid container justify='flex-start' alignItems='center' spacing={2}>
+                                <Grid container justify='flex-start' alignItems='center' spacing={2}>
 
-                    <TableContainer component={Paper} style={{ maxWidth: '94%', marginTop: 20, marginLeft: 10, marginRight: 10 }} elevation={5}>
-                        <Table stickyHeader>
-                            <TableHead>
-                                <TableRow style={{ backgroundColor: 'black' }}>
-                                    <TableCell align="left">Date</TableCell>
-                                    <TableCell align="left">Code</TableCell>
-                                    <TableCell align="left">Employee</TableCell>
-                                    <TableCell align="left">Code Status</TableCell>
-                                    <TableCell align="left">Last Updated</TableCell>
-                                    <TableCell align="left">View</TableCell>
-                                    {/* <TableCell align="left"></TableCell> */}
-                                    <TableCell align="left">Actions</TableCell>
-                                    {/* <TableCell align="left">Update</TableCell> */}
-                                </TableRow>
-                            </TableHead>
-                            {this.tableDisplayLogic()}
-                            {this.viewCodeDetails()}
-                            {this.viewEmployeeDetailsDialog()}
-                        </Table>
-                    </TableContainer>
+                                    <TableContainer component={Paper} style={{ maxWidth: '94%', marginTop: 20, marginLeft: 10, marginRight: 10 }} elevation={5}>
+                                        <Table stickyHeader>
+                                            <TableHead>
+                                                <TableRow style={{ backgroundColor: 'black' }}>
+                                                    <TableCell align="left">Date</TableCell>
+                                                    <TableCell align="left">Code</TableCell>
+                                                    <TableCell align="left">Employee</TableCell>
+                                                    <TableCell align="left">Code Status</TableCell>
+                                                    <TableCell align="left">Last Updated</TableCell>
+                                                    <TableCell align="center">View</TableCell>
+                                                    <TableCell align="left">Actions</TableCell>
+                                                    <TableCell align="left">Update Status</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            {this.tableDisplayLogic()}
+                                            {this.viewCodeDetails()}
+                                            {this.viewEmployeeDetailsDialog()}
+                                        </Table>
+                                    </TableContainer>
 
-                </Grid>
-                {/* </Paper> */}
+                                </Grid>
+                                {/* </Paper> */}
 
-                {/* GENERATE NEW CODE DIALOG DATA */}
-                {this.generateAccessCode()}
+                                {/* GENERATE NEW CODE DIALOG DATA */}
+                                {this.generateAccessCode()}
 
-            </div>
+                            </div>
+                        )
+                }
+            </>
+
         )
     }
 
@@ -278,11 +307,13 @@ class index extends Component {
                             {row.codeStatus == "AccessGranted" || row.codeStatus == "GrantViewed" ? (
                                 <Button
                                     size='small'
-                                    color="default"
-                                    variant="contained"
+                                    color="primary"
+                                    variant="outlined"
+                                    fullWidth
                                     style={{ minWidth: 120 }}
                                     onClick={() => {
-                                        this.setState({ employeeDetailsData: this.state.allCodes[index] }, () => console.log('employeeDetailsData;', this.state.employeeDetailsData.employee_name_field.name))
+                                        this.setState({ employeeDetailsData: this.state.allCodes[index], employeeName: this.state.allCodes[index].employee_name_field.name},
+                                        () => console.log('employeeDetailsData;', this.state.employeeDetailsData))
                                         this.viewEmployeeDetails(row.id)
                                     }}
                                 >
@@ -291,9 +322,13 @@ class index extends Component {
 
                             <Button
                                 size='small'
-                                color="default"
-                                variant="contained"
-                                onClick={() => this.fetchCodeDetails(row.id)}
+                                color="primary"
+                                variant="outlined"
+                                fullWidth
+                                onClick={() =>
+                                    this.setState({ codeDetails: this.state.allCodes[index], employeeName: this.state.allCodes[index].employee_name_field.name, codeDetailsDialog: true }, console.log('object:', this.state.codeDetails))
+                                    // this.fetchCodeDetails(row.id)
+                                }
                                 style={{ minWidth: 120, marginTop: 10 }}
                             >Code Details
                             </Button>
@@ -301,34 +336,37 @@ class index extends Component {
 
                         <TableCell align="left">
 
-                            <Grid container justify='row'>
-                                <Grid item xs={12}>
-                                    <Button
-                                        size='small'
-                                        color="primary"
-                                        variant="outlined"
-                                        style={{ minWidth: 120 }}
-                                        onClick={() => this.postAccessCodeStatus(row.status_options_employer_field[0].status)}
-                                    >
-                                        {/* {row.status_options_employer_field[0].action} */}
-                                    </Button>
-                                </Grid>
+                            <FormControl variant="outlined" size="medium" style={{ minWidth: 85 }}
+                                fullWidth >
+                                <InputLabel id="demo-simple-select-outlined-label">Status</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-outlined-label"
+                                    id="demo-simple-select-outlined"
+                                    // value={this.state.status}
+                                    onChange={(event) => { this.setState({ status: event.target.value }) }}
+                                    label="Status"
+                                >
+                                    <MenuItem value="">
+                                        <em>None</em>
+                                    </MenuItem>
+                                    {row.status_options_employer_field.map((val) =>
+                                        <MenuItem value={val.status}>{val.action}</MenuItem>
+                                    )}
 
-                                <Grid item xs={12}>
-                                    <Button
-                                        size='small'
-                                        color="secondary"
-                                        variant="outlined"
-                                        style={{ minWidth: 120, marginTop: 10 }}
-                                        onClick={() => this.postAccessCodeStatus(row.status_options_employer_field[1].status)}
+                                </Select>
+                            </FormControl>
 
-                                    >
-                                        {/* {row.status_options_employer_field[1].action} */}
-                                    </Button>
-                                </Grid>
-
-                            </Grid>
-
+                        </TableCell>
+                        <TableCell align="right">
+                            <Button
+                                size="small"
+                                color="secondary"
+                                variant="outlined"
+                                fullWidth
+                                onClick={() => { this.updatestatus(row.id) }}
+                            >
+                                Update Status
+                          </Button>
                         </TableCell>
                     </TableRow>
                 ))}
@@ -347,26 +385,69 @@ class index extends Component {
                         <TableCell align="left">{row.codeStatus}</TableCell>
                         <TableCell align="left">{new Date(row.statusChangeDate).toDateString()}</TableCell>
                         <TableCell align="left">
+
+                            {row.codeStatus == "AccessGranted" || row.codeStatus == "GrantViewed" ? (
+                                <Button
+                                    size='small'
+                                    color="primary"
+                                    variant="outlined"
+                                    fullWidth
+                                    style={{ minWidth: 120 }}
+                                    onClick={() => {
+                                        this.setState({ employeeDetailsData: this.state.allCodes[index] },
+                                            () => console.log('employeeDetailsData;', this.state.employeeDetailsData))
+                                        this.viewEmployeeDetails(row.id)
+                                    }}
+                                >
+                                    Employee Details
+                                </Button>) : <div />}
+
                             <Button
                                 size='small'
-                                color="default"
-                                variant="contained"
-                                style={{ minWidth: 120 }}
-                                onClick={() => this.viewEmployeeDetails(row.id)}
-                            >
-                                Employee Details
-                                    </Button>
-                            <Button
-                                size='small'
-                                color="default"
-                                variant="contained"
-                                onClick={() => this.fetchCodeDetails(row.id)}
+                                color="primary"
+                                variant="outlined"
+                                fullWidth
+                                onClick={() =>
+                                    this.setState({ codeDetails: this.state.allCodes[index], codeDetailsDialog: true })
+                                    // this.fetchCodeDetails(row.id)
+                                }
                                 style={{ minWidth: 120, marginTop: 10 }}
-                            >Code Details</Button>
+                            >Code Details
+                        </Button>
                         </TableCell>
                         <TableCell align="left">
-                            <Button size='small' color="primary" variant="outlined" style={{ minWidth: 120 }}>{row.status_options_employer_field[0].action}</Button>
-                            <Button size='small' color="secondary" variant="outlined" style={{ minWidth: 120, marginTop: 10 }}>{row.status_options_employer_field[1].action}</Button>
+
+                            <FormControl variant="outlined" size="medium" style={{ minWidth: 85 }}
+                                fullWidth >
+                                <InputLabel id="demo-simple-select-outlined-label">Status</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-outlined-label"
+                                    id="demo-simple-select-outlined"
+                                    // value={this.state.status}
+                                    onChange={(event) => { this.setState({ status: event.target.value }) }}
+                                    label="Status"
+                                >
+                                    <MenuItem value="">
+                                        <em>None</em>
+                                    </MenuItem>
+                                    {row.status_options_employer_field.map((val) =>
+                                        <MenuItem value={val.status}>{val.action}</MenuItem>
+                                    )}
+
+                                </Select>
+                            </FormControl>
+
+                        </TableCell>
+                        <TableCell align="right">
+                            <Button
+                                size="small"
+                                color="secondary"
+                                variant="outlined"
+                                fullWidth
+                                onClick={() => { this.updatestatus(row.id) }}
+                            >
+                                Update Status
+                          </Button>
                         </TableCell>
                     </TableRow>
                 ))}
@@ -400,7 +481,7 @@ class index extends Component {
                                     <TextField
                                         id="=viewCreatedOn"
                                         label="Created on"
-                                        defaultValue={this.state.codeDetails['createdOn']}
+                                        defaultValue={new Date(this.state.codeDetails['createdOn']).toDateString()}
                                         type="text"
                                         InputProps={{
                                             readOnly: true,
@@ -414,7 +495,7 @@ class index extends Component {
                                     <TextField
                                         id="=viewLastUpdated"
                                         label="Last updated"
-                                        defaultValue={this.state.codeDetails['statusChangeDate']}
+                                        defaultValue={new Date(this.state.codeDetails['statusChangeDate']).toDateString()}
                                         type="text"
                                         InputProps={{
                                             readOnly: true,
@@ -442,7 +523,7 @@ class index extends Component {
                                     <TextField
                                         id="=viewEmployeeName"
                                         label="Employee Name"
-                                        // defaultValue={this.state.codeDetails.employee_name_field['name']}
+                                        defaultValue={this.state.employeeName}
                                         type="text"
                                         InputProps={{
                                             readOnly: true,
@@ -554,14 +635,14 @@ class index extends Component {
                                 <TextField
                                     id="=viewEmployeeName"
                                     label="Employee Name"
-                                    // defaultValue={this.state.employeeDetailsData.employee_name_field.name}
+                                    defaultValue={this.state.employeeName}
                                     type="text"
                                     InputProps={{
                                         readOnly: true,
                                     }}
                                     fullWidth
                                     size='small'
-                                    variant='outlined'
+                                    // variant='outlined'
                                 />
                             </Grid>
 
@@ -576,7 +657,7 @@ class index extends Component {
                                     }}
                                     fullWidth
                                     size='small'
-                                    variant='outlined'
+                                    // variant='outlined'
                                 />
                             </Grid>
 
@@ -585,7 +666,7 @@ class index extends Component {
                                     Access granted for:
                                     </Typography>
 
-                                <ExpansionPanel style={{ marginTop: 10 }}>
+                                <ExpansionPanel  disabled={this.state.canAccessProfile}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -597,11 +678,11 @@ class index extends Component {
                                         <Typography variant='subtitle2'>Profiles</Typography>
                                     </ExpansionPanelSummary>
                                     <ExpansionPanelDetails>
-                                        <Profile />
+                                        <Profile userId={this.state.employeeDetailsData['employee']} code={this.state.employeeDetailsData['codeString']} />
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
-                                <ExpansionPanel style={{ marginTop: 10 }}>
+                                <ExpansionPanel  disabled={this.state.canAccessAddresses}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -613,11 +694,11 @@ class index extends Component {
                                         <Typography variant='subtitle2'>Addresses</Typography>
                                     </ExpansionPanelSummary>
                                     <ExpansionPanelDetails>
-                                        <Address />
+                                        <Address userId={this.state.employeeDetailsData['employee']} code={this.state.employeeDetailsData['codeString']} />
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
-                                <ExpansionPanel style={{ marginTop: 10 }}>
+                                <ExpansionPanel  disabled={this.state.canAccessIdentities}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -629,11 +710,11 @@ class index extends Component {
                                         <Typography variant='subtitle2'>Identities</Typography>
                                     </ExpansionPanelSummary>
                                     <ExpansionPanelDetails>
-                                        <Identity />
+                                        <Identity userId={this.state.employeeDetailsData['employee']} code={this.state.employeeDetailsData['codeString']} />
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
-                                <ExpansionPanel style={{ marginTop: 10 }}>
+                                <ExpansionPanel  disabled={this.state.canAccessPhones}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -645,11 +726,11 @@ class index extends Component {
                                         <Typography variant='subtitle2'>Phones</Typography>
                                     </ExpansionPanelSummary>
                                     <ExpansionPanelDetails>
-                                        <Phone />
+                                        <Phone userId={this.state.employeeDetailsData['employee']} code={this.state.employeeDetailsData['codeString']} />
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
-                                <ExpansionPanel style={{ marginTop: 10 }}>
+                                <ExpansionPanel  disabled={this.state.canAccessJobHistory}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -661,19 +742,25 @@ class index extends Component {
                                         <Typography variant='subtitle2'>Job profile history</Typography>
                                     </ExpansionPanelSummary>
                                     <ExpansionPanelDetails>
-                                        <Job />
+                                        <Job userId={this.state.employeeDetailsData['employee']} code={this.state.employeeDetailsData['codeString']} />
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
-                                {/* <ExpansionPanel disabled>
-                                        <ExpansionPanelSummary
-                                            expandIcon={<ExpandMoreIcon />}
-                                            aria-controls="panel3a-content"
-                                            id="panel3a-header"
-                                        >
-                                            <Typography className={classes.heading}>Disabled Expansion Panel</Typography>
-                                        </ExpansionPanelSummary>
-                                    </ExpansionPanel> */}
+                                <ExpansionPanel  disabled={this.state.canAccessRatings}>
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                    >
+                                        <ListItemIcon>
+                                            <StarsIcon />
+                                        </ListItemIcon>
+                                        <Typography variant='subtitle2'>Ratings</Typography>
+                                    </ExpansionPanelSummary>
+                                    <ExpansionPanelDetails>
+                                        <Ratings userId={this.state.employeeDetailsData['employee']} code={this.state.employeeDetailsData['codeString']} />
+                                    </ExpansionPanelDetails>
+                                </ExpansionPanel>
 
                             </Grid>
 
@@ -733,7 +820,7 @@ class index extends Component {
 
                             {this.state.employeeByRadio !== 'searchByOntracId' ? (
                                 <Grid item xs={12}>
-                                    <TextField
+                                    {/* <TextField
                                         id="searchByOntracId"
                                         label="OnTrac Id"
                                         variant="outlined"
@@ -744,7 +831,47 @@ class index extends Component {
                                             this.setState({ generateCodeData: event.target.value })
                                             // this.fetchEmployeeOntracId(this.state.generateCodeData)
                                         }}
+                                    /> */}
+
+                                    {/* <Autocomplete
+                                        id="combo-box-demo"
+                                        options={this.state.onTracId}
+                                        getOptionLabel={(option) => option.ontrac_id}
+                                        style={{ width: 300 }}
+                                        renderInput={(params) => <TextField {...params} label="Verify OnTrac Id" variant="outlined" />}
+                                        fullWidth
+                                        Username
+                                        // onChange={(event, value)=> {this.setState(employeeVotId: value)}}
+                                    /> */}
+
+                                    <Autocomplete
+                                        id="searchByOntracId"
+                                        options={this.state.onTracId}
+                                        getOptionLabel={(VOTId) => VOTId.ontrac_id}
+                                        Username
+                                        fullWidth
+                                        value={this.state.selectedstate}
+                                        onChange={(event, value) => {
+                                            this.setState({ selectedstate: value})
+                                            this.setState({ employeeVotId: value['id'] }, console.log("employeeVotId", value['id']))
+                                            console.log("selectedstate", value);
+
+                                        }}
+                                        inputValue={this.state.enteredOntracId}
+                                        onInputChange={(event, newInputValue) => {
+                                            this.setState({ enteredOntracId: newInputValue });
+                                            // console.log(newInputValue);
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="Verify OnTrac Id"
+                                                margin="normal"
+                                                variant="outlined"
+                                            />
+                                        )}
                                     />
+
                                 </Grid>
                             ) : (
                                     <Grid item xs={12}>
@@ -824,6 +951,7 @@ class index extends Component {
                             <Button
                                 color="secondary"
                                 variant="contained"
+                                disabled={this.state.codeButton}
                                 onClick={() => this.postGenerateAccessCode()}
                             >
                                 Generate One-time Code
@@ -852,11 +980,11 @@ class index extends Component {
         );
     }
 
-    async postGenerateAccessCode(id) {
+    async postGenerateAccessCode() {
 
         let bodyData = {
             "employer": id,
-            "employee": 4,
+            "employee": this.state.employeeVotId,
             "canAccessProfile": this.state.codeProfile,
             "canAccessAddresses": this.state.codeAddress,
             "canAccessJobHistory": this.state.codeJobHistory,
@@ -901,138 +1029,60 @@ class index extends Component {
         }
     }
 
-    async postAccessCodeStatus(status) {
+    // async updatestatus(id) {
 
-        let bodyData = {
-            "codeStatus": status,
-        }
+    //     let bodyData = {
+    //         "codeStatus": this.state.status,
+    //     }
 
-        console.log('Body data:', bodyData)
+    //     console.log('Body data:', bodyData)
 
-        try {
-            let response = await fetch(api + '/api/v1/codes/access/codes',
-                {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': token,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(bodyData)
-                }
-            );
-            response = await response.json();
-            console.log('postCodeStatusSuccess:', response);
+    //     try {
+    //         let response = await fetch(api + '/api/v1/codes/access/codes' + id,
+    //             {
+    //                 method: 'PUT',
+    //                 headers: {
+    //                     'Authorization': token,
+    //                     'Content-Type': "multipart/form-data"
+    //                 },
+    //                 body: JSON.stringify(bodyData)
+    //             }
+    //         );
+    //         response = await response.json();
+    //         console.log('postCodeStatusSuccess:', response);
 
-            await this.fetchAllCodes();
-            await this.fetchPendingCodes();
+    //         await this.fetchAllCodes();
+    //         await this.fetchPendingCodes();
 
-        } catch (error) {
-            console.log("[!ON_REGISTER] " + error);
-        }
+    //     } catch (error) {
+    //         console.log("[!ON_REGISTER] " + error);
+    //     }
+    // }
+
+    async updatestatus(id) {
+        let headers = {
+            headers: {
+                Authorization: token,
+                "Content-Type": "multipart/form-data",
+            },
+        };
+        let bodyFormData = new FormData();
+        bodyFormData.append("codeStatus", this.state.status);
+        // console.log("check",this.state.status,id)
+
+
+        await axios
+            .put(
+                "http://3.22.17.212:8000/api/v1/codes/access/update-code/" + id,
+                bodyFormData,
+                headers
+            )
+            .then((response) => {
+                console.log(response);
+            });
+        await this.fetchAllCodes();
+        await this.fetchPendingCodes();
     }
 }
-
-const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 },
-    { title: '12 Angry Men', year: 1957 },
-    { title: "Schindler's List", year: 1993 },
-    { title: 'Pulp Fiction', year: 1994 },
-    { title: 'The Lord of the Rings: The Return of the King', year: 2003 },
-    { title: 'The Good, the Bad and the Ugly', year: 1966 },
-    { title: 'Fight Club', year: 1999 },
-    { title: 'The Lord of the Rings: The Fellowship of the Ring', year: 2001 },
-    { title: 'Star Wars: Episode V - The Empire Strikes Back', year: 1980 },
-    { title: 'Forrest Gump', year: 1994 },
-    { title: 'Inception', year: 2010 },
-    { title: 'The Lord of the Rings: The Two Towers', year: 2002 },
-    { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
-    { title: 'Goodfellas', year: 1990 },
-    { title: 'The Matrix', year: 1999 },
-    { title: 'Seven Samurai', year: 1954 },
-    { title: 'Star Wars: Episode IV - A New Hope', year: 1977 },
-    { title: 'City of God', year: 2002 },
-    { title: 'Se7en', year: 1995 },
-    { title: 'The Silence of the Lambs', year: 1991 },
-    { title: "It's a Wonderful Life", year: 1946 },
-    { title: 'Life Is Beautiful', year: 1997 },
-    { title: 'The Usual Suspects', year: 1995 },
-    { title: 'Léon: The Professional', year: 1994 },
-    { title: 'Spirited Away', year: 2001 },
-    { title: 'Saving Private Ryan', year: 1998 },
-    { title: 'Once Upon a Time in the West', year: 1968 },
-    { title: 'American History X', year: 1998 },
-    { title: 'Interstellar', year: 2014 },
-    { title: 'Casablanca', year: 1942 },
-    { title: 'City Lights', year: 1931 },
-    { title: 'Psycho', year: 1960 },
-    { title: 'The Green Mile', year: 1999 },
-    { title: 'The Intouchables', year: 2011 },
-    { title: 'Modern Times', year: 1936 },
-    { title: 'Raiders of the Lost Ark', year: 1981 },
-    { title: 'Rear Window', year: 1954 },
-    { title: 'The Pianist', year: 2002 },
-    { title: 'The Departed', year: 2006 },
-    { title: 'Terminator 2: Judgment Day', year: 1991 },
-    { title: 'Back to the Future', year: 1985 },
-    { title: 'Whiplash', year: 2014 },
-    { title: 'Gladiator', year: 2000 },
-    { title: 'Memento', year: 2000 },
-    { title: 'The Prestige', year: 2006 },
-    { title: 'The Lion King', year: 1994 },
-    { title: 'Apocalypse Now', year: 1979 },
-    { title: 'Alien', year: 1979 },
-    { title: 'Sunset Boulevard', year: 1950 },
-    { title: 'Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb', year: 1964 },
-    { title: 'The Great Dictator', year: 1940 },
-    { title: 'Cinema Paradiso', year: 1988 },
-    { title: 'The Lives of Others', year: 2006 },
-    { title: 'Grave of the Fireflies', year: 1988 },
-    { title: 'Paths of Glory', year: 1957 },
-    { title: 'Django Unchained', year: 2012 },
-    { title: 'The Shining', year: 1980 },
-    { title: 'WALL·E', year: 2008 },
-    { title: 'American Beauty', year: 1999 },
-    { title: 'The Dark Knight Rises', year: 2012 },
-    { title: 'Princess Mononoke', year: 1997 },
-    { title: 'Aliens', year: 1986 },
-    { title: 'Oldboy', year: 2003 },
-    { title: 'Once Upon a Time in America', year: 1984 },
-    { title: 'Witness for the Prosecution', year: 1957 },
-    { title: 'Das Boot', year: 1981 },
-    { title: 'Citizen Kane', year: 1941 },
-    { title: 'North by Northwest', year: 1959 },
-    { title: 'Vertigo', year: 1958 },
-    { title: 'Star Wars: Episode VI - Return of the Jedi', year: 1983 },
-    { title: 'Reservoir Dogs', year: 1992 },
-    { title: 'Braveheart', year: 1995 },
-    { title: 'M', year: 1931 },
-    { title: 'Requiem for a Dream', year: 2000 },
-    { title: 'Amélie', year: 2001 },
-    { title: 'A Clockwork Orange', year: 1971 },
-    { title: 'Like Stars on Earth', year: 2007 },
-    { title: 'Taxi Driver', year: 1976 },
-    { title: 'Lawrence of Arabia', year: 1962 },
-    { title: 'Double Indemnity', year: 1944 },
-    { title: 'Eternal Sunshine of the Spotless Mind', year: 2004 },
-    { title: 'Amadeus', year: 1984 },
-    { title: 'To Kill a Mockingbird', year: 1962 },
-    { title: 'Toy Story 3', year: 2010 },
-    { title: 'Logan', year: 2017 },
-    { title: 'Full Metal Jacket', year: 1987 },
-    { title: 'Dangal', year: 2016 },
-    { title: 'The Sting', year: 1973 },
-    { title: '2001: A Space Odyssey', year: 1968 },
-    { title: "Singin' in the Rain", year: 1952 },
-    { title: 'Toy Story', year: 1995 },
-    { title: 'Bicycle Thieves', year: 1948 },
-    { title: 'The Kid', year: 1921 },
-    { title: 'Inglourious Basterds', year: 2009 },
-    { title: 'Snatch', year: 2000 },
-    { title: '3 Idiots', year: 2009 },
-    { title: 'Monty Python and the Holy Grail', year: 1975 },
-];
 
 export default withStyles(styles)(index);

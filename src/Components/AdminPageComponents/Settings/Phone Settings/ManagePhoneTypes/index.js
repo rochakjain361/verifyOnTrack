@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import { withStyles } from '@material-ui/core/styles';
-import { TextField, Paper, Grid, Typography, Button, TableContainer } from '@material-ui/core/';
+import { TextField, CircularProgress, Paper, Grid, Typography, Button, TableContainer } from '@material-ui/core/';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -14,19 +14,13 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import IconButton from "@material-ui/core/IconButton";
-import PhoneIcon from '@material-ui/icons/Phone';
-import InputAdornment from "@material-ui/core/InputAdornment";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import DeleteIcon from '@material-ui/icons/Delete';
 import axios from 'axios'
 
 const token1 = localStorage.getItem("Token");
@@ -38,6 +32,10 @@ const cors = "https://cors-anywhere.herokuapp.com/"
 const styles = theme => ({
 
 })
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 class index extends Component {
 
@@ -52,9 +50,14 @@ class index extends Component {
         deleteDialogBox: false,
         deleteid: "",
         selectedIndex: "",
+        loading: true,
+
+        snackbar: "",
+        snackbarresponse: "",
     }
 
     async getPhoneTypes() {
+        this.setState({ loading: true });
         let response = await fetch(cors + api + "/api/v1/resManager/phone/types",
             {
                 headers: {
@@ -67,21 +70,37 @@ class index extends Component {
         this.setState({ phoneTypesArr: this.state.allPhoneTypes.map(phoneType => phoneType.phoneType) })
         console.log("allPhoneTypes:", this.state.phoneTypesArr)
         console.log("allphoneTypesArrList:", this.state.phoneTypesArr)
+        this.setState({ loading: false });
     }
 
     async componentDidMount() {
         this.getPhoneTypes();
     }
 
-    render() {
+    
+    isloading() {
+        return (
+            <>
+                <Grid
+                    container
+                    spacing={0}
+                    direction="column"
+                    alignItems="center"
+                    justify="center"
+                    display="flex"
+                    style={{ minHeight: "0vh" }}
+                >
+                    <CircularProgress />
+                </Grid>
+            </>
+        );
+    }
 
+    displaytable() {
         const allPhoneTypesList = {
             options: this.state.allPhoneTypes,
             getOptionLabel: (phone) => phone.phoneType,
         };
-
-        const { classes } = this.props;
-
         return (
             <div style={{ marginTop: 20 }}>
                 {/* <Paper style={{ padding: 20, height: '100vh' }}> */}
@@ -141,6 +160,7 @@ class index extends Component {
                     </Grid>
                     <Grid item>
                         <Fab
+                            disabled={this.state.newPhoneType.length < 1}
                             onClick={() => {
                                 this.addPhoneType();
                             }}
@@ -181,7 +201,49 @@ class index extends Component {
                 {/* </Paper> */}
                 {this.deleteDialog()}
             </div>
-        )
+        );
+    }
+
+    snackBar() {
+        return (
+            <Snackbar
+                open={this.state.snackbar}
+                autoHideDuration={6000}
+                onClick={() => { this.setState({ snackbar: !this.state.snackbar }) }}
+            >
+                {this.state.snackbarresponse.status === 201 ?
+                    <Alert
+                        onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }}
+                        severity="success"
+                    >
+                        Added sucessfully
+                </Alert> :
+                    this.state.snackbarresponse.status === 204 ?
+                        <Alert
+                            onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }}
+                            severity="success">
+                            Deleted sucessfully
+                </Alert> :
+                        <Alert
+                            onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }}
+                            severity="error"
+                        >
+                            Something went wrong please try again
+                </Alert>}
+            </Snackbar>
+        );
+    }
+
+    render() {
+
+        const { classes } = this.props;
+
+        return (
+            <div style={{ marginTop: 20 }}>
+                {this.state.loading ? this.isloading() : this.displaytable()}
+                {this.snackBar()}
+            </div>
+        );
     }
 
     async addPhoneType() {
@@ -204,12 +266,13 @@ class index extends Component {
                     })
                 }
             );
-            response = await response.json();
-            console.log('AddPhoneSuccess:', response);
             await this.getPhoneTypes();
-            this.setState({ newPhoneType: "" })
+            this.setState({ snackbar: true, snackbarresponse: response, newPhoneType: "" });
+            console.log('AddPhoneSuccess:', response);
+
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
+            this.setState({ snackbar: true, snackbarresponse: error.response })
         }
     }
 
@@ -255,18 +318,42 @@ class index extends Component {
         );
     }
 
+    // async deletePhoneType(id) {
+    //     // console.log("......",id)
+    //     await axios.delete(
+    //         api + "/api/v1/resManager/phone/types/" + id + "/",
+    //         {
+    //             headers: {
+    //                 Authorization: token,
+    //             },
+    //         }
+    //     );
+    //     await this.getPhoneTypes();
+    // }
+
     async deletePhoneType(id) {
-        // console.log("......",id)
-        await axios.delete(
+    this.setState({ deleteDialogBox: false })
+    try {
+        let response = await axios.delete(
             api + "/api/v1/resManager/phone/types/" + id + "/",
             {
+
                 headers: {
                     Authorization: token,
+                    // 'Content-Type': 'application/json'
                 },
             }
         );
+        console.log('Success:', response);
         await this.getPhoneTypes();
+        this.setState({ snackbar: true, snackbarresponse: response });
+        
+    } catch (error) {
+        console.log("[!ON_REGISTER] " + error);
+        this.setState({ snackbar: true, snackbarresponse: error.response })
     }
+    this.getPhoneTypes();
+}
 }
 
 export default withStyles(styles)(index);

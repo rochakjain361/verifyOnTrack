@@ -20,8 +20,8 @@ class index extends React.Component{
 
     state = {
       profiles: [],
-      user: '',
-      approval: ''
+      userId: '',
+      code: ''
     }
 
     // constructor(props) {
@@ -30,9 +30,9 @@ class index extends React.Component{
     //   } 
 
     async fetchProfiles() {
-      const user = this.props.user;
-      const approval = this.props.approval;
-      let response = await fetch(api + "/api/v1/employees/" + user + "/profiles?approvalcode=" + approval,
+      const userId = this.props.userId;
+      const code = this.props.code;
+      let response = await fetch(api + "/api/v1/employees/" + userId + "/profiles?code=" + code,
           {
               headers: {
                   'Authorization': token

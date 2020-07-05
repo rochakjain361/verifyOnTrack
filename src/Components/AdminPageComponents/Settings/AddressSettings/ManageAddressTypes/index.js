@@ -294,6 +294,8 @@ class index extends Component {
         }
         this.getAddressTypes();
     }
+
+
 }
 
 export default withStyles(styles)(index);

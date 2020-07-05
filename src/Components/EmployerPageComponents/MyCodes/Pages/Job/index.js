@@ -28,9 +28,9 @@ class index extends React.Component {
     //     this.generateNewEmployementCodeButton = this.generateNewEmployementCodeButton.bind(this);
     //   } 
     async fetchJobs() {
-        const user = this.props.user;
-      const approval = this.props.approval;
-        let response = await fetch(api + "/api/v1/employees/"+ user +"/jobs?approvalcode=" + approval,
+        const userId = this.props.userId;
+      const code = this.props.code;
+        let response = await fetch(api + "/api/v1/employees/" + userId + "/jobs?code=" + code,
             {
                 headers: {
                     'Authorization': token
