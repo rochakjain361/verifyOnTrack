@@ -20,12 +20,17 @@ import Link from '@material-ui/core/Link';
 import axios from "axios";
 import { Box } from "@material-ui/core";
 import ReCAPTCHA from "react-google-recaptcha";
+import {Snackbar} from '@material-ui/core'
+import MuiAlert from '@material-ui/lab/Alert';
 // import ValidationMessage from './ValidationMessage';
 function ValidationMessage(props) {
   if (!props.valid) {
     return <div className="error-msg">{props.message}</div>;
   }
   return null;
+}
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 class signUp extends Component {
   constructor(props) {
@@ -58,6 +63,9 @@ class signUp extends Component {
     companyvalid: false,
     capthavalid:false,
     captha:"",
+    signup:false,
+    signupemail:false,
+    signupusername:false
   };
   validatefirstname = (firstname1) => {
     console.log(firstname1.length)
@@ -94,13 +102,13 @@ class signUp extends Component {
       this.setState({ companyvalid: false }, this.validateForm)
     }
   }
-  validateUsername = () => {
+  validateUsername = (event) => {
     const { username } = this.state;
-    
+    console.log("username",event);
     let usernameValid = true;
     let errorMsg = { ...this.state.errorMsg };
 
-    if (username.length < 5) {
+    if (event.length < 5) {
       usernameValid = false;
       errorMsg.username = "Must be at least 5 characters long";
 
@@ -228,7 +236,8 @@ class signUp extends Component {
         this.state.emailValid &&
         this.state.passwordValid &&
         this.state.passwordConfirmValid 
-        &&this.state.companyvalid
+        &&this.state.companyvalid&&
+        this.state.capthavalid
 
 
       ) {
@@ -268,6 +277,7 @@ class signUp extends Component {
               style={{ padding: 50, marginLeft: 40, marginRight: 40 }}
               raised="true"
             >
+             
               <form className={classes.form} noValidate>
                 <Typography
                   variant="h4"
@@ -411,7 +421,7 @@ class signUp extends Component {
                       
                         this.setState(
                           { username: event.target.value },
-                          this.validateUsername(event)
+                          this.validateUsername(event.target.value)
                         )
                       }
                       type="text"
@@ -561,7 +571,16 @@ class signUp extends Component {
                     </Grid>
                   </Grid>
                 </Grid>
-                
+                <Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ addsnackbar: false }) }>
+            <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addasnackbar }) }} severity="success">
+            username
+      </Alert>
+          </Snackbar>
+     
+                <ValidationMessage
+                      valid={this.state.signup}
+                      message="username or email are already registered"
+                    />
                 <Grid container spacing={1}>
                   <Grid item xs={12}>
                     <GradientButton
@@ -643,8 +662,8 @@ class signUp extends Component {
         },
       });
       console.log("..................................................");
-      console.log("response", response);
       response = await response.json();
+     
       if (response.token) {
         localStorage.setItem("Token", response.token);
         localStorage.setItem("id", response.user.id);
@@ -666,6 +685,19 @@ class signUp extends Component {
         }
       } else {
         this.setState({ warning: true });
+        console.log("response", response.email);
+        if(response.email&&response.username){
+          this.setState({signup:true})
+        }
+        else if(response.email){
+
+          this.setState({signupemail:true})
+        }
+        else if(response.name){
+          this.setState({signupusername:true})
+        }
+       
+        
 
       }
     } catch (error) {

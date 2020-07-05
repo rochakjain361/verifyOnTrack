@@ -72,13 +72,6 @@ export default function Datatable(props) {
                 console.log("viewraddmessageesponse", response);
                 ViewMessage(response.data.message.id)
                 props.data.refresh()
-
-
-
-
-
-
-
             })
     }
 

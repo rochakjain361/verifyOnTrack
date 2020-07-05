@@ -282,7 +282,7 @@ class index extends Component {
                                     variant="contained"
                                     style={{ minWidth: 120 }}
                                     onClick={() => {
-                                        this.setState({ employeeDetailsData: this.state.allCodes[index] }, () => console.log('employeeDetailsData;', this.state.employeeDetailsData))
+                                        this.setState({ employeeDetailsData: this.state.allCodes[index] }, () => console.log('employeeDetailsData;', this.state.employeeDetailsData.employee_name_field.name))
                                         this.viewEmployeeDetails(row.id)
                                     }}
                                 >

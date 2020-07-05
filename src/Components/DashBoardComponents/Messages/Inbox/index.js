@@ -38,6 +38,7 @@ let Id="";
 
 export default function Index() {
     const [Response,setResponse]=React.useState([])
+    const [loading,setLoading]=React.useState(true)
    
   
     // const[Token,setToken]=React.useState("")
@@ -60,6 +61,7 @@ export default function Index() {
                  
                 
                 setResponse(response.data)
+                setLoading(false)
                  
                  
              })
@@ -77,14 +79,6 @@ export default function Index() {
         // });
         // this.setState({ companies: tempArr });
         // console.log(tempArr)
-      
-
-    
-
-   
-
-        
-       
 
         return (
             <div style={{ marginTop: 20 }}>
@@ -98,7 +92,7 @@ export default function Index() {
                     </Grid>
 
                 </Grid>
-                {Response.length===0?<Grid
+                {loading?<Grid
         container
         spacing={0}
         direction="column"
@@ -108,7 +102,7 @@ export default function Index() {
         style={{ minHeight: "100vh" }}
       >
         <CircularProgress />
-      </Grid>:
+      </Grid>:Response.length===0?<Grid container align="center" justify="center"><h1>No Messages</h1></Grid>:
                 <Tabs data={Response} refresh={fetchInboxMessages}/>}
 
                
