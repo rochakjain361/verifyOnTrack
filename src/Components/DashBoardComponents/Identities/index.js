@@ -629,7 +629,7 @@ async getidentites(){
                     <TableCell align="center">{row.fullname}</TableCell>
                     <TableCell align="center">{row.dob}</TableCell>
                     <TableCell align="center">{row.sex}</TableCell>
-                    <TableCell align="center">{row.source_name_field}</TableCell>
+                    <TableCell align="center">{row.idSource_name_field}</TableCell>
                     <TableCell align="center">
                       <Grid
                         container
@@ -879,7 +879,7 @@ async getidentites(){
                       <TableCell align="center">{row.fullname}</TableCell>
                       <TableCell align="center">{row.dob}</TableCell>
                       <TableCell align="center">{row.sex}</TableCell>
-                      <TableCell align="center">{row.idSource}</TableCell>
+                      <TableCell align="center">{row.idSource_name_field}</TableCell>
                       <TableCell align="center">{row.idNumber}</TableCell>{" "}
                       <TableCell component="th" align="center">
                         {new Date(row.created_on).toDateString()}
