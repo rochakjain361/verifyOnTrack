@@ -571,16 +571,23 @@ class signUp extends Component {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ addsnackbar: false }) }>
-            <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addasnackbar }) }} severity="success">
-            username
+                <Snackbar open={this.state.signup} autoHideDuration={3000} onClick={() =>  this.setState({ signup: false }) }>
+            <Alert onClose={() => { this.setState({ signup: !this.state.signup }) }} severity="error">
+            This username and email already exists 
+      </Alert>
+          </Snackbar>
+          <Snackbar open={this.state.signupusername} autoHideDuration={3000} onClick={() =>  this.setState({ signupusername: false }) }>
+            <Alert onClose={() => { this.setState({ signupusername: !this.state.signupusername }) }} severity="error">
+            This username already exists 
+      </Alert>
+          </Snackbar>
+          <Snackbar open={this.state.signupemail} autoHideDuration={3000} onClick={() =>  this.setState({ signupemail: false }) }>
+            <Alert onClose={() => { this.setState({ signupemail: !this.state.signupemail }) }} severity="error">
+            This email already exists 
       </Alert>
           </Snackbar>
      
-                <ValidationMessage
-                      valid={this.state.signup}
-                      message="username or email are already registered"
-                    />
+                
                 <Grid container spacing={1}>
                   <Grid item xs={12}>
                     <GradientButton
@@ -693,7 +700,7 @@ class signUp extends Component {
 
           this.setState({signupemail:true})
         }
-        else if(response.name){
+        else if(response.username){
           this.setState({signupusername:true})
         }
        

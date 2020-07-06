@@ -1259,7 +1259,7 @@ class Addresses extends PureComponent {
     console.log("selectedlga", this.state.selectedLga, lgaid);
     await axios
       .get(
-        "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/address/cities?lgaId=" +
+        "http://3.22.17.212:8000/api/v1/resManager/address/cities/?lgaId=" +
         lgaid,
         {
           headers: {
