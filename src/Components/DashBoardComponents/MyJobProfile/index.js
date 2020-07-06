@@ -132,38 +132,48 @@ class myJobProfile extends Component {
         availableCompanies: [],
         check: false,
         companyOptionDisable: false,
-        isloading: true
+        isloading: true,
+
+
+        addsnackbar:false,
+        updatesnackbar:false,
     }
 
-    snackBar() {
+    addsnackbar() {
         return (
-            <Snackbar
-                open={this.state.snackbar}
-                autoHideDuration={6000}
-                onClick={() => { this.setState({ snackbar: !this.state.snackbar }) }}
-            >
-                {this.state.snackbarresponse.status === 201 ?
-                    <Alert
-                        onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }}
-                        severity="success"
-                    >
-                        Added sucessfully
-                </Alert> :
-                    this.state.snackbarresponse.status === 204 ?
-                        <Alert
-                            onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }}
-                            severity="success">
-                            Deleted sucessfully
-                </Alert> :
-                        <Alert
-                            onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }}
-                            severity="error"
-                        >
-                            Something went wrong please try again
-                </Alert>}
+          this.state.addresponse === 200 ?
+            (<div>
+    <Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }}>
+              <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }} severity="error">
+                Something went wrong please try again
+          </Alert>
             </Snackbar>
-        );
-    }
+              
+            </div>) : (<Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ addsnackbar: false }) }>
+                <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addasnackbar }) }} severity="success">
+                Job added sucessfully
+          </Alert>
+              </Snackbar>))
+    
+      }
+      updatesnackbar() {
+        return (
+          this.state.updateresponse === 200 ?
+            (<div>
+              {console.log("//////////////////////////////////////")}
+    
+              <Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ updatesnackbar: false }) }>
+                <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="success">
+                  Job updated sucessfully
+          </Alert>
+              </Snackbar>
+            </div>) : (<Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }}>
+              <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="error">
+                Something went wrong please try again
+          </Alert>
+            </Snackbar>))
+    
+      }
 
     async getJobProfiles() {
         this.setState({ isLoading: true })
@@ -280,7 +290,8 @@ class myJobProfile extends Component {
                 }
                 {this.addJoBHistoryDialog()}
                 {this.editJobHistoryDialog()}
-                {this.snackBar()}
+                {this.addsnackbar()}
+                {this.updatesnackbar()}
             </div>
         )
     }
@@ -978,7 +989,7 @@ class myJobProfile extends Component {
             response = await response.json();
             console.log('AddJobSuccess:', response);
 
-            this.setState({ snackbar: true, snackbarresponse: response });
+            this.setState({addresponse:response.status,addsnackbar: true})
 
             await this.getJobProfiles();
 
@@ -1031,7 +1042,7 @@ class myJobProfile extends Component {
             console.log('AddJobOtherSuccess:', response);
             
             await this.getJobProfiles();
-            this.setState({ snackbar: true, snackbarresponse: response });
+            this.setState({addresponse:response.status,addsnackbar: true})
 
             this.setState({ addDialogOpen: false })
             this.setState({ addJobDialogCompany: "" })
@@ -1046,7 +1057,7 @@ class myJobProfile extends Component {
 
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
-            this.setState({ snackbar: true, snackbarresponse: error.response });
+            this.setState({addresponse: error.response,addsnackbar: true})
         }
     }
 
@@ -1082,7 +1093,7 @@ class myJobProfile extends Component {
 
         await this.getJobProfiles();
         await this.setState({ editActionsOpen: false })
-        this.setState({ snackbar: true, snackbarresponse: response });
+        this.setState({updateresponse:response.status, updatesnackbar: true })
     }
 
     async employerVerification(employeeId, employerId, rowId) {
