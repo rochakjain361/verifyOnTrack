@@ -382,20 +382,38 @@ class index extends Component {
                             {
                                 row.showAssignTo_field ?
                                     (
-                                        <Button variant='outlined' color='secondary' onClick={() => this.assignadminTableButton(row.id)} >
+                                        <Button
+                                            variant='outlined'
+                                            color='secondary'
+                                            onClick={() => {
+                                                console.log("row.id///////////", row.id)
+                                                this.assignadminTableButton(row.id)
+                                            }}
+                                        >
                                             Assign Admin
                                         </Button>
                                     )
                                     :
                                     (
-                                        <Button variant='outlined' color='secondary' onClick={() => this.setState({ assignDialog: true })} >
+                                        <Button
+                                            variant='outlined'
+                                            color='secondary'
+                                            onClick={() => {
+                                                this.setState({ assignDialog: true })
+                                                this.setState({ adminIndex: row.id })
+                                            }}
+                                        >
                                             Reassign Admin
                                         </Button>
                                     )}
                         </TableCell>
                         {/* {row.viewApprove_field !== "False" ? (this.setState({viewLogic: true})) : null} */}
-                        <TableCell align="left">
+                        < TableCell align="left" >
                             <Button variant='outlined' color='primary'
+                                onClick={() => {
+                                    this.setState({ userID: row.user, approvalCode: row.codeString, viewId: row.id})
+                                    this.viewAndApprove(row.id, row.codeString)
+                                }}
                             // disabled={this.state.viewLogic}
                             >
                                 View &amp; approve
@@ -425,22 +443,39 @@ class index extends Component {
                             {
                                 row.showAssignTo_field ?
                                     (
-                                        <Button variant='outlined' color='secondary' onClick={() => this.setState({ assignDialog: true })} >
+                                        <Button
+                                            variant='outlined'
+                                            color='secondary'
+                                            onClick={() => {
+                                                console.log("row.id///////////", row.id)
+                                                this.assignadminTableButton(row.id)
+                                            }}
+                                        >
                                             Assign Admin
                                         </Button>
                                     )
                                     :
                                     (
-                                        <Button variant='outlined' color='secondary' onClick={() => this.setState({ assignDialog: true })} >
+                                        <Button
+                                            variant='outlined'
+                                            color='secondary'
+                                            onClick={() => {
+                                                this.setState({ assignDialog: true })
+                                                this.setState({ adminIndex: row.id })
+                                            }}
+                                        >
                                             Reassign Admin
                                         </Button>
                                     )}
                         </TableCell>
                         {/* {row.viewApprove_field !== "False" ? (this.setState({viewLogic: true})) : null} */}
-                        <TableCell align="left">
+                        < TableCell align="left" >
                             <Button variant='outlined' color='primary'
-                            // onClick={()=>}
-                            //  disabled={this.state.viewLogic}
+                                onClick={() => {
+                                    this.setState({ userID: row.user, approvalCode: row.codeString, viewId: row.id})
+                                    this.viewAndApprove(row.id, row.codeString)
+                                }}
+                            // disabled={this.state.viewLogic}
                             >
                                 View &amp; approve
                         </Button>
@@ -480,20 +515,38 @@ class index extends Component {
                             {
                                 row.showAssignTo_field ?
                                     (
-                                        <Button variant='outlined' color='secondary' onClick={() => { this.assignadminTableButton(row.id) }}>
+                                        <Button
+                                            variant='outlined'
+                                            color='secondary'
+                                            onClick={() => {
+                                                console.log("row.id///////////", row.id)
+                                                this.assignadminTableButton(row.id)
+                                            }}
+                                        >
                                             Assign Admin
                                         </Button>
                                     )
                                     :
                                     (
-                                        <Button variant='outlined' color='secondary' onClick={() => this.setState({ assignDialog: true })} >
+                                        <Button
+                                            variant='outlined'
+                                            color='secondary'
+                                            onClick={() => {
+                                                this.setState({ assignDialog: true })
+                                                this.setState({ adminIndex: row.id })
+                                            }}
+                                        >
                                             Reassign Admin
                                         </Button>
                                     )}
                         </TableCell>
                         {/* {row.viewApprove_field !== "False" ? (this.setState({viewLogic: true})) : null} */}
-                        <TableCell align="left">
+                        < TableCell align="left" >
                             <Button variant='outlined' color='primary'
+                                onClick={() => {
+                                    this.setState({ userID: row.user, approvalCode: row.codeString, viewId: row.id})
+                                    this.viewAndApprove(row.id, row.codeString)
+                                }}
                             // disabled={this.state.viewLogic}
                             >
                                 View &amp; approve

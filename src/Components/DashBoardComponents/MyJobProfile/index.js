@@ -122,6 +122,7 @@ class myJobProfile extends Component {
         editJobDialogUpdateReason: '',
 
         verificationData: [],
+        verificationEmployeeID: '',
 
         availableCompanies: [],
         check: false,
@@ -838,16 +839,15 @@ class myJobProfile extends Component {
                                                         // onClick={() => {this.setState({ verificationData: this.state.myJobHistory[index] },
                                                         //     () => { console.log('verificationData:', this.state.verificationData})}
                                                         onClick={() => {
-                                                            this.setState({ verificationData: this.state.myJobHistory[index] },
+                                                            this.setState({
+                                                                verificationEmployeeID: this.state.myJobHistory[index].employee,
+                                                                verificationData: this.state.myJobHistory[index]
+                                                            },
                                                                 () => {
-                                                                    console.log('verificationData:', this.state.verificationData,
-                                                                        'ee_employer', this.state.verificationData['employer_id_field'],
-                                                                        'ee_employee', this.state.verificationData['employee'],
-                                                                        'category: "Employment Verification"',
-                                                                        'requestJobProfile: "true"',
-                                                                        'job_profile:', this.state.verificationData['id'])
+                                                                    console.log('verificationData:', this.state.verificationData, 
+                                                                                'emloyeeId:',this.state.verificationEmployeeID)
                                                                 })
-                                                            this.employerVerification()
+                                                            this.employerVerification(row.employee,row.employer_id_field, row.id)
                                                         }}
                                                     >
                                                         Get Employer Verification
@@ -999,14 +999,17 @@ class myJobProfile extends Component {
         await this.setState({ editActionsOpen: false })
     }
 
-    async employerVerification() {
+    async employerVerification(employeeId, employerId, rowId) {
+
+        console.log('employeeID:', this.state.verificationEmployeeID, 
+                    'employerId:', this.state.verificationData['employer_id_field'])
 
         let bodyData = {
-            'ee_employer': this.state.verificationData['employer_id_field'],
-            'ee_employee': this.state.verificationData['employee'],
-            'category': 'Employment Verification',
-            'requestJobProfile': "true",
-            'job_profile:': this.state.verificationData['id']
+            'ee_employer': employerId,
+            'ee_employee': employeeId,
+            'category': 'EmploymentVerification',
+            'requestJobProfile': true,
+            'job_profile:': rowId
         }
         console.log('verificationBody:', bodyData)
 
