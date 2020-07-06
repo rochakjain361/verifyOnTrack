@@ -153,9 +153,9 @@ class index extends React.Component {
                 </Alert> :
                         <Alert
                             onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }}
-                            severity="error"
+                            severity="success"
                         >
-                            Something went wrong please try again
+                            Account Approved!
                 </Alert>}
             </Snackbar>
         );

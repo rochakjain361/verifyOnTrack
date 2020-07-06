@@ -66,7 +66,7 @@ class index extends React.Component {
               <TextField
                 id="phoneReason"
                 label="Phone Reason"
-                defaultValue={id.phone_reason}
+                defaultValue={id.phone_reason_name_field}
                 type="text"
                 InputProps={{
                   readOnly: true,
@@ -80,7 +80,7 @@ class index extends React.Component {
               <TextField
                 id="phoneType"
                 label="Phone Type"
-                defaultValue={id.phone_type}
+                defaultValue={id.phone_type_name_field}
                 type="text"
                 InputProps={{
                   readOnly: true,

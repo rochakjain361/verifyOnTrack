@@ -66,7 +66,7 @@ class index extends React.Component {
                             <TextField
                                 id="addressTypes"
                                 label="Address Type"
-                                defaultValue={id.address_type}
+                                defaultValue={id.address_type_name_field}
                                 type="text"
                                 InputProps={{
                                     readOnly: true,
@@ -80,7 +80,7 @@ class index extends React.Component {
                             <TextField
                                 id="addressReason"
                                 label="Address Reason"
-                                defaultValue={id.address_reason}
+                                defaultValue={id.address_reason_name_field}
                                 type="text"
                                 InputProps={{
                                     readOnly: true,
