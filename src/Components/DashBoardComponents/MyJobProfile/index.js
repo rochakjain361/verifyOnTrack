@@ -161,6 +161,12 @@ class myJobProfile extends Component {
         // console.log('jobIndex:',index)
     }
 
+    async componentWillMount() {
+        const token1 = localStorage.getItem("Token");
+        const token = "Token " + token1;
+        const id = localStorage.getItem("id");
+    }
+
     async componentDidMount() {
 
         const token1 = localStorage.getItem("Token");
@@ -171,7 +177,7 @@ class myJobProfile extends Component {
 
         await axios
             .get(
-                "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/employers",
+                "http://3.22.17.212:8000/api/v1/employers/",
                 {
                     headers: {
                         Authorization:
@@ -186,7 +192,7 @@ class myJobProfile extends Component {
             });
 
         await axios
-            .get("https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/job/categories", {
+            .get("http://3.22.17.212:8000/api/v1/resManager/job/categories/", {
                 headers: {
                     Authorization:
                         token,
@@ -201,7 +207,7 @@ class myJobProfile extends Component {
             });
 
         await axios
-            .get("https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/job/leaving-reasons", {
+            .get("http://3.22.17.212:8000/api/v1/resManager/job/leaving-reasons/", {
                 headers: {
                     Authorization:
                         token,
