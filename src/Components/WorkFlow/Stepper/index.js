@@ -32,6 +32,7 @@ import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore'
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import { useState, useEffect } from 'react';
 import { Paper } from '@material-ui/core'
+import { CircularProgress } from '@material-ui/core'
 import axios from "axios";
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -123,8 +124,6 @@ function getStepContent(step, props) {
 export default function HorizontalLinearStepper(props) {
     const requestconfirmation = async () => {
 
-
-
         let headers = {
             headers: {
                 Authorization: Token,
@@ -170,7 +169,9 @@ export default function HorizontalLinearStepper(props) {
             setActiveStep(5)
             if (props.location.state.detail.user.accountStatus === "Approval In Progress") {
                 setApproval(true)
+   
             }
+           
         }
     });
 
@@ -182,6 +183,10 @@ export default function HorizontalLinearStepper(props) {
     const [Token, setToken] = React.useState("");
     const [Token1, setToken1] = React.useState("");
     const [id, setid] = React.useState("");
+    const [approvalButton, setApprovalButton] = React.useState(false);
+    const [loading, setLoading] = React.useState(true);
+    const [allData, setallData] = React.useState(false);
+
     const ColorlibConnector = withStyles({
         alternativeLabel: {
             top: 22,
@@ -207,19 +212,21 @@ export default function HorizontalLinearStepper(props) {
     })(StepConnector);
 
     useEffect(() => {
-        // console.log("currentStep",currentStep);
-        // initialstep(props.location.state.detail.user.info_provided_field);
+
 
 
         setToken1(localStorage.getItem("Token"));
         setToken("Token " + Token1);
         setid(localStorage.getItem("id"));
+       if(activeStep===5&&Approval===false){
+        apiCheck()
+       }
         // setActiveStep(2);
-    });
-// const profileCheck=()=>{
-//     setProfiledone(true)
+    }, console.log(Token, "Token////////////////////////"));
+    // const profileCheck=()=>{
+    //     setProfiledone(true)
 
-// }
+    // }
     const isStepOptional = (step) => {
         return step === 1;
     };
@@ -227,8 +234,102 @@ export default function HorizontalLinearStepper(props) {
     const isStepSkipped = (step) => {
         return skipped.has(step);
     };
-    const apiCheck =()=>{
+    const apiCheck = async () => {
+        // setLoading(true)
         console.log("check suceeded")
+        await axios
+            .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/profiles", {
+                headers: {
+                    Authorization: Token,
+                },
+            })
+            .then((res) => {
+
+
+                console.log("Profile Data", res.data);
+                if (res.data.length > 0) {
+                    
+                } else {
+                    setLoading(false)
+                    setallData(true)
+                    return;
+
+                }
+            });
+        await axios
+            .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/addresses", {
+                headers: {
+                    Authorization: Token,
+                },
+            })
+            .then((res) => {
+                // result = res.data;
+                if (res.data.length > 0) {
+                    
+                } else {
+                    setLoading(false)
+                    setallData(true)
+                    return;
+                }
+
+                console.table("addresses", res.data);
+            });
+        await axios
+            .get(
+                "http://3.22.17.212:8000/api/v1/employees/" + id + "/identities-by/" + id,
+                {
+                    headers: {
+                        Authorization: Token,
+                    },
+                }
+            )
+            .then((res) => {
+                //result = res.data;
+                if (res.data.length > 0) {
+                    
+                } else {
+                    setLoading(false)
+                    setallData(true)
+                    return;
+                }
+                console.table("identites", res.data);
+            });
+        await axios
+            .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/phones", {
+                headers: {
+                    Authorization: Token,
+                },
+            })
+            .then((res) => {
+                //  result = res.data;
+                if (res.data.length > 0) {
+                    
+                } else {
+                    setLoading(false)
+                    setallData(true)
+                    return;
+                }
+                console.table("Phones", res.data);
+                // console.log(result[0].phone_reason);
+            });
+        let response = await fetch("http://3.22.17.212:8000/api/v1/employees/" + id + "/jobs",
+            {
+                headers: {
+                    'Authorization': Token
+                }
+            });
+        response = await response.json();
+        console.log('allJobs from stepper', response)
+        if (response.length > 0) {
+            setallData(false)
+            setLoading(false)
+            return;
+        } else {
+            setLoading(false)
+            setallData(true)
+            return;
+        }
+
     }
 
     const handleNext = () => {
@@ -237,7 +338,7 @@ export default function HorizontalLinearStepper(props) {
             newSkipped = new Set(newSkipped.values());
             newSkipped.delete(activeStep);
         }
-        if(activeStep===steps.length - 1){
+        if (activeStep === steps.length - 1) {
             apiCheck()
         }
 
@@ -307,53 +408,63 @@ export default function HorizontalLinearStepper(props) {
             <div>
                 {activeStep === steps.length ? (
                     <Box m={3} p={2}>
-                        {Approval === false ? <Grid spacing={3} container direction="column"  >
-
-
-                            <Grid item xs={12}  >
-                                <Grid container direction="row" justify="space-between" alignItems="center">
-                                    <Grid item  >
-                                        <Button size='medium' variant="contained" color='primary' disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
-                                            <><ArrowBackIcon />Previous</>
-                                        </Button></Grid>
-                                    <Grid item  >
-                                        <Button size='medium' onClick={handleReset} variant="contained" color="primary" className={classes.button} >
-                                            <SettingsBackupRestoreIcon />
-                            Reset
-
-                        </Button> </Grid></Grid></Grid>
-                            <Grid container spacing={3} direction="column" justify='center' align="center">
+                        {Approval === false ? loading ? <Grid
+                            container
+                            spacing={0}
+                            direction="column"
+                            alignItems="center"
+                            justify="center"
+                            display="flex"
+                            style={{ minHeight: "100vh" }}
+                        >
+                            <CircularProgress />
+                        </Grid> : <Grid spacing={3} container direction="column"  >
 
 
                                 <Grid item xs={12}  >
+                                    <Grid container direction="row" justify="space-between" alignItems="center">
+                                        <Grid item  >
+                                            <Button size='medium' variant="contained" color='primary' disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
+                                                <><ArrowBackIcon />Previous</>
+                                            </Button></Grid>
+                                        <Grid item  >
+                                            <Button size='medium' onClick={handleReset} variant="contained" color="primary" className={classes.button} >
+                                                <SettingsBackupRestoreIcon />
+                            Reset
 
-                                    <Paper elevation={3} direction="column" >
-                                        <Box p={3} display="flex" flexDirection="column" justifyContent='center' alignItems="center" style={{ height: '50vh', }} >
+                        </Button> </Grid></Grid></Grid>
+                                <Grid container spacing={3} direction="column" justify='center' align="center">
 
-                                           
-                                            <Grid container spacing={2} direction="column" >
 
-                                        <Typography justify="center"  align="center" >
-                                                   By submitting for approval you acknowlege that all the information provided by you is authentic and can be verified by our team.
+                                    <Grid item xs={12}  >
+
+                                        <Paper elevation={3} direction="column" >
+                                            <Box p={3} display="flex" flexDirection="column" justifyContent='center' alignItems="center" style={{ height: '50vh', }} >
+
+
+                                                <Grid container spacing={2} direction="column" >
+
+                                                    <Typography justify="center" align="center" >
+                                                        By submitting for approval you acknowlege that all the information provided by you is authentic and can be verified by our team.
                                                 </Typography>
-                                                <br/>
-                                                <Button
+                                                    <br />
+                                                    <Button
+                                                        disabled={allData}
+                                                        variant="contained"
+                                                        color="primary"
+                                                        onClick={() => {
+                                                            requestconfirmation()
 
-                                                    variant="contained"
-                                                    color="primary"
-                                                    onClick={() => {
-                                                        requestconfirmation()
-
-                                                    }}
-                                                >
-                                                    Submit for approval
+                                                        }}
+                                                    >
+                                                        Submit for approval
                            </Button></Grid>
-                            
-                                               
-                                            
-                                           </Box></Paper></Grid>
-                            </Grid>
-                        </Grid> :
+
+
+
+                                            </Box></Paper></Grid>
+                                </Grid>
+                            </Grid> :
                             <Grid container spacing={3} direction="column" justify='center' align="center">
 
 

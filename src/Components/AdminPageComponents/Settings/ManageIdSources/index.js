@@ -31,9 +31,9 @@ import AddIcon from "@material-ui/icons/Add";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
 const styles = (theme) => ({});
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+let token1 = "";
+let token = "";
+let id = "";
 let result = [];
 export class index extends Component {
   constructor(props) {
@@ -66,6 +66,9 @@ export class index extends Component {
 
   }
   async componentDidMount() {
+     token1 = localStorage.getItem("Token");
+ token = "Token " + token1;
+ id = localStorage.getItem("id");
     this.setState({ loading: true });
     await this.getid();
     this.setState({ loading: false });
@@ -233,7 +236,7 @@ export class index extends Component {
                     </TableBody>
                   </Table>
                 </TableContainer>
-              </Grid>]
+              </Grid>
               {this.deleteDialog()}
             </>
           )}

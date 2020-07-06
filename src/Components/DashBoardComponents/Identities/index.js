@@ -93,15 +93,13 @@ class Identities extends Component {
 
   };
   addsnackbar() {
-
-
     return (
       this.state.addresponse === 200 ?
         (<div>
 
           <Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ addsnackbar: false }) }>
             <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addasnackbar }) }} severity="success">
-              Profile added sucessfully
+            Identites added sucessfully
       </Alert>
           </Snackbar>
         </div>) : (<Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }}>
@@ -112,8 +110,6 @@ class Identities extends Component {
 
   }
   updatesnackbar() {
-
-
     return (
       this.state.updateresponse === 200 ?
         (<div>
@@ -121,7 +117,7 @@ class Identities extends Component {
 
           <Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ updatesnackbar: false }) }>
             <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="success">
-              Profile updated sucessfully
+              Identites updated sucessfully
       </Alert>
           </Snackbar>
         </div>) : (<Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }}>
@@ -230,6 +226,7 @@ async getidentites(){
       )
       .then((response) => {
         console.log(response);
+        this.setState({addresponse:response.status,addsnackbar: true})
       });
       await this.getidentites();
   }
@@ -259,6 +256,7 @@ async getidentites(){
       )
       .then((response) => {
         console.log(response);
+        this.setState({updateresponse:response.status, updatesnackbar: true })
       });
       await this.getidentites();
   }

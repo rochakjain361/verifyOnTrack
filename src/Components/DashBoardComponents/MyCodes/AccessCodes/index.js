@@ -14,6 +14,7 @@ import {
   InputLabel,
   MenuItem,
   CircularProgress,
+  Snackbar
 } from "@material-ui/core/";
 
 import {
@@ -23,6 +24,7 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core/";
+import MuiAlert from '@material-ui/lab/Alert';
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -46,7 +48,9 @@ let emails = [];
 let companys = [];
 
 const styles = (theme) => ({});
-
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 class index extends Component {
   state = {
     opencodes: false,
@@ -74,7 +78,9 @@ class index extends Component {
     codedetails: "",
     codes: [],
     pendingcodes: [],
-    status:""
+    status:"",
+    updatesnackbar:false,
+    updateresponse:"",
   };
 
   isloading() {
@@ -98,6 +104,26 @@ class index extends Component {
         console.log("123456789", e.id);
       }
     });
+  }
+  updatesnackbar() {
+
+
+    return (
+      this.state.updateresponse === 200 ?
+        (<div>
+          {console.log("//////////////////////////////////////")}
+
+          <Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ updatesnackbar: false }) }>
+            <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="success">
+              Address updated sucessfully
+      </Alert>
+          </Snackbar>
+        </div>) : (<Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }}>
+          <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="error">
+            Something went wrong please try again
+      </Alert>
+        </Snackbar>))
+
   }
   async searchusername(username) {
     await axios
@@ -259,32 +285,35 @@ class index extends Component {
       </>
     );
   }
+  async getcodes(){
+    await axios
+    .get("http://3.22.17.212:8000/api/v1/codes/access/codes", {
+      headers: {
+        Authorization: token,
+      },
+    })
+    .then((res) => {
+      codes = res.data;
+      this.setState({ codes: res.data })
+      console.log("codes", codes);
+    });
+  await axios
+    .get("http://3.22.17.212:8000/api/v1/codes/access/pending-codes", {
+      headers: {
+        Authorization: token,
+      },
+    })
+    .then((res) => {
+      pendingcodes = res.data;
+      this.setState({ pendingcodes: res.data })
+      console.log("pendingcodes", pendingcodes);
+    });
+  }
   async componentDidMount() {
     token1 = localStorage.getItem("Token");
     token = "Token " + token1;
     id = localStorage.getItem("id");
-    await axios
-      .get("http://3.22.17.212:8000/api/v1/codes/access/codes", {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        codes = res.data;
-        this.setState({ codes: res.data })
-        console.log("codes", codes);
-      });
-    await axios
-      .get("http://3.22.17.212:8000/api/v1/codes/access/pending-codes", {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        pendingcodes = res.data;
-        this.setState({ pendingcodes: res.data })
-        console.log("pendingcodes", pendingcodes);
-      });
+    
     await axios
       .get(
         `http://3.22.17.212:8000/api/v1/accounts/employer?email=`,
@@ -299,7 +328,7 @@ class index extends Component {
         emails = res.data;
         console.log("emails", emails);
       });
-
+await this.getcodes()
     await axios
       .get(
         `http://3.22.17.212:8000/api/v1/accounts/employer?username=`,
@@ -410,15 +439,16 @@ class index extends Component {
       )
       .then((response) => {
         console.log(response);
+        this.setState({updateresponse:response.status, updatesnackbar: true })
       });
-      // await this.getidentites();
+      await this.getcodes()
   }
   gettable() {
     return (
       <>
         <Grid container justify="space-between" alignItems="center" spacing={4}>
           <Grid item xs={8}>
-            <Typography variant="h4">Access Codes</Typography>
+            <Typography variant="h4">Access Request</Typography>
           </Grid>
           <Grid item xs={12}>
             <FormControlLabel
@@ -449,30 +479,30 @@ class index extends Component {
             <Table stickyHeader>
               <TableHead>
                 <TableRow style={{ backgroundColor: "black" }}>
-                  <TableCell align="left">Date</TableCell>
-                  <TableCell align="left">Code</TableCell>
-                  <TableCell align="left">Employer</TableCell>
-                  <TableCell align="left">Code Status</TableCell>
-                  <TableCell align="left">Last Updated</TableCell>
-                  <TableCell align="left">Details</TableCell>
-                  <TableCell align="left">Actions</TableCell>
-                  <TableCell align="left">Update</TableCell>
+                  <TableCell align="center">Date</TableCell>
+                  <TableCell align="center">Code</TableCell>
+                  <TableCell align="center">Employer</TableCell>
+                  <TableCell align="center">Code Status</TableCell>
+                  <TableCell align="center">Last Updated</TableCell>
+                  <TableCell align="center">Details</TableCell>
+                  <TableCell align="center">Actions</TableCell>
+                  <TableCell align="center">Update</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {this.state.opencodes
+                {!this.state.opencodes
                   ? this.state.codes.map((row, index) => (
                     <TableRow key={row.id}>
-                      <TableCell align="left"> {new Date(row.createdOn).toDateString()}</TableCell>
-                      <TableCell align="left">{row.codeString}</TableCell>
-                      <TableCell align="left">
+                      <TableCell align="center"> {new Date(row.createdOn).toDateString()}</TableCell>
+                      <TableCell align="center">{row.codeString}</TableCell>
+                      <TableCell align="center">
                         {row.employer_company_field}
                       </TableCell>
-                      <TableCell align="left">{row.codeStatus}</TableCell>
-                      <TableCell align="left">
+                      <TableCell align="center">{row.codeStatus}</TableCell>
+                      <TableCell align="center">
                         {new Date(row.statusChangeDate).toDateString()}
                       </TableCell>
-                      <TableCell align="left">
+                      <TableCell align="center">
                         <Button
                           size="small"
                           color="primary"
@@ -482,14 +512,15 @@ class index extends Component {
                           View Details
                           </Button>
                       </TableCell>
-                      <TableCell align="left">
-                      <FormControl variant="outlined" size="medium"  style={{ minWidth: 85 }}
+                      <TableCell align="center">
+                      <FormControl variant="outlined"  size="small" style={{ minWidth: 85 }}
                           fullWidth >
                           <InputLabel id="demo-simple-select-outlined-label">Status</InputLabel>
                           <Select
+                         
                             labelId="demo-simple-select-outlined-label"
-                            id="demo-simple-select-outlined"
-                             value={this.state.status}
+                            id={row.id}
+                            //  value={this.state.status}
                              onChange={(event)=>{this.setState({status:event.target.value})}}
                             label="Status"
                           >
@@ -509,24 +540,25 @@ class index extends Component {
                           color="secondary"
                           variant="outlined"
                           onClick={()=>{this.updatestatus(row.id)}}
+                          
                         >
-                          Update
+                          Update status
                           </Button>
                       </TableCell>
                     </TableRow>
                   ))
                   : pendingcodes.map((row, index) => (
                     <TableRow key={row.id}>
-                      <TableCell align="left"> {new Date(row.createdOn).toDateString()}</TableCell>
-                      <TableCell align="left">{row.codeString}</TableCell>
-                      <TableCell align="left">
+                      <TableCell align="center"> {new Date(row.createdOn).toDateString()}</TableCell>
+                      <TableCell align="center">{row.codeString}</TableCell>
+                      <TableCell align="center">
                         {row.employer_company_field}
                       </TableCell>
-                      <TableCell align="left">{row.codeStatus}</TableCell>
-                      <TableCell align="left">
+                      <TableCell align="center">{row.codeStatus}</TableCell>
+                      <TableCell align="center">
                         {new Date(row.statusChangeDate).toDateString()}
                       </TableCell>
-                      <TableCell align="left">
+                      <TableCell align="center">
                         <Button
                           size="small"
                           color="primary"
@@ -536,14 +568,15 @@ class index extends Component {
                           View Details
                           </Button>
                       </TableCell>
-                      <TableCell align="left">
-                        <FormControl variant="outlined" size="medium"  style={{ minWidth: 85 }}
+                      <TableCell align="center">
+                        <FormControl variant="outlined"  size='small'  style={{ minWidth: 85 }}
                           fullWidth >
                           <InputLabel id="demo-simple-select-outlined-label">Status</InputLabel>
                           <Select
+                         
                             labelId="demo-simple-select-outlined-label"
-                            id="demo-simple-select-outlined"
-                             value={this.state.status}
+                            id={row.id}
+                            //  value={this.state.status}
                              onChange={(event)=>{this.setState({status:event.target.value})}}
                             label="Status"
                           >
@@ -573,6 +606,7 @@ class index extends Component {
             </Table>
           </TableContainer>
         </Grid>
+        {this.updatesnackbar()}
         {/* </Paper> */}
 
         {/* GENERATE NEW CODE DIALOG DATA */}
@@ -717,7 +751,7 @@ class index extends Component {
             onClose={() => this.setState({ viewDialog: false })}
             aria-labelledby="responsive-dialog-title"
           >
-            <DialogTitle id="codegenerator">Code Details</DialogTitle>
+            <DialogTitle id="codegenerator" align="center">Code Details</DialogTitle>
             <DialogContent>
               <TableContainer component={Paper} elevation={6} p={0}>
                 <Table stickyHeader>
@@ -730,16 +764,18 @@ class index extends Component {
                         "last updated",
                         " current status",
                         "Profile access",
-                        "Jobhistory access",
+                      
                         "Address access",
                         "Phones access",
-                        "Ratings access",
                         "Identities access",
+                        "Jobhistory access",
+                        "Ratings access",
+                        
                       ].map((text, index) => (
                         <TableCell
                           style={{
                             fontWeight: "bolder",
-                            fontFamily: "Montserrat",
+                            // fontFamily: "Montserrat",
                           }}
                           align="center"
                         >
@@ -788,16 +824,7 @@ class index extends Component {
                             color="primary"
                           />
                         </TableCell>
-                        <TableCell component="th" align="center">
-                          <Checkbox
-                            checked={this.state.codedetails.canAccessJobHistory}
-                            defaultValue={
-                              this.state.codedetails.canAccessJobHistory
-                            }
-                            name="checkedB"
-                            color="primary"
-                          />
-                        </TableCell>
+                        
                         <TableCell align="center">
                           <Checkbox
                             checked={this.state.codedetails.canAccessPhones}
@@ -813,6 +840,16 @@ class index extends Component {
                             checked={this.state.codedetails.canAccessIdentities}
                             defaultValue={
                               this.state.codedetails.canAccessIdentities
+                            }
+                            name="checkedB"
+                            color="primary"
+                          />
+                        </TableCell>
+                        <TableCell component="th" align="center">
+                          <Checkbox
+                            checked={this.state.codedetails.canAccessJobHistory}
+                            defaultValue={
+                              this.state.codedetails.canAccessJobHistory
                             }
                             name="checkedB"
                             color="primary"
