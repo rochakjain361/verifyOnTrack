@@ -17,6 +17,9 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from 'axios'
 
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
 const token1 = localStorage.getItem("Token");
 const token = "Token " + token1;
 const id = localStorage.getItem("id");
@@ -27,12 +30,19 @@ const styles = theme => ({
 
 })
 
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 class index extends React.Component {
 
     state = {
         reasons: [],
         rejectDialog: false,
-        reasonList: ''
+        reasonList: '',
+
+        snackbar: "",
+        snackbarresponse: "",
     }
 
     constructor(props) {
@@ -77,8 +87,11 @@ class index extends React.Component {
             );
             response = await response.json();
             console.log('approvalSuccess:', response);
+            this.setState({ snackbar: true, snackbarresponse: response});
+
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
+            this.setState({ snackbar: true, snackbarresponse: error.response })
         }
     }
 
@@ -104,8 +117,10 @@ class index extends React.Component {
             );
             response = await response.json();
             console.log('approvalSuccess:', response);
+            this.setState({ rejectDialog: false })
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
+            this.setState({ rejectDialog: false })
         }
     }
 
@@ -115,6 +130,36 @@ class index extends React.Component {
         const id = localStorage.getItem("id");
 
         this.fetchrejectReasons()
+    }
+
+    snackBar() {
+        return (
+            <Snackbar
+                open={this.state.snackbar}
+                autoHideDuration={6000}
+                onClick={() => { this.setState({ snackbar: !this.state.snackbar }) }}
+            >
+                {this.state.snackbarresponse.status === 201 ?
+                    <Alert
+                        onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }}
+                        severity="success"
+                    >
+                        Account Approved!
+                </Alert> :
+                    this.state.snackbarresponse.status === 204 ?
+                        <Alert
+                            onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }}
+                            severity="success">
+                            Deleted sucessfully
+                </Alert> :
+                        <Alert
+                            onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }}
+                            severity="error"
+                        >
+                            Something went wrong please try again
+                </Alert>}
+            </Snackbar>
+        );
     }
 
     render() {
@@ -153,6 +198,7 @@ class index extends React.Component {
 
                 </Grid>
                 {this.rejectionDialog()}
+                {this.snackBar()}
             </div>
         );
     }

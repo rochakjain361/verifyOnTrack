@@ -42,9 +42,9 @@ import Ratings from '../Pages/Ratings';
 
 import axios from 'axios'
 
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+let token1 = "";
+let token = "";
+let id = "";
 const api = "http://3.22.17.212:8000"
 
 const styles = theme => ({
@@ -175,9 +175,9 @@ class index extends Component {
 
     async componentDidMount() {
 
-        const token1 = localStorage.getItem("Token");
-        const token = "Token " + token1;
-        const id = localStorage.getItem("id");
+        token1 = localStorage.getItem("Token");
+        token = "Token " + token1;
+        id = localStorage.getItem("id");
 
         await this.fetchAllCodes();
         // await this.fetchEmployeePhones();
@@ -312,8 +312,8 @@ class index extends Component {
                                     fullWidth
                                     style={{ minWidth: 120 }}
                                     onClick={() => {
-                                        this.setState({ employeeDetailsData: this.state.allCodes[index], employeeName: this.state.allCodes[index].employee_name_field.name},
-                                        () => console.log('employeeDetailsData;', this.state.employeeDetailsData))
+                                        this.setState({ employeeDetailsData: this.state.allCodes[index], employeeName: this.state.allCodes[index].employee_name_field.name },
+                                            () => console.log('employeeDetailsData;', this.state.employeeDetailsData))
                                         this.viewEmployeeDetails(row.id)
                                     }}
                                 >
@@ -642,7 +642,7 @@ class index extends Component {
                                     }}
                                     fullWidth
                                     size='small'
-                                    // variant='outlined'
+                                // variant='outlined'
                                 />
                             </Grid>
 
@@ -657,7 +657,7 @@ class index extends Component {
                                     }}
                                     fullWidth
                                     size='small'
-                                    // variant='outlined'
+                                // variant='outlined'
                                 />
                             </Grid>
 
@@ -666,7 +666,7 @@ class index extends Component {
                                     Access granted for:
                                     </Typography>
 
-                                <ExpansionPanel  disabled={this.state.canAccessProfile}>
+                                <ExpansionPanel disabled={this.state.canAccessProfile}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -682,7 +682,7 @@ class index extends Component {
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
-                                <ExpansionPanel  disabled={this.state.canAccessAddresses}>
+                                <ExpansionPanel disabled={this.state.canAccessAddresses}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -698,7 +698,7 @@ class index extends Component {
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
-                                <ExpansionPanel  disabled={this.state.canAccessIdentities}>
+                                <ExpansionPanel disabled={this.state.canAccessIdentities}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -714,7 +714,7 @@ class index extends Component {
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
-                                <ExpansionPanel  disabled={this.state.canAccessPhones}>
+                                <ExpansionPanel disabled={this.state.canAccessPhones}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -730,7 +730,7 @@ class index extends Component {
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
-                                <ExpansionPanel  disabled={this.state.canAccessJobHistory}>
+                                <ExpansionPanel disabled={this.state.canAccessJobHistory}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -746,7 +746,7 @@ class index extends Component {
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
-                                <ExpansionPanel  disabled={this.state.canAccessRatings}>
+                                <ExpansionPanel disabled={this.state.canAccessRatings}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -852,7 +852,7 @@ class index extends Component {
                                         fullWidth
                                         value={this.state.selectedstate}
                                         onChange={(event, value) => {
-                                            this.setState({ selectedstate: value})
+                                            this.setState({ selectedstate: value })
                                             this.setState({ employeeVotId: value['id'] }, console.log("employeeVotId", value['id']))
                                             console.log("selectedstate", value);
 
@@ -1020,7 +1020,7 @@ class index extends Component {
             this.setState({ codeIdentities: false })
             this.setState({ codeRatings: false })
             this.setState({ employeeVotId: "" })
-            
+
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
         }

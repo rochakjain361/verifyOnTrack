@@ -18,15 +18,13 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import axios from "axios";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
+
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Rating from '@material-ui/lab/Rating';
-import {
-    MuiPickersUtilsProvider,
-    KeyboardTimePicker,
-    KeyboardDatePicker,
-} from '@material-ui/pickers';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
 import DateFnsUtils from '@date-io/date-fns';
 
 import Card from '@material-ui/core/Card';
@@ -54,14 +52,18 @@ const rows = [
 
 ];
 
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+let token1 = "";
+let token = "";
+let id = "";
 const api = "http://3.22.17.212:8000"
 
 let companyChoices = [];
 let positionCategories = [];
 let reasonsChoices = [];
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 class myJobProfile extends Component {
     constructor(props) {
@@ -89,6 +91,9 @@ class myJobProfile extends Component {
         positions: [],
         leavingReasons: [],
         updateMyJobData: [],
+
+        snackbar: "",
+        snackbarresponse: "",
 
         //ADD DIALOG STATES
         addJobDialogCompany: '',
@@ -130,6 +135,36 @@ class myJobProfile extends Component {
         isloading: true
     }
 
+    snackBar() {
+        return (
+            <Snackbar
+                open={this.state.snackbar}
+                autoHideDuration={6000}
+                onClick={() => { this.setState({ snackbar: !this.state.snackbar }) }}
+            >
+                {this.state.snackbarresponse.status === 201 ?
+                    <Alert
+                        onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }}
+                        severity="success"
+                    >
+                        Added sucessfully
+                </Alert> :
+                    this.state.snackbarresponse.status === 204 ?
+                        <Alert
+                            onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }}
+                            severity="success">
+                            Deleted sucessfully
+                </Alert> :
+                        <Alert
+                            onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }}
+                            severity="error"
+                        >
+                            Something went wrong please try again
+                </Alert>}
+            </Snackbar>
+        );
+    }
+
     async getJobProfiles() {
         this.setState({ isLoading: true })
         let response = await fetch(api + "/api/v1/employees/" + id + "/jobs",
@@ -161,17 +196,11 @@ class myJobProfile extends Component {
         // console.log('jobIndex:',index)
     }
 
-    async componentWillMount() {
-        const token1 = localStorage.getItem("Token");
-        const token = "Token " + token1;
-        const id = localStorage.getItem("id");
-    }
-
     async componentDidMount() {
 
-        const token1 = localStorage.getItem("Token");
-        const token = "Token " + token1;
-        const id = localStorage.getItem("id");
+        token1 = localStorage.getItem("Token");
+        token = "Token " + token1;
+        id = localStorage.getItem("id");
 
         await this.getJobProfiles();
 
@@ -370,8 +399,7 @@ class myJobProfile extends Component {
                         }
 
                         <Grid item xs={6}>
-                            <InputLabel id="dob">Start Date</InputLabel>
-                            <input
+                            {/* <input
                                 class="w3-input"
                                 type="date"
                                 onChange={(event) => {
@@ -379,13 +407,22 @@ class myJobProfile extends Component {
                                     console.log(event.target.value);
                                 }}
 
+                            /> */}
+                            <TextField
+                            fullWidth
+                            type="date"
+                            onChange={(event) => {
+                                this.setState({ addJobDialogStartDate: event.target.value });
+                                console.log(event.target.value);
+                            }}
+                            helperText="Start Date"
                             />
                         </Grid>
 
                         <Grid item xs={6}>
                             {/* <InputLabel id="dob">End Date</InputLabel> */}
 
-                            <input
+                            {/* <input
                                 class="w3-input"
                                 type="date"
                                 onChange={(event) => {
@@ -393,6 +430,15 @@ class myJobProfile extends Component {
                                     console.log(event.target.value);
                                 }}
 
+                            /> */}
+                            <TextField
+                            fullWidth
+                            type="date"
+                            onChange={(event) => {
+                                this.setState({ addJobDialogEndDate: event.target.value });
+                                console.log(event.target.value);
+                            }}
+                            helperText="End Date"
                             />
 
                         </Grid>
@@ -586,7 +632,7 @@ class myJobProfile extends Component {
                         }
 
                         <Grid item xs={6}>
-                            <input
+                            {/* <input
                                 class="w3-input"
                                 type="date"
                                 defaultValue={this.state.updateMyJobData.startDate}
@@ -595,12 +641,22 @@ class myJobProfile extends Component {
                                     console.log(event.target.value);
                                 }}
 
+                            /> */}
+                            <TextField
+                            fullWidth
+                            type="date"
+                            defaultValue={this.state.updateMyJobData.startDate}
+                                onChange={(event) => {
+                                    this.setState({ editJobDialogStartDate: event.target.value });
+                                    console.log(event.target.value);
+                                }}
+                            helperText="Start Date"
                             />
                         </Grid>
 
                         <Grid item xs={6}>
 
-                            <input
+                            {/* <input
                                 class="w3-input"
                                 type="date"
                                 defaultValue={this.state.updateMyJobData.endDate}
@@ -609,6 +665,16 @@ class myJobProfile extends Component {
                                     console.log(event.target.value);
                                 }}
 
+                            /> */}
+                            <TextField
+                            fullWidth
+                            type="date"
+                            defaultValue={this.state.updateMyJobData.endDate}
+                                onChange={(event) => {
+                                    this.setState({ editJobDialogEndDate: event.target.value });
+                                    console.log(event.target.value);
+                                }}
+                            helperText="End Date"
                             />
 
                         </Grid>
@@ -821,8 +887,10 @@ class myJobProfile extends Component {
                                     </TableCell>
                                     <TableCell>
                                         <Grid container justify='column'>
-                                            <Grid item>
-                                                <Button
+                                            
+                                                {row.show_update_field ? (
+                                                    <Grid item>
+                                                    <Button
                                                     style={{ minWidth: 200 }}
                                                     variant="outlined"
                                                     color="secondary"
@@ -834,7 +902,10 @@ class myJobProfile extends Component {
                                                 >
                                                     Update
                                                 </Button>
-                                            </Grid>
+                                                </Grid>
+                                                ) : ('NA')}
+                                                
+                                            
 
                                             <Grid item>
                                                 {row.show_employer_ver_field == "True" ? (
