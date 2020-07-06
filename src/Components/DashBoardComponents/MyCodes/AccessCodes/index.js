@@ -81,6 +81,7 @@ class index extends Component {
     status:"",
     updatesnackbar:false,
     updateresponse:"",
+    addDialogOpen:false
   };
 
   isloading() {
@@ -313,7 +314,8 @@ class index extends Component {
     token1 = localStorage.getItem("Token");
     token = "Token " + token1;
     id = localStorage.getItem("id");
-    
+    await this.getcodes()
+
     await axios
       .get(
         `http://3.22.17.212:8000/api/v1/accounts/employer?email=`,
@@ -328,7 +330,6 @@ class index extends Component {
         emails = res.data;
         console.log("emails", emails);
       });
-await this.getcodes()
     await axios
       .get(
         `http://3.22.17.212:8000/api/v1/accounts/employer?username=`,
@@ -419,7 +420,7 @@ await this.getcodes()
         console.log(response);
       });
   }
-  async updatestatus(id){
+  async updatestatus(){
     let headers = {
       headers: {
         Authorization: token,
@@ -428,12 +429,12 @@ await this.getcodes()
     };
     let bodyFormData = new FormData();
     bodyFormData.append("codeStatus", this.state.status);
-    console.log("check",this.state.status,id)
+    console.log("check",this.state.status,this.state.currentid)
    
 
     await axios
       .put(
-        "http://3.22.17.212:8000/api/v1/codes/access/update-code/"+id,
+        "http://3.22.17.212:8000/api/v1/codes/access/update-code/"+this.state.currentid,
         bodyFormData,
         headers
       )
@@ -443,6 +444,7 @@ await this.getcodes()
       });
       await this.getcodes()
   }
+
   gettable() {
     return (
       <>
@@ -486,7 +488,7 @@ await this.getcodes()
                   <TableCell align="center">Last Updated</TableCell>
                   <TableCell align="center">Details</TableCell>
                   <TableCell align="center">Actions</TableCell>
-                  <TableCell align="center">Update</TableCell>
+                  {/* <TableCell align="center">Update</TableCell> */}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -521,12 +523,10 @@ await this.getcodes()
                             labelId="demo-simple-select-outlined-label"
                             id={row.id}
                             //  value={this.state.status}
-                             onChange={(event)=>{this.setState({status:event.target.value})}}
+                             onChange={(event)=>{this.setState({status:event.target.value,addDialogOpen:true,currentid:row.id})}}
                             label="Status"
                           >
-                            <MenuItem value="">
-                              <em>None</em>
-                            </MenuItem>
+                           
                             {row.status_options_employee_field.map((val) =>
                               <MenuItem value={val.status}>{val.action}</MenuItem>
                             )}
@@ -534,7 +534,8 @@ await this.getcodes()
                           </Select>
                         </FormControl>
                       </TableCell>
-                      <TableCell align="right">
+                      
+                      {/* <TableCell align="right">
                         <Button
                           size="small"
                           color="secondary"
@@ -544,7 +545,7 @@ await this.getcodes()
                         >
                           Update status
                           </Button>
-                      </TableCell>
+                      </TableCell> */}
                     </TableRow>
                   ))
                   : pendingcodes.map((row, index) => (
@@ -577,12 +578,10 @@ await this.getcodes()
                             labelId="demo-simple-select-outlined-label"
                             id={row.id}
                             //  value={this.state.status}
-                             onChange={(event)=>{this.setState({status:event.target.value})}}
+                             onChange={(event)=>{this.setState({status:event.target.value,addDialogOpen:true,currentid:row.id})}}
                             label="Status"
                           >
-                            <MenuItem value="">
-                              <em>None</em>
-                            </MenuItem>
+                           
                             {row.status_options_employee_field.map((val) =>
                               <MenuItem value={val.status}>{val.action}</MenuItem>
                             )}
@@ -590,7 +589,7 @@ await this.getcodes()
                           </Select>
                         </FormControl>
                       </TableCell>
-                      <TableCell align="right">
+                      {/* <TableCell align="right">
                         <Button
                           size="small"
                           color="secondary"
@@ -599,16 +598,66 @@ await this.getcodes()
                         >
                           Update
                           </Button>
-                      </TableCell>
+                      </TableCell> */}
                     </TableRow>
                   ))}
               </TableBody>
             </Table>
           </TableContainer>
         </Grid>
-        {this.updatesnackbar()}
+       
+     
+        {
+          <div>
+          <Dialog
+                  open={this.state.addDialogOpen}
+                  onClose={() => this.setState({ addDialogOpen: true })}
+                  aria-labelledby="form-dialog-title"
+                >
+                  <DialogTitle id="form-dialog-title" justify="center">
+                    Update status
+              </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                    Are you sure you want to do this?
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      onClick={() => {
+                        this.setState(
+                          {
+                            addDialogOpen: false,
+                           
+                          },
+                          this.updatestatus
+                        );
+                      }}
+                    >
+                      Submit Profile
+                </Button>
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      onClick={() =>
+                        this.setState({
+                          addDialogOpen: false,
+                          status:"",
+                          currentid:""
+                        })
+                      }
+                    >
+                      Cancel
+                </Button>
+                  </DialogActions>
+                </Dialog>
+                </div>
+  }
         {/* </Paper> */}
-
+        {this.updatesnackbar()}
+        {/* {this.updatestatus()} */}
         {/* GENERATE NEW CODE DIALOG DATA */}
 
         <div>
