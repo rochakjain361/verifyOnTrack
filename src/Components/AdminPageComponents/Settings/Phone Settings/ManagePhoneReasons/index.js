@@ -31,9 +31,9 @@ import Select from '@material-ui/core/Select';
 import DeleteIcon from '@material-ui/icons/Delete';
 import axios from 'axios'
 
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+let token1 = "";
+let token = "";
+let id = "";
 const api = "http://3.22.17.212:8000"
 
 
@@ -80,6 +80,9 @@ class index extends Component {
     }
 
     async componentDidMount() {
+        token1 = localStorage.getItem("Token");
+token = "Token " + token1;
+id = localStorage.getItem("id");
         this.getPhoneReasons();
         // this.setState({ loading: !this.state.loading })
     }

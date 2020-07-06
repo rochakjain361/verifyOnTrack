@@ -23,9 +23,9 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import axios from 'axios'
 
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+let token1 = "";
+let token = "";
+let id = "";
 const api = "http://3.22.17.212:8000"
 const cors = "https://cors-anywhere.herokuapp.com/"
 
@@ -74,10 +74,13 @@ class index extends Component {
     }
 
     async componentDidMount() {
+        token1 = localStorage.getItem("Token");
+        token = "Token " + token1;
+        id = localStorage.getItem("id");
         this.getPhoneTypes();
     }
 
-    
+
     isloading() {
         return (
             <>
@@ -182,14 +185,14 @@ class index extends Component {
                                 {this.state.allPhoneTypes.map((row, index) => (
                                     <TableRow key={row.id}>
                                         <TableCell align="left">{row.phoneType}</TableCell>
-                                        <TableCell align="right"><Button variant='outlined' size='small' 
-                                        onClick={() => {
-                                            this.setState({
-                                              deleteDialogBox: true,
-                                              selectedIndex: index,
-                                              deleteid: row.id,
-                                            });
-                                          }} color='secondary'>Delete</Button>
+                                        <TableCell align="right"><Button variant='outlined' size='small'
+                                            onClick={() => {
+                                                this.setState({
+                                                    deleteDialogBox: true,
+                                                    selectedIndex: index,
+                                                    deleteid: row.id,
+                                                });
+                                            }} color='secondary'>Delete</Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -277,44 +280,44 @@ class index extends Component {
     }
 
     deleteDialog(selectedIndex) {
-        return(
-        <div>
-        <Dialog
-        open={this.state.deleteDialogBox}
-        onClose={() => this.setState({ deleteDialogBox: false })}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-          Current entry will be deleted, do you want to
-        continue?
+        return (
+            <div>
+                <Dialog
+                    open={this.state.deleteDialogBox}
+                    onClose={() => this.setState({ deleteDialogBox: false })}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Current entry will be deleted, do you want to
+                            continue?
           </DialogContentText>
-        </DialogContent>
-        <DialogActions style={{ padding: 15 }}>
-          <Button
-            style={{ width: 85 }}
-            color="primary"
-            variant="contained"
-            onClick={() => {
-                this.deletePhoneType(this.state.deleteid);
-                this.setState({deleteDialogBox: false})
-              }}
-          >
-            Delete
+                    </DialogContent>
+                    <DialogActions style={{ padding: 15 }}>
+                        <Button
+                            style={{ width: 85 }}
+                            color="primary"
+                            variant="contained"
+                            onClick={() => {
+                                this.deletePhoneType(this.state.deleteid);
+                                this.setState({ deleteDialogBox: false })
+                            }}
+                        >
+                            Delete
           </Button>
-          <Button
-            color="secondary"
-            variant="contained"
-            onClick={() => {
-                this.setState({deleteDialogBox: false})
-              }}
-          >
-            Cancel
+                        <Button
+                            color="secondary"
+                            variant="contained"
+                            onClick={() => {
+                                this.setState({ deleteDialogBox: false })
+                            }}
+                        >
+                            Cancel
           </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+                    </DialogActions>
+                </Dialog>
+            </div>
         );
     }
 
@@ -332,28 +335,28 @@ class index extends Component {
     // }
 
     async deletePhoneType(id) {
-    this.setState({ deleteDialogBox: false })
-    try {
-        let response = await axios.delete(
-            api + "/api/v1/resManager/phone/types/" + id + "/",
-            {
+        this.setState({ deleteDialogBox: false })
+        try {
+            let response = await axios.delete(
+                api + "/api/v1/resManager/phone/types/" + id + "/",
+                {
 
-                headers: {
-                    Authorization: token,
-                    // 'Content-Type': 'application/json'
-                },
-            }
-        );
-        console.log('Success:', response);
-        await this.getPhoneTypes();
-        this.setState({ snackbar: true, snackbarresponse: response });
-        
-    } catch (error) {
-        console.log("[!ON_REGISTER] " + error);
-        this.setState({ snackbar: true, snackbarresponse: error.response })
+                    headers: {
+                        Authorization: token,
+                        // 'Content-Type': 'application/json'
+                    },
+                }
+            );
+            console.log('Success:', response);
+            await this.getPhoneTypes();
+            this.setState({ snackbar: true, snackbarresponse: response });
+
+        } catch (error) {
+            console.log("[!ON_REGISTER] " + error);
+            this.setState({ snackbar: true, snackbarresponse: error.response })
+        }
+        this.getPhoneTypes();
     }
-    this.getPhoneTypes();
-}
 }
 
 export default withStyles(styles)(index);

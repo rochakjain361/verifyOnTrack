@@ -109,7 +109,7 @@ class index extends React.Component {
               <TextField
                 id="idSource"
                 label="Id Source"
-                defaultValue={id.idSource}
+                defaultValue={id.idSource_name_field}
                 type="text"
                 InputProps={{
                   readOnly: true,
