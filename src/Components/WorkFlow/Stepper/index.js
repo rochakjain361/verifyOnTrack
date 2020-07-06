@@ -173,7 +173,7 @@ export default function HorizontalLinearStepper(props) {
    
             }
             else{
-                setActiveStep(5)
+                setActiveStep(4)
             }
            
         }
@@ -223,14 +223,11 @@ export default function HorizontalLinearStepper(props) {
         setToken("Token " + Token1);
         setid(localStorage.getItem("id"));
        if(props.location.state.detail.user.info_provided_field.profile === true&&props.location.state.detail.user.info_provided_field.address === true&&Approval===false&&props.location.state.detail.user.info_provided_field.identity === true&&props.location.state.detail.user.info_provided_field.phone === true){
-        apiCheck()
+        // apiCheck()
        }
         // setActiveStep(2);
     }, console.log(Token, "Token////////////////////////"));
-    // const profileCheck=()=>{
-    //     setProfiledone(true)
-
-    // }
+   
     const isStepOptional = (step) => {
         return step === 1;
     };

@@ -93,7 +93,7 @@ export default function Datatable(props) {
                         {props.data.data.map((row, index) => (
                             <TableRow key={row.id}>
                                 <TableCell align="left">{row.initialDate_field}</TableCell>
-                                <TableCell align="left">{row.messageDate}</TableCell>
+                                <TableCell align="left">{new Date(row.messageDate).toDateString()}</TableCell>
                                 <TableCell align="left">{row.discuss_with_employer_field}</TableCell>
                                 <TableCell align="left">{row.message}</TableCell>
                                 <TableCell align="left">{row.total_items_field}</TableCell>
