@@ -83,7 +83,7 @@ export class index extends Component {
     async getReasons() {
         this.setState({ loading: true });
         await axios
-            .get("https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/job/leaving-reasons", {
+            .get("http://3.22.17.212:8000/api/v1/resManager/job/leaving-reasons/", {
                 headers: {
                     Authorization: token,
                 },
