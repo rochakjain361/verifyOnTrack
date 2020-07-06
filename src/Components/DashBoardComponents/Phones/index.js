@@ -309,7 +309,7 @@ class Phones extends Component {
                       <TableCell align="center" style={{ fontWeight: "bolder", }}>Phone</TableCell>
                       <TableCell align="center" style={{ fontWeight: "bolder", }}>IMEI</TableCell>
                       <TableCell align="center" style={{ fontWeight: "bolder", }}>Default phone</TableCell>
-                      <TableCell align="center" style={{ fontWeight: "bolder", }}>Source</TableCell>
+                      <TableCell align="center" style={{ fontWeight: "bolder", }}>PhoneType</TableCell>
                       <TableCell align="center" style={{ fontWeight: "bolder", }}>VerifiedBy</TableCell>
                       <TableCell align="center" style={{ fontWeight: "bolder", }}>Start Date</TableCell>
                       {/* <TableCell align="center">IdNumber</TableCell> */}
@@ -325,7 +325,7 @@ class Phones extends Component {
                         <TableCell align="center">{row.imeiNumber}</TableCell>
                         <TableCell align="center">{row.default_phone}</TableCell>
                         <TableCell align="center">
-                          {row.source_name_field}
+                          {row.phone_type_name_field}
                         </TableCell>
 
                         <TableCell align="center">{row.owner_name_field}</TableCell>
@@ -776,8 +776,8 @@ class Phones extends Component {
                     {history.map((row, index) => (
                       <TableRow key={row.id}>
                         <TableCell align="center">{row.phoneNumber}</TableCell>
-                        <TableCell align="center">{row.phone_reason}</TableCell>
-                        <TableCell align="center">{row.phone_type}</TableCell>
+                        <TableCell align="center">{row.phone_reason_name_field}</TableCell>
+                        <TableCell align="center">{row.phone_type_name_field}</TableCell>
                         <TableCell align="center">{row.default_phone}</TableCell>
                         <TableCell align="center">
                           {row.imeiNumber}

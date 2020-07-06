@@ -360,7 +360,7 @@ class Addresses extends PureComponent {
                       "State/LGA/City",
                       "Google link",
                    
-                        "Address source",
+                        "Address Type",
                         "Default Address",
                         "Verifier",
                         "Update",
@@ -399,7 +399,7 @@ class Addresses extends PureComponent {
                         </TableCell>
                         
                         <TableCell align="center" size="small" padding="none">
-                          {row.source_name_field}
+                          {row.address_type_name_field}
                         </TableCell>
                         <TableCell align="center" size="small" padding="none">
                           {row.default_address}
@@ -1207,8 +1207,8 @@ class Addresses extends PureComponent {
                             Location
                         </a>
                         </TableCell>
-                        <TableCell align="center">{row.address_reason}</TableCell>{" "}
-                        <TableCell align="center">{row.address_type}</TableCell>{" "}
+                        <TableCell align="center">{row.address_reason_name_field}</TableCell>{" "}
+                        <TableCell align="center">{row.address_type_name_field}</TableCell>{" "}
                         <TableCell component="th" align="center">
                           {new Date(row.created_on).toDateString()}
                         </TableCell>
