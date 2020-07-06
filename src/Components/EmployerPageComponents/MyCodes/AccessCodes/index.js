@@ -79,6 +79,9 @@ class index extends Component {
         status: '',
         employeeName: '',
 
+        addDialogOpen: false,
+        currentid:"",
+
         codeRatings: false,
         codeAddress: false,
         codeProfile: false,
@@ -268,8 +271,8 @@ class index extends Component {
                                                     <TableCell align="left">Code Status</TableCell>
                                                     <TableCell align="left">Last Updated</TableCell>
                                                     <TableCell align="center">View</TableCell>
-                                                    <TableCell align="left">Actions</TableCell>
-                                                    <TableCell align="left">Update Status</TableCell>
+                                                    <TableCell align="left">Status</TableCell>
+                                                    {/* <TableCell align="left">Update Status</TableCell> */}
                                                 </TableRow>
                                             </TableHead>
                                             {this.tableDisplayLogic()}
@@ -283,6 +286,7 @@ class index extends Component {
 
                                 {/* GENERATE NEW CODE DIALOG DATA */}
                                 {this.generateAccessCode()}
+                                {this.statusDialog()}
 
                             </div>
                         )
@@ -336,14 +340,17 @@ class index extends Component {
 
                         <TableCell align="left">
 
-                            <FormControl variant="outlined" size="medium" style={{ minWidth: 85 }}
+                            {row.codeStatus == "RequestExpired" ? ("NA") : (
+                                <FormControl variant="outlined" size="medium" style={{ minWidth: 150 }}
                                 fullWidth >
                                 <InputLabel id="demo-simple-select-outlined-label">Status</InputLabel>
                                 <Select
                                     labelId="demo-simple-select-outlined-label"
                                     id="demo-simple-select-outlined"
                                     // value={this.state.status}
-                                    onChange={(event) => { this.setState({ status: event.target.value }) }}
+                                    // onChange={(event) => { this.setState({ status: event.target.value }) }}
+                                    onChange={(event)=>{this.setState({status:event.target.value,addDialogOpen:true,currentid:row.id})}}
+
                                     label="Status"
                                 >
                                     <MenuItem value="">
@@ -355,9 +362,10 @@ class index extends Component {
 
                                 </Select>
                             </FormControl>
+                            )}
 
                         </TableCell>
-                        <TableCell align="right">
+                        {/* <TableCell align="right">
                             <Button
                                 size="small"
                                 color="secondary"
@@ -367,7 +375,7 @@ class index extends Component {
                             >
                                 Update Status
                           </Button>
-                        </TableCell>
+                        </TableCell> */}
                     </TableRow>
                 ))}
             </TableBody>
@@ -424,7 +432,9 @@ class index extends Component {
                                     labelId="demo-simple-select-outlined-label"
                                     id="demo-simple-select-outlined"
                                     // value={this.state.status}
-                                    onChange={(event) => { this.setState({ status: event.target.value }) }}
+                                    // onChange={(event) => { this.setState({ status: event.target.value }) }}
+                                    onChange={(event)=>{this.setState({status:event.target.value,addDialogOpen:true,currentid:row.id})}}
+
                                     label="Status"
                                 >
                                     <MenuItem value="">
@@ -438,7 +448,7 @@ class index extends Component {
                             </FormControl>
 
                         </TableCell>
-                        <TableCell align="right">
+                        {/* <TableCell align="right">
                             <Button
                                 size="small"
                                 color="secondary"
@@ -448,7 +458,7 @@ class index extends Component {
                             >
                                 Update Status
                           </Button>
-                        </TableCell>
+                        </TableCell> */}
                     </TableRow>
                 ))}
             </TableBody>
@@ -666,7 +676,7 @@ class index extends Component {
                                     Access granted for:
                                     </Typography>
 
-                                <ExpansionPanel disabled={this.state.canAccessProfile}>
+                                <ExpansionPanel disabled={!this.state.employeeDetailsData['canAccessProfile']}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -682,7 +692,7 @@ class index extends Component {
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
-                                <ExpansionPanel disabled={this.state.canAccessAddresses}>
+                                <ExpansionPanel disabled={!this.state.employeeDetailsData['canAccessAddresses']}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -698,7 +708,7 @@ class index extends Component {
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
-                                <ExpansionPanel disabled={this.state.canAccessIdentities}>
+                                <ExpansionPanel disabled={!this.state.employeeDetailsData['canAccessIdentities']}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -714,7 +724,7 @@ class index extends Component {
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
-                                <ExpansionPanel disabled={this.state.canAccessPhones}>
+                                <ExpansionPanel disabled={!this.state.employeeDetailsData['canAccessPhones']}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -730,7 +740,7 @@ class index extends Component {
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
-                                <ExpansionPanel disabled={this.state.canAccessJobHistory}>
+                                <ExpansionPanel disabled={!this.state.employeeDetailsData['canAccessJobHistory']}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -746,7 +756,7 @@ class index extends Component {
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
-                                <ExpansionPanel disabled={this.state.canAccessRatings}>
+                                <ExpansionPanel disabled={!this.state.employeeDetailsData['canAccessRatings']}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
@@ -980,6 +990,57 @@ class index extends Component {
         );
     }
 
+    statusDialog () {
+        return(
+            <div>
+          <Dialog
+                  open={this.state.addDialogOpen}
+                  onClose={() => this.setState({ addDialogOpen: true })}
+                  aria-labelledby="form-dialog-title"
+                >
+                  <DialogTitle id="form-dialog-title" justify="center">
+                    Update status
+              </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                    Are you sure you want to do this?
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      onClick={() => {
+                        this.setState(
+                          {
+                            addDialogOpen: false,
+                           
+                          },
+                          this.updatestatus
+                        );
+                      }}
+                    >
+                      Yes
+                </Button>
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      onClick={() =>
+                        this.setState({
+                          addDialogOpen: false,
+                          status:"",
+                          currentid:""
+                        })
+                      }
+                    >
+                      No
+                </Button>
+                  </DialogActions>
+                </Dialog>
+                </div>
+        );
+    }
+
     async postGenerateAccessCode() {
 
         let bodyData = {
@@ -1056,7 +1117,7 @@ class index extends Component {
     //     }
     // }
 
-    async updatestatus(id) {
+    async updatestatus() {
         let headers = {
             headers: {
                 Authorization: token,
@@ -1070,7 +1131,7 @@ class index extends Component {
 
         await axios
             .put(
-                "http://3.22.17.212:8000/api/v1/codes/access/update-code/" + id,
+                "http://3.22.17.212:8000/api/v1/codes/access/update-code/" + this.state.currentid,
                 bodyFormData,
                 headers
             )

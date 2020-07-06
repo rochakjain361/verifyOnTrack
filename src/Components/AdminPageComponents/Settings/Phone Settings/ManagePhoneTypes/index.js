@@ -58,7 +58,7 @@ class index extends Component {
 
     async getPhoneTypes() {
         this.setState({ loading: true });
-        let response = await fetch(cors + api + "/api/v1/resManager/phone/types",
+        let response = await fetch(api + "/api/v1/resManager/phone/types/",
             {
                 headers: {
                     'Authorization': token

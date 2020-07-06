@@ -64,6 +64,7 @@ class index extends React.Component {
 
             <Grid item fullWidth xs={12}>
               <TextField
+              style={{ textTransform: 'capitalize' }}
                 id="fullName"
                 label="Full Name"
                 defaultValue={id.fullname}
