@@ -173,7 +173,7 @@ export default function HorizontalLinearStepper(props) {
    
             }
             else{
-                setActiveStep(4)
+                setActiveStep(5)
             }
            
         }
@@ -222,7 +222,7 @@ export default function HorizontalLinearStepper(props) {
         setToken1(localStorage.getItem("Token"));
         setToken("Token " + Token1);
         setid(localStorage.getItem("id"));
-       if(activeStep===4&&Approval===false){
+       if(props.location.state.detail.user.info_provided_field.profile === true&&props.location.state.detail.user.info_provided_field.address === true&&Approval===false&&props.location.state.detail.user.info_provided_field.identity === true&&props.location.state.detail.user.info_provided_field.phone === true){
         apiCheck()
        }
         // setActiveStep(2);
@@ -257,6 +257,8 @@ export default function HorizontalLinearStepper(props) {
                     console.log("else statement in profile stepper");
                     return;
 
+                }else{
+                    setLoading(true)
                 }
            
         let addressdata=await axios
