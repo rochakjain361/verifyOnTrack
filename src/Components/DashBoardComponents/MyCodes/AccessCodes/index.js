@@ -637,7 +637,7 @@ class index extends Component {
                         );
                       }}
                     >
-                      Submit Profile
+                      Yes
                 </Button>
                     <Button
                       color="secondary"
@@ -650,7 +650,7 @@ class index extends Component {
                         })
                       }
                     >
-                      Cancel
+                      No
                 </Button>
                   </DialogActions>
                 </Dialog>

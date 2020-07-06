@@ -100,7 +100,7 @@ export default function Datatable(props) {
                         {props.data.data.map((row, index) => (
                             <TableRow key={row.id}>
                                 <TableCell align="left">{row.initialDate_field}</TableCell>
-                                <TableCell align="left">{row.messageDate}</TableCell>
+                                <TableCell align="left">{new Date(row.messageDate).toDateString()}</TableCell>
                                 <TableCell align="left">{row.discuss_with_employee_field.name}</TableCell>
                                 <TableCell align="left">{row.message}</TableCell>
                                 <TableCell align="left">{row.total_items_field}</TableCell>
@@ -134,11 +134,14 @@ export default function Datatable(props) {
                                 <Card style={{ minWidth: 400, marginTop: 10 }} elevation={4} variant="outlined" >
                                     <CardContent>
                                         <Typography variant="h5" component="h2">{row.initiated_by_field}</Typography>
-                                        <Typography style={{ fontSize: 14 }} color="textSecondary" gutterBottom>{row.initialDate_field}</Typography>
+                                        {/* <Typography style={{ fontSize: 14 }} color="textSecondary" gutterBottom>{row.initialDate_field}</Typography> */}
 
                                         <Typography style={{ marginBottom: 12 }} color="textSecondary"> {row.msgCategory_field}</Typography>
                                         
+                                        <Grid container justify="space-between">
                                         <Typography variant="body2" component="p">{row.message}</Typography>
+                                        <Typography variant="caption" alignItems="flex-end" style={{ fontSize: 16 }} color="textSecondary" >{row.initialDate_field}</Typography>
+                                        </Grid>
                                     </CardContent>
                                 </Card>
                                
