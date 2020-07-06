@@ -241,7 +241,7 @@ export default function MiniDrawer(props) {
                             {theme.direction === 'rtl' ? <ChevronRightIcon style={{ color: "white" }} /> : <ArrowBackIcon style={{ color: "white" }} />}
                         </IconButton>
                     </div>
-                    <Link to="/dashboard" className={classes.link}>
+                    <Link to="/employerDashboard" className={classes.link}>
                         <ListItem button>
                             <ListItemIcon>
                                 <DashboardIcon style={{ color: "white" }} />
@@ -257,7 +257,7 @@ export default function MiniDrawer(props) {
 
                     <ListItem
                         button
-                        onClick={() => setOpen3(!open3)}
+                        onClick={() => setOpen3(!open3), ()=> setOpen(!open)}
                     >
                         <ListItemIcon>
                             <CodeIcon style={{ color: "white" }} />
@@ -273,10 +273,10 @@ export default function MiniDrawer(props) {
                             )}
                     </ListItem>
 
-                    <Collapse in={open3} timeout="auto" unmountOnExit>
+                    <Collapse in={open3, open} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding>
                             <Link to="/employerAccessCodes" className={classes.link}>
-                                <ListItem button className={classes.nested}>
+                                <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
                                     <ListItemText
                                         primary="Access Codes"
                                         className={classes.textColor}
@@ -285,7 +285,7 @@ export default function MiniDrawer(props) {
                             </Link>
 
                             <Link to="/employerEmployementCodes" className={classes.link}>
-                                <ListItem button className={classes.nested}>
+                                <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
                                     <ListItemText
                                         primary="Employement Codes"
                                         className={classes.textColor}
@@ -299,7 +299,7 @@ export default function MiniDrawer(props) {
 
                     <ListItem
                         button
-                        onClick={() => setOpen2(!open2)}
+                        onClick={() => setOpen2(!open2), ()=> setOpen(!open)}
                     >
                         <ListItemIcon>
                             <MessageIcon style={{ color: "white" }} />
@@ -315,10 +315,10 @@ export default function MiniDrawer(props) {
                             )}
                     </ListItem>
 
-                    <Collapse in={open2} timeout="auto" unmountOnExit>
+                    <Collapse in={open2, open} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding>
                             <Link to="/employerInbox" className={classes.link}>
-                                <ListItem button className={classes.nested}>
+                                <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
                                     <ListItemText
                                         primary="Inbox"
                                         className={classes.textColor}
