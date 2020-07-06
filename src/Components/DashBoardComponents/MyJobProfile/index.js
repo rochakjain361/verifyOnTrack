@@ -122,6 +122,7 @@ class myJobProfile extends Component {
         editJobDialogUpdateReason: '',
 
         verificationData: [],
+        verificationEmployeeID: '',
 
         availableCompanies: [],
         check: false,
@@ -160,6 +161,12 @@ class myJobProfile extends Component {
         // console.log('jobIndex:',index)
     }
 
+    async componentWillMount() {
+        const token1 = localStorage.getItem("Token");
+        const token = "Token " + token1;
+        const id = localStorage.getItem("id");
+    }
+
     async componentDidMount() {
 
         const token1 = localStorage.getItem("Token");
@@ -170,7 +177,7 @@ class myJobProfile extends Component {
 
         await axios
             .get(
-                "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/employers",
+                "http://3.22.17.212:8000/api/v1/employers/",
                 {
                     headers: {
                         Authorization:
@@ -185,7 +192,7 @@ class myJobProfile extends Component {
             });
 
         await axios
-            .get("https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/job/categories", {
+            .get("http://3.22.17.212:8000/api/v1/resManager/job/categories/", {
                 headers: {
                     Authorization:
                         token,
@@ -200,7 +207,7 @@ class myJobProfile extends Component {
             });
 
         await axios
-            .get("https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/job/leaving-reasons", {
+            .get("http://3.22.17.212:8000/api/v1/resManager/job/leaving-reasons/", {
                 headers: {
                     Authorization:
                         token,
@@ -838,16 +845,15 @@ class myJobProfile extends Component {
                                                         // onClick={() => {this.setState({ verificationData: this.state.myJobHistory[index] },
                                                         //     () => { console.log('verificationData:', this.state.verificationData})}
                                                         onClick={() => {
-                                                            this.setState({ verificationData: this.state.myJobHistory[index] },
+                                                            this.setState({
+                                                                verificationEmployeeID: this.state.myJobHistory[index].employee,
+                                                                verificationData: this.state.myJobHistory[index]
+                                                            },
                                                                 () => {
-                                                                    console.log('verificationData:', this.state.verificationData,
-                                                                        'ee_employer', this.state.verificationData['employer_id_field'],
-                                                                        'ee_employee', this.state.verificationData['employee'],
-                                                                        'category: "Employment Verification"',
-                                                                        'requestJobProfile: "true"',
-                                                                        'job_profile:', this.state.verificationData['id'])
+                                                                    console.log('verificationData:', this.state.verificationData, 
+                                                                                'emloyeeId:',this.state.verificationEmployeeID)
                                                                 })
-                                                            this.employerVerification()
+                                                            this.employerVerification(row.employee,row.employer_id_field, row.id)
                                                         }}
                                                     >
                                                         Get Employer Verification
@@ -999,14 +1005,17 @@ class myJobProfile extends Component {
         await this.setState({ editActionsOpen: false })
     }
 
-    async employerVerification() {
+    async employerVerification(employeeId, employerId, rowId) {
+
+        console.log('employeeID:', this.state.verificationEmployeeID, 
+                    'employerId:', this.state.verificationData['employer_id_field'])
 
         let bodyData = {
-            'ee_employer': this.state.verificationData['employer_id_field'],
-            'ee_employee': this.state.verificationData['employee'],
-            'category': 'Employment Verification',
-            'requestJobProfile': "true",
-            'job_profile:': this.state.verificationData['id']
+            'ee_employer': employerId,
+            'ee_employee': employeeId,
+            'category': 'EmploymentVerification',
+            'requestJobProfile': true,
+            'job_profile:': rowId
         }
         console.log('verificationBody:', bodyData)
 

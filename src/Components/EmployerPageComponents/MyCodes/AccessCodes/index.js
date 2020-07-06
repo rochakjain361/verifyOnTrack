@@ -1011,19 +1011,16 @@ class index extends Component {
 
             await this.fetchAllCodes();
             await this.fetchPendingCodes();
+            this.setState({ generateNewEmployementCodeDialog: false })
 
-
-            // this.setState({ addDialogOpen: false })
-            // this.setState({ addJobDialogCompany: "" })
-            // this.setState({ addJobDialogOtherCompany: "" })
-            // this.setState({ addJobDialogStartDate: "" })
-            // this.setState({ addJobDialogEndDate: "" })
-            // this.setState({ addJobDialogPosition: "" })
-            // this.setState({ addJobDialogJobTitle: "" })
-            // this.setState({ addJobDialogJobDescription: "" })
-            // this.setState({ addJobDialogReasonForLeaving: "" })
-            // this.setState({ addJobDialogRating: "" })
-
+            this.setState({ codeProfile: false })
+            this.setState({ codeAddress: false })
+            this.setState({ codeJobHistory: false })
+            this.setState({ codePhones: false })
+            this.setState({ codeIdentities: false })
+            this.setState({ codeRatings: false })
+            this.setState({ employeeVotId: "" })
+            
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
         }
