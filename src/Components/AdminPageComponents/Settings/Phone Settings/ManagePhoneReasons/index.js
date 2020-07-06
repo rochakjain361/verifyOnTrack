@@ -35,7 +35,7 @@ const token1 = localStorage.getItem("Token");
 const token = "Token " + token1;
 const id = localStorage.getItem("id");
 const api = "http://3.22.17.212:8000"
-const cors = "https://cors-anywhere.herokuapp.com/"
+
 
 const styles = theme => ({
 
@@ -64,7 +64,7 @@ class index extends Component {
 
     async getPhoneReasons() {
         this.setState({ loading: true });
-        let response = await fetch(cors + api + "/api/v1/resManager/phone/reasons",
+        let response = await fetch(api + "/api/v1/resManager/phone/reasons/",
             {
                 headers: {
                     'Authorization': token

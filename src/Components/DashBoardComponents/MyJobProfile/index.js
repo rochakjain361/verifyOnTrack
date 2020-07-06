@@ -198,6 +198,8 @@ class myJobProfile extends Component {
 
     async componentDidMount() {
 
+        this.setState({ isLoading: true })
+
         token1 = localStorage.getItem("Token");
         token = "Token " + token1;
         id = localStorage.getItem("id");
@@ -278,6 +280,7 @@ class myJobProfile extends Component {
                 }
                 {this.addJoBHistoryDialog()}
                 {this.editJobHistoryDialog()}
+                {this.snackBar()}
             </div>
         )
     }
@@ -619,7 +622,7 @@ class myJobProfile extends Component {
                                     <Grid item fullWidth xs={12}>
                                         <TextField
                                             id="otherCompany"
-                                            label="Other CCompany"
+                                            label="Other Company"
                                             value={this.state.editJobDialogOtherCompany}
                                             onChange={event => this.setState({ editJobDialogOtherCompany: event.target.value })}
                                             type="text"
@@ -857,7 +860,7 @@ class myJobProfile extends Component {
                                 <TableCell align="left">Position</TableCell>
                                 <TableCell align="left">VON-Status</TableCell>
                                 <TableCell align="left">View</TableCell>
-                                <TableCell align="left">Actions</TableCell>
+                                <TableCell align="center">Actions</TableCell>
 
                             </TableRow>
                         </TableHead>
@@ -975,6 +978,8 @@ class myJobProfile extends Component {
             response = await response.json();
             console.log('AddJobSuccess:', response);
 
+            this.setState({ snackbar: true, snackbarresponse: response });
+
             await this.getJobProfiles();
 
             this.setState({ addDialogOpen: false })
@@ -990,6 +995,7 @@ class myJobProfile extends Component {
 
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
+            this.setState({ snackbar: true, snackbarresponse: error.response });
         }
     }
 
@@ -1023,8 +1029,9 @@ class myJobProfile extends Component {
             );
             response = await response.json();
             console.log('AddJobOtherSuccess:', response);
-
+            
             await this.getJobProfiles();
+            this.setState({ snackbar: true, snackbarresponse: response });
 
             this.setState({ addDialogOpen: false })
             this.setState({ addJobDialogCompany: "" })
@@ -1039,6 +1046,7 @@ class myJobProfile extends Component {
 
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
+            this.setState({ snackbar: true, snackbarresponse: error.response });
         }
     }
 
@@ -1074,6 +1082,7 @@ class myJobProfile extends Component {
 
         await this.getJobProfiles();
         await this.setState({ editActionsOpen: false })
+        this.setState({ snackbar: true, snackbarresponse: response });
     }
 
     async employerVerification(employeeId, employerId, rowId) {
@@ -1101,8 +1110,9 @@ class myJobProfile extends Component {
             });
         response = await response.json(bodyData);
         console.log('verificationSuccess:', response);
+        this.setState({ snackbar: true, snackbarresponse: response });
 
-        // await this.getJobProfiles();
+        await this.getJobProfiles();
     }
 }
 

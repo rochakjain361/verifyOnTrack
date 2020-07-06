@@ -64,7 +64,7 @@ class index extends React.Component{
                         // src={this.state.result[0].picture}
                         style={{ height: "8rem", width: "8rem" }}
                       >
-                        <img src="/images/sampleuserphoto.jpg" width="130" height="130" alt="" />
+                        <img src={id.picture} width="130" height="130" alt="" />
                       </Avatar>
                         </Grid>
 

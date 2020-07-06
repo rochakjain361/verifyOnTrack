@@ -66,6 +66,7 @@ class index extends Component {
         assignedToMe: [],
         pendingApprovalRequests: [],
         bothRequests: [],
+        approvalRowId: '',
 
         userID: '',
         viewId: '',
@@ -335,7 +336,8 @@ class index extends Component {
                                             variant='outlined'
                                             color='secondary'
                                             onClick={() => {
-                                                console.log("row.id:", row.id)
+                                                this.setState({currentid: row.id}, 
+                                                ()=>{console.log('currentId:',this.state.currentid)}) 
                                                 this.assignadminTableButton(row.id)
                                             }}
                                         >
@@ -402,7 +404,8 @@ class index extends Component {
                                             variant='outlined'
                                             color='secondary'
                                             onClick={() => {
-                                                console.log("row.id:", row.id)
+                                                this.setState({currentid: row.id}, 
+                                                ()=>{console.log('currentId:',this.state.currentid)}) 
                                                 this.assignadminTableButton(row.id)
                                             }}
                                         >
@@ -468,7 +471,8 @@ class index extends Component {
                                             variant='outlined'
                                             color='secondary'
                                             onClick={() => {
-                                                console.log("row.id:", row.id)
+                                                this.setState({currentid: row.id}, 
+                                                ()=>{console.log('currentId:',this.state.currentid)}) 
                                                 this.assignadminTableButton(row.id)
                                             }}
                                         >
@@ -545,7 +549,8 @@ class index extends Component {
                                             variant='outlined'
                                             color='secondary'
                                             onClick={() => {
-                                                console.log("row.id:", row.id)
+                                                this.setState({currentid: row.id}, 
+                                                ()=>{console.log('currentId:',this.state.currentid)}) 
                                                 this.assignadminTableButton(row.id)
                                             }}
                                         >
@@ -796,16 +801,17 @@ class index extends Component {
         );
     }
 
-    async assignAdmin(id) {
+    async assignAdmin() {
 
         let bodyData = {
             'assigned_to': this.state.assignAdminId
         }
 
         console.log('Body data:', bodyData)
+        console.log('Id', this.state.approvalRowId)
 
         try {
-            let response = await fetch(api + '/api/v1/codes/approval/' + id + '/assignto',
+            let response = await fetch(api + '/api/v1/codes/approval/' + this.state.currentid + '/assignto',
                 {
                     method: 'PUT',
                     headers: {

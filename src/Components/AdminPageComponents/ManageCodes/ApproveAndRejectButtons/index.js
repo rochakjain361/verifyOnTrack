@@ -55,7 +55,7 @@ class index extends React.Component {
         const approval = this.props.approval;
         const viewId = this.props.viewId;
 
-        let response = await fetch(cors + api + "/api/v1/resManager/account/reject-reasons",
+        let response = await fetch(api + "/api/v1/resManager/account/reject-reasons/",
             {
                 headers: {
                     'Authorization': token
@@ -69,20 +69,19 @@ class index extends React.Component {
     async approveAccount() {
         const approval = this.props.approval;
         const viewId = this.props.viewId;
-        let bodyData = {
-        }
+        let bodyData = {}
 
         console.log('Body data:', approval)
 
         try {
-            let response = await fetch(api + '/api/v1/accounts/approve?approvalCode=' + approval + '-orMy&approve=true',
+            let response = await fetch(api + '/api/v1/accounts/approve?approvalCode=' + approval + '&approve=true',
                 {
                     method: 'POST',
                     headers: {
                         'Authorization': token,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(bodyData)
+                    body: JSON.stringify("")
                 }
             );
             response = await response.json();

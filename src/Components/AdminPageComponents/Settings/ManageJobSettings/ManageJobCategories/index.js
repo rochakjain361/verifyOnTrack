@@ -84,7 +84,7 @@ export class index extends Component {
     async getPositions() {
         this.setState({ loading: true });
         await axios
-            .get("https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/job/categories", {
+            .get("http://3.22.17.212:8000/api/v1/resManager/job/categories/", {
                 headers: {
                     Authorization: token,
                 },
