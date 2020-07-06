@@ -166,10 +166,14 @@ export default function HorizontalLinearStepper(props) {
         else if (props.location.state.detail.user.info_provided_field.jobHistory === false) {
             setActiveStep(4)
         } else {
-            setActiveStep(5)
+           
             if (props.location.state.detail.user.accountStatus === "Approval In Progress") {
                 setApproval(true)
+                setActiveStep(5)
    
+            }
+            else{
+                setActiveStep(4)
             }
            
         }
@@ -218,7 +222,7 @@ export default function HorizontalLinearStepper(props) {
         setToken1(localStorage.getItem("Token"));
         setToken("Token " + Token1);
         setid(localStorage.getItem("id"));
-       if(activeStep===5&&Approval===false){
+       if(activeStep===4&&Approval===false){
         apiCheck()
        }
         // setActiveStep(2);
@@ -237,44 +241,48 @@ export default function HorizontalLinearStepper(props) {
     const apiCheck = async () => {
         // setLoading(true)
         console.log("check suceeded")
-        await axios
+        let profiledata=await axios
             .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/profiles", {
                 headers: {
                     Authorization: Token,
                 },
             })
-            .then((res) => {
+           
 
 
-                console.log("Profile Data", res.data);
-                if (res.data.length > 0) {
-                    
-                } else {
+                console.log("Profile Data from stepper", profiledata.data);
+                if(profiledata.data.length==0) {
                     setLoading(false)
                     setallData(true)
+                    console.log("else statement in profile stepper");
                     return;
 
                 }
-            });
-        await axios
+           
+        let addressdata=await axios
             .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/addresses", {
                 headers: {
                     Authorization: Token,
                 },
             })
-            .then((res) => {
+          
                 // result = res.data;
-                if (res.data.length > 0) {
-                    
-                } else {
+                console.log("addressdata from stepper",addressdata.data)
+               
+                if(addressdata.data.length==0){
                     setLoading(false)
                     setallData(true)
                     return;
+                    
                 }
+                   
+                
+                
 
-                console.table("addresses", res.data);
-            });
-        await axios
+                
+            
+            console.log("its continuing //////////////////////////////////")
+        let identitesdata=await axios
             .get(
                 "http://3.22.17.212:8000/api/v1/employees/" + id + "/identities-by/" + id,
                 {
@@ -283,52 +291,57 @@ export default function HorizontalLinearStepper(props) {
                     },
                 }
             )
-            .then((res) => {
+           
                 //result = res.data;
-                if (res.data.length > 0) {
-                    
-                } else {
+                console.table("identites from stepper", identitesdata.data);
+                if(identitesdata.data.length===0){
                     setLoading(false)
                     setallData(true)
                     return;
                 }
-                console.table("identites", res.data);
-            });
-        await axios
+                
+         
+        let phonedata=await axios
             .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/phones", {
                 headers: {
                     Authorization: Token,
                 },
             })
-            .then((res) => {
+            
                 //  result = res.data;
-                if (res.data.length > 0) {
-                    
-                } else {
+                console.table("Phones from stepper", phonedata.data);
+               if(phonedata.data.length===0) {
                     setLoading(false)
                     setallData(true)
                     return;
+                }else{
+                    setLoading(false)
+                    setallData(false)
                 }
-                console.table("Phones", res.data);
+                   
+                
+               
                 // console.log(result[0].phone_reason);
-            });
-        let response = await fetch("http://3.22.17.212:8000/api/v1/employees/" + id + "/jobs",
-            {
-                headers: {
-                    'Authorization': Token
-                }
-            });
-        response = await response.json();
-        console.log('allJobs from stepper', response)
-        if (response.length > 0) {
-            setallData(false)
-            setLoading(false)
-            return;
-        } else {
-            setLoading(false)
-            setallData(true)
-            return;
-        }
+           
+        // let response = await fetch("http://3.22.17.212:8000/api/v1/employees/" + id + "/jobs",
+        //     {
+        //         headers: {
+        //             'Authorization': Token
+        //         }
+        //     });
+        // response = await response.json();
+        // console.log('allJobs from stepper', response)
+        
+        // if (response.length > 0) {
+        //     setallData(false)
+        //     setLoading(false)
+           
+        //     return;
+        // } else if(response.data.length===0){
+        //     setLoading(false)
+        //     setallData(true)
+        //     return;
+        // }
 
     }
 
