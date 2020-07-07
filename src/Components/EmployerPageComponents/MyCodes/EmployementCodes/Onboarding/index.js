@@ -19,6 +19,9 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import Fab from "@material-ui/core/Fab";
 
 let token1 = "";
 let token = "";
@@ -50,6 +53,8 @@ class index extends Component {
 
     state = {
         generateNewEmployementCodeDialog: false,
+        viewOfferButton: false,
+        modifyOfferButton: false,
 
         onboardOffers: []
     }
@@ -85,6 +90,12 @@ class index extends Component {
         const { classes } = this.props;
 
         return (
+            this.displayTable()
+        );
+    }
+
+    displayTable() {
+        return (
             <div style={{ marginTop: 20 }}>
                 {/* <Paper style={{ padding: 20, height: '100vh' }}> */}
                 <Grid container justify='space-between' alignItems='center' spacing={4}>
@@ -92,14 +103,20 @@ class index extends Component {
                     <Grid item xs={8}>
                         <Typography variant='h4'>
                             Onboarding
-                                </Typography>
+                        </Typography>
                     </Grid>
 
                     <Grid item xs={4}>
-                        <Button color='secondary' variant='contained' onClick={() => this.setState({ generateNewEmployementCodeDialog: true })} fullWidth>  Generate New Onboarding Request </Button>
+                        <Button 
+                        color='secondary' 
+                        variant='contained' 
+                        onClick={() => this.setState({ generateNewEmployementCodeDialog: true })} fullWidth
+                        >  
+                        Generate New Onboarding Request 
+                        </Button>
                     </Grid>
 
-                    <Grid item>
+                    {/* <Grid item>
                         <FormControlLabel
                             control={
                                 <Checkbox
@@ -111,7 +128,7 @@ class index extends Component {
                             }
                             label="Show open codes"
                         />
-                    </Grid>
+                    </Grid> */}
 
                 </Grid>
 
@@ -140,7 +157,16 @@ class index extends Component {
                                         <TableCell align="left">{row.codeStatus}</TableCell>
                                         <TableCell align="left">{row.statusChangeDate}</TableCell>
                                         <TableCell align="left"></TableCell>
-                                        <TableCell align="left"><Button size='small' color="primary" variant="outlined">View Details</Button></TableCell>
+                                        <TableCell align="left">
+                                            <Button
+                                                size='small'
+                                                color="primary"
+                                                variant="outlined"
+                                                onClick={() => this.setState({ viewOfferButton: true })}
+                                            >
+                                                View Details
+                                                </Button>
+                                        </TableCell>
                                         {/* <TableCell align="right"><Button size='small' color="secondary" variant="outlined">Update</Button></TableCell> */}
                                     </TableRow>
                                 ))}
@@ -154,9 +180,9 @@ class index extends Component {
                 {
                     this.generateNewEmploymentDialog()
                 }
-
+                {this.viewOfferDetailsDialog()}
             </div>
-        )
+        );
     }
 
     generateNewEmploymentDialog() {
@@ -170,7 +196,7 @@ class index extends Component {
         return (
             <div>
                 <Dialog open={this.state.generateNewEmployementCodeDialog} onClose={() => this.setState({ generateNewEmployementCodeDialog: false })} >
-                    <DialogTitle id="alert-dialog-title">{"Code Generator"}</DialogTitle>
+                    <DialogTitle id="alert-dialog-title">{"New Request"}</DialogTitle>
                     <DialogContent>
                         <Grid
                             container
@@ -268,32 +294,32 @@ class index extends Component {
                             ) : (
                                     <Grid item xs={12}>
                                         <Autocomplete
-                                        id="searchByOntracId"
-                                        options={this.state.onTracId}
-                                        getOptionLabel={(VOTId) => VOTId.ontrac_id}
-                                        Username
-                                        fullWidth
-                                        value={this.state.selectedstate}
-                                        onChange={(event, value) => {
-                                            this.setState({ selectedstate: value })
-                                            this.setState({ employeeVotId: value['id'] }, console.log("employeeVotId", value['id']))
-                                            console.log("selectedstate", value);
+                                            id="searchByOntracId"
+                                            options={this.state.onTracId}
+                                            getOptionLabel={(VOTId) => VOTId.ontrac_id}
+                                            Username
+                                            fullWidth
+                                            value={this.state.selectedstate}
+                                            onChange={(event, value) => {
+                                                this.setState({ selectedstate: value })
+                                                this.setState({ employeeVotId: value['id'] }, console.log("employeeVotId", value['id']))
+                                                console.log("selectedstate", value);
 
-                                        }}
-                                        inputValue={this.state.enteredOntracId}
-                                        onInputChange={(event, newInputValue) => {
-                                            this.setState({ enteredOntracId: newInputValue });
-                                            // console.log(newInputValue);
-                                        }}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="Phone"
-                                                margin="normal"
-                                                variant="outlined"
-                                            />
-                                        )}
-                                    />
+                                            }}
+                                            inputValue={this.state.enteredOntracId}
+                                            onInputChange={(event, newInputValue) => {
+                                                this.setState({ enteredOntracId: newInputValue });
+                                                // console.log(newInputValue);
+                                            }}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    label="Phone"
+                                                    margin="normal"
+                                                    variant="outlined"
+                                                />
+                                            )}
+                                        />
                                     </Grid>)}
 
                             <Grid item xs={12}>
@@ -417,11 +443,420 @@ class index extends Component {
         );
     }
 
-    // generateNewEmployementCodeButton() {
-    //     return(
-    //  
-    //     )
-    // }
+    viewOfferDetailsDialog() {
+        return (
+            <div>
+                <Dialog open={this.state.viewOfferButton} onClose={() => this.setState({ viewOfferButton: false })} >
+                    <DialogTitle id="alert-dialog-title">{"Job Details"}</DialogTitle>
+                    <DialogContent>
+                        <Grid container justify='space-between' spacing={2}>
+
+                            <Grid item xs={6}>
+                                <TextField
+                                    id="verifyOntracId"
+                                    label="Verify Ontrac Id"
+                                    // defaultValue={id.firstname}
+                                    type="text"
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    fullWidth
+                                    size='small'
+                                />
+                            </Grid>
+
+                            <Grid item>
+                                {this.state.modifyOfferButton ? (
+                                    <>
+                                        <Fab
+                                            size="small"
+                                            color="default"
+                                            onClick={() => this.setState({ modifyOfferButton: !this.state.modifyOfferButton })}
+                                        >
+                                            <ArrowBackIcon />
+                                        </Fab>
+                                    </>
+                                ) : (
+                                        <>
+                                            <Button
+                                                color="primary"
+                                                variant="outlined"
+                                                size='large'
+                                                onClick={() => this.setState({ modifyOfferButton: !this.state.modifyOfferButton })}
+                                            >
+                                                Modify Offer
+                                            </Button>
+                                        </>
+                                    )}
+                            </Grid>
+
+                            {this.state.modifyOfferButton ? (
+                                <>
+                                    <Grid item xs={12}>
+                                        <Paper variant='outlined' style={{ padding: 15 }}>
+                                            <Grid
+                                                container
+                                                justify="flex-start"
+                                                direction="row"
+                                                alignItems="center"
+                                                spacing={2}
+                                            // style={{ padding: 20 }}
+                                            >
+                                                <Grid item xs={12}>
+                                                    <FormLabel component="legend">Enter new offer details:</FormLabel>
+                                                </Grid>
+
+                                                <Grid item xs={12}>
+                                                    <Autocomplete
+                                                        // options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
+                                                        // getOptionLabel={(option) => option.email}
+                                                        // groupBy={(option) => option.firstLetter}
+                                                        id="adminEmail"
+                                                        Username
+                                                        size='small'
+                                                        fullWidth
+                                                        value={this.state.selectedstate}
+                                                        onChange={(event, value) => {
+                                                            this.setState({ selectedstate: value });
+                                                            this.setState({ assignAdminId: value['id'] })
+                                                            console.log("selectedstate", value);
+                                                            console.log("assignAdminID", this.state.assignAdminId);
+                                                        }}
+                                                        inputValue={this.state.enteredUsername}
+                                                        onInputChange={(event, newInputValue) => {
+                                                            this.setState({ enteredUsername: newInputValue });
+                                                            // console.log(newInputValue);
+                                                        }}
+                                                        renderInput={(params) => (
+                                                            <TextField
+                                                                {...params}
+                                                                label="Job Type"
+                                                                margin="normal"
+                                                                variant="outlined"
+                                                            />
+                                                        )}
+                                                    />
+                                                </Grid>
+
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        id="startingSalary"
+                                                        label="Starting Salary"
+                                                        variant="outlined"
+                                                        // value={id.firstname}
+                                                        // onChange={}
+                                                        type="number"
+                                                        fullWidth
+                                                        size='small'
+                                                    />
+                                                </Grid>
+
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        id="startingDate"
+                                                        // label="Starting Salary"
+                                                        variant="outlined"
+                                                        // value={id.firstname}
+                                                        // onChange={}
+                                                        type="date"
+                                                        helperText="Starting date"
+                                                        fullWidth
+                                                        size='small'
+                                                    />
+                                                </Grid>
+
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        id="jobDescription"
+                                                        label="Job Description"
+                                                        variant="outlined"
+                                                        // value={id.firstname}
+                                                        // onChange={}
+                                                        type="date"
+                                                        fullWidth
+                                                        multiline
+                                                        rows={3}
+                                                        size='small'
+                                                    />
+                                                </Grid>
+
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        id="otherConditions"
+                                                        label="Other Conditions"
+                                                        variant="outlined"
+                                                        // value={id.firstname}
+                                                        // onChange={}
+                                                        type="date"
+                                                        fullWidth
+                                                        multiline
+                                                        rows={3}
+                                                        size='small'
+                                                    />
+                                                </Grid>
+
+                                            </Grid>
+                                        </Paper>
+                                    </Grid>
+                                </>
+                            ) : (
+                                    <>
+                                        <Grid item xs={6}>
+                                            <Paper variant='outlined' style={{ padding: 15 }}>
+                                                <Grid
+                                                    container
+                                                    justify="flex-start"
+                                                    direction="row"
+                                                    alignItems="center"
+                                                    spacing={2}
+                                                // style={{ padding: 20 }}
+                                                >
+                                                    <Grid item xs={12}>
+                                                        <FormLabel component="legend">Modified offer:</FormLabel>
+                                                    </Grid>
+
+                                                    <Grid item xs={12}>
+                                                        <Autocomplete
+                                                            // options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
+                                                            // getOptionLabel={(option) => option.email}
+                                                            // groupBy={(option) => option.firstLetter}
+                                                            id="adminEmail"
+                                                            Username
+                                                            size='small'
+                                                            fullWidth
+                                                            value={this.state.selectedstate}
+                                                            onChange={(event, value) => {
+                                                                this.setState({ selectedstate: value });
+                                                                this.setState({ assignAdminId: value['id'] })
+                                                                console.log("selectedstate", value);
+                                                                console.log("assignAdminID", this.state.assignAdminId);
+                                                            }}
+                                                            inputValue={this.state.enteredUsername}
+                                                            onInputChange={(event, newInputValue) => {
+                                                                this.setState({ enteredUsername: newInputValue });
+                                                                // console.log(newInputValue);
+                                                            }}
+                                                            renderInput={(params) => (
+                                                                <TextField
+                                                                    {...params}
+                                                                    label="Job Type"
+                                                                    margin="normal"
+                                                                    variant="outlined"
+                                                                />
+                                                            )}
+                                                        />
+                                                    </Grid>
+
+                                                    <Grid item xs={12}>
+                                                        <TextField
+                                                            id="startingSalary"
+                                                            label="Starting Salary"
+                                                            variant="outlined"
+                                                            // value={id.firstname}
+                                                            // onChange={}
+                                                            type="number"
+                                                            fullWidth
+                                                            size='small'
+                                                        />
+                                                    </Grid>
+
+                                                    <Grid item xs={12}>
+                                                        <TextField
+                                                            id="startingDate"
+                                                            // label="Starting Salary"
+                                                            variant="outlined"
+                                                            // value={id.firstname}
+                                                            // onChange={}
+                                                            type="date"
+                                                            helperText="Starting date"
+                                                            fullWidth
+                                                            size='small'
+                                                        />
+                                                    </Grid>
+
+                                                    <Grid item xs={12}>
+                                                        <TextField
+                                                            id="jobDescription"
+                                                            label="Job Description"
+                                                            variant="outlined"
+                                                            // value={id.firstname}
+                                                            // onChange={}
+                                                            type="date"
+                                                            fullWidth
+                                                            multiline
+                                                            rows={3}
+                                                            size='small'
+                                                        />
+                                                    </Grid>
+
+                                                    <Grid item xs={12}>
+                                                        <TextField
+                                                            id="otherConditions"
+                                                            label="Other Conditions"
+                                                            variant="outlined"
+                                                            // value={id.firstname}
+                                                            // onChange={}
+                                                            type="date"
+                                                            fullWidth
+                                                            multiline
+                                                            rows={3}
+                                                            size='small'
+                                                        />
+                                                    </Grid>
+
+                                                </Grid>
+                                            </Paper>
+                                        </Grid>
+
+                                        <Grid item xs={6}>
+                                            <Paper variant='outlined' style={{ padding: 15 }}>
+                                                <Grid
+                                                    container
+                                                    justify="flex-start"
+                                                    direction="row"
+                                                    alignItems="center"
+                                                    spacing={2}
+                                                // style={{ padding: 20 }}
+                                                >
+                                                    <Grid item xs={12}>
+                                                        <FormLabel component="legend">Original offer:</FormLabel>
+                                                    </Grid>
+
+                                                    <Grid item xs={12}>
+                                                        <Autocomplete
+                                                            // options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
+                                                            // getOptionLabel={(option) => option.email}
+                                                            // groupBy={(option) => option.firstLetter}
+                                                            id="adminEmail"
+                                                            Username
+                                                            size='small'
+                                                            fullWidth
+                                                            value={this.state.selectedstate}
+                                                            onChange={(event, value) => {
+                                                                this.setState({ selectedstate: value });
+                                                                this.setState({ assignAdminId: value['id'] })
+                                                                console.log("selectedstate", value);
+                                                                console.log("assignAdminID", this.state.assignAdminId);
+                                                            }}
+                                                            inputValue={this.state.enteredUsername}
+                                                            onInputChange={(event, newInputValue) => {
+                                                                this.setState({ enteredUsername: newInputValue });
+                                                                // console.log(newInputValue);
+                                                            }}
+                                                            renderInput={(params) => (
+                                                                <TextField
+                                                                    {...params}
+                                                                    label="Job Type"
+                                                                    margin="normal"
+                                                                    variant="outlined"
+                                                                />
+                                                            )}
+                                                        />
+                                                    </Grid>
+
+                                                    <Grid item xs={12}>
+                                                        <TextField
+                                                            id="startingSalary"
+                                                            label="Starting Salary"
+                                                            variant="outlined"
+                                                            // value={id.firstname}
+                                                            // onChange={}
+                                                            type="number"
+                                                            fullWidth
+                                                            size='small'
+                                                        />
+                                                    </Grid>
+
+                                                    <Grid item xs={12}>
+                                                        <TextField
+                                                            id="startingDate"
+                                                            // label="Starting Salary"
+                                                            variant="outlined"
+                                                            // value={id.firstname}
+                                                            // onChange={}
+                                                            type="date"
+                                                            helperText="Starting date"
+                                                            fullWidth
+                                                            size='small'
+                                                        />
+                                                    </Grid>
+
+                                                    <Grid item xs={12}>
+                                                        <TextField
+                                                            id="jobDescription"
+                                                            label="Job Description"
+                                                            variant="outlined"
+                                                            // value={id.firstname}
+                                                            // onChange={}
+                                                            type="date"
+                                                            fullWidth
+                                                            multiline
+                                                            rows={3}
+                                                            size='small'
+                                                        />
+                                                    </Grid>
+
+                                                    <Grid item xs={12}>
+                                                        <TextField
+                                                            id="otherConditions"
+                                                            label="Other Conditions"
+                                                            variant="outlined"
+                                                            // value={id.firstname}
+                                                            // onChange={}
+                                                            type="date"
+                                                            fullWidth
+                                                            multiline
+                                                            rows={3}
+                                                            size='small'
+                                                        />
+                                                    </Grid>
+
+                                                </Grid>
+                                            </Paper>
+                                        </Grid>
+                                    </>
+                                )}
+
+                        </Grid>
+
+                    </DialogContent>
+                    <DialogActions style={{ padding: 15 }}>
+                        {this.state.modifyOfferButton ? (
+                            <>
+                                <Button
+                                    color="primary"
+                                    variant="contained"
+                                    onClick={() => this.setState({ viewOfferButton: false, selectedIndex: -1 })}
+                                    style={{ minWidth: 200 }}
+                                >
+                                    Send New Offer
+                        </Button>
+                            </>
+                        ) : (
+                                <>
+                                    <Button
+                                        color="primary"
+                                        variant="contained"
+                                        onClick={() => this.setState({ viewOfferButton: false, selectedIndex: -1 })}
+                                        style={{ minWidth: 200 }}
+                                    >
+                                        Confirm Employee Onboard
+                        </Button>
+                                </>
+                            )}
+                        <Button
+                            color="secondary"
+                            variant="contained"
+                            onClick={() => this.setState({ viewOfferButton: false, selectedIndex: -1 })}
+                            style={{ minWidth: 200 }}
+                        >
+                            Cancel Offer
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        )
+    }
 }
 
 export default withStyles(styles)(index);
