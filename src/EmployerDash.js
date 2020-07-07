@@ -29,7 +29,8 @@ import Dashboard from './Components/EmployerPageComponents/Dashboard'
 import Index from './Components/EmployerPageComponents/Messages/Inbox/index'
 import Outbox from './Components/EmployerPageComponents/Messages/Outbox'
 import AccessCodes from './Components/EmployerPageComponents/MyCodes/AccessCodes'
-import EmployementCodes from './Components/EmployerPageComponents/MyCodes/EmployementCodes'
+import EmployementCodes from './Components/EmployerPageComponents/MyCodes/EmployementCodes/EmploymentVerification'
+import EmploymentTabs from './Components/EmployerPageComponents/MyCodes/EmployementCodes/EmploymentTabs'
 
 const drawerWidth = 240;
 let token1 = "";
@@ -284,7 +285,7 @@ export default function MiniDrawer(props) {
                                 </ListItem>
                             </Link>
 
-                            <Link to="/employerEmployementCodes" className={classes.link}>
+                            <Link to="/employerEmployment" className={classes.link}>
                                 <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
                                     <ListItemText
                                         primary="Employement Codes"
@@ -368,9 +369,9 @@ export default function MiniDrawer(props) {
                 </Container>
               </Route>
 
-              <Route exact path="/employerEmployementCodes">
+              <Route exact path="/employerEmployment">
                 <Container>
-                  <EmployementCodes />
+                  <EmploymentTabs />
                 </Container>
               </Route>
             </Switch>

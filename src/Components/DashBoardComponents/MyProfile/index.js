@@ -470,7 +470,7 @@ class MyProfile extends Component {
                       xs={6}>
 
                       <Typography variant='h2'
-                      // style={{ fontFamily: "Montserrat", textTransform: 'capitalize' }}
+                      style={{textTransform: 'capitalize'}}
                       >
                         {this.state.result[0].firstname} {this.state.result[0].middlename} {this.state.result[0].surname}
                       </Typography>
@@ -572,7 +572,7 @@ class MyProfile extends Component {
                       /> */}
                     </Avatar>
                   </TableCell>
-                  <TableCell align="center"> {row.firstname} {row.middlename} {row.surname}</TableCell>
+                  <TableCell align="center" style={{textTransform: 'capitalize'}}> {row.firstname} {row.middlename} {row.surname}</TableCell>
                   <TableCell align="center">{row.sex}</TableCell>
                   <TableCell align="center">{row.dob}</TableCell>
                   <TableCell align="center">{row.source_name_field}</TableCell>

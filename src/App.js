@@ -20,6 +20,7 @@ import ApprovalCodes from './Components/AdminPageComponents/ManageCodes/Approval
 import Job from './Components/AdminPageComponents/ManageCodes/Pages/Job';
 import AdminDash from './AdminDash'
 import EmployerDash from './EmployerDash'
+import EmloymentTabs from './Components/EmployerPageComponents/MyCodes/EmployementCodes/EmploymentTabs'
 
 
 class App extends React.PureComponent {
@@ -62,6 +63,7 @@ class App extends React.PureComponent {
               <Route exact path='/employerEmployementCodes' component={EmployerDash} />
               <Route exact path='/employerInbox' component={EmployerDash} />
               <Route exact path='/employerOutbox' component={EmployerDash} />
+              <Route exact path='/employerEmployment' component={EmployerDash} />
 
               {/* ADMIN PAGE PATHS */}
               {/* <Route exact path='/adminLanding' component={AdminDash} /> */}
