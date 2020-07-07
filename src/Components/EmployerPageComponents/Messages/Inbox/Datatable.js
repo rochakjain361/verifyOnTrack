@@ -37,8 +37,8 @@ export default function Datatable(props) {
         setMessage("")
     }
     const ViewMessage = async (id) => {
-        Token1 = await localStorage.getItem("Token");
-        Token = await "Token " + Token1;
+       
+        Token = await localStorage.getItem("Token");
         Id = await localStorage.getItem("id")
         setviewDetailsButton(true)
         // setCurrentID(id);

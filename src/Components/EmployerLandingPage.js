@@ -80,8 +80,8 @@ class EmployerLandingPage extends React.PureComponent {
     open2: false,
   };
   async componentDidMount() {
-    token1 = localStorage.getItem("Token");
-    token = "Token " + token1;
+  
+    token = localStorage.getItem("Token");
     id = localStorage.getItem("id");
 
   }

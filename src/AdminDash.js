@@ -163,8 +163,8 @@ export default function MiniDrawer(props) {
     const [id, setid] = React.useState("");
     // const [anchorEl, setAnchorEl] = React.useState(false);
     useEffect(() => {
-        setToken1(localStorage.getItem("Token"));
-        setToken("Token " + Token1);
+      
+        setToken(localStorage.getItem("Token"));
         setid(localStorage.getItem("id"));
     });
 

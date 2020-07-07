@@ -20,9 +20,9 @@ import axios from 'axios'
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+
+let token = localStorage.getItem("Token")
+let id = localStorage.getItem("id");
 const api = "http://3.22.17.212:8000"
 const cors = "https://cors-anywhere.herokuapp.com/"
 
@@ -124,9 +124,9 @@ class index extends React.Component {
     }
 
     async componentDidMount() {
-        const token1 = localStorage.getItem("Token");
-        const token = "Token " + token1;
-        const id = localStorage.getItem("id");
+         
+         token = localStorage.getItem("Token");
+         id = localStorage.getItem("id");
 
         this.fetchrejectReasons()
     }

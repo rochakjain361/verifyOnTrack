@@ -80,7 +80,7 @@ class index extends Component {
         employeeName: '',
 
         addDialogOpen: false,
-        currentid:"",
+        currentid: "",
 
         codeRatings: false,
         codeAddress: false,
@@ -178,8 +178,8 @@ class index extends Component {
 
     async componentDidMount() {
 
-        token1 = localStorage.getItem("Token");
-        token = "Token " + token1;
+        
+        token = localStorage.getItem("Token");
         id = localStorage.getItem("id");
 
         await this.fetchAllCodes();
@@ -342,26 +342,26 @@ class index extends Component {
 
                             {row.codeStatus == "RequestExpired" ? ("NA") : (
                                 <FormControl variant="outlined" size="medium" style={{ minWidth: 150 }}
-                                fullWidth >
-                                <InputLabel id="demo-simple-select-outlined-label">Status</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-outlined-label"
-                                    id="demo-simple-select-outlined"
-                                    // value={this.state.status}
-                                    // onChange={(event) => { this.setState({ status: event.target.value }) }}
-                                    onChange={(event)=>{this.setState({status:event.target.value,addDialogOpen:true,currentid:row.id})}}
+                                    fullWidth >
+                                    <InputLabel id="demo-simple-select-outlined-label">Status</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-outlined-label"
+                                        id="demo-simple-select-outlined"
+                                        // value={this.state.status}
+                                        // onChange={(event) => { this.setState({ status: event.target.value }) }}
+                                        onChange={(event) => { this.setState({ status: event.target.value, addDialogOpen: true, currentid: row.id }) }}
 
-                                    label="Status"
-                                >
-                                    <MenuItem value="">
-                                        <em>None</em>
-                                    </MenuItem>
-                                    {row.status_options_employer_field.map((val) =>
-                                        <MenuItem value={val.status}>{val.action}</MenuItem>
-                                    )}
+                                        label="Status"
+                                    >
+                                        <MenuItem value="">
+                                            <em>None</em>
+                                        </MenuItem>
+                                        {row.status_options_employer_field.map((val) =>
+                                            <MenuItem value={val.status}>{val.action}</MenuItem>
+                                        )}
 
-                                </Select>
-                            </FormControl>
+                                    </Select>
+                                </FormControl>
                             )}
 
                         </TableCell>
@@ -433,7 +433,7 @@ class index extends Component {
                                     id="demo-simple-select-outlined"
                                     // value={this.state.status}
                                     // onChange={(event) => { this.setState({ status: event.target.value }) }}
-                                    onChange={(event)=>{this.setState({status:event.target.value,addDialogOpen:true,currentid:row.id})}}
+                                    onChange={(event) => { this.setState({ status: event.target.value, addDialogOpen: true, currentid: row.id }) }}
 
                                     label="Status"
                                 >
@@ -990,54 +990,54 @@ class index extends Component {
         );
     }
 
-    statusDialog () {
-        return(
+    statusDialog() {
+        return (
             <div>
-          <Dialog
-                  open={this.state.addDialogOpen}
-                  onClose={() => this.setState({ addDialogOpen: true })}
-                  aria-labelledby="form-dialog-title"
+                <Dialog
+                    open={this.state.addDialogOpen}
+                    onClose={() => this.setState({ addDialogOpen: true })}
+                    aria-labelledby="form-dialog-title"
                 >
-                  <DialogTitle id="form-dialog-title" justify="center">
-                    Update status
+                    <DialogTitle id="form-dialog-title" justify="center">
+                        Update status
               </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText>
-                    Are you sure you want to do this?
+                    <DialogContent>
+                        <DialogContentText>
+                            Are you sure you want to do this?
                 </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                      color="primary"
-                      variant="contained"
-                      onClick={() => {
-                        this.setState(
-                          {
-                            addDialogOpen: false,
-                           
-                          },
-                          this.updatestatus
-                        );
-                      }}
-                    >
-                      Yes
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            color="primary"
+                            variant="contained"
+                            onClick={() => {
+                                this.setState(
+                                    {
+                                        addDialogOpen: false,
+
+                                    },
+                                    this.updatestatus
+                                );
+                            }}
+                        >
+                            Yes
                 </Button>
-                    <Button
-                      color="secondary"
-                      variant="contained"
-                      onClick={() =>
-                        this.setState({
-                          addDialogOpen: false,
-                          status:"",
-                          currentid:""
-                        })
-                      }
-                    >
-                      No
+                        <Button
+                            color="secondary"
+                            variant="contained"
+                            onClick={() =>
+                                this.setState({
+                                    addDialogOpen: false,
+                                    status: "",
+                                    currentid: ""
+                                })
+                            }
+                        >
+                            No
                 </Button>
-                  </DialogActions>
+                    </DialogActions>
                 </Dialog>
-                </div>
+            </div>
         );
     }
 

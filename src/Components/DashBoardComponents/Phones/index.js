@@ -98,8 +98,8 @@ class Phones extends Component {
       });
   }
   async componentDidMount() {
-    token1 = localStorage.getItem("Token");
-    token = "Token " + token1;
+    
+    token = localStorage.getItem("Token");
     id = localStorage.getItem("id");
     await this.getphonedata();
     await axios

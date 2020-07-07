@@ -47,8 +47,8 @@ export default function Index() {
 
     
     const fetchInboxMessages=async()=> {
-        const Token1=await localStorage.getItem("Token");
-        const Token=await "Token " + Token1;
+        
+        Token=await localStorage.getItem("Token");
         console.log("Token",Token)
         const Id=localStorage.getItem("id")
         await Axios.get('http://3.22.17.212:8000/api/v1/messages/',
