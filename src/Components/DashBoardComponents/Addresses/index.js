@@ -157,8 +157,8 @@ class Addresses extends PureComponent {
       });
   }
   async componentDidMount() {
-    token1 = localStorage.getItem("Token");
-    token = "Token " + token1;
+    
+    token = localStorage.getItem("Token");
     id = localStorage.getItem("id");
     await this.getaddressdata();
 

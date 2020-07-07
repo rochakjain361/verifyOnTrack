@@ -84,8 +84,8 @@ class MyProfile extends Component {
   }
   async componentDidMount() {
     this.setState({ isloading: true })
-    token1 = localStorage.getItem("Token");
-    token = "Token " + token1;
+   
+    token = localStorage.getItem("Token");
     id = localStorage.getItem("id");
     await this.getprofiledata();
     this.setState({ isloading: false });

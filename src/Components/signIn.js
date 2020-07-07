@@ -315,7 +315,8 @@ console.log("///////",window.$IP)
       console.log(data);
 
       if (data.token) {
-        localStorage.setItem("Token", data.token);
+        // localStorage.setItem("Token", data.token);
+        localStorage.setItem("Token","Token "+data.token);
         localStorage.setItem("id", data.user.id);
 
         this.setState({ response: data });

@@ -184,9 +184,9 @@ export default function HorizontalLinearStepper(props) {
 
     const [skipped, setSkipped] = React.useState(new Set());
     const steps = getSteps();
-    const [Token, setToken] = React.useState("");
-    const [Token1, setToken1] = React.useState("");
-    const [id, setid] = React.useState("");
+    // const [Token1, setToken1] = React.useState();
+    const [Token, setToken] = React.useState(localStorage.getItem("Token"));
+    const [id, setid] = React.useState(localStorage.getItem("id"));
     const [approvalButton, setApprovalButton] = React.useState(false);
     const [loading, setLoading] = React.useState(true);
     const [allData, setallData] = React.useState(false);
@@ -219,14 +219,14 @@ export default function HorizontalLinearStepper(props) {
 
 
 
-        setToken1(localStorage.getItem("Token"));
-        setToken("Token " + Token1);
-        setid(localStorage.getItem("id"));
-       if(props.location.state.detail.user.info_provided_field.profile === true&&props.location.state.detail.user.info_provided_field.address === true&&Approval===false&&props.location.state.detail.user.info_provided_field.identity === true&&props.location.state.detail.user.info_provided_field.phone === true){
-        // apiCheck()
-       }
+        
+    //    if(props.location.state.detail.user.info_provided_field.profile === true&&props.location.state.detail.user.info_provided_field.address === true&&Approval===false&&props.location.state.detail.user.info_provided_field.identity === true&&props.location.state.detail.user.info_provided_field.phone === true){
+    //     apiCheck()
+    //     console.log("apicheck")
+    //    }
+      
         // setActiveStep(2);
-    }, console.log(Token, "Token////////////////////////"));
+    },[]);
    
     const isStepOptional = (step) => {
         return step === 1;
@@ -236,7 +236,7 @@ export default function HorizontalLinearStepper(props) {
         return skipped.has(step);
     };
     const apiCheck = async () => {
-        // setLoading(true)
+        setLoading(true)
         console.log("check suceeded")
         let profiledata=await axios
             .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/profiles", {
@@ -254,9 +254,10 @@ export default function HorizontalLinearStepper(props) {
                     console.log("else statement in profile stepper");
                     return;
 
-                }else{
-                    setLoading(true)
                 }
+                // else{
+                //     setLoading(true)
+                // }
            
         let addressdata=await axios
             .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/addresses", {
