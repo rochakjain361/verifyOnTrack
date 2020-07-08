@@ -27,7 +27,7 @@ import { useEffect } from 'react';
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import Dashboard from './Components/EmployerPageComponents/Dashboard'
 import Index from './Components/EmployerPageComponents/Messages/Inbox/index'
-import Outbox from './Components/EmployerPageComponents/Messages/Outbox'
+// import Outbox from './Components/EmployerPageComponents/Messages/Outbox'
 import AccessCodes from './Components/EmployerPageComponents/MyCodes/AccessCodes'
 import EmployementCodes from './Components/EmployerPageComponents/MyCodes/EmployementCodes/EmploymentVerification'
 import EmploymentTabs from './Components/EmployerPageComponents/MyCodes/EmployementCodes/EmploymentTabs'

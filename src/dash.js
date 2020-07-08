@@ -39,10 +39,11 @@ import Identitiestitle from "./Components/DashBoardComponents/Identities/title";
 import PhoneTitle from "./Components/DashBoardComponents/Phones/title";
 import MyJobProfile from "./Components/DashBoardComponents/MyJobProfile";
 import Index from "./Components/DashBoardComponents/Messages/Inbox";
+import Indexemployment from './Components/DashBoardComponents/MyCodes/EmployementCodes/index'
 // import Outbox from "./Components/DashBoardComponents/Messages/Outbox";
 import Profiletitle from "./Components/DashBoardComponents/MyProfile/title";
 import AccessCodes from "./Components/DashBoardComponents/MyCodes/AccessCodes";
-import EmployementCodes from "./Components/DashBoardComponents/MyCodes/EmployementCodes";
+// import EmployementCodes from "./Components/DashBoardComponents/MyCodes/EmployementCodes";s
 import HomeIcon from '@material-ui/icons/Home';
 import PaymentIcon from '@material-ui/icons/Payment';
 import PhoneIcon from '@material-ui/icons/Phone';
@@ -486,7 +487,7 @@ export default function MiniDrawer(props) {
 
               <Route exact path="/employeeEmployementCodes">
                 <Container>
-                  <EmployementCodes />
+                  <Indexemployment />
                 </Container>
               </Route>
             </Switch>

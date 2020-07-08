@@ -32,7 +32,7 @@ import Identities from "../DashBoardComponents/Identities";
 import Phones from "../DashBoardComponents/Phones";
 import MyJobProfile from "../DashBoardComponents/MyJobProfile";
 import Inbox from "../DashBoardComponents/Messages/Inbox";
-import Outbox from "../DashBoardComponents/Messages/Outbox";
+// import Outbox from "../DashBoardComponents/Messages/Outbox";
 import MyProfile from "../DashBoardComponents/MyProfile";
 import AccessCodes from "../DashBoardComponents/MyCodes/AccessCodes";
 import EmployementCodes from "../DashBoardComponents/MyCodes/EmployementCodes";
@@ -312,14 +312,14 @@ class NewLandingPage extends React.PureComponent {
                     </ListItem>
                   </Link>
 
-                  <Link to="/employeeOutbox" className={classes.link}>
+                  {/* <Link to="/employeeOutbox" className={classes.link}>
                     <ListItem button className={classes.nested}>
                       <ListItemText
                         primary="Outbox"
                         className={classes.textColor}
                       />
                     </ListItem>
-                  </Link>
+                  </Link> */}
                 </List>
               </Collapse>
 
@@ -371,11 +371,11 @@ class NewLandingPage extends React.PureComponent {
                 </Container>
               </Route>
 
-              <Route exact path="/employeeOutbox">
+              {/* <Route exact path="/employeeOutbox">
                 <Container>
                   <Outbox />
                 </Container>
-              </Route>
+              </Route> */}
 
               <Route exact path="/employeeAccessCodes">
                 <Container>
