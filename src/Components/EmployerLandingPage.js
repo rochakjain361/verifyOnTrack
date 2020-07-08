@@ -26,7 +26,7 @@ import Collapse from '@material-ui/core/Collapse';
 import axios from "axios";
 import Dashboard from './EmployerPageComponents/Dashboard'
 import Inbox from './EmployerPageComponents/Messages/Inbox'
-import Outbox from './EmployerPageComponents/Messages/Outbox'
+// import Outbox from './EmployerPageComponents/Messages/Outbox'
 import AccessCodes from './EmployerPageComponents/MyCodes/AccessCodes'
 import EmployementCodes from './EmployerPageComponents/MyCodes/EmployementCodes/EmploymentVerification'
 import EmploymentTabs from './EmployerPageComponents/MyCodes/EmployementCodes/EmploymentTabs'
@@ -193,14 +193,14 @@ class EmployerLandingPage extends React.PureComponent {
                     </ListItem>
                   </Link>
 
-                  <Link to="/employerOutbox" className={classes.link}>
+                  {/* <Link to="/employerOutbox" className={classes.link}>
                     <ListItem button className={classes.nested}>
                       <ListItemText
                         primary="Outbox"
                         className={classes.textColor}
                       />
                     </ListItem>
-                  </Link>
+                  </Link> */}
                 </List>
               </Collapse>
 
@@ -264,11 +264,11 @@ class EmployerLandingPage extends React.PureComponent {
                 </Container>
               </Route>
 
-              <Route exact path="/employerOutbox">
+              {/* <Route exact path="/employerOutbox">
                 <Container>
                   <Outbox />
                 </Container>
-              </Route>
+              </Route> */}
 
               <Route exact path="/employerAccessCodes">
                 <Container>
