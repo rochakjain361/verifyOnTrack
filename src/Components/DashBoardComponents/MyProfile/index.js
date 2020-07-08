@@ -27,13 +27,17 @@ import { CircularProgress } from "@material-ui/core";
 import InputLabel from '@material-ui/core/InputLabel';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import {Snackbar} from '@material-ui/core'
+import MuiAlert from '@material-ui/lab/Alert';
 
 let token1 = "";
 let token = "";
 let id = "";
 let result = [];
 let history = []
-
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 class MyProfile extends Component {
   state = {
     updateDialogOpen: false,
@@ -59,6 +63,11 @@ class MyProfile extends Component {
     file: null,
     gender: "",
     result: [],
+    addsnackbar:false,
+    addresponse:"",
+    updateresponse:"",
+    updatesnackbar:false,
+
   };
   async getprofiledata() {
     await axios
@@ -75,8 +84,8 @@ class MyProfile extends Component {
   }
   async componentDidMount() {
     this.setState({ isloading: true })
-    token1 = localStorage.getItem("Token");
-    token = "Token " + token1;
+   
+    token = localStorage.getItem("Token");
     id = localStorage.getItem("id");
     await this.getprofiledata();
     this.setState({ isloading: false });
@@ -127,16 +136,6 @@ class MyProfile extends Component {
     console.log("firstname1",this.state.firstname)
 
   }
-
-  // async updatedetails(){
-  //   console.log("///////////////////////////////////////////////");
-  //  let data = {
-  //     employee: this.state.id,
-  //     update_reason: this.state.updatedReasonforupdating,
-  //     sex: this.state.updatedsex,
-  //     dob: this.state.updatedDob,
-  //   };
-
   async updatedetails() {
     this.setState({
       updateDialogOpen: false,
@@ -150,7 +149,9 @@ class MyProfile extends Component {
     let bodyFormData = new FormData();
     bodyFormData.append("employee", id);
     bodyFormData.append("update_reason", this.state.updatedReasonforupdating);
-    bodyFormData.append("picture", this.state.file);
+    if(this.state.file!==""){
+    bodyFormData.append("picture", this.state.file)
+    }
     bodyFormData.append("dob", this.state.updatedDob);
     bodyFormData.append("firstname", this.state.updatedfirstname);
     bodyFormData.append("middlename", this.state.updatedMiddlename);
@@ -163,7 +164,9 @@ class MyProfile extends Component {
         headers
       )
       .then((response) => {
-        console.log(response);
+        console.log("update response",response.status);
+        this.setState({updateresponse:response.status, updatesnackbar: true })
+        
       });
     await this.getprofiledata();
   }
@@ -190,8 +193,49 @@ class MyProfile extends Component {
       )
       .then((response) => {
         console.log(response);
+        this.setState({addresponse:response.status,addsnackbar: true})
+       
       });
     await this.getprofiledata();
+  }
+  addsnackbar() {
+
+
+    return (
+      this.state.addresponse === 200 ?
+        (<div>
+
+          <Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ addsnackbar: false }) }>
+            <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addasnackbar }) }} severity="success">
+              Profile added sucessfully
+      </Alert>
+          </Snackbar>
+        </div>) : (<Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }}>
+          <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }} severity="error">
+            Something went wrong please try again
+      </Alert>
+        </Snackbar>))
+
+  }
+  updatesnackbar() {
+
+
+    return (
+      this.state.updateresponse === 200 ?
+        (<div>
+          {console.log("//////////////////////////////////////")}
+
+          <Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ updatesnackbar: false }) }>
+            <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="success">
+              Profile updated sucessfully
+      </Alert>
+          </Snackbar>
+        </div>) : (<Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }}>
+          <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="error">
+            Something went wrong please try again
+      </Alert>
+        </Snackbar>))
+
   }
   isloading() {
     return (
@@ -390,7 +434,10 @@ class MyProfile extends Component {
                       Cancel
                 </Button>
                   </DialogActions>
-                </Dialog>}
+                </Dialog>
+                }
+                {this.addsnackbar()}
+               
               </div>
             ) : (
               <div>
@@ -423,7 +470,7 @@ class MyProfile extends Component {
                       xs={6}>
 
                       <Typography variant='h2'
-                      // style={{ fontFamily: "Montserrat", textTransform: 'capitalize' }}
+                      style={{textTransform: 'capitalize'}}
                       >
                         {this.state.result[0].firstname} {this.state.result[0].middlename} {this.state.result[0].surname}
                       </Typography>
@@ -525,7 +572,7 @@ class MyProfile extends Component {
                       /> */}
                     </Avatar>
                   </TableCell>
-                  <TableCell align="center"> {row.firstname} {row.middlename} {row.surname}</TableCell>
+                  <TableCell align="center" style={{textTransform: 'capitalize'}}> {row.firstname} {row.middlename} {row.surname}</TableCell>
                   <TableCell align="center">{row.sex}</TableCell>
                   <TableCell align="center">{row.dob}</TableCell>
                   <TableCell align="center">{row.source_name_field}</TableCell>
@@ -545,6 +592,9 @@ class MyProfile extends Component {
                           updatedfirstname: result[index].firstname,
                           updatedMiddlename: result[index].middlename,
                           updatedDob: result[index].dob,
+                          updateresponse:"",
+                          file:""
+                          
 
                           // add the updatedstate elements here after passing the token and adding data
                         })
@@ -576,7 +626,7 @@ class MyProfile extends Component {
           ) : (
               <Dialog
                 open={this.state.updateDialogOpen}
-                onClose={() => this.setState({ updateDialogOpen: false })}
+                onClose={() => this.setState({ updateDialogOpen: false,buttondisabled: "disabled" })}
                 aria-labelledby="form-dialog-title"
               >
                 <DialogTitle id="form-dialog-title" align="center">Update Profile</DialogTitle>
@@ -704,6 +754,8 @@ class MyProfile extends Component {
                       this.setState({
                         updateDialogOpen: false,
                         selectedIndex: -1,
+                        buttondisabled: "disabled"
+
                       })
                     }
                   >
@@ -712,6 +764,7 @@ class MyProfile extends Component {
                 </DialogActions>
               </Dialog>
             )}
+             {this.updatesnackbar()}
         </TableContainer>
 
         <Dialog
@@ -794,6 +847,7 @@ class MyProfile extends Component {
   render() {
    
     return <>{this.state.isloading ? this.isloading() : this.tabledata()}</>;
+   
   }
 }
 

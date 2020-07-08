@@ -55,9 +55,9 @@ export class index extends Component {
             selectedReason: "",
             reason: "",
 
-            addSnackbar: false,
-            deletedSnackbar: false,
-            errorSnackbar: false,
+            snackbar: "",
+            snackbarresponse: "",
+
             deleteDialogBox: false,
             deleteid: "",
             selectedIndex: "",
@@ -65,23 +65,25 @@ export class index extends Component {
     }
     isloading() {
         return (
-            <Grid
-                container
-                spacing={0}
-                direction="column"
-                alignItems="center"
-                justify="center"
-                display="flex"
-                style={{ minHeight: "100vh" }}
-            >
-                <CircularProgress />
-            </Grid>
+            <>
+                <Grid
+                    container
+                    spacing={0}
+                    direction="column"
+                    alignItems="center"
+                    justify="center"
+                    display="flex"
+                    style={{ minHeight: "0vh" }}
+                >
+                    <CircularProgress />
+                </Grid>
+            </>
         );
     }
     async getReasons() {
         this.setState({ loading: true });
         await axios
-            .get("https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/job/leaving-reasons", {
+            .get("http://3.22.17.212:8000/api/v1/resManager/job/leaving-reasons/", {
                 headers: {
                     Authorization: token,
                 },
@@ -93,47 +95,67 @@ export class index extends Component {
         this.setState({ loading: false });
     }
     async componentDidMount() {
-        token1 = localStorage.getItem("Token");
-        token = "Token " + token1;
+       
+        token =  localStorage.getItem("Token");
         id = localStorage.getItem("id");
 
         this.getReasons();
     }
-    async addReason() {
-        console.log('boom', this.state.reason)
-        let headers = {
-            headers: {
-                Authorization: token,
-                "Content-Type": "multipart/form-data",
-            },
-        };
-        let bodyFormData = new FormData();
-        bodyFormData.append("reason", this.state.reason);
 
-        await axios
-            .post(
-                "http://3.22.17.212:8000/api/v1/resManager/job/leaving-reasons/",
-                bodyFormData,
-                headers
-            )
-            .then((response) => {
-                console.log(response);
-                this.getReasons();
-            });
-            await this.setState({ deletedSnackbar: true })
+    async addReason() {
+        let bodyData = {
+            'reason': this.state.reason,
+        }
+
+        console.log('Body data:', bodyData)
+
+        try {
+            let response = await fetch('http://3.22.17.212:8000/api/v1/resManager/job/leaving-reasons/',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'reason': this.state.reason,
+                    })
+                }
+            );
+            await this.getReasons();
+            this.setState({ snackbar: true, snackbarresponse: response, reason: "" });
+            console.log('AddJobSuccess:', response);
+        } catch (error) {
+            console.log("[!ON_REGISTER] " + error);
+            this.setState({ snackbar: true, snackbarresponse: error.response })
+        }
     }
-    async deleteReason(id) {
-        // console.log("......",id)
-        await axios.delete(
-            "http://3.22.17.212:8000/api/v1/resManager/job/leaving-reasons/" + id + "/",
-            {
-                headers: {
-                    Authorization: token,
-                },
-            }
-        );
+
+    async deleteReason(index) {
+        this.setState({ deleteDialogBox: false })
+        try {
+            let response = await axios.delete(
+                "http://3.22.17.212:8000/api/v1/resManager/job/leaving-reasons/" +
+                index +
+                "/",
+                {
+
+                    headers: {
+                        Authorization: token,
+                        // 'Content-Type': 'application/json'
+                    },
+                }
+            );
+            console.log('delJobSuccess:', response);
+            await this.getReasons();
+            this.setState({ snackbar: true, snackbarresponse: response });
+        } catch (error) {
+            console.log("[!ON_REGISTER] " + error);
+            this.setState({ snackbar: true, snackbarresponse: error.response })
+        }
         this.getReasons();
     }
+
     displaytable() {
         return (
             <>
@@ -188,10 +210,12 @@ export class index extends Component {
                             onChange={(event) => {
                                 this.setState({ reason: event.target.value });
                             }}
+                            value={this.state.reason}
                         />
                     </Grid>
                     <Grid item>
                         <Fab
+                            disabled={this.state.reason.length < 1}
                             size="small"
                             color="secondary"
                             onClick={() => {
@@ -244,26 +268,6 @@ export class index extends Component {
         );
     }
 
-    handleDeleteClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        this.setState({ deletedSnackbar: false });
-    };
-
-    addSnackbar() {
-        return (
-            <div>
-                <Snackbar open={this.state.deletedSnackbar} autoHideDuration={3000} onClose={this.handleDeleteClose}>
-                    <Alert severity="success" onClose={this.handleDeleteClose}>
-                        Successfully added!
-    </Alert>
-                </Snackbar>
-            </div>
-        );
-    }
-
     deleteDialog(selectedIndex) {
         return(
         <div>
@@ -303,15 +307,42 @@ export class index extends Component {
     </div>
         );
     }
+    snackBar() {
+        return (
+            <Snackbar
+                open={this.state.snackbar}
+                autoHideDuration={6000}
+                onClick={() => { this.setState({ snackbar: !this.state.snackbar }) }}
+            >
+                {this.state.snackbarresponse.status === 201 ?
+                    <Alert
+                        onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }}
+                        severity="success"
+                    >
+                        Added sucessfully
+                </Alert> :
+                    this.state.snackbarresponse.status === 204 ?
+                        <Alert
+                            onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }}
+                            severity="success">
+                            Deleted sucessfully
+                </Alert> :
+                        <Alert
+                            onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }}
+                            severity="error"
+                        >
+                            Something went wrong please try again
+                </Alert>}
+            </Snackbar>
+        );
+    }
 
     render() {
         return (
             <div style={{ marginTop: 20 }}>
-                {/* <Paper style={{ padding: 20, height: '100vh' }}> */}
                 {this.state.loading ? this.isloading() : this.displaytable()}
+                {this.snackBar()}
 
-                {/* </Paper> */}
-                {this.addSnackbar()}
             </div>
         );
     }

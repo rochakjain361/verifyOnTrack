@@ -7,12 +7,15 @@ import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField'
+import Grid from '@material-ui/core/Grid'
 
 import Profile from '../Pages/Profile'
 import Address from '../Pages/Address'
 import Identity from '../Pages/Identity'
 import Phone from '../Pages/Phone'
 import Job from '../Pages/Job'
+import ApproveAndRejectButtons from '../ApproveAndRejectButtons'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,15 +40,15 @@ function getSteps() {
 function getStepContent(step, user, approval) {
     switch (step) {
         case 0:
-            return <Profile user={user} approval={approval}/>;
+            return <Profile user={user} approval={approval} />;
         case 1:
-            return <Address user={user} approval={approval}/>;
+            return <Address user={user} approval={approval} />;
         case 2:
-            return <Identity user={user} approval={approval}/>;
+            return <Identity user={user} approval={approval} />;
         case 3:
-            return <Phone user={user} approval={approval}/>;
+            return <Phone user={user} approval={approval} />;
         case 4:
-            return <Job user={user} approval={approval}/>;
+            return <Job user={user} approval={approval} />;
         default:
             return 'Unknown step';
     }
@@ -54,7 +57,9 @@ function getStepContent(step, user, approval) {
 export default function VerticalLinearStepper(props) {
     const user = props.user;
     const approval = props.approval;
-    console.log('user:',user, approval)
+    const viewId = props.viewId;
+
+    console.log('user:', user, approval)
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
@@ -104,13 +109,7 @@ export default function VerticalLinearStepper(props) {
             </Stepper>
             {activeStep === steps.length && (
                 <Paper square elevation={0} className={classes.resetContainer}>
-                    <Typography>All steps completed - you&apos;re finished</Typography>
-                    <Button color='primary' variant='contained' onClick={handleReset} className={classes.button}>
-                        Approve account
-          </Button>
-          <Button color='secondary' variant='contained' onClick={handleReset} className={classes.button}>
-                        Reject account
-          </Button>
+                    <ApproveAndRejectButtons approval={approval} viewId={viewId}/>
                 </Paper>
             )}
         </div>

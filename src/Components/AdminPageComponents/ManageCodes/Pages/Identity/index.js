@@ -7,8 +7,8 @@ import {
   Typography
 } from '@material-ui/core';
 
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
+
+const token =  localStorage.getItem("Token");
 const id = localStorage.getItem("id");
 const api = "http://3.22.17.212:8000"
 
@@ -41,8 +41,8 @@ class index extends React.Component {
   }
 
   componentDidMount() {
-    const token1 = localStorage.getItem("Token");
-    const token = "Token " + token1;
+    
+    const token = localStorage.getItem("Token");
     const id = localStorage.getItem("id");
     this.fetchIdentities()
   }
@@ -64,6 +64,7 @@ class index extends React.Component {
 
             <Grid item fullWidth xs={12}>
               <TextField
+              style={{ textTransform: 'capitalize' }}
                 id="fullName"
                 label="Full Name"
                 defaultValue={id.fullname}
@@ -108,7 +109,7 @@ class index extends React.Component {
               <TextField
                 id="idSource"
                 label="Id Source"
-                defaultValue={id.idSource}
+                defaultValue={id.idSource_name_field}
                 type="text"
                 InputProps={{
                   readOnly: true,

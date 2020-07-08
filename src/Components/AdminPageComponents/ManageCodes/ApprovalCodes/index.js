@@ -15,7 +15,8 @@ import {
     MenuItem,
     FormLabel,
     RadioGroup,
-    Radio
+    Radio,
+    CircularProgress
 } from '@material-ui/core/';
 import {
     Table,
@@ -38,27 +39,10 @@ import Identity from '../Pages/Identity'
 import Phone from '../Pages/Phone'
 import Job from '../Pages/Job'
 
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+let token1 = "";
+let token = "";
+let id = "";
 const api = "http://3.22.17.212:8000"
-
-const rows = [
-    {
-        "createdOn": "09/12/2020",
-        "codeString": "testCodeString1",
-        "employeeCompanyField": "testEmployeeCompanyField1",
-        "codeStatus": "testCodeStatu1s",
-        "statusChangeDate": "09/12/2020",
-    },
-    {
-        "createdOn": "09/12/2020",
-        "codeString": "testCodeString1",
-        "employeeCompanyField": "testEmployeeCompanyField1",
-        "codeStatus": "testCodeStatus2",
-        "statusChangeDate": "09/12/2020",
-    }
-];
 
 const styles = theme => ({
 
@@ -82,13 +66,16 @@ class index extends Component {
         assignedToMe: [],
         pendingApprovalRequests: [],
         bothRequests: [],
+        approvalRowId: '',
 
         userID: '',
+        viewId: '',
         assignAdminId: '',
         approvalCode: '',
         currentid: "",
         enteredUsername: '',
         selectedRequest: [],
+        isLoading: true,
 
         adminList: [],
     }
@@ -96,6 +83,24 @@ class index extends Component {
     constructor(props) {
         super(props);
         this.allCodesTable = this.allCodesTable.bind(this);
+    }
+
+    isloading() {
+        return (
+            <>
+                <Grid
+                    container
+                    spacing={0}
+                    direction="column"
+                    alignItems="center"
+                    justify="center"
+                    display="flex"
+                    style={{ minHeight: "0vh" }}
+                >
+                    <CircularProgress />
+                </Grid>
+            </>
+        );
     }
 
     async fetchAdminList() {
@@ -160,24 +165,31 @@ class index extends Component {
     }
 
     async componentDidMount() {
+    
+       
+        token =  localStorage.getItem("Token");
+        id = localStorage.getItem("id");
 
         await this.fetchAllCodes();
         await this.fetchAssignedToMe();
         await this.fetchBothRequests();
         await this.fetchPendingApprovalRequests();
         await this.fetchAdminList()
+
+        this.setState({isLoading: false})
     }
 
     render() {
 
         const { classes } = this.props;
 
-        const defaultProps = {
-            options: top100Films,
-            getOptionLabel: (option) => option.title,
-        };
-
         return (
+            this.state.isLoading ? this.isloading() : this.displayTable() 
+        )
+    }
+
+    displayTable() {
+        return(
             <div style={{ marginTop: 20, marginRight: 20 }}>
                 {/* <Paper style={{ padding: 20, height: '100vh' }}> */}
                 <Grid container justify='space-between' alignItems='center' spacing={4}>
@@ -226,7 +238,7 @@ class index extends Component {
                                         color="primary"
                                     />
                                 }
-                                label="Pending approval requests"
+                                label="All approval requests"
                             />
                         </Grid>
                         {/* <div>{this.allTablesLogic()}</div> */}
@@ -261,7 +273,7 @@ class index extends Component {
                 {this.viewDialogBox()}
 
             </div>
-        )
+        );
     }
 
     // allTablesLogic() {
@@ -316,14 +328,16 @@ class index extends Component {
                         <TableCell align="left">{row.codeStatus}</TableCell>
                         <TableCell align="left">{new Date(row.statusChangeDate).toDateString()}</TableCell>
                         <TableCell align="left">
-                            {
+                            {row.user_field.name == "User deleted"? ("NA") : 
+                            row.codeStatus== "Closed" ? ("Closed") : (
                                 row.showAssignTo_field ?
                                     (
                                         <Button
                                             variant='outlined'
                                             color='secondary'
                                             onClick={() => {
-                                                console.log("row.id///////////", row.id)
+                                                this.setState({currentid: row.id}, 
+                                                ()=>{console.log('currentId:',this.state.currentid)}) 
                                                 this.assignadminTableButton(row.id)
                                             }}
                                         >
@@ -342,20 +356,23 @@ class index extends Component {
                                         >
                                             Reassign Admin
                                         </Button>
-                                    )}
+                                    ))}
                         </TableCell>
                         {/* {row.viewApprove_field !== "False" ? (this.setState({viewLogic: true})) : null} */}
                         < TableCell align="left" >
-                            <Button variant='outlined' color='primary'
-                                onClick={() => {
-                                    this.setState({ userID: row.user })
-                                    this.setState({ approvalCode: row.codeString })
-                                    this.viewAndApprove(row.id, row.codeString)
-                                }}
-                            // disabled={this.state.viewLogic}
-                            >
-                                View &amp; approve
-                        </Button>
+                        {row.user_field.name == "User deleted" ? ('NA'): (
+                                    row.codeStatus== "Closed" ? ("Closed") : (
+                                        <Button variant='outlined' color='primary'
+                                        onClick={() => {
+                                            this.setState({ userID: row.user, approvalCode: row.codeString, viewId: row.id }, ()=> console.log('userId:', this.state.userID))
+                                            this.viewAndApprove(row.id, row.codeString)
+                                        }}
+                                    // disabled={this.state.viewLogic}
+                                    >
+                                        View &amp; approve
+                                </Button>
+                                    )
+                                    )}
                         </TableCell>
                     </TableRow >
                 ))
@@ -379,27 +396,51 @@ class index extends Component {
                         <TableCell align="left">{row.codeStatus}</TableCell>
                         <TableCell align="left">{new Date(row.statusChangeDate).toDateString()}</TableCell>
                         <TableCell align="left">
-                            {
+                            {row.user_field.name == "User deleted"? ("NA") : 
+                            row.codeStatus== "Closed" ? ("Closed") : (
                                 row.showAssignTo_field ?
                                     (
-                                        <Button variant='outlined' color='secondary' onClick={() => this.assignadminTableButton(row.id)} >
+                                        <Button
+                                            variant='outlined'
+                                            color='secondary'
+                                            onClick={() => {
+                                                this.setState({currentid: row.id}, 
+                                                ()=>{console.log('currentId:',this.state.currentid)}) 
+                                                this.assignadminTableButton(row.id)
+                                            }}
+                                        >
                                             Assign Admin
                                         </Button>
                                     )
                                     :
                                     (
-                                        <Button variant='outlined' color='secondary' onClick={() => this.setState({ assignDialog: true })} >
+                                        <Button
+                                            variant='outlined'
+                                            color='secondary'
+                                            onClick={() => {
+                                                this.setState({ assignDialog: true })
+                                                this.setState({ adminIndex: row.id })
+                                            }}
+                                        >
                                             Reassign Admin
                                         </Button>
-                                    )}
+                                    ))}
                         </TableCell>
                         {/* {row.viewApprove_field !== "False" ? (this.setState({viewLogic: true})) : null} */}
-                        <TableCell align="left">
-                            <Button variant='outlined' color='primary'
-                            // disabled={this.state.viewLogic}
-                            >
-                                View &amp; approve
-                        </Button>
+                        < TableCell align="left" >
+                        {row.user_field.name == "User deleted" ? ('NA'): (
+                                    row.codeStatus== "Closed" ? ("Closed") : (
+                                        <Button variant='outlined' color='primary'
+                                        onClick={() => {
+                                            this.setState({ userID: row.user, approvalCode: row.codeString, viewId: row.id }, ()=> console.log('userId:', this.state.userID))
+                                            this.viewAndApprove(row.id, row.codeString)
+                                        }}
+                                    // disabled={this.state.viewLogic}
+                                    >
+                                        View &amp; approve
+                                </Button>
+                                    )
+                                    )}
                         </TableCell>
                     </TableRow>
                 ))}
@@ -422,28 +463,51 @@ class index extends Component {
                         <TableCell align="left">{row.codeStatus}</TableCell>
                         <TableCell align="left">{new Date(row.statusChangeDate).toDateString()}</TableCell>
                         <TableCell align="left">
-                            {
+                            {row.user_field.name == "User deleted"? ("NA") : 
+                            row.codeStatus== "Closed" ? ("Closed") : (
                                 row.showAssignTo_field ?
                                     (
-                                        <Button variant='outlined' color='secondary' onClick={() => this.setState({ assignDialog: true })} >
+                                        <Button
+                                            variant='outlined'
+                                            color='secondary'
+                                            onClick={() => {
+                                                this.setState({currentid: row.id}, 
+                                                ()=>{console.log('currentId:',this.state.currentid)}) 
+                                                this.assignadminTableButton(row.id)
+                                            }}
+                                        >
                                             Assign Admin
                                         </Button>
                                     )
                                     :
                                     (
-                                        <Button variant='outlined' color='secondary' onClick={() => this.setState({ assignDialog: true })} >
+                                        <Button
+                                            variant='outlined'
+                                            color='secondary'
+                                            onClick={() => {
+                                                this.setState({ assignDialog: true })
+                                                this.setState({ adminIndex: row.id })
+                                            }}
+                                        >
                                             Reassign Admin
                                         </Button>
-                                    )}
+                                    ))}
                         </TableCell>
                         {/* {row.viewApprove_field !== "False" ? (this.setState({viewLogic: true})) : null} */}
-                        <TableCell align="left">
-                            <Button variant='outlined' color='primary'
-                            // onClick={()=>}
-                            //  disabled={this.state.viewLogic}
-                            >
-                                View &amp; approve
-                        </Button>
+                        < TableCell align="left" >
+                        {row.user_field.name == "User deleted" ? ('NA'): (
+                                    row.codeStatus== "Closed" ? ("Closed") : (
+                                        <Button variant='outlined' color='primary'
+                                        onClick={() => {
+                                            this.setState({ userID: row.user, approvalCode: row.codeString, viewId: row.id }, ()=> console.log('userId:', this.state.userID))
+                                            this.viewAndApprove(row.id, row.codeString)
+                                        }}
+                                    // disabled={this.state.viewLogic}
+                                    >
+                                        View &amp; approve
+                                </Button>
+                                    )
+                                    )}
                         </TableCell>
                     </TableRow>
                 ))}
@@ -477,27 +541,51 @@ class index extends Component {
                         <TableCell align="left">{row.codeStatus}</TableCell>
                         <TableCell align="left">{new Date(row.statusChangeDate).toDateString()}</TableCell>
                         <TableCell align="left">
-                            {
+                            {row.user_field.name == "User deleted"? ("NA") : 
+                            row.codeStatus== "Closed" ? ("Closed") : (
                                 row.showAssignTo_field ?
                                     (
-                                        <Button variant='outlined' color='secondary' onClick={() => { this.assignadminTableButton(row.id) }}>
+                                        <Button
+                                            variant='outlined'
+                                            color='secondary'
+                                            onClick={() => {
+                                                this.setState({currentid: row.id}, 
+                                                ()=>{console.log('currentId:',this.state.currentid)}) 
+                                                this.assignadminTableButton(row.id)
+                                            }}
+                                        >
                                             Assign Admin
                                         </Button>
                                     )
                                     :
                                     (
-                                        <Button variant='outlined' color='secondary' onClick={() => this.setState({ assignDialog: true })} >
+                                        <Button
+                                            variant='outlined'
+                                            color='secondary'
+                                            onClick={() => {
+                                                this.setState({ assignDialog: true })
+                                                this.setState({ adminIndex: row.id })
+                                            }}
+                                        >
                                             Reassign Admin
                                         </Button>
-                                    )}
+                                    ))}
                         </TableCell>
                         {/* {row.viewApprove_field !== "False" ? (this.setState({viewLogic: true})) : null} */}
-                        <TableCell align="left">
-                            <Button variant='outlined' color='primary'
-                            // disabled={this.state.viewLogic}
-                            >
-                                View &amp; approve
-                        </Button>
+                        < TableCell align="left" >
+                        {row.user_field.name == "User deleted" ? ('NA'): (
+                                    row.codeStatus== "Closed" ? ("Closed") : (
+                                        <Button variant='outlined' color='primary'
+                                        onClick={() => {
+                                            this.setState({ userID: row.user, approvalCode: row.codeString, viewId: row.id }, ()=> console.log('userId:', this.state.userID))
+                                            this.viewAndApprove(row.id, row.codeString)
+                                        }}
+                                    // disabled={this.state.viewLogic}
+                                    >
+                                        View &amp; approve
+                                </Button>
+                                    )
+                                    )}
                         </TableCell>
                     </TableRow>
                 ))}
@@ -513,12 +601,11 @@ class index extends Component {
                     (this.bothRequestsTable()) : (this.assignedToMeTable()))
                 :
                 (this.state.assignedToMeCheck || this.state.pendingApprovalRequestCheck) ?
-                    (this.pendingApprovalTable()) : (this.allCodesTable())
+                    (this.allCodesTable()) : (this.pendingApprovalTable())
         );
     }
 
     assignAdminDialog(id) {
-        console.log("qqqqqqqqqqqqqq", id)
         const options = this.state.adminList.map((option) => {
             const firstLetter = option.username[0].toUpperCase();
             return {
@@ -704,7 +791,7 @@ class index extends Component {
             </DialogTitle>
                 <DialogContent>
 
-                    <ViewPagesComponent user={this.state.userID} approval={this.state.approvalCode} />
+                    <ViewPagesComponent user={this.state.userID} approval={this.state.approvalCode} viewId={this.state.viewId} />
 
                 </DialogContent>
 
@@ -714,16 +801,17 @@ class index extends Component {
         );
     }
 
-    async assignAdmin(id) {
+    async assignAdmin() {
 
         let bodyData = {
             'assigned_to': this.state.assignAdminId
         }
 
         console.log('Body data:', bodyData)
+        console.log('Id', this.state.approvalRowId)
 
         try {
-            let response = await fetch(api + '/api/v1/codes/approval/' + id + '/assignto',
+            let response = await fetch(api + '/api/v1/codes/approval/' + this.state.currentid + '/assignto',
                 {
                     method: 'PUT',
                     headers: {
@@ -747,108 +835,5 @@ class index extends Component {
         }
     }
 }
-
-const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 },
-    { title: '12 Angry Men', year: 1957 },
-    { title: "Schindler's List", year: 1993 },
-    { title: 'Pulp Fiction', year: 1994 },
-    { title: 'The Lord of the Rings: The Return of the King', year: 2003 },
-    { title: 'The Good, the Bad and the Ugly', year: 1966 },
-    { title: 'Fight Club', year: 1999 },
-    { title: 'The Lord of the Rings: The Fellowship of the Ring', year: 2001 },
-    { title: 'Star Wars: Episode V - The Empire Strikes Back', year: 1980 },
-    { title: 'Forrest Gump', year: 1994 },
-    { title: 'Inception', year: 2010 },
-    { title: 'The Lord of the Rings: The Two Towers', year: 2002 },
-    { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
-    { title: 'Goodfellas', year: 1990 },
-    { title: 'The Matrix', year: 1999 },
-    { title: 'Seven Samurai', year: 1954 },
-    { title: 'Star Wars: Episode IV - A New Hope', year: 1977 },
-    { title: 'City of God', year: 2002 },
-    { title: 'Se7en', year: 1995 },
-    { title: 'The Silence of the Lambs', year: 1991 },
-    { title: "It's a Wonderful Life", year: 1946 },
-    { title: 'Life Is Beautiful', year: 1997 },
-    { title: 'The Usual Suspects', year: 1995 },
-    { title: 'Léon: The Professional', year: 1994 },
-    { title: 'Spirited Away', year: 2001 },
-    { title: 'Saving Private Ryan', year: 1998 },
-    { title: 'Once Upon a Time in the West', year: 1968 },
-    { title: 'American History X', year: 1998 },
-    { title: 'Interstellar', year: 2014 },
-    { title: 'Casablanca', year: 1942 },
-    { title: 'City Lights', year: 1931 },
-    { title: 'Psycho', year: 1960 },
-    { title: 'The Green Mile', year: 1999 },
-    { title: 'The Intouchables', year: 2011 },
-    { title: 'Modern Times', year: 1936 },
-    { title: 'Raiders of the Lost Ark', year: 1981 },
-    { title: 'Rear Window', year: 1954 },
-    { title: 'The Pianist', year: 2002 },
-    { title: 'The Departed', year: 2006 },
-    { title: 'Terminator 2: Judgment Day', year: 1991 },
-    { title: 'Back to the Future', year: 1985 },
-    { title: 'Whiplash', year: 2014 },
-    { title: 'Gladiator', year: 2000 },
-    { title: 'Memento', year: 2000 },
-    { title: 'The Prestige', year: 2006 },
-    { title: 'The Lion King', year: 1994 },
-    { title: 'Apocalypse Now', year: 1979 },
-    { title: 'Alien', year: 1979 },
-    { title: 'Sunset Boulevard', year: 1950 },
-    { title: 'Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb', year: 1964 },
-    { title: 'The Great Dictator', year: 1940 },
-    { title: 'Cinema Paradiso', year: 1988 },
-    { title: 'The Lives of Others', year: 2006 },
-    { title: 'Grave of the Fireflies', year: 1988 },
-    { title: 'Paths of Glory', year: 1957 },
-    { title: 'Django Unchained', year: 2012 },
-    { title: 'The Shining', year: 1980 },
-    { title: 'WALL·E', year: 2008 },
-    { title: 'American Beauty', year: 1999 },
-    { title: 'The Dark Knight Rises', year: 2012 },
-    { title: 'Princess Mononoke', year: 1997 },
-    { title: 'Aliens', year: 1986 },
-    { title: 'Oldboy', year: 2003 },
-    { title: 'Once Upon a Time in America', year: 1984 },
-    { title: 'Witness for the Prosecution', year: 1957 },
-    { title: 'Das Boot', year: 1981 },
-    { title: 'Citizen Kane', year: 1941 },
-    { title: 'North by Northwest', year: 1959 },
-    { title: 'Vertigo', year: 1958 },
-    { title: 'Star Wars: Episode VI - Return of the Jedi', year: 1983 },
-    { title: 'Reservoir Dogs', year: 1992 },
-    { title: 'Braveheart', year: 1995 },
-    { title: 'M', year: 1931 },
-    { title: 'Requiem for a Dream', year: 2000 },
-    { title: 'Amélie', year: 2001 },
-    { title: 'A Clockwork Orange', year: 1971 },
-    { title: 'Like Stars on Earth', year: 2007 },
-    { title: 'Taxi Driver', year: 1976 },
-    { title: 'Lawrence of Arabia', year: 1962 },
-    { title: 'Double Indemnity', year: 1944 },
-    { title: 'Eternal Sunshine of the Spotless Mind', year: 2004 },
-    { title: 'Amadeus', year: 1984 },
-    { title: 'To Kill a Mockingbird', year: 1962 },
-    { title: 'Toy Story 3', year: 2010 },
-    { title: 'Logan', year: 2017 },
-    { title: 'Full Metal Jacket', year: 1987 },
-    { title: 'Dangal', year: 2016 },
-    { title: 'The Sting', year: 1973 },
-    { title: '2001: A Space Odyssey', year: 1968 },
-    { title: "Singin' in the Rain", year: 1952 },
-    { title: 'Toy Story', year: 1995 },
-    { title: 'Bicycle Thieves', year: 1948 },
-    { title: 'The Kid', year: 1921 },
-    { title: 'Inglourious Basterds', year: 2009 },
-    { title: 'Snatch', year: 2000 },
-    { title: '3 Idiots', year: 2009 },
-    { title: 'Monty Python and the Holy Grail', year: 1975 },
-];
 
 export default withStyles(styles)(index);

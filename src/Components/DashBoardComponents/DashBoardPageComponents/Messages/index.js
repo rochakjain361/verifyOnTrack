@@ -27,8 +27,8 @@ class index extends Component {
   };
   async componentDidMount() {
     this.setState({ loading: true });
-    token1 = localStorage.getItem("Token");
-    token = "Token " + token1;
+    
+    token = localStorage.getItem("Token");
     id = localStorage.getItem("id");
     await axios
       .get("http://3.22.17.212:8000/api/v1/messages/", {

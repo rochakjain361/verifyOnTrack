@@ -29,7 +29,8 @@ import { InputLabel } from "@material-ui/core";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import FormControl from "@material-ui/core/FormControl";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-
+import {Snackbar} from '@material-ui/core'
+import MuiAlert from '@material-ui/lab/Alert';
 // let result = [];
 let state = [
 
@@ -40,12 +41,12 @@ let history = [];
 let token1 = "";
 let token = "";
 let id = "";
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 class Addresses extends PureComponent {
   constructor(props) {
     super(props);
-    //uncomment the below 2 lines after finishing address
-    // const data=props.data;
-    // console.log("token data from address page",data.token);
     this.state = {
       location: {
         latitude: null,
@@ -92,6 +93,10 @@ class Addresses extends PureComponent {
       updatedlgastates: [],
       updatedcityStates: [],
       buttondisabled: "disabled",
+      updateresponse:"",
+      addresponse:"",
+      addsnackbar:false,
+      updatesnackbar:false
     };
 
     this.onMarkerClick = this.onMarkerClick.bind(this);
@@ -124,14 +129,6 @@ class Addresses extends PureComponent {
     );
 
   }
-  // updateonMarkerClick(props, marker, e) {
-  //   console.log(e.latLng.lat(),e.latLng.lng());
-  //   this.setState({
-  //       location: {updatedlatitude: e.latLng.lat(),
-  //     updatedlongititude: e.latLng.lng()},
-  //   });
-
-  // }
   reasonforupdatevalidcheck = (event) => {
     if (event.target.value.length > 0) {
       //  console.log(event.target.value);
@@ -160,8 +157,8 @@ class Addresses extends PureComponent {
       });
   }
   async componentDidMount() {
-    token1 = localStorage.getItem("Token");
-    token = "Token " + token1;
+    
+    token = localStorage.getItem("Token");
     id = localStorage.getItem("id");
     await this.getaddressdata();
 
@@ -287,8 +284,48 @@ class Addresses extends PureComponent {
       )
       .then((response) => {
         console.log(response);
+        this.setState({updateresponse:response.status, updatesnackbar: true })
       });
       await this.getaddressdata();
+  }
+  addsnackbar() {
+
+
+    return (
+      this.state.addresponse === 200 ?
+        (<div>
+
+          <Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ addsnackbar: false }) }>
+            <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addasnackbar }) }} severity="success">
+              Address added sucessfully
+      </Alert>
+          </Snackbar>
+        </div>) : (<Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }}>
+          <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }} severity="error">
+            Something went wrong please try again
+      </Alert>
+        </Snackbar>))
+
+  }
+  updatesnackbar() {
+
+
+    return (
+      this.state.updateresponse === 200 ?
+        (<div>
+          {console.log("//////////////////////////////////////")}
+
+          <Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ updatesnackbar: false }) }>
+            <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="success">
+              Address updated sucessfully
+      </Alert>
+          </Snackbar>
+        </div>) : (<Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }}>
+          <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="error">
+            Something went wrong please try again
+      </Alert>
+        </Snackbar>))
+
   }
   getaddress() {
     return (
@@ -323,7 +360,7 @@ class Addresses extends PureComponent {
                       "State/LGA/City",
                       "Google link",
                    
-                        "Address source",
+                        "Address Type",
                         "Default Address",
                         "Verifier",
                         "Update",
@@ -362,7 +399,7 @@ class Addresses extends PureComponent {
                         </TableCell>
                         
                         <TableCell align="center" size="small" padding="none">
-                          {row.source_name_field}
+                          {row.address_type_name_field}
                         </TableCell>
                         <TableCell align="center" size="small" padding="none">
                           {row.default_address}
@@ -432,6 +469,7 @@ class Addresses extends PureComponent {
                   </TableBody>
                 </Table>
               </TableContainer>
+             
               {this.state.selectedIndex === -1 ? (
                 <div />
               ) : (
@@ -551,26 +589,7 @@ class Addresses extends PureComponent {
                              
                             
 
-                            {/* <Grid item fullWidth xs={12}>
-                            <Button
-                               
-                                startIcon={<CloudUploadIcon />}
-                              >
-                               
-                         
-                              <TextField
-                                id="addressImage"
-                                // label="Choose Image"
-                                onChange={(event) => {
-                                  this.setState({
-                                    updatedimage: event.target.files[0],
-                                  });
-                                  console.log(event.target.files[0]);
-                                }}
-                                type="file"
-                                fullWidth
-                              /> </Button>
-                            </Grid> */}
+                          
 
                             <Grid item fullWidth xs={12}>
                               <InputLabel id="state">State</InputLabel>
@@ -785,6 +804,7 @@ class Addresses extends PureComponent {
                           this.setState({
                             updateDialogOpen: false,
                             selectedIndex: -1,
+                            updatedreason:""
                           })
                         }
                       >
@@ -792,7 +812,10 @@ class Addresses extends PureComponent {
                   </Button>
                     </DialogActions>
                   </Dialog>
+                  
                 )}
+                 {this.updatesnackbar()}
+                 {this.addsnackbar()}
               <Dialog
                 fullWidth={"md"}
                 maxWidth={"md"}
@@ -1071,7 +1094,7 @@ class Addresses extends PureComponent {
                       </Grid> */}
                       </Grid>
                     </Box>
-                    <Box p={1} width={1 / 2} style={{ minHeight: "10vh" }}>
+                    <Box p={2} width={1 / 2} style={{ minHeight: "10vh" }}>
                       <Map
                         google={this.props.google}
                         zoom={6}
@@ -1143,9 +1166,7 @@ class Addresses extends PureComponent {
                 <TableRow style={{ backgroundColor: "black" }}>
                   {[
                     "State/Lga/City",
-                    
                     "House Number,Street Name,Address Hint 1",
-                    
                     "Google Link",
                     "Address Reason",
                     "Address Type",
@@ -1186,8 +1207,8 @@ class Addresses extends PureComponent {
                             Location
                         </a>
                         </TableCell>
-                        <TableCell align="center">{row.address_reason}</TableCell>{" "}
-                        <TableCell align="center">{row.address_type}</TableCell>{" "}
+                        <TableCell align="center">{row.address_reason_name_field}</TableCell>{" "}
+                        <TableCell align="center">{row.address_type_name_field}</TableCell>{" "}
                         <TableCell component="th" align="center">
                           {new Date(row.created_on).toDateString()}
                         </TableCell>
@@ -1238,7 +1259,7 @@ class Addresses extends PureComponent {
     console.log("selectedlga", this.state.selectedLga, lgaid);
     await axios
       .get(
-        "https://cors-anywhere.herokuapp.com/http://3.22.17.212:8000/api/v1/resManager/address/cities?lgaId=" +
+        "http://3.22.17.212:8000/api/v1/resManager/address/cities/?lgaId=" +
         lgaid,
         {
           headers: {
@@ -1295,6 +1316,8 @@ class Addresses extends PureComponent {
       )
       .then((response) => {
         console.log(response);
+        this.setState({addresponse:response.status,addsnackbar: true})
+       
       });
       await this.getaddressdata();
   }

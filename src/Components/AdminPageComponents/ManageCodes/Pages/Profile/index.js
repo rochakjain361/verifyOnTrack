@@ -7,9 +7,9 @@ import {
     Paper
     } from '@material-ui/core';
 
-    const token1 = localStorage.getItem("Token");
-    const token = "Token " + token1;
-    const id = localStorage.getItem("id");
+    let token1 = "";
+    let token = "";
+    let id = "";
     const api = "http://3.22.17.212:8000"
   
 const styles = theme => ({
@@ -44,9 +44,9 @@ class index extends React.Component{
   }
 
   componentDidMount() {
-    const token1 = localStorage.getItem("Token");
-    const token = "Token " + token1;
-    const id = localStorage.getItem("id");
+   
+    token = localStorage.getItem("Token");
+    id = localStorage.getItem("id");
     this.fetchProfiles()
   }
 
@@ -64,7 +64,7 @@ class index extends React.Component{
                         // src={this.state.result[0].picture}
                         style={{ height: "8rem", width: "8rem" }}
                       >
-                        <img src="/images/sampleuserphoto.jpg" width="130" height="130" alt="" />
+                        <img src={id.picture} width="130" height="130" alt="" />
                       </Avatar>
                         </Grid>
 

@@ -7,8 +7,8 @@ import {
     Typography
 } from '@material-ui/core';
 
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
+
+const token = localStorage.getItem("Token");
 const id = localStorage.getItem("id");
 const api = "http://3.22.17.212:8000"
 
@@ -41,8 +41,8 @@ class index extends React.Component {
     }
 
     componentDidMount() {
-        const token1 = localStorage.getItem("Token");
-        const token = "Token " + token1;
+       
+        const token = localStorage.getItem("Token");
         const id = localStorage.getItem("id");
         this.fetchaddresses()
     }
@@ -66,7 +66,7 @@ class index extends React.Component {
                             <TextField
                                 id="addressTypes"
                                 label="Address Type"
-                                defaultValue={id.address_type}
+                                defaultValue={id.address_type_name_field}
                                 type="text"
                                 InputProps={{
                                     readOnly: true,
@@ -80,7 +80,7 @@ class index extends React.Component {
                             <TextField
                                 id="addressReason"
                                 label="Address Reason"
-                                defaultValue={id.address_reason}
+                                defaultValue={id.address_reason_name_field}
                                 type="text"
                                 InputProps={{
                                     readOnly: true,

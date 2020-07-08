@@ -26,10 +26,11 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { useEffect } from 'react';
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import Dashboard from './Components/EmployerPageComponents/Dashboard'
-import Inbox from './Components/EmployerPageComponents/Messages/Inbox'
+import Index from './Components/EmployerPageComponents/Messages/Inbox/index'
 import Outbox from './Components/EmployerPageComponents/Messages/Outbox'
 import AccessCodes from './Components/EmployerPageComponents/MyCodes/AccessCodes'
-import EmployementCodes from './Components/EmployerPageComponents/MyCodes/EmployementCodes'
+import EmployementCodes from './Components/EmployerPageComponents/MyCodes/EmployementCodes/EmploymentVerification'
+import EmploymentTabs from './Components/EmployerPageComponents/MyCodes/EmployementCodes/EmploymentTabs'
 
 const drawerWidth = 240;
 let token1 = "";
@@ -137,12 +138,12 @@ export default function MiniDrawer(props) {
     const [open, setOpen] = React.useState(false);
     const [auth, setAuth] = React.useState(true);
     const [Token, setToken] = React.useState("");
-    const [Token1, setToken1] = React.useState("");
+    // const [Token1, setToken1] = React.useState("");
     const [id, setid] = React.useState("");
     // const [anchorEl, setAnchorEl] = React.useState(false);
     useEffect(() => {
-        setToken1(localStorage.getItem("Token"));
-        setToken("Token " + Token1);
+      
+        setToken(localStorage.getItem("Token"));
         setid(localStorage.getItem("id"));
     });
 
@@ -241,7 +242,7 @@ export default function MiniDrawer(props) {
                             {theme.direction === 'rtl' ? <ChevronRightIcon style={{ color: "white" }} /> : <ArrowBackIcon style={{ color: "white" }} />}
                         </IconButton>
                     </div>
-                    <Link to="/dashboard" className={classes.link}>
+                    <Link to="/employerDashboard" className={classes.link}>
                         <ListItem button>
                             <ListItemIcon>
                                 <DashboardIcon style={{ color: "white" }} />
@@ -257,7 +258,7 @@ export default function MiniDrawer(props) {
 
                     <ListItem
                         button
-                        onClick={() => setOpen3(!open3)}
+                        onClick={() => setOpen3(!open3), ()=> setOpen(!open)}
                     >
                         <ListItemIcon>
                             <CodeIcon style={{ color: "white" }} />
@@ -273,10 +274,10 @@ export default function MiniDrawer(props) {
                             )}
                     </ListItem>
 
-                    <Collapse in={open3} timeout="auto" unmountOnExit>
+                    <Collapse in={open3, open} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding>
                             <Link to="/employerAccessCodes" className={classes.link}>
-                                <ListItem button className={classes.nested}>
+                                <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
                                     <ListItemText
                                         primary="Access Codes"
                                         className={classes.textColor}
@@ -284,8 +285,8 @@ export default function MiniDrawer(props) {
                                 </ListItem>
                             </Link>
 
-                            <Link to="/employerEmployementCodes" className={classes.link}>
-                                <ListItem button className={classes.nested}>
+                            <Link to="/employerEmployment" className={classes.link}>
+                                <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
                                     <ListItemText
                                         primary="Employement Codes"
                                         className={classes.textColor}
@@ -299,7 +300,7 @@ export default function MiniDrawer(props) {
 
                     <ListItem
                         button
-                        onClick={() => setOpen2(!open2)}
+                        onClick={() => setOpen2(!open2), ()=> setOpen(!open)}
                     >
                         <ListItemIcon>
                             <MessageIcon style={{ color: "white" }} />
@@ -315,10 +316,10 @@ export default function MiniDrawer(props) {
                             )}
                     </ListItem>
 
-                    <Collapse in={open2} timeout="auto" unmountOnExit>
+                    <Collapse in={open2, open} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding>
-                            <Link to="/employeeInbox" className={classes.link}>
-                                <ListItem button className={classes.nested}>
+                            <Link to="/employerInbox" className={classes.link}>
+                                <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
                                     <ListItemText
                                         primary="Inbox"
                                         className={classes.textColor}
@@ -326,14 +327,14 @@ export default function MiniDrawer(props) {
                                 </ListItem>
                             </Link>
 
-                            <Link to="/employeeOutbox" className={classes.link}>
+                            {/* <Link to="/employeeOutbox" className={classes.link}>
                                 <ListItem button className={classes.nested}>
                                     <ListItemText
                                         primary="Outbox"
                                         className={classes.textColor}
                                     />
                                 </ListItem>
-                            </Link>
+                            </Link> */}
                         </List>
                     </Collapse>
 
@@ -352,15 +353,15 @@ export default function MiniDrawer(props) {
 
               <Route exact path="/employerInbox">
                 <Container>
-                  <Inbox />
+                  <Index />
                 </Container>
               </Route>
 
-              <Route exact path="/employerOutbox">
+              {/* <Route exact path="/employerOutbox">
                 <Container>
                   <Outbox />
                 </Container>
-              </Route>
+              </Route> */}
 
               <Route exact path="/employerAccessCodes">
                 <Container>
@@ -368,9 +369,9 @@ export default function MiniDrawer(props) {
                 </Container>
               </Route>
 
-              <Route exact path="/employerEmployementCodes">
+              <Route exact path="/employerEmployment">
                 <Container>
-                  <EmployementCodes />
+                  <EmploymentTabs />
                 </Container>
               </Route>
             </Switch>

@@ -28,7 +28,8 @@ import Dashboard from './EmployerPageComponents/Dashboard'
 import Inbox from './EmployerPageComponents/Messages/Inbox'
 import Outbox from './EmployerPageComponents/Messages/Outbox'
 import AccessCodes from './EmployerPageComponents/MyCodes/AccessCodes'
-import EmployementCodes from './EmployerPageComponents/MyCodes/EmployementCodes'
+import EmployementCodes from './EmployerPageComponents/MyCodes/EmployementCodes/EmploymentVerification'
+import EmploymentTabs from './EmployerPageComponents/MyCodes/EmployementCodes/EmploymentTabs'
 
 const drawerWidth = 240;
 let token="";
@@ -79,8 +80,8 @@ class EmployerLandingPage extends React.PureComponent {
     open2: false,
   };
   async componentDidMount() {
-    token1 = localStorage.getItem("Token");
-    token = "Token " + token1;
+  
+    token = localStorage.getItem("Token");
     id = localStorage.getItem("id");
 
   }
@@ -237,7 +238,7 @@ class EmployerLandingPage extends React.PureComponent {
                   <Link to="/employerEmployementCodes" className={classes.link}>
                     <ListItem button className={classes.nested}>
                       <ListItemText
-                        primary="Employement Codes"
+                        primary="Employment Requests"
                         className={classes.textColor}
                       />
                     </ListItem>
@@ -277,7 +278,7 @@ class EmployerLandingPage extends React.PureComponent {
 
               <Route exact path="/employerEmployementCodes">
                 <Container>
-                  <EmployementCodes />
+                  <EmploymentTabs />
                 </Container>
               </Route>
             </Switch>

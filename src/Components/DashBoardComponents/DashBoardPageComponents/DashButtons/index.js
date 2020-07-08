@@ -38,8 +38,8 @@ async getevaldata(){
 }
   async componentDidMount() {
     this.setState({ loading: true });
-    token1 = localStorage.getItem("Token");
-    token = "Token " + token1;
+    
+    token = localStorage.getItem("Token");
     id = localStorage.getItem("id");
     await this.getevaldata();
     this.setState({ loading: false });

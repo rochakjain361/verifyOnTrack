@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import { withStyles } from '@material-ui/core/styles';
-import { TextField, Paper, Grid, Typography, Button, TableContainer } from '@material-ui/core/';
+import { TextField, Paper, Grid, Typography, Button, TableContainer, CircularProgress } from '@material-ui/core/';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -31,11 +31,11 @@ import Select from '@material-ui/core/Select';
 import DeleteIcon from '@material-ui/icons/Delete';
 import axios from 'axios'
 
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+let token1 = "";
+let token = "";
+let id = "";
 const api = "http://3.22.17.212:8000"
-const cors = "https://cors-anywhere.herokuapp.com/"
+
 
 const styles = theme => ({
 
@@ -59,10 +59,12 @@ class index extends Component {
         selectedIndex: "",
         snackbar: "",
         snackbarresponse: "",
+        loading: true,
     }
 
     async getPhoneReasons() {
-        let response = await fetch(cors + api + "/api/v1/resManager/phone/reasons",
+        this.setState({ loading: true });
+        let response = await fetch(api + "/api/v1/resManager/phone/reasons/",
             {
                 headers: {
                     'Authorization': token
@@ -74,138 +76,174 @@ class index extends Component {
         this.setState({ phoneReasonsArr: this.state.allPhoneReasons.map(phoneReason => phoneReason.phoneReason) })
         console.log("allPhoneReasons:", this.state.phoneReasonsArr)
         console.log("allphoneReasonsArrList:", this.state.phoneReasonsArr)
+        this.setState({ loading: false });
     }
 
     async componentDidMount() {
+      
+token = localStorage.getItem("Token");
+id = localStorage.getItem("id");
         this.getPhoneReasons();
+        // this.setState({ loading: !this.state.loading })
     }
 
-    render() {
+    isloading() {
+        return (
+            <>
+                <Grid
+                    container
+                    spacing={0}
+                    direction="column"
+                    alignItems="center"
+                    justify="center"
+                    display="flex"
+                    style={{ minHeight: "0vh" }}
+                >
+                    <CircularProgress />
+                </Grid>
+            </>
+        );
+    }
 
+    displaytable() {
         const allphoneReasonsList = {
             options: this.state.allPhoneReasons,
             getOptionLabel: (phone) => phone.phoneReason,
         };
-
-        const { classes } = this.props;
-
-        return (
+        return(
             <div style={{ marginTop: 20 }}>
-                {/* <Paper style={{ padding: 20, height: '100vh' }}> */}
-                <Grid container justify='space-between' alignItems='center' spacing={4}>
+                        {/* <Paper style={{ padding: 20, height: '100vh' }}> */}
+                        <Grid container justify='space-between' alignItems='center' spacing={4}>
 
-                    <Grid item>
-                        <Typography variant='h4'>
-                            Phone Reasons
+                            <Grid item>
+                                <Typography variant='h4'>
+                                    Phone Reasons
                             </Typography>
-                    </Grid>
+                            </Grid>
 
-                    <Grid item xs={6}>
-                        <Autocomplete
-                            options={this.state.allPhoneReasons}
-                            getOptionLabel={(option) => option.phoneReason}
-                            size="small"
-                            id="phoneReasons"
-                            Username
-                            value={this.state.phoneReasonSelected}
-                            onChange={(event, value) => {
-                                this.setState({ phoneReasonSelected: value });
-                                console.log("phoneReasonSelected", value);
-                            }}
-                            inputValue={this.state.enteredtext}
-                            onInputChange={(event, newInputValue) => {
-                                this.setState({ enteredReason: newInputValue });
-                                // console.log(newInputValue);
-                            }}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Phone Reasons"
-                                    margin="normal"
-                                    variant="outlined"
+                            <Grid item xs={6}>
+                                <Autocomplete
+                                    options={this.state.allPhoneReasons}
+                                    getOptionLabel={(option) => option.phoneReason}
                                     size="small"
+                                    id="phoneReasons"
+                                    Username
+                                    value={this.state.phoneReasonSelected}
+                                    onChange={(event, value) => {
+                                        this.setState({ phoneReasonSelected: value });
+                                        console.log("phoneReasonSelected", value);
+                                    }}
+                                    inputValue={this.state.enteredtext}
+                                    onInputChange={(event, newInputValue) => {
+                                        this.setState({ enteredReason: newInputValue });
+                                        // console.log(newInputValue);
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Phone Reasons"
+                                            margin="normal"
+                                            variant="outlined"
+                                            size="small"
+                                        />
+                                    )}
                                 />
-                            )}
-                        />
-                    </Grid>
+                            </Grid>
 
 
 
-                </Grid>
+                        </Grid>
 
-                <Grid container justify='flex-start' alignItems='center' style={{ marginTop: 20 }} spacing={2}>
+                        <Grid container justify='flex-start' alignItems='center' style={{ marginTop: 20 }} spacing={2}>
 
-                    <Grid item xs={3}>
+                            <Grid item xs={3}>
 
-                        <TextField
-                            label="Enter phone reason to add"
-                            variant='outlined'
-                            size='medium'
-                            fullWidth
-                            onChange={(event) => {
-                                this.setState({ newPhoneReason: event.target.value });
-                            }}
-                            value={this.state.newPhoneReason}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <Fab
-                            onClick={() => {
-                                this.addPhoneReason();
-                            }}
-                            size="small"
-                            color="secondary">
-                            <AddIcon />
-                        </Fab>
-                    </Grid>
+                                <TextField
+                                    label="Enter phone reason to add"
+                                    variant='outlined'
+                                    size='medium'
+                                    fullWidth
+                                    onChange={(event) => {
+                                        this.setState({ newPhoneReason: event.target.value });
+                                    }}
+                                    value={this.state.newPhoneReason}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <Fab
+                                disabled={this.state.newPhoneReason.length < 1}
+                                    onClick={() => {
+                                        this.addPhoneReason();
+                                    }}
+                                    size="small"
+                                    color="secondary">
+                                    <AddIcon />
+                                </Fab>
+                            </Grid>
 
-                    {this.snackBar()}
+                            {this.snackBar()}
 
-                    <TableContainer component={Paper} style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }} elevation={5}>
-                        <Table stickyHeader>
-                            <TableHead>
-                                <TableRow style={{ backgroundColor: 'black' }}>
-                                    <TableCell align="left">Phone Reason</TableCell>
-                                    <TableCell align="right"></TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {this.state.allPhoneReasons.map((row, index) => (
-                                    <TableRow key={row.id}>
-                                        <TableCell align="left">{row.phoneReason}</TableCell>
-                                        <TableCell align="right"><Button variant='outlined' size='small'
-                                            onClick={() => {
-                                                this.setState({
-                                                    deleteDialogBox: true,
-                                                    selectedIndex: index,
-                                                    deleteid: row.id,
-                                                });
-                                            }} color='secondary'>Delete</Button>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                            <TableContainer component={Paper} style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }} elevation={5}>
+                                <Table stickyHeader>
+                                    <TableHead>
+                                        <TableRow style={{ backgroundColor: 'black' }}>
+                                            <TableCell align="left">Phone Reason</TableCell>
+                                            <TableCell align="right"></TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {this.state.allPhoneReasons.map((row, index) => (
+                                            <TableRow key={row.id}>
+                                                <TableCell align="left">{row.phoneReason}</TableCell>
+                                                <TableCell align="right"><Button variant='outlined' size='small'
+                                                    onClick={() => {
+                                                        this.setState({
+                                                            deleteDialogBox: true,
+                                                            selectedIndex: index,
+                                                            deleteid: row.id,
+                                                        });
+                                                    }} color='secondary'>Delete</Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
 
-                </Grid>
-                {/* </Paper> */}
-                {this.deleteDialog()}
-            </div>
-        )
+                        </Grid>
+                        {/* </Paper> */}
+                        {this.deleteDialog()}
+                    </div>
+        );
     }
 
     snackBar() {
         return (
-            <Snackbar open={this.state.snackbar} autoHideDuration={1000} onClick={() => { this.setState({ snackbar: !this.state.snackbar }) }}>
-                                    {this.state.snackbarresponse.status === 201 ? <Alert onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }} severity="success">
-                                        AddressType added sucessfully
-</Alert> : this.state.snackbarresponse.status === 204 ? <Alert onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }} severity="success">
-                                            AddressType deleted sucessfully
-</Alert> : <Alert onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }} severity="error">
-                                                Something went wrong please try again
-</Alert>}
-                                </Snackbar>
+            <Snackbar
+                open={this.state.snackbar}
+                autoHideDuration={6000}
+                onClick={() => { this.setState({ snackbar: !this.state.snackbar }) }}
+            >
+                {this.state.snackbarresponse.status === 201 ?
+                    <Alert
+                        onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }}
+                        severity="success"
+                    >
+                        Added sucessfully
+                </Alert> :
+                    this.state.snackbarresponse.status === 204 ?
+                        <Alert
+                            onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }}
+                            severity="success">
+                            Deleted sucessfully
+                </Alert> :
+                        <Alert
+                            onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }}
+                            severity="error"
+                        >
+                            Something went wrong please try again
+                </Alert>}
+            </Snackbar>
         );
     }
 
@@ -251,36 +289,18 @@ class index extends Component {
         );
     }
 
-    // async addPhoneReason() {
-    //     let bodyData = {
-    //         'phoneReason': this.state.newPhoneReason,
-    //     }
+    render() {
 
-    //     console.log('Body data:', bodyData)
+        const { classes } = this.props;
 
-    //     try {
-    //         let response = await fetch(api + '/api/v1/resManager/phone/reasons/',
-    //             {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     'Authorization': token,
-    //                     'Content-Reason': 'application/json'
-    //                 },
-    //                 body: JSON.stringify({
-    //                     'phoneReason': this.state.newPhoneReason,
-    //                 })
-    //             }
-    //         );
-    //         response = await response.json();
-    //         console.log('AddPhoneSuccess:', response);
-    //         await this.getPhoneReasons();
-    //         this.setState({ newPhoneReason: "" })
-    //         this.setState({ snackbar: true, snackbarresponse: response });
-    //     } catch (error) {
-    //         console.log("[!ON_REGISTER] " + error);
-    //         this.setState({ snackbar: true, snackbarresponse: error.response })
-    //     }
-    // }
+        return (
+            <div style={{ marginTop: 20 }}>
+                {this.state.loading ? this.isloading() : this.displaytable()}
+                {this.snackBar()}
+
+            </div>
+        )
+    }
 
     async addPhoneReason() {
         let bodyData = {
@@ -302,18 +322,17 @@ class index extends Component {
                     })
                 }
             );
-            this.setState({ snackbar: true, snackbarresponse: response });
-
-            console.log('Success:', response);
             await this.getPhoneReasons();
-
-
+            this.setState({ snackbar: true, snackbarresponse: response, newPhoneReason: "" });
+            console.log('AddphoneSuccess:', response);
 
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
             this.setState({ snackbar: true, snackbarresponse: error.response })
         }
     }
+
+
 
     async deletePhoneReason(id) {
         this.setState({ deleteDialogBox: false })
@@ -329,9 +348,9 @@ class index extends Component {
                 }
             );
             console.log('Success:', response);
-            this.setState({ snackbar: true, snackbarresponse: response });
-
             await this.getPhoneReasons();
+            this.setState({ snackbar: true, snackbarresponse: response });
+            
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
             this.setState({ snackbar: true, snackbarresponse: error.response })

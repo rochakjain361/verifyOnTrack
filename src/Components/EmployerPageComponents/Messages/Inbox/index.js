@@ -38,6 +38,7 @@ let Id="";
 
 export default function Index() {
     const [Response,setResponse]=React.useState([])
+    const [loading,setLoading]=React.useState(true)
    
   
     // const[Token,setToken]=React.useState("")
@@ -46,8 +47,8 @@ export default function Index() {
 
     
     const fetchInboxMessages=async()=> {
-        const Token1=await localStorage.getItem("Token");
-        const Token=await "Token " + Token1;
+        
+        const Token=await localStorage.getItem("Token");
         console.log("Token",Token)
         const Id=localStorage.getItem("id")
         await Axios.get('http://3.22.17.212:8000/api/v1/messages/',
@@ -56,21 +57,18 @@ export default function Index() {
                      'Authorization': Token
                  }
              }).then((response)=>{
-                 console.log(response);
+                 console.log("messages",response);
                  
                 
                 setResponse(response.data)
-                 
-                 
+                setLoading(false)  
              })
             }
-
-    useEffect( () => {
-     
-      fetchInboxMessages()
-         
-       
+    useEffect( () => {    
+      fetchInboxMessages()   
     },[])
+    
+
         // let tempArr = [];
         // response.forEach(element => {
         //     tempArr.push(element["companyName"]);
@@ -98,17 +96,17 @@ export default function Index() {
                     </Grid>
 
                 </Grid>
-                {Response.length===0?<Grid
+                {loading?<Grid
         container
         spacing={0}
         direction="column"
         alignItems="center"
         justify="center"
         display="flex"
-        style={{ minHeight: "100vh" }}
-      >
-        <CircularProgress />
-      </Grid>:
+        style={{ minHeight: "100vh" }}>
+       <CircularProgress /></Grid>:Response.length===0?<Grid container align="center" justify="center"><h1>No Messages</h1></Grid>
+       
+      :
                 <Tabs data={Response} refresh={fetchInboxMessages}/>}
 
                

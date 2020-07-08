@@ -130,8 +130,8 @@ class AdminLandingPage extends React.PureComponent {
     });
   }
   async componentDidMount(){
-    token1 = localStorage.getItem("Token");
-token = "Token " + token1;
+    
+token = localStorage.getItem("Token");
 id = localStorage.getItem("id");
   }
 

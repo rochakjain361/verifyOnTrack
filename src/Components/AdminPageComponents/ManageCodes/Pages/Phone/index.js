@@ -7,8 +7,8 @@ import {
   Typography
 } from '@material-ui/core';
 
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
+
+const token = localStorage.getItem("Token");
 const id = localStorage.getItem("id");
 const api = "http://3.22.17.212:8000"
 
@@ -41,8 +41,8 @@ class index extends React.Component {
   }
 
   componentDidMount() {
-    const token1 = localStorage.getItem("Token");
-    const token = "Token " + token1;
+   
+    const token = localStorage.getItem("Token");
     const id = localStorage.getItem("id");
     this.fetchPhones()
   }
@@ -66,7 +66,7 @@ class index extends React.Component {
               <TextField
                 id="phoneReason"
                 label="Phone Reason"
-                defaultValue={id.phone_reason}
+                defaultValue={id.phone_reason_name_field}
                 type="text"
                 InputProps={{
                   readOnly: true,
@@ -80,7 +80,7 @@ class index extends React.Component {
               <TextField
                 id="phoneType"
                 label="Phone Type"
-                defaultValue={id.phone_type}
+                defaultValue={id.phone_type_name_field}
                 type="text"
                 InputProps={{
                   readOnly: true,

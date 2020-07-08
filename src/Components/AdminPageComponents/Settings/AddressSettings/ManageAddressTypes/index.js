@@ -73,8 +73,8 @@ class index extends Component {
     }
 
     async componentDidMount() {
-        token1 = localStorage.getItem("Token");
-        token = "Token " + token1;
+       
+        token = localStorage.getItem("Token");
         id = localStorage.getItem("id");
         this.setState({ loading: true })
         await this.getAddressTypes();
@@ -294,6 +294,8 @@ class index extends Component {
         }
         this.getAddressTypes();
     }
+
+
 }
 
 export default withStyles(styles)(index);
