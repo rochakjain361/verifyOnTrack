@@ -8,6 +8,8 @@ import {
     TableCell,
     TableHead,
     TableRow,
+    CircularProgress,
+    Box
 } from '@material-ui/core/';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -31,7 +33,7 @@ export default function Indexemployment() {
 const [Token]=React.useState(localStorage.getItem("Token"))
 const [id]=React.useState(localStorage.getItem("id"))
 const [Loading,setLoading]=React.useState(true)
-const [Resposne,setResponse]=React.useState([])
+const [OnboardingResponse,setOnboardingResponse]=React.useState([])
         
     
 
@@ -46,13 +48,33 @@ const [Resposne,setResponse]=React.useState([])
                 'Authorization': Token
             }
         }).then((response)=>{
-            console.log("response for oboffers",response)
-           setResponse(response.data)
+            console.log("response for oboffers",OnboardingResponse)
+           setOnboardingResponse(response.data)
            setLoading(false)
             
             
         })
     }
+    const isloading=()=> {
+        return (
+          <Grid
+            container
+            justify="flex-end"
+            alignItems="center"
+            // container
+            // spacing={0}
+            direction="column"
+          // alignItems="center"
+          // justify="center"
+          // // display="flex"
+          // style={{ minHeight: "10vh" }}
+          >
+            <Grid item xs={6} style={{ marginTop: 100 }}>
+              <CircularProgress />
+            </Grid>
+          </Grid>
+        );
+      }
 
 useEffect(()=>{
     Onboardingdata()
@@ -63,10 +85,26 @@ useEffect(()=>{
      
 
         return (
-            <Grid>
-                
+            Loading?isloading():
+            <Grid container align="center" justify="center">
+              
 
-              <TabsEmployment/>
+                <Grid item xs={12}>
+                    <Box p={2}>
+
+
+    <Typography variant='h4' align="center" justify="center">
+        Employement Codes
+            </Typography>
+                    </Box>
+                </Grid>
+                <Grid item xs={12}>
+
+               
+
+
+              <TabsEmployment Onboarding={OnboardingResponse}/>
+                </Grid>
                
                
 

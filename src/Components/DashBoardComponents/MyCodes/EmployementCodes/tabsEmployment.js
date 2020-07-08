@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TabsEmployment() {
+export default function TabsEmployment(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
@@ -85,7 +85,7 @@ export default function TabsEmployment() {
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <Onboarding/>
+          <Onboarding data={props.Onboarding}/>
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
           <Offboarding/>
