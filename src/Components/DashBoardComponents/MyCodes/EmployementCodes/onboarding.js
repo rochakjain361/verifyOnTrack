@@ -56,6 +56,7 @@ function Onboarding(props) {
     jobDescription: "",
     conditions: "",
     jobTitle: "",
+    jobCategory_name_field:""
   });
   const [acceptbutton, setAcceptbutton] = React.useState(false);
   const [rejectbutton, setRejectbutton] = React.useState(false);
@@ -230,7 +231,7 @@ function Onboarding(props) {
                     {new Date(row.created_on).toDateString()}
                   </TableCell>
                   <TableCell align="center">{row.employer_ontracid}</TableCell>
-                  <TableCell align="center">{row.jobCategory}</TableCell>
+                  <TableCell align="center">{row.jobCategory_name_field}</TableCell>
                   <TableCell align="center">{row.jobTitle}</TableCell>
                   <TableCell align="center">{row.startDate}</TableCell>
                   <TableCell align="center">{row.obStatus}</TableCell>
@@ -557,7 +558,7 @@ function Onboarding(props) {
                                 <TextField
                                   id="verifyOntracId"
                                   label="JobCategory"
-                                  defaultValue={oboffer[0].jobCategory}
+                                  defaultValue={oboffer[0].jobCategory_name_field}
                                   type="text"
                                   InputProps={{
                                     readOnly: true,
@@ -667,7 +668,7 @@ function Onboarding(props) {
                                 <TextField
                                   id="verifyOntracId"
                                   label="JobCategory"
-                                  value={oboffer[0].jobCategory}
+                                  value={oboffer[0].jobCategory_name_field}
                                   type="text"
                                   InputProps={{
                                     readOnly: true,
@@ -776,7 +777,7 @@ function Onboarding(props) {
                                 <TextField
                                   id="verifyOntracId"
                                   label="JobCategory"
-                                  defaultValue={oboffer[1].jobCategory}
+                                  defaultValue={oboffer[1].jobCategory_name_field}
                                   type="text"
                                   InputProps={{
                                     readOnly: true,
