@@ -85,7 +85,7 @@ export default function TabsEmployment(props) {
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <Onboarding data={props.Onboarding}/>
+          <Onboarding data={props.Onboarding} refresh={props.refresh}/>
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
           <Offboarding/>

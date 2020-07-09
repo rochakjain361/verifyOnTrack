@@ -57,7 +57,7 @@ export default function Indexemployment() {
     }).then((response) => {
       console.log("response for oboffers", OnboardingResponse);
       setOnboardingResponse(response.data);
-      setLoading(false);
+      
     });
   };
   const isloading = () => {
@@ -83,6 +83,7 @@ export default function Indexemployment() {
 
   useEffect(() => {
     Onboardingdata();
+    setLoading(false);
   }, []);
 
   return Loading ? (
@@ -97,7 +98,7 @@ export default function Indexemployment() {
         </Box>
       </Grid>
       <Grid item xs={12}>
-        <TabsEmployment Onboarding={OnboardingResponse} />
+        <TabsEmployment Onboarding={OnboardingResponse} refresh={Onboardingdata} />
       </Grid>
     </Grid>
   );

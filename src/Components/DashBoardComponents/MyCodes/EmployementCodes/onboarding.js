@@ -13,6 +13,7 @@ import {
   Select,
   InputLabel,
   MenuItem,
+  CircularProgress
 } from "@material-ui/core/";
 
 import {
@@ -38,6 +39,8 @@ import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Axios from "axios";
 import { set } from "date-fns";
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@material-ui/core/styles';
 function Onboarding(props) {
   const [Token] = React.useState(localStorage.getItem("Token"));
   const [modifyOfferButton, setModifyofferbutton] = React.useState(false);
@@ -57,6 +60,10 @@ function Onboarding(props) {
   const [acceptbutton, setAcceptbutton] = React.useState(false);
   const [rejectbutton, setRejectbutton] = React.useState(false);
   const [modifyofferform, setModifyofferform] = React.useState(false);
+  const [Loading, setLoading] = React.useState(true);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
   //   const [jobCategory,setJobcateogry]=React.useState("")
 
   const [
@@ -64,9 +71,7 @@ function Onboarding(props) {
     setGenerateNewEmployementCodeDialog,
   ] = React.useState(false);
   // const [confirmoffer,setConfirmoffer]=React.useState()
-  const ViewDialouge = () => {
-    return <div></div>;
-  };
+ 
   const Modifyofferformdetails = (offer) => {
     setModifyOboffer({
       ...modifyoboffer,
@@ -81,6 +86,8 @@ function Onboarding(props) {
     setModifyofferbutton(!modifyOfferButton);
   };
   const Modifyofferformpost = async (id) => {
+    setviewOfferButton(false);
+   
     console.log("modifyoboffer", modifyoboffer);
     await Axios.put(
       "http://3.22.17.212:8000/api/v1/employers/oboffers/" + id + "/modify",
@@ -92,11 +99,16 @@ function Onboarding(props) {
       }
     ).then((response) => {
       console.log("acceptofferresponse", response);
+      setOboffer([])
+      props.refresh()
+      
 
       // props.data.refresh()
     });
   };
   const confirmoffer = async (id) => {
+    setviewOfferButton(false);
+   
     console.log("id", id);
 
     await Axios.put(
@@ -109,11 +121,13 @@ function Onboarding(props) {
       }
     ).then((response) => {
       console.log("acceptofferresponse", response);
-
+      setOboffer([])
       // props.data.refresh()
     });
   };
   const canceloffer = async (id) => {
+    setviewOfferButton(false);
+   
     console.log("id", id);
 
     await Axios.put(
@@ -126,11 +140,16 @@ function Onboarding(props) {
       }
     ).then((response) => {
       console.log("acceptofferresponse", response);
+      setOboffer([])
+     
+
 
       // props.data.refresh()
     });
   };
   const handleopen = async (id) => {
+    setviewOfferButton(true);
+    setLoading(true)
     await Axios.get("http://3.22.17.212:8000/api/v1/employers/oboffers/" + id, {
       headers: {
         Authorization: Token,
@@ -143,7 +162,7 @@ function Onboarding(props) {
       setAcceptbutton(response.data[0].showAccept_field);
       setRejectbutton(response.data[0].showReject_field);
       setModifyofferbuttonshow(response.data[0].showModify_field);
-      setviewOfferButton(true);
+      setLoading(false)
     });
 
     // ViewDialouge()
@@ -239,15 +258,28 @@ function Onboarding(props) {
         </TableContainer>
       </Grid>
       {/* </Paper> */}
-      {oboffer.length === 0 ? null : (
+     
         <Dialog
+                fullWidth={"sm"}
+                maxWidth={"sm"}
           open={viewOfferButton}
           onClose={() => {
             setviewOfferButton(false);
-            setOboffer([]);
+            setOboffer([])
           }}
+        > {Loading? <Grid
+          container
+          justify="flex-end"
+          alignItems="center"
+          
+          direction="column"
+         
         >
-          <DialogTitle id="alert-dialog-title">{"Job Details"}</DialogTitle>
+          <Grid item xs={6} style={{ marginTop: 100 }}>
+            <CircularProgress />
+          </Grid>
+        </Grid>:oboffer.length === 0 ? null : (<>
+          <DialogTitle id="alert-dialog-title" align="center">{"Job Details"}</DialogTitle>
           <DialogContent>
             <Grid container justify="space-between" spacing={2}>
               {/* <Grid item xs={6}>
@@ -264,14 +296,17 @@ function Onboarding(props) {
                 />
               </Grid> */}
               {modifyofferform ? (
-                <Grid item>
+                <Grid item xs={12} >
+                  <Grid container direction="row-reverse">
+
+
                   {modifyOfferButton ? (
                     <>
                       <Fab
                         size="small"
                         color="default"
                         onClick={() => setModifyofferbutton(!modifyOfferButton)}
-                      >
+                        >
                         <ArrowBackIcon />
                       </Fab>
                     </>
@@ -282,11 +317,12 @@ function Onboarding(props) {
                         variant="outlined"
                         size="large"
                         onClick={() => Modifyofferformdetails(oboffer)}
-                      >
+                        >
                         Modify offer
                       </Button>
                     </>
                   )}
+                  </Grid>
                 </Grid>
               ) : null}
 
@@ -308,18 +344,46 @@ function Onboarding(props) {
                           </FormLabel>
                         </Grid>
 
-                        {/* <Grid item xs={12}>
+                        <Grid item xs={12}>
                           <TextField
                             id="verifyOntracId"
                             label="JobCategory"
                             value={modifyoboffer.jobCategory}
-                            onChange={(e)=>{setModifyOboffer({...modifyoboffer,jobCategory:e.target.value})
-                                console.log("modifyoboffer.jobCategory",modifyoboffer.jobCategory)}}
+                            onChange={(e) => {
+                              setModifyOboffer({
+                                ...modifyoboffer,
+                                jobCategory: e.target.value,
+                              });
+                              console.log(
+                                "modifyoboffer.jobCategory",
+                                modifyoboffer.jobCategory
+                              );
+                            }}
                             type="text"
                             fullWidth
                             size="small"
                           />
-                        </Grid> */}
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextField
+                            id="verifyOntracId"
+                            label="JobTitle"
+                            value={modifyoboffer.jobTitle}
+                            onChange={(e) => {
+                              setModifyOboffer({
+                                ...modifyoboffer,
+                                jobTitle: e.target.value,
+                              });
+                              console.log(
+                                "modifyoboffer.jobCategory",
+                                modifyoboffer.jobTitle
+                              );
+                            }}
+                            type="text"
+                            fullWidth
+                            size="small"
+                          />
+                        </Grid>
 
                         <Grid item xs={12}>
                           <TextField
@@ -420,7 +484,9 @@ function Onboarding(props) {
               ) : (
                 <>
                   {oboffer.length === 1 ? (
-                    <Grid item xs={6}>
+                    <Grid container direction="row" justify="center" alignItems="center" backgroundColor="red">
+                      <Grid item xs={12}>
+
                       <Paper variant="outlined" style={{ padding: 15 }}>
                         <Grid
                           container
@@ -429,7 +495,7 @@ function Onboarding(props) {
                           alignItems="center"
                           spacing={2}
                           // style={{ padding: 20 }}
-                        >
+                          >
                           <Grid item xs={12}>
                             <FormLabel component="legend">
                               Original offer:
@@ -447,7 +513,20 @@ function Onboarding(props) {
                               }}
                               fullWidth
                               size="small"
-                            />
+                              />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <TextField
+                              id="verifyOntracId"
+                              label="JobTitle"
+                              defaultValue={oboffer[0].jobTitle}
+                              type="text"
+                              InputProps={{
+                                readOnly: true,
+                              }}
+                              fullWidth
+                              size="small"
+                              />
                           </Grid>
 
                           <Grid item xs={12}>
@@ -460,7 +539,7 @@ function Onboarding(props) {
                               type="number"
                               fullWidth
                               size="small"
-                            />
+                              />
                           </Grid>
 
                           <Grid item xs={12}>
@@ -474,7 +553,7 @@ function Onboarding(props) {
                               helperText="Starting date"
                               fullWidth
                               size="small"
-                            />
+                              />
                           </Grid>
 
                           <Grid item xs={12}>
@@ -489,7 +568,7 @@ function Onboarding(props) {
                               multiline
                               rows={3}
                               size="small"
-                            />
+                              />
                           </Grid>
 
                           <Grid item xs={12}>
@@ -504,11 +583,12 @@ function Onboarding(props) {
                               multiline
                               rows={3}
                               size="small"
-                            />
+                              />
                           </Grid>
                         </Grid>
                       </Paper>
                     </Grid>
+                              </Grid>
                   ) : (
                     <>
                       <Grid item xs={6}>
@@ -540,6 +620,19 @@ function Onboarding(props) {
                                 size="small"
                               />
                             </Grid>
+                            <Grid item xs={12}>
+                            <TextField
+                              id="verifyOntracId"
+                              label="JobTitle"
+                              defaultValue={oboffer[0].jobTitle}
+                              type="text"
+                              InputProps={{
+                                readOnly: true,
+                              }}
+                              fullWidth
+                              size="small"
+                            />
+                          </Grid>
 
                             <Grid item xs={12}>
                               <TextField
@@ -630,7 +723,19 @@ function Onboarding(props) {
                                 size="small"
                               />
                             </Grid>
-
+                            <Grid item xs={12}>
+                            <TextField
+                              id="verifyOntracId"
+                              label="JobTitle"
+                              defaultValue={oboffer[0].jobTitle}
+                              type="text"
+                              InputProps={{
+                                readOnly: true,
+                              }}
+                              fullWidth
+                              size="small"
+                            />
+                          </Grid>
                             <Grid item xs={12}>
                               <TextField
                                 id="startingSalary"
@@ -730,9 +835,18 @@ function Onboarding(props) {
                 Cancel Offer
               </Button>
             ) : null}
+            <Button
+            color="secondary"
+            variant="contained"
+            onClick={()=> {setviewOfferButton(false) }}>
+              Close
+
+            </Button>
           </DialogActions>
+          </>
+           )}
         </Dialog>
-      )}
+     
       {
         <div>
           <Dialog
