@@ -149,35 +149,9 @@ export default function HorizontalLinearStepper(props) {
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState();
     // const [profileDone, setProfiledone] = React.useState(false);
-    const [currentStep, setCurrentStep] = React.useState(() => {
-        if (props.location.state.detail.user.info_provided_field.profile === false) {
-            setActiveStep(0)
-        }
-        else if (props.location.state.detail.user.info_provided_field.address === false) {
-            setActiveStep(1)
-
-        }
-        else if (props.location.state.detail.user.info_provided_field.identity === false) {
-            setActiveStep(2)
-        }
-        else if (props.location.state.detail.user.info_provided_field.phone === false) {
-            setActiveStep(3)
-        }
-        else if (props.location.state.detail.user.info_provided_field.jobHistory === false) {
-            setActiveStep(4)
-        } else {
-           
-            if (props.location.state.detail.user.accountStatus === "Approval In Progress") {
-                setApproval(true)
-                setActiveStep(5)
-   
-            }
-            else{
-                setActiveStep(4)
-            }
-           
-        }
-    });
+    // const [currentStep, setCurrentStep] = React.useState(() => {
+      
+    // });
 
 
 
@@ -216,10 +190,34 @@ export default function HorizontalLinearStepper(props) {
     })(StepConnector);
 
     useEffect(() => {
+        if (props.location.state.detail.user.info_provided_field.profile === false) {
+            setActiveStep(0)
+        }
+        else if (props.location.state.detail.user.info_provided_field.address === false) {
+            setActiveStep(1)
 
-
-
-        
+        }
+        else if (props.location.state.detail.user.info_provided_field.identity === false) {
+            setActiveStep(2)
+        }
+        else if (props.location.state.detail.user.info_provided_field.phone === false) {
+            setActiveStep(3)
+        }
+        else if (props.location.state.detail.user.info_provided_field.jobHistory === false) {
+            setActiveStep(4)
+        } 
+        else {
+           
+            if (props.location.state.detail.user.accountStatus === "Approval In Progress") {
+                setApproval(true)
+                setActiveStep(5)
+   
+            }
+            else{
+                setActiveStep(4)
+            }
+           
+        }
     //    if(props.location.state.detail.user.info_provided_field.profile === true&&props.location.state.detail.user.info_provided_field.address === true&&Approval===false&&props.location.state.detail.user.info_provided_field.identity === true&&props.location.state.detail.user.info_provided_field.phone === true){
     //     apiCheck()
     //     console.log("apicheck")
