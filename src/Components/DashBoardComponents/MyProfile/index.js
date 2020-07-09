@@ -29,6 +29,7 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import {Snackbar} from '@material-ui/core'
 import MuiAlert from '@material-ui/lab/Alert';
+import NetworkDetector from  '../../../NetworkDetector';
 
 let token1 = "";
 let token = "";
@@ -853,4 +854,4 @@ class MyProfile extends Component {
 
 
 
-export default MyProfile;
+export default NetworkDetector(MyProfile);
