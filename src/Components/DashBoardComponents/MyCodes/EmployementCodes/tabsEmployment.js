@@ -74,9 +74,9 @@ export default function TabsEmployment(props) {
           variant="fullWidth"
           aria-label="full width tabs example"
         >
-          <Tab label="Onboarding" {...a11yProps(0)} />
-          <Tab label="Offboarding" {...a11yProps(1)} />
-          <Tab label="Employerlist" {...a11yProps(2)} />
+          <Tab label="Onboarding"   style={{ fontWeight: "bolder", }}{...a11yProps(0)} />
+          <Tab label="Offboarding"   style={{ fontWeight: "bolder", }}{...a11yProps(1)} />
+          <Tab label="Employerlist"  style={{ fontWeight: "bolder", }} {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <SwipeableViews

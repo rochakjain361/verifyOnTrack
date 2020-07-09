@@ -13,7 +13,7 @@ import {
   Select,
   InputLabel,
   MenuItem,
-  CircularProgress
+  CircularProgress,
 } from "@material-ui/core/";
 
 import {
@@ -39,8 +39,8 @@ import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Axios from "axios";
 import { set } from "date-fns";
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useTheme } from "@material-ui/core/styles";
 function Onboarding(props) {
   const [Token] = React.useState(localStorage.getItem("Token"));
   const [modifyOfferButton, setModifyofferbutton] = React.useState(false);
@@ -62,7 +62,8 @@ function Onboarding(props) {
   const [modifyofferform, setModifyofferform] = React.useState(false);
   const [Loading, setLoading] = React.useState(true);
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const [JobCateogry, setJobCateogry] = React.useState([]);
 
   //   const [jobCategory,setJobcateogry]=React.useState("")
 
@@ -71,7 +72,7 @@ function Onboarding(props) {
     setGenerateNewEmployementCodeDialog,
   ] = React.useState(false);
   // const [confirmoffer,setConfirmoffer]=React.useState()
- 
+
   const Modifyofferformdetails = (offer) => {
     setModifyOboffer({
       ...modifyoboffer,
@@ -87,7 +88,7 @@ function Onboarding(props) {
   };
   const Modifyofferformpost = async (id) => {
     setviewOfferButton(false);
-   
+
     console.log("modifyoboffer", modifyoboffer);
     await Axios.put(
       "http://3.22.17.212:8000/api/v1/employers/oboffers/" + id + "/modify",
@@ -99,16 +100,15 @@ function Onboarding(props) {
       }
     ).then((response) => {
       console.log("acceptofferresponse", response);
-      setOboffer([])
-      props.refresh()
-      
+      setOboffer([]);
+      props.refresh();
 
       // props.data.refresh()
     });
   };
   const confirmoffer = async (id) => {
     setviewOfferButton(false);
-   
+
     console.log("id", id);
 
     await Axios.put(
@@ -121,13 +121,14 @@ function Onboarding(props) {
       }
     ).then((response) => {
       console.log("acceptofferresponse", response);
-      setOboffer([])
+      setOboffer([]);
+      props.refresh();
       // props.data.refresh()
     });
   };
   const canceloffer = async (id) => {
     setviewOfferButton(false);
-   
+
     console.log("id", id);
 
     await Axios.put(
@@ -140,16 +141,15 @@ function Onboarding(props) {
       }
     ).then((response) => {
       console.log("acceptofferresponse", response);
-      setOboffer([])
-     
-
+      setOboffer([]);
+      props.refresh();
 
       // props.data.refresh()
     });
   };
   const handleopen = async (id) => {
     setviewOfferButton(true);
-    setLoading(true)
+    setLoading(true);
     await Axios.get("http://3.22.17.212:8000/api/v1/employers/oboffers/" + id, {
       headers: {
         Authorization: Token,
@@ -162,9 +162,16 @@ function Onboarding(props) {
       setAcceptbutton(response.data[0].showAccept_field);
       setRejectbutton(response.data[0].showReject_field);
       setModifyofferbuttonshow(response.data[0].showModify_field);
-      setLoading(false)
+      setLoading(false);
     });
-
+    await Axios.get("http://3.22.17.212:8000/api/v1/resManager/job/categories/", {
+      headers: {
+        Authorization: Token,
+      },
+    }).then((response) => {
+      console.log(response.data);
+      setJobCateogry(response.data)
+    })
     // ViewDialouge()
   };
   useEffect(() => {
@@ -210,7 +217,9 @@ function Onboarding(props) {
                   "Obstatus",
                   "Action",
                 ].map((tablename) => (
-                  <TableCell align="center">{tablename}</TableCell>
+                  <TableCell align="center" style={{ fontWeight: "bolder" }}>
+                    {tablename}
+                  </TableCell>
                 ))}
               </TableRow>
             </TableHead>
@@ -239,7 +248,7 @@ function Onboarding(props) {
 
                         </Select>
                     </FormControl></TableCell> */}
-                  <TableCell align="left">
+                  <TableCell align="center">
                     <Button
                       size="small"
                       color="primary"
@@ -258,31 +267,36 @@ function Onboarding(props) {
         </TableContainer>
       </Grid>
       {/* </Paper> */}
-     
-        <Dialog
-                fullWidth={"sm"}
-                maxWidth={"sm"}
-          open={viewOfferButton}
-          onClose={() => {
-            setviewOfferButton(false);
-            setOboffer([])
-          }}
-        > {Loading? <Grid
-          container
-          justify="flex-end"
-          alignItems="center"
-          
-          direction="column"
-         
-        >
-          <Grid item xs={6} style={{ marginTop: 100 }}>
-            <CircularProgress />
+
+      <Dialog
+        fullWidth={"sm"}
+        maxWidth={"sm"}
+        open={viewOfferButton}
+        onClose={() => {
+          setviewOfferButton(false);
+          setOboffer([]);
+        }}
+      >
+        {" "}
+        {Loading ? (
+          <Grid
+            container
+            justify="flex-end"
+            alignItems="center"
+            direction="column"
+          >
+            <Grid item xs={6} style={{ marginTop: 100 }}>
+              <CircularProgress />
+            </Grid>
           </Grid>
-        </Grid>:oboffer.length === 0 ? null : (<>
-          <DialogTitle id="alert-dialog-title" align="center">{"Job Details"}</DialogTitle>
-          <DialogContent>
-            <Grid container justify="space-between" spacing={2}>
-              {/* <Grid item xs={6}>
+        ) : oboffer.length === 0 ? null : (
+          <>
+            <DialogTitle id="alert-dialog-title" align="center">
+              {"Job Details"}
+            </DialogTitle>
+            <DialogContent>
+              <Grid container justify="space-between" spacing={2}>
+                {/* <Grid item xs={6}>
                 <TextField
                   id="verifyOntracId"
                   label="Verify Ontrac Id"
@@ -295,198 +309,40 @@ function Onboarding(props) {
                   size="small"
                 />
               </Grid> */}
-              {modifyofferform ? (
-                <Grid item xs={12} >
-                  <Grid container direction="row-reverse">
-
-
-                  {modifyOfferButton ? (
-                    <>
-                      <Fab
-                        size="small"
-                        color="default"
-                        onClick={() => setModifyofferbutton(!modifyOfferButton)}
-                        >
-                        <ArrowBackIcon />
-                      </Fab>
-                    </>
-                  ) : (
-                    <>
-                      <Button
-                        color="primary"
-                        variant="outlined"
-                        size="large"
-                        onClick={() => Modifyofferformdetails(oboffer)}
-                        >
-                        Modify offer
-                      </Button>
-                    </>
-                  )}
-                  </Grid>
-                </Grid>
-              ) : null}
-
-              {modifyOfferButton ? (
-                <>
+                {modifyofferform ? (
                   <Grid item xs={12}>
-                    <Paper variant="outlined" style={{ padding: 15 }}>
-                      <Grid
-                        container
-                        justify="flex-start"
-                        direction="row"
-                        alignItems="center"
-                        spacing={2}
-                        // style={{ padding: 20 }}
-                      >
-                        <Grid item xs={12}>
-                          <FormLabel component="legend">
-                            Enter new offer details:
-                          </FormLabel>
-                        </Grid>
-
-                        <Grid item xs={12}>
-                          <TextField
-                            id="verifyOntracId"
-                            label="JobCategory"
-                            value={modifyoboffer.jobCategory}
-                            onChange={(e) => {
-                              setModifyOboffer({
-                                ...modifyoboffer,
-                                jobCategory: e.target.value,
-                              });
-                              console.log(
-                                "modifyoboffer.jobCategory",
-                                modifyoboffer.jobCategory
-                              );
-                            }}
-                            type="text"
-                            fullWidth
+                    <Grid container direction="row-reverse">
+                      {modifyOfferButton ? (
+                        <>
+                          <Fab
                             size="small"
-                          />
-                        </Grid>
-                        <Grid item xs={12}>
-                          <TextField
-                            id="verifyOntracId"
-                            label="JobTitle"
-                            value={modifyoboffer.jobTitle}
-                            onChange={(e) => {
-                              setModifyOboffer({
-                                ...modifyoboffer,
-                                jobTitle: e.target.value,
-                              });
-                              console.log(
-                                "modifyoboffer.jobCategory",
-                                modifyoboffer.jobTitle
-                              );
-                            }}
-                            type="text"
-                            fullWidth
-                            size="small"
-                          />
-                        </Grid>
-
-                        <Grid item xs={12}>
-                          <TextField
-                            id="startingSalary"
-                            label="Starting Salary"
+                            color="default"
+                            onClick={() =>
+                              setModifyofferbutton(!modifyOfferButton)
+                            }
+                          >
+                            <ArrowBackIcon />
+                          </Fab>
+                        </>
+                      ) : (
+                        <>
+                          <Button
+                            color="primary"
                             variant="outlined"
-                            value={modifyoboffer.startSalary}
-                            onChange={(e) => {
-                              setModifyOboffer({
-                                ...modifyoboffer,
-                                startSalary: e.target.value,
-                              });
-                              console.log(
-                                "modifyoboffer.jobCategory",
-                                modifyoboffer.startSalary
-                              );
-                            }}
-                            type="number"
-                            fullWidth
-                            size="small"
-                          />
-                        </Grid>
-
-                        <Grid item xs={12}>
-                          <TextField
-                            id="startingDate"
-                            // label="Starting Salary"
-                            variant="outlined"
-                            value={modifyoboffer.startDate}
-                            onChange={(e) => {
-                              setModifyOboffer({
-                                ...modifyoboffer,
-                                startDate: e.target.value,
-                              });
-                              console.log(
-                                "modifyoboffer.jobCategory",
-                                modifyoboffer.startDate
-                              );
-                            }}
-                            type="date"
-                            helperText="Starting date"
-                            fullWidth
-                            size="small"
-                          />
-                        </Grid>
-
-                        <Grid item xs={12}>
-                          <TextField
-                            id="jobDescription"
-                            label="Job Description"
-                            variant="outlined"
-                            value={modifyoboffer.jobDescription}
-                            onChange={(e) => {
-                              setModifyOboffer({
-                                ...modifyoboffer,
-                                jobDescription: e.target.value,
-                              });
-                              console.log(
-                                "modifyoboffer.jobCategory",
-                                modifyoboffer.jobDescription
-                              );
-                            }}
-                            type="date"
-                            fullWidth
-                            multiline
-                            rows={3}
-                            size="small"
-                          />
-                        </Grid>
-
-                        <Grid item xs={12}>
-                          <TextField
-                            id="otherConditions"
-                            label="Other Conditions"
-                            variant="outlined"
-                            value={modifyoboffer.conditions}
-                            onChange={(e) => {
-                              setModifyOboffer({
-                                ...modifyoboffer,
-                                conditions: e.target.value,
-                              });
-                              console.log(
-                                "modifyoboffer.jobCategory",
-                                modifyoboffer.conditions
-                              );
-                            }}
-                            type="date"
-                            fullWidth
-                            multiline
-                            rows={3}
-                            size="small"
-                          />
-                        </Grid>
-                      </Grid>
-                    </Paper>
+                            size="large"
+                            onClick={() => Modifyofferformdetails(oboffer)}
+                          >
+                            Modify offer
+                          </Button>
+                        </>
+                      )}
+                    </Grid>
                   </Grid>
-                </>
-              ) : (
-                <>
-                  {oboffer.length === 1 ? (
-                    <Grid container direction="row" justify="center" alignItems="center" backgroundColor="red">
-                      <Grid item xs={12}>
+                ) : null}
 
+                {modifyOfferButton ? (
+                  <>
+                    <Grid item xs={12}>
                       <Paper variant="outlined" style={{ padding: 15 }}>
                         <Grid
                           container
@@ -495,38 +351,79 @@ function Onboarding(props) {
                           alignItems="center"
                           spacing={2}
                           // style={{ padding: 20 }}
-                          >
+                        >
                           <Grid item xs={12}>
                             <FormLabel component="legend">
-                              Original offer:
+                              Enter new offer details:
                             </FormLabel>
                           </Grid>
 
-                          <Grid item xs={12}>
+                          {/* <Grid item xs={12}>
                             <TextField
                               id="verifyOntracId"
                               label="JobCategory"
-                              defaultValue={oboffer[0].jobCategory}
-                              type="text"
-                              InputProps={{
-                                readOnly: true,
+                              value={modifyoboffer.jobCategory}
+                              onChange={(e) => {
+                                setModifyOboffer({
+                                  ...modifyoboffer,
+                                  jobCategory: e.target.value,
+                                });
+                                console.log(
+                                  "modifyoboffer.jobCategory",
+                                  modifyoboffer.jobCategory
+                                );
                               }}
+                              type="text"
                               fullWidth
                               size="small"
-                              />
-                          </Grid>
-                          <Grid item xs={12}>
+                            />
+                          </Grid> */}
+                          <Grid item fullWidth xs={12}>
+                                
+                                  <InputLabel id="demo-simple-select-label">
+                                  JobCategory
+                                  </InputLabel>
+                                  <Select
+                                  fullWidth
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={modifyoboffer.jobCategory}
+                                    onChange={(e) => {
+                                      setModifyOboffer({
+                                        ...modifyoboffer,
+                                        jobCategory: e.target.value,
+                                      });
+                                      console.log(
+                                        "modifyoboffer.jobCategory",
+                                        modifyoboffer.jobCategory
+                                      );
+                                    }}
+                                  >
+                                    {JobCateogry.map((job)=><MenuItem id={job.id}value={job.id}>{job.positionCategory}</MenuItem>)}
+                                  
+                                  </Select>
+                                
+                              </Grid>
+                          <Grid item  fullWidth xs={12}>
                             <TextField
                               id="verifyOntracId"
                               label="JobTitle"
-                              defaultValue={oboffer[0].jobTitle}
-                              type="text"
-                              InputProps={{
-                                readOnly: true,
+                              value={modifyoboffer.jobTitle}
+                              
+                              onChange={(e) => {
+                                setModifyOboffer({
+                                  ...modifyoboffer,
+                                  jobTitle: e.target.value,
+                                });
+                                console.log(
+                                  "modifyoboffer.jobCategory",
+                                  modifyoboffer.jobTitle
+                                );
                               }}
+                              type="text"
                               fullWidth
                               size="small"
-                              />
+                            />
                           </Grid>
 
                           <Grid item xs={12}>
@@ -534,12 +431,21 @@ function Onboarding(props) {
                               id="startingSalary"
                               label="Starting Salary"
                               variant="outlined"
-                              value={oboffer[0].startSalary}
-                              // onChange={}
+                              value={modifyoboffer.startSalary}
+                              onChange={(e) => {
+                                setModifyOboffer({
+                                  ...modifyoboffer,
+                                  startSalary: e.target.value,
+                                });
+                                console.log(
+                                  "modifyoboffer.jobCategory",
+                                  modifyoboffer.startSalary
+                                );
+                              }}
                               type="number"
                               fullWidth
                               size="small"
-                              />
+                            />
                           </Grid>
 
                           <Grid item xs={12}>
@@ -547,13 +453,22 @@ function Onboarding(props) {
                               id="startingDate"
                               // label="Starting Salary"
                               variant="outlined"
-                              value={oboffer[0].startDate}
-                              // onChange={}
+                              value={modifyoboffer.startDate}
+                              onChange={(e) => {
+                                setModifyOboffer({
+                                  ...modifyoboffer,
+                                  startDate: e.target.value,
+                                });
+                                console.log(
+                                  "modifyoboffer.jobCategory",
+                                  modifyoboffer.startDate
+                                );
+                              }}
                               type="date"
                               helperText="Starting date"
                               fullWidth
                               size="small"
-                              />
+                            />
                           </Grid>
 
                           <Grid item xs={12}>
@@ -561,14 +476,23 @@ function Onboarding(props) {
                               id="jobDescription"
                               label="Job Description"
                               variant="outlined"
-                              value={oboffer[0].jobDescription}
-                              // onChange={}
+                              value={modifyoboffer.jobDescription}
+                              onChange={(e) => {
+                                setModifyOboffer({
+                                  ...modifyoboffer,
+                                  jobDescription: e.target.value,
+                                });
+                                console.log(
+                                  "modifyoboffer.jobCategory",
+                                  modifyoboffer.jobDescription
+                                );
+                              }}
                               type="date"
                               fullWidth
                               multiline
                               rows={3}
                               size="small"
-                              />
+                            />
                           </Grid>
 
                           <Grid item xs={12}>
@@ -576,277 +500,417 @@ function Onboarding(props) {
                               id="otherConditions"
                               label="Other Conditions"
                               variant="outlined"
-                              value={oboffer[0].conditions}
-                              // onChange={}
+                              value={modifyoboffer.conditions}
+                              onChange={(e) => {
+                                setModifyOboffer({
+                                  ...modifyoboffer,
+                                  conditions: e.target.value,
+                                });
+                                console.log(
+                                  "modifyoboffer.jobCategory",
+                                  modifyoboffer.conditions
+                                );
+                              }}
                               type="date"
                               fullWidth
                               multiline
                               rows={3}
                               size="small"
-                              />
+                            />
                           </Grid>
                         </Grid>
                       </Paper>
                     </Grid>
+                  </>
+                ) : (
+                  <>
+                    {oboffer.length === 1 ? (
+                      <Grid
+                        container
+                        direction="row"
+                        justify="center"
+                        alignItems="center"
+                        backgroundColor="red"
+                      >
+                        <Grid item xs={12}>
+                          <Paper variant="outlined" style={{ padding: 15 }}>
+                            <Grid
+                              container
+                              justify="flex-start"
+                              direction="row"
+                              alignItems="center"
+                              spacing={2}
+                              // style={{ padding: 20 }}
+                            >
+                              <Grid item xs={12}>
+                                <Typography
+                                  variant="subtitle1"
+                                  align="center"
+                                  justify="center"
+                                  gutterBottom
+                                >
+                                  Original offer:
+                                </Typography>
                               </Grid>
-                  ) : (
-                    <>
-                      <Grid item xs={6}>
-                        <Paper variant="outlined" style={{ padding: 15 }}>
-                          <Grid
-                            container
-                            justify="flex-start"
-                            direction="row"
-                            alignItems="center"
-                            spacing={2}
-                            // style={{ padding: 20 }}
-                          >
-                            <Grid item xs={12}>
-                              <FormLabel component="legend">
-                                Modified offer:
-                              </FormLabel>
-                            </Grid>
 
-                            <Grid item xs={12}>
-                              <TextField
-                                id="verifyOntracId"
-                                label="JobCategory"
-                                value={oboffer[0].jobCategory}
-                                type="text"
-                                InputProps={{
-                                  readOnly: true,
-                                }}
-                                fullWidth
-                                size="small"
-                              />
-                            </Grid>
-                            <Grid item xs={12}>
-                            <TextField
-                              id="verifyOntracId"
-                              label="JobTitle"
-                              defaultValue={oboffer[0].jobTitle}
-                              type="text"
-                              InputProps={{
-                                readOnly: true,
-                              }}
-                              fullWidth
-                              size="small"
-                            />
-                          </Grid>
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="verifyOntracId"
+                                  label="JobCategory"
+                                  defaultValue={oboffer[0].jobCategory}
+                                  type="text"
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                  fullWidth
+                                  size="small"
+                                />
+                              </Grid>
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="verifyOntracId"
+                                  label="JobTitle"
+                                  defaultValue={oboffer[0].jobTitle}
+                                  type="text"
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                  fullWidth
+                                  size="small"
+                                />
+                              </Grid>
 
-                            <Grid item xs={12}>
-                              <TextField
-                                id="startingSalary"
-                                label="Starting Salary"
-                                variant="outlined"
-                                value={oboffer[0].startSalary}
-                                // onChange={}
-                                type="number"
-                                fullWidth
-                                size="small"
-                              />
-                            </Grid>
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="startingSalary"
+                                  label="Starting Salary"
+                                  variant="outlined"
+                                  value={oboffer[0].startSalary}
+                                  // onChange={}
+                                  type="number"
+                                  fullWidth
+                                  size="small"
+                                />
+                              </Grid>
 
-                            <Grid item xs={12}>
-                              <TextField
-                                id="startingDate"
-                                // label="Starting Salary"
-                                variant="outlined"
-                                value={oboffer[0].startDate}
-                                // onChange={}
-                                type="date"
-                                helperText="Starting date"
-                                fullWidth
-                                size="small"
-                              />
-                            </Grid>
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="startingDate"
+                                  // label="Starting Salary"
+                                  variant="outlined"
+                                  value={oboffer[0].startDate}
+                                  // onChange={}
+                                  type="date"
+                                  helperText="Starting date"
+                                  fullWidth
+                                  size="small"
+                                />
+                              </Grid>
 
-                            <Grid item xs={12}>
-                              <TextField
-                                id="jobDescription"
-                                label="Job Description"
-                                variant="outlined"
-                                value={oboffer[0].jobDescription}
-                                // onChange={}
-                                type="date"
-                                fullWidth
-                                multiline
-                                rows={3}
-                                size="small"
-                              />
-                            </Grid>
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="jobDescription"
+                                  label="Job Description"
+                                  variant="outlined"
+                                  value={oboffer[0].jobDescription}
+                                  // onChange={}
+                                  type="date"
+                                  fullWidth
+                                  multiline
+                                  rows={3}
+                                  size="small"
+                                />
+                              </Grid>
 
-                            <Grid item xs={12}>
-                              <TextField
-                                id="otherConditions"
-                                label="Other Conditions"
-                                variant="outlined"
-                                value={oboffer[0].conditions}
-                                // onChange={}
-                                type="date"
-                                fullWidth
-                                multiline
-                                rows={3}
-                                size="small"
-                              />
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="otherConditions"
+                                  label="Other Conditions"
+                                  variant="outlined"
+                                  value={oboffer[0].conditions}
+                                  // onChange={}
+                                  type="date"
+                                  fullWidth
+                                  multiline
+                                  rows={3}
+                                  size="small"
+                                />
+                              </Grid>
                             </Grid>
-                          </Grid>
-                        </Paper>
+                          </Paper>
+                        </Grid>
                       </Grid>
+                    ) : (
+                      <>
+                        <Grid item xs={6}>
+                          <Paper variant="outlined" style={{ padding: 15 }}>
+                            <Grid
+                              container
+                              justify="flex-start"
+                              direction="row"
+                              alignItems="center"
+                              spacing={2}
+                              // style={{ padding: 20 }}
+                            >
+                              <Grid item xs={12}>
+                                <Typography
+                                  variant="subtitle1"
+                                  align="center"
+                                  justify="center"
+                                  gutterBottom
+                                >
+                                  Modified offer:
+                                </Typography>
+                              </Grid>
 
-                      <Grid item xs={6}>
-                        <Paper variant="outlined" style={{ padding: 15 }}>
-                          <Grid
-                            container
-                            justify="flex-start"
-                            direction="row"
-                            alignItems="center"
-                            spacing={2}
-                            // style={{ padding: 20 }}
-                          >
-                            <Grid item xs={12}>
-                              <FormLabel component="legend">
-                                Original offer:
-                              </FormLabel>
-                            </Grid>
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="verifyOntracId"
+                                  label="JobCategory"
+                                  value={oboffer[0].jobCategory}
+                                  type="text"
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                  fullWidth
+                                  size="small"
+                                />
+                              </Grid>
+                              
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="verifyOntracId"
+                                  label="JobTitle"
+                                  defaultValue={oboffer[0].jobTitle}
+                                  type="text"
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                  fullWidth
+                                  size="small"
+                                />
+                              </Grid>
 
-                            <Grid item xs={12}>
-                              <TextField
-                                id="verifyOntracId"
-                                label="JobCategory"
-                                defaultValue={oboffer[1].jobCategory}
-                                type="text"
-                                InputProps={{
-                                  readOnly: true,
-                                }}
-                                fullWidth
-                                size="small"
-                              />
-                            </Grid>
-                            <Grid item xs={12}>
-                            <TextField
-                              id="verifyOntracId"
-                              label="JobTitle"
-                              defaultValue={oboffer[0].jobTitle}
-                              type="text"
-                              InputProps={{
-                                readOnly: true,
-                              }}
-                              fullWidth
-                              size="small"
-                            />
-                          </Grid>
-                            <Grid item xs={12}>
-                              <TextField
-                                id="startingSalary"
-                                label="Starting Salary"
-                                variant="outlined"
-                                value={oboffer[1].startSalary}
-                                // onChange={}
-                                type="number"
-                                fullWidth
-                                size="small"
-                              />
-                            </Grid>
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="startingSalary"
+                                  label="Starting Salary"
+                                  variant="outlined"
+                                  value={oboffer[0].startSalary}
+                                  // onChange={}
+                                  type="number"
+                                  fullWidth
+                                  size="small"
+                                />
+                              </Grid>
 
-                            <Grid item xs={12}>
-                              <TextField
-                                id="startingDate"
-                                // label="Starting Salary"
-                                variant="outlined"
-                                value={oboffer[1].startDate}
-                                // onChange={}
-                                type="date"
-                                helperText="Starting date"
-                                fullWidth
-                                size="small"
-                              />
-                            </Grid>
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="startingDate"
+                                  // label="Starting Salary"
+                                  variant="outlined"
+                                  value={oboffer[0].startDate}
+                                  // onChange={}
+                                  type="date"
+                                  helperText="Starting date"
+                                  fullWidth
+                                  size="small"
+                                />
+                              </Grid>
 
-                            <Grid item xs={12}>
-                              <TextField
-                                id="jobDescription"
-                                label="Job Description"
-                                variant="outlined"
-                                value={oboffer[1].jobDescription}
-                                // onChange={}
-                                type="date"
-                                fullWidth
-                                multiline
-                                rows={3}
-                                size="small"
-                              />
-                            </Grid>
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="jobDescription"
+                                  label="Job Description"
+                                  variant="outlined"
+                                  value={oboffer[0].jobDescription}
+                                  // onChange={}
+                                  type="date"
+                                  fullWidth
+                                  multiline
+                                  rows={3}
+                                  size="small"
+                                />
+                              </Grid>
 
-                            <Grid item xs={12}>
-                              <TextField
-                                id="otherConditions"
-                                label="Other Conditions"
-                                variant="outlined"
-                                value={oboffer[1].conditions}
-                                // onChange={}
-                                type="date"
-                                fullWidth
-                                multiline
-                                rows={3}
-                                size="small"
-                              />
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="otherConditions"
+                                  label="Other Conditions"
+                                  variant="outlined"
+                                  value={oboffer[0].conditions}
+                                  // onChange={}
+                                  type="date"
+                                  fullWidth
+                                  multiline
+                                  rows={3}
+                                  size="small"
+                                />
+                              </Grid>
                             </Grid>
-                          </Grid>
-                        </Paper>
-                      </Grid>
-                    </>
-                  )}
+                          </Paper>
+                        </Grid>
+
+                        <Grid item xs={6}>
+                          <Paper variant="outlined" style={{ padding: 15 }}>
+                            <Grid
+                              container
+                              justify="flex-start"
+                              direction="row"
+                              alignItems="center"
+                              spacing={2}
+                              // style={{ padding: 20 }}
+                            >
+                              <Grid item xs={12}>
+                                <Typography
+                                  variant="subtitle1"
+                                  align="center"
+                                  justify="center"
+                                  gutterBottom
+                                >
+                                  Original offer:
+                                </Typography>
+                              </Grid>
+
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="verifyOntracId"
+                                  label="JobCategory"
+                                  defaultValue={oboffer[1].jobCategory}
+                                  type="text"
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                  fullWidth
+                                  size="small"
+                                />
+                              </Grid>
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="verifyOntracId"
+                                  label="JobTitle"
+                                  defaultValue={oboffer[0].jobTitle}
+                                  type="text"
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                  fullWidth
+                                  size="small"
+                                />
+                              </Grid>
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="startingSalary"
+                                  label="Starting Salary"
+                                  variant="outlined"
+                                  value={oboffer[1].startSalary}
+                                  // onChange={}
+                                  type="number"
+                                  fullWidth
+                                  size="small"
+                                />
+                              </Grid>
+
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="startingDate"
+                                  // label="Starting Salary"
+                                  variant="outlined"
+                                  value={oboffer[1].startDate}
+                                  // onChange={}
+                                  type="date"
+                                  helperText="Starting date"
+                                  fullWidth
+                                  size="small"
+                                />
+                              </Grid>
+
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="jobDescription"
+                                  label="Job Description"
+                                  variant="outlined"
+                                  value={oboffer[1].jobDescription}
+                                  // onChange={}
+                                  type="date"
+                                  fullWidth
+                                  multiline
+                                  rows={3}
+                                  size="small"
+                                />
+                              </Grid>
+
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="otherConditions"
+                                  label="Other Conditions"
+                                  variant="outlined"
+                                  value={oboffer[1].conditions}
+                                  // onChange={}
+                                  type="date"
+                                  fullWidth
+                                  multiline
+                                  rows={3}
+                                  size="small"
+                                />
+                              </Grid>
+                            </Grid>
+                          </Paper>
+                        </Grid>
+                      </>
+                    )}
+                  </>
+                )}
+              </Grid>
+            </DialogContent>
+            <DialogActions style={{ padding: 15 }}>
+              {modifyOfferButton ? (
+                <>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    onClick={() => Modifyofferformpost(oboffer[0].id)}
+                    style={{ minWidth: 200 }}
+                  >
+                    Send New Offer
+                  </Button>
                 </>
-              )}
-            </Grid>
-          </DialogContent>
-          <DialogActions style={{ padding: 15 }}>
-            {modifyOfferButton ? (
-              <>
+              ) : acceptbutton ? (
+                <>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    onClick={() => confirmoffer(oboffer[0].id)}
+                    style={{ minWidth: 200 }}
+                  >
+                    Confirm Employee Onboard
+                  </Button>
+                </>
+              ) : null}
+              {rejectbutton ? (
                 <Button
-                  color="primary"
+                  color="secondary"
                   variant="contained"
-                  onClick={() => Modifyofferformpost(oboffer[0].id)}
+                  onClick={() => canceloffer(oboffer[0].id)}
                   style={{ minWidth: 200 }}
                 >
-                  Send New Offer
+                  Cancel Offer
                 </Button>
-              </>
-            ) : acceptbutton ? (
-              <>
-                <Button
-                  color="primary"
-                  variant="contained"
-                  onClick={() => confirmoffer(oboffer[0].id)}
-                  style={{ minWidth: 200 }}
-                >
-                  Confirm Employee Onboard
-                </Button>
-              </>
-            ) : null}
-            {rejectbutton ? (
+              ) : null}
               <Button
                 color="secondary"
                 variant="contained"
-                onClick={() => canceloffer(oboffer[0].id)}
-                style={{ minWidth: 200 }}
+                onClick={() => {
+                  setviewOfferButton(false);
+                }}
               >
-                Cancel Offer
+                Close
               </Button>
-            ) : null}
-            <Button
-            color="secondary"
-            variant="contained"
-            onClick={()=> {setviewOfferButton(false) }}>
-              Close
-
-            </Button>
-          </DialogActions>
+            </DialogActions>
           </>
-           )}
-        </Dialog>
-     
+        )}
+      </Dialog>
+
       {
         <div>
           <Dialog

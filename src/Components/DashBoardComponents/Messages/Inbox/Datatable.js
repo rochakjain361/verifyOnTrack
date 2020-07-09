@@ -81,23 +81,23 @@ export default function Datatable(props) {
                 <Table stickyHeader>
                     <TableHead>
                         <TableRow style={{ backgroundColor: 'black' }}>
-                            <TableCell align="left">Last Updated</TableCell>
-                            <TableCell align="left">Initial Date</TableCell>
-                            <TableCell align="left">Discuss With</TableCell>
-                            <TableCell align="left">Message</TableCell>
-                            <TableCell align="left">Number of items</TableCell>
-                            <TableCell align="left">Actions</TableCell>
+                            <TableCell align="center"   style={{ fontWeight: "bolder", }}>Last Updated</TableCell>
+                            <TableCell align="center"  style={{ fontWeight: "bolder", }}>Initial Date</TableCell>
+                            <TableCell align="center"  style={{ fontWeight: "bolder", }}>Discuss With</TableCell>
+                            <TableCell align="center"  style={{ fontWeight: "bolder", }}>Message</TableCell>
+                            <TableCell align="center"  style={{ fontWeight: "bolder", }}>Number of items</TableCell>
+                            <TableCell align="center"  style={{ fontWeight: "bolder", }}>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {props.data.data.map((row, index) => (
                             <TableRow key={row.id}>
-                                <TableCell align="left">{row.initialDate_field}</TableCell>
-                                <TableCell align="left">{new Date(row.messageDate).toDateString()}</TableCell>
-                                <TableCell align="left">{row.discuss_with_employer_field}</TableCell>
-                                <TableCell align="left">{row.message}</TableCell>
-                                <TableCell align="left">{row.total_items_field}</TableCell>
-                                <TableCell align="left"><Button size='small' color="primary" variant="outlined"
+                                <TableCell align="center">{row.initialDate_field}</TableCell>
+                                <TableCell align="center">{new Date(row.messageDate).toDateString()}</TableCell>
+                                <TableCell align="center">{row.discuss_with_employer_field}</TableCell>
+                                <TableCell align="center">{row.message}</TableCell>
+                                <TableCell align="center">{row.total_items_field}</TableCell>
+                                <TableCell align="center"><Button size='small' color="primary" variant="outlined"
                                     onClick={() => ViewMessage(row.id)}
                                 >View Details</Button></TableCell>
                             </TableRow>

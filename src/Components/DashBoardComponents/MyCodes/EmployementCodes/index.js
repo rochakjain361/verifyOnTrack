@@ -57,6 +57,7 @@ export default function Indexemployment() {
     }).then((response) => {
       console.log("response for oboffers", OnboardingResponse);
       setOnboardingResponse(response.data);
+      setLoading(false);
       
     });
   };
@@ -82,8 +83,9 @@ export default function Indexemployment() {
   };
 
   useEffect(() => {
+    
     Onboardingdata();
-    setLoading(false);
+    
   }, []);
 
   return Loading ? (
