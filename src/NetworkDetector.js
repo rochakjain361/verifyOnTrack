@@ -7,7 +7,8 @@ function Alert(props) {
 export default function (ComposedComponent) {
   class NetworkDetector extends Component {
     state = {
-      isDisconnected: false
+      isDisconnected: false,
+      snackbar:false
     }
 
     componentDidMount() {
@@ -31,10 +32,10 @@ export default function (ComposedComponent) {
               mode: 'no-cors',
               })
             .then(() => {
-              this.setState({ isDisconnected: false,sucesssnackbar:true }, () => {
+              this.setState({ isDisconnected: false }, () => {
                 return clearInterval(webPing)
               });
-            }).catch(() => this.setState({ isDisconnected: true }) )
+            }).catch(() => this.setState({ isDisconnected: true,snackbar:true }) )
           }, 2000);
         return;
       }
@@ -58,7 +59,7 @@ export default function (ComposedComponent) {
          No internet connection
         </Alert>
       </Snackbar>
-            </div>):( null)
+            </div>):(  null)
           }
           <ComposedComponent {...this.props} />
         </div>

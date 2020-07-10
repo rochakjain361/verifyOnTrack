@@ -790,7 +790,7 @@ function Onboarding(props) {
                                 <TextField
                                   id="verifyOntracId"
                                   label="JobTitle"
-                                  defaultValue={oboffer[0].jobTitle}
+                                  defaultValue={oboffer[1].jobTitle}
                                   type="text"
                                   InputProps={{
                                     readOnly: true,
