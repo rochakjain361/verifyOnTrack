@@ -215,7 +215,7 @@ function Onboarding(props) {
                   "Jobcategories",
                   "Jobtitle",
                   "Startdate",
-                  "Obstatus",
+                  "Onboarding Status",
                   "Action",
                 ].map((tablename) => (
                   <TableCell align="center" style={{ fontWeight: "bolder" }}>
@@ -660,6 +660,112 @@ function Onboarding(props) {
                                   justify="center"
                                   gutterBottom
                                 >
+                                  Original offer:
+                                </Typography>
+                              </Grid>
+
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="verifyOntracId"
+                                  label="JobCategory"
+                                  defaultValue={oboffer[1].jobCategory_name_field}
+                                  type="text"
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                  fullWidth
+                                  size="small"
+                                />
+                              </Grid>
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="verifyOntracId"
+                                  label="JobTitle"
+                                  defaultValue={oboffer[1].jobTitle}
+                                  type="text"
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                  fullWidth
+                                  size="small"
+                                />
+                              </Grid>
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="startingSalary"
+                                  label="Starting Salary"
+                                  variant="outlined"
+                                  value={oboffer[1].startSalary}
+                                  // onChange={}
+                                  type="number"
+                                  fullWidth
+                                  size="small"
+                                />
+                              </Grid>
+
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="startingDate"
+                                  // label="Starting Salary"
+                                  variant="outlined"
+                                  value={oboffer[1].startDate}
+                                  // onChange={}
+                                  type="date"
+                                  helperText="Starting date"
+                                  fullWidth
+                                  size="small"
+                                />
+                              </Grid>
+
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="jobDescription"
+                                  label="Job Description"
+                                  variant="outlined"
+                                  value={oboffer[1].jobDescription}
+                                  // onChange={}
+                                  type="date"
+                                  fullWidth
+                                  multiline
+                                  rows={3}
+                                  size="small"
+                                />
+                              </Grid>
+
+                              <Grid item xs={12}>
+                                <TextField
+                                  id="otherConditions"
+                                  label="Other Conditions"
+                                  variant="outlined"
+                                  value={oboffer[1].conditions}
+                                  // onChange={}
+                                  type="date"
+                                  fullWidth
+                                  multiline
+                                  rows={3}
+                                  size="small"
+                                />
+                              </Grid>
+                            </Grid>
+                          </Paper>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Paper variant="outlined" style={{ padding: 15 }}>
+                            <Grid
+                              container
+                              justify="flex-start"
+                              direction="row"
+                              alignItems="center"
+                              spacing={2}
+                              // style={{ padding: 20 }}
+                            >
+                              <Grid item xs={12}>
+                                <Typography
+                                  variant="subtitle1"
+                                  align="center"
+                                  justify="center"
+                                  gutterBottom
+                                >
                                   Modified offer:
                                 </Typography>
                               </Grid>
@@ -752,112 +858,7 @@ function Onboarding(props) {
                           </Paper>
                         </Grid>
 
-                        <Grid item xs={6}>
-                          <Paper variant="outlined" style={{ padding: 15 }}>
-                            <Grid
-                              container
-                              justify="flex-start"
-                              direction="row"
-                              alignItems="center"
-                              spacing={2}
-                              // style={{ padding: 20 }}
-                            >
-                              <Grid item xs={12}>
-                                <Typography
-                                  variant="subtitle1"
-                                  align="center"
-                                  justify="center"
-                                  gutterBottom
-                                >
-                                  Original offer:
-                                </Typography>
-                              </Grid>
-
-                              <Grid item xs={12}>
-                                <TextField
-                                  id="verifyOntracId"
-                                  label="JobCategory"
-                                  defaultValue={oboffer[1].jobCategory_name_field}
-                                  type="text"
-                                  InputProps={{
-                                    readOnly: true,
-                                  }}
-                                  fullWidth
-                                  size="small"
-                                />
-                              </Grid>
-                              <Grid item xs={12}>
-                                <TextField
-                                  id="verifyOntracId"
-                                  label="JobTitle"
-                                  defaultValue={oboffer[1].jobTitle}
-                                  type="text"
-                                  InputProps={{
-                                    readOnly: true,
-                                  }}
-                                  fullWidth
-                                  size="small"
-                                />
-                              </Grid>
-                              <Grid item xs={12}>
-                                <TextField
-                                  id="startingSalary"
-                                  label="Starting Salary"
-                                  variant="outlined"
-                                  value={oboffer[1].startSalary}
-                                  // onChange={}
-                                  type="number"
-                                  fullWidth
-                                  size="small"
-                                />
-                              </Grid>
-
-                              <Grid item xs={12}>
-                                <TextField
-                                  id="startingDate"
-                                  // label="Starting Salary"
-                                  variant="outlined"
-                                  value={oboffer[1].startDate}
-                                  // onChange={}
-                                  type="date"
-                                  helperText="Starting date"
-                                  fullWidth
-                                  size="small"
-                                />
-                              </Grid>
-
-                              <Grid item xs={12}>
-                                <TextField
-                                  id="jobDescription"
-                                  label="Job Description"
-                                  variant="outlined"
-                                  value={oboffer[1].jobDescription}
-                                  // onChange={}
-                                  type="date"
-                                  fullWidth
-                                  multiline
-                                  rows={3}
-                                  size="small"
-                                />
-                              </Grid>
-
-                              <Grid item xs={12}>
-                                <TextField
-                                  id="otherConditions"
-                                  label="Other Conditions"
-                                  variant="outlined"
-                                  value={oboffer[1].conditions}
-                                  // onChange={}
-                                  type="date"
-                                  fullWidth
-                                  multiline
-                                  rows={3}
-                                  size="small"
-                                />
-                              </Grid>
-                            </Grid>
-                          </Paper>
-                        </Grid>
+                      
                       </>
                     )}
                   </>
