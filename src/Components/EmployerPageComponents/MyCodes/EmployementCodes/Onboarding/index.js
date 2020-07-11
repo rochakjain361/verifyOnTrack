@@ -154,6 +154,20 @@ class index extends Component {
         this.setState({ onboardOffers: response });
     }
 
+    async fetchOnboardOfferDetails(rowId) {
+        
+        let response = await fetch(api + "/api/v1/employers/oboffers/" + rowId,
+            {
+                headers: {
+                    'Authorization': token
+                }
+            });
+        response = await response.json();
+        console.log('viewDetailsData:', response)
+        this.setState({ viewDetailsData: response, viewOfferButton: true });
+        console.log('sssssssssssssssstatus:', this.state.viewDetailsData[0].showNewOffer_field)
+    }
+
     async componentDidMount() {
         this.setState({ isLoading: true })
 
@@ -200,20 +214,6 @@ class index extends Component {
                         </Button>
                     </Grid>
 
-                    {/* <Grid item>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    // checked={state.checkedB}
-                                    // onChange={handleChange}
-                                    name="checkedB"
-                                    color="primary"
-                                />
-                            }
-                            label="Show open codes"
-                        />
-                    </Grid> */}
-
                 </Grid>
 
                 <Grid container justify='flex-start' alignItems='center' spacing={2}>
@@ -253,7 +253,7 @@ class index extends Component {
                                                     size='small'
                                                     color="primary"
                                                     variant="outlined"
-                                                    onClick={() => this.setState({ viewOfferButton: true, viewDetailsData: row }, () => console.log('row:', this.state.viewDetailsData))}
+                                                    onClick={() => this.fetchOnboardOfferDetails(row.id)}
                                                 >
                                                     View Details
                                                 </Button>
@@ -263,7 +263,7 @@ class index extends Component {
                                                         size='small'
                                                         color="primary"
                                                         variant="outlined"
-                                                        onClick={()=> this.joinEmployee(row.employee)}
+                                                        onClick={()=> this.joinEmployee(row.id)}
                                                     >
                                                         Join Employee
                                                     </Button>
@@ -360,90 +360,10 @@ class index extends Component {
 
                                         </Select>
                                     </FormControl>
-                                    {/* <TextField
-                                        id="searchByOntracId"
-                                        label="Verify OnTrac Id"
-                                        variant="outlined"
-                                        // error={this.state.getEmployeeByOntracId.length !== 1}
-                                        // helperText={this.state.getEmployeeByOntracId.length !== 1 ? ('Please enter the correct Id!'):('')}
-                                        fullWidth
-                                        // value={this.state.generateCodeData}
-                                        onChange={(event) => {
-                                            this.fetchAllEmployeesOntracId(event.target.value);
-                                            this.setState({selectedEmployeeByOntracId: this.state.getEmployeeByOntracId, });
-                                            
-                                        }}
-                                    /> */}
-
-                                    {/* <Autocomplete
-                                        id="combo-box-demo"
-                                        options={this.state.onTracId}
-                                        getOptionLabel={(option) => option.ontrac_id}
-                                        style={{ width: 300 }}
-                                        renderInput={(params) => <TextField {...params} label="Verify OnTrac Id" variant="outlined" />}
-                                        fullWidth
-                                        Username
-                                        // onChange={(event, value)=> {this.setState(employeeVotId: value)}}
-                                    /> */}
-
-                                    {/* <Autocomplete
-                                        id="searchByOntracId"
-                                        options={this.state.onTracId}
-                                        getOptionLabel={(VOTId) => VOTId.ontrac_id}
-                                        Username
-                                        fullWidth
-                                        value={this.state.selectedstate}
-                                        onChange={(event, value) => {
-                                            this.setState({ selectedstate: value })
-                                            this.setState({ employeeVotId: value['id'] }, console.log("employeeVotId", value['id']))
-                                            console.log("selectedstate", value);
-
-                                        }}
-                                        inputValue={this.state.enteredOntracId}
-                                        onInputChange={(event, newInputValue) => {
-                                            this.setState({ enteredOntracId: newInputValue });
-                                            // console.log(newInputValue);
-                                        }}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="Verify OnTrac Id"
-                                                margin="normal"
-                                                variant="outlined"
-                                            />
-                                        )}
-                                    /> */}
 
                                 </Grid>
                             ) : (
                                     <Grid item xs={12}>
-                                        {/* //     <Autocomplete
-                                    //         id="searchByOntracId"
-                                    //         options={this.state.onTracId}
-                                    //         getOptionLabel={(VOTId) => VOTId.ontrac_id}
-                                    //         Username
-                                    //         fullWidth
-                                    //         value={this.state.selectedstate}
-                                    //         onChange={(event, value) => {
-                                    //             this.setState({ selectedstate: value })
-                                    //             this.setState({ employeeVotId: value['id'] }, console.log("employeeVotId", value['id']))
-                                    //             console.log("selectedstate", value);
-
-                                    //         }}
-                                    //         inputValue={this.state.enteredOntracId}
-                                    //         onInputChange={(event, newInputValue) => {
-                                    //             this.setState({ enteredOntracId: newInputValue });
-                                    //             // console.log(newInputValue);
-                                    //         }}
-                                    //         renderInput={(params) => (
-                                    //             <TextField
-                                    //                 {...params}
-                                    //                 label="Phone"
-                                    //                 margin="normal"
-                                    //                 variant="outlined"
-                                    //             />
-                                    //         )}
-                                    //     /> */}
 
                                         <TextField
                                             id="searchByphone"
@@ -464,51 +384,8 @@ class index extends Component {
                                 <FormLabel component="legend">Enter Job Details:</FormLabel>
                             </Grid>
 
-                            {/* <Grid item xs={12}>
-                                <TextField
-                                    id="verifyOntracId"
-                                    label="Verify Ontrac Id"
-                                    variant="outlined"
-                                    // defaultValue={id.firstname}
-                                    type="text"
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    fullWidth
-                                    size='small'
-                                />
-                            </Grid> */}
-
                             <Grid item xs={12}>
-                                {/* <Autocomplete
-                                    // options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
-                                    // getOptionLabel={(option) => option.email}
-                                    // groupBy={(option) => option.firstLetter}
-                                    id="adminEmail"
-                                    Username
-                                    size='small'
-                                    fullWidth
-                                    value={this.state.selectedstate}
-                                    onChange={(event, value) => {
-                                        this.setState({ selectedstate: value });
-                                        this.setState({ assignAdminId: value['id'] })
-                                        console.log("selectedstate", value);
-                                        console.log("assignAdminID", this.state.assignAdminId);
-                                    }}
-                                    inputValue={this.state.enteredUsername}
-                                    onInputChange={(event, newInputValue) => {
-                                        this.setState({ enteredUsername: newInputValue });
-                                        // console.log(newInputValue);
-                                    }}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label="Job Type"
-                                            margin="normal"
-                                            variant="outlined"
-                                        />
-                                    )}
-                                /> */}
+                                
                                 <FormControl variant="outlined" fullWidth size='small'>
                                     <InputLabel id="demo-simple-select-outlined-label">Job Type</InputLabel>
                                     <Select
@@ -633,7 +510,7 @@ class index extends Component {
                                 <TextField
                                     id="verifyOntracId"
                                     label="Verify Ontrac Id"
-                                    defaultValue={this.state.viewDetailsData['employee_ontracid']}
+                                    defaultValue={this.state.viewDetailsData.ontrac_id}
                                     type="text"
                                     InputProps={{
                                         readOnly: true,
@@ -642,7 +519,7 @@ class index extends Component {
                                     size='small'
                                 />
                             </Grid>
-                            { this.state.viewDetailsData['showModify_field'] 
+                            { this.state.viewDetailsData['showNewOffer_field'] 
                             ? (
                                 <>
                                     <Grid item>
@@ -660,7 +537,7 @@ class index extends Component {
                                 </>
                             ) : <div />}
 
-                            { this.state.viewDetailsData['showModify_field'] 
+                            { this.state.viewDetailsData['showNewOffer_field'] 
                             ? (
                                 this.state.modifyOfferButton ? (
                                     <>
@@ -824,7 +701,7 @@ class index extends Component {
                                                                     id="ModifiedjobType"
                                                                     label="Job type"
                                                                     variant="outlined"
-                                                                    defaultValue={this.state.viewDetailsData['jobCategory']}
+                                                                    defaultValue={this.state.viewDetailsData[0].jobCategory}
                                                                     // onChange={}
                                                                     type="text"
                                                                     fullWidth
@@ -840,7 +717,7 @@ class index extends Component {
                                                                     id="ModifiedjobTitle"
                                                                     label="Job title"
                                                                     variant="outlined"
-                                                                    defaultValue={this.state.viewDetailsData['jobTitle']}
+                                                                    defaultValue={this.state.viewDetailsData[0].jobTitle}
                                                                     // onChange={}
                                                                     type="text"
                                                                     fullWidth
@@ -856,7 +733,7 @@ class index extends Component {
                                                                     id="ModifiedstartingSalary"
                                                                     label="Starting Salary"
                                                                     variant="outlined"
-                                                                    defaultValue={this.state.viewDetailsData['startSalary']}
+                                                                    defaultValue={this.state.viewDetailsData[0].startSalary}
                                                                     // onChange={}
                                                                     type="number"
                                                                     fullWidth
@@ -872,7 +749,7 @@ class index extends Component {
                                                                     id="ModifiedstartingDate"
                                                                     // label="Starting Salary"
                                                                     variant="outlined"
-                                                                    defaultValue={this.state.viewDetailsData['startDate']}
+                                                                    defaultValue={this.state.viewDetailsData[0].startDate}
                                                                     // onChange={}
                                                                     type="date"
                                                                     helperText="Starting date"
@@ -889,7 +766,7 @@ class index extends Component {
                                                                     id="ModifiedjobDescription"
                                                                     label="Job Description"
                                                                     variant="outlined"
-                                                                    defaultValue={this.state.viewDetailsData['jobDescription']}
+                                                                    defaultValue={this.state.viewDetailsData[0].jobDescription}
                                                                     // onChange={}
                                                                     type="date"
                                                                     fullWidth
@@ -907,7 +784,7 @@ class index extends Component {
                                                                     id="ModifiedotherConditions"
                                                                     label="Other Conditions"
                                                                     variant="outlined"
-                                                                    defaultValue={this.state.viewDetailsData['conditions']}
+                                                                    defaultValue={this.state.viewDetailsData[0].conditions}
                                                                     // onChange={}
                                                                     type="date"
                                                                     fullWidth
@@ -943,7 +820,7 @@ class index extends Component {
                                                                     id="OriginaljobType"
                                                                     label="Job type"
                                                                     variant="outlined"
-                                                                    defaultValue={this.state.viewDetailsData['jobCategory']}
+                                                                    defaultValue={this.state.viewDetailsData[1].jobCategory}
                                                                     // onChange={}
                                                                     type="text"
                                                                     fullWidth
@@ -959,7 +836,7 @@ class index extends Component {
                                                                     id="OriginaljobTitle"
                                                                     label="Job title"
                                                                     variant="outlined"
-                                                                    defaultValue={this.state.viewDetailsData['jobTitle']}
+                                                                    defaultValue={this.state.viewDetailsData[1].jobTitle}
                                                                     // onChange={}
                                                                     type="text"
                                                                     fullWidth
@@ -975,7 +852,7 @@ class index extends Component {
                                                                     id="OriginalstartingSalary"
                                                                     label="Starting Salary"
                                                                     variant="outlined"
-                                                                    defaultValue={this.state.viewDetailsData['startSalary']}
+                                                                    defaultValue={this.state.viewDetailsData[1].startSalary}
                                                                     // onChange={}
                                                                     type="number"
                                                                     fullWidth
@@ -991,7 +868,7 @@ class index extends Component {
                                                                     id="OriginalstartingDate"
                                                                     // label="Starting Salary"
                                                                     variant="outlined"
-                                                                    defaultValue={this.state.viewDetailsData['startDate']}
+                                                                    defaultValue={this.state.viewDetailsData[1].startDate}
                                                                     // onChange={}
                                                                     type="date"
                                                                     helperText="Starting date"
@@ -1008,7 +885,7 @@ class index extends Component {
                                                                     id="OriginaljobDescription"
                                                                     label="Job Description"
                                                                     variant="outlined"
-                                                                    defaultValue={this.state.viewDetailsData['jobDescription']}
+                                                                    defaultValue={this.state.viewDetailsData[1].jobDescription}
                                                                     // onChange={}
                                                                     type="date"
                                                                     fullWidth
@@ -1026,7 +903,7 @@ class index extends Component {
                                                                     id="OriginalotherConditions"
                                                                     label="Other Conditions"
                                                                     variant="outlined"
-                                                                    defaultValue={this.state.viewDetailsData['conditions']}
+                                                                    defaultValue={this.state.viewDetailsData[1].conditions}
                                                                     // onChange={}
                                                                     type="date"
                                                                     fullWidth
@@ -1262,7 +1139,7 @@ class index extends Component {
 
                 <DialogActions>
                     <Button
-                        onClick={()=> this.cancelJobOffer(this.state.viewDetailsData['employee'])}
+                        onClick={()=> this.cancelJobOffer(this.state.viewDetailsData['id'])}
                         variant='contained'
                         color="primary">
                         Yes
@@ -1383,7 +1260,7 @@ class index extends Component {
         let bodyData = {}
 
         try {
-            let response = await fetch(api + '/api/v1/employers/oboffers/' + empId + '/reject',
+            let response = await fetch(api + '/api/v1/employers/oboffers/' + empId + '/cancel',
                 {
                     method: 'PUT',
                     headers: {
