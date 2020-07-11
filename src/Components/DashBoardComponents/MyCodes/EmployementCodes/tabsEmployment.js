@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TabsEmployment() {
+export default function TabsEmployment(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
@@ -74,9 +74,9 @@ export default function TabsEmployment() {
           variant="fullWidth"
           aria-label="full width tabs example"
         >
-          <Tab label="Onboarding" {...a11yProps(0)} />
-          <Tab label="Offboarding" {...a11yProps(1)} />
-          <Tab label="Employerlist" {...a11yProps(2)} />
+          <Tab label="Onboarding"   style={{ fontWeight: "bolder", }}{...a11yProps(0)} />
+          <Tab label="Offboarding"   style={{ fontWeight: "bolder", }}{...a11yProps(1)} />
+          <Tab label="Employerlist"  style={{ fontWeight: "bolder", }} {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <SwipeableViews
@@ -85,7 +85,7 @@ export default function TabsEmployment() {
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <Onboarding/>
+          <Onboarding data={props.Onboarding} refresh={props.refresh}/>
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
           <Offboarding/>
