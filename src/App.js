@@ -21,14 +21,26 @@ import Job from './Components/AdminPageComponents/ManageCodes/Pages/Job';
 import AdminDash from './AdminDash'
 import EmployerDash from './EmployerDash'
 import EmloymentTabs from './Components/EmployerPageComponents/MyCodes/EmployementCodes/EmploymentTabs'
-
+import Academics from './Components/DashBoardComponents/Academics'
+import {CustomizedSnackbars} from './Snackbarpage'
+import { SnackbarProvider } from 'notistack';
+import SuccessSnackbar from './sucesssnackbar';
+import {createStore} from 'redux';
+import reducer from './Reducer/reducer'
+// const store = createStore(reducer);
 
 class App extends React.PureComponent {
  
   render() {
     return (
       <ThemeProvider theme={theme}>
+        <SnackbarProvider anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+    }}>
 
+
+<SuccessSnackbar />
         <Router>
           <div>
             <Switch>
@@ -53,6 +65,7 @@ class App extends React.PureComponent {
               <Route exact path='/employeeAccessCodes' component={dash} />
               <Route exact path='/employeeAccessCodes' component={dash} />
               <Route exact path='/employeeEmployementCodes' component={dash} />
+              <Route exact path='/employee/academics' component={dash} />
 
               {/* Employer Page Paths */}
               {/* <Route exact path='/employerLanding' component={EmployerDash} /> */}
@@ -86,6 +99,7 @@ class App extends React.PureComponent {
             </Switch>
           </div>
         </Router>
+        </SnackbarProvider>
       </ThemeProvider>
     );
   }
