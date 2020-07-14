@@ -4,7 +4,6 @@ import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import { SnackbarProvider, useSnackbar } from "notistack";
-import snackbarclose from './Snackbarclose'
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }

@@ -14,7 +14,7 @@ import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
 import StepConnector from '@material-ui/core/StepConnector';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
-
+import Academics from '../../DashBoardComponents/Academics/index'
 import Verification from '../Verification/index'
 import MyProfile from "../../DashBoardComponents/MyProfile/index"
 import Addresses from "../../DashBoardComponents/Addresses/index"

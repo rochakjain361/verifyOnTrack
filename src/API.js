@@ -1,18 +1,15 @@
 import Axios from "axios";
-import { CustomizedSnackbars } from "./Snackbarpage";
-import { useSnackbar } from "notistack";
-import React from 'react'
-import signIn from './Components/signIn'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { useDispatch, useSelector } from "react-redux";
-import {connect} from 'react-redux'
+// import { CustomizedSnackbars } from "./Snackbarpage";
+// import { useSnackbar } from "notistack";
+// import React from 'react'
+// import signIn from './Components/signIn'
+// import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+// import { useDispatch, useSelector } from "react-redux";
+// import {connect} from 'react-redux'
 // const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 import {ShowSuccessSnackbar} from './actions/snackbaractions'
-
- 
 let res=[]
-const token = localStorage.getItem("Token");
-export const get=async(url, params)=>{
+export const get=async(url,token, params)=>{
     // const { classes } = this.props;
      return await Axios.get(url, {
       headers: {
@@ -30,7 +27,7 @@ export const get=async(url, params)=>{
         // }
     }) 
   }
-  export const update=async(url,formdata)=>{
+  export const update=async(url,token,formdata)=>{
     let headers = {
       headers: {
         Authorization: token,
@@ -50,7 +47,7 @@ export const get=async(url, params)=>{
         // }
   })
 }
-export const post=async(url,formdata)=>{
+export const post=async(url,token,formdata)=>{
   let headers = {
     headers: {
       Authorization: token,

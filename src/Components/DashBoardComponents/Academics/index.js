@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   Grid,
-  Typography,
   Box,
   CircularProgress,
   Table,
@@ -12,16 +11,17 @@ import {
   TableRow,
   TableHead,
   TableBody,
-  Avatar,
   Paper,
   DialogTitle,
   DialogContent,
   DialogContentText,
   TextField,
+  Typography
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import { get, update, post } from "../../../API";
 let id = "";
+let token="";
 export class index extends Component {
   state = {
     result: [
@@ -68,13 +68,14 @@ export class index extends Component {
   };
   async componentDidMount() {
     this.setState({ loading: true });
+     token = localStorage.getItem("Token");
     id = localStorage.getItem("id");
     await this.getAcademics();
     this.setState({ loading: false });
   }
   async getAcademics() {
     await get(
-      "http://3.22.17.212:8000/api/v1/employees/" + id + "/academics",
+      "http://3.22.17.212:8000/api/v1/employees/" + id + "/academics",token,
       ""
     ).then((response) => {
       console.log("response from api page", response);
@@ -99,7 +100,7 @@ export class index extends Component {
   async fetchhistory(index) {
     this.setState({ historyDialogeOpen: true, historyloading: true });
     await get(
-      "http://3.22.17.212:8000/api/v1/employees/" + id + "/academics/" + index,
+      "http://3.22.17.212:8000/api/v1/employees/" + id + "/academics/" + index,token,
       ""
     ).then((response) => {
       this.setState({ history: response.data, historyloading: false });
@@ -111,7 +112,7 @@ export class index extends Component {
     });
 
     await update(
-      "http://3.22.17.212:8000/api/v1/employees/update-academics/" + id,
+      "http://3.22.17.212:8000/api/v1/employees/update-academics/" + id,token,
       this.state.updatedresult
     ).then((response) => {
       console.log("update response", response);
@@ -121,7 +122,7 @@ export class index extends Component {
   async addacademics() {
     this.setState({ addnewdialog: false });
     await post(
-      "http://3.22.17.212:8000/api/v1/employees/post-academics",
+      "http://3.22.17.212:8000/api/v1/employees/post-academics",token,
       this.state.newAcademics
     ).then((response) => {
       console.log(response);
@@ -132,7 +133,36 @@ export class index extends Component {
     return (
       <div>
         {this.state.result.length === 0 ? (
-          <h1>hello</h1>
+          <Grid container spacing={3} justify="space-between">
+          <Grid item xs={12}>
+            <Paper style={{ padding: 20 }} elevation={3}>
+              <Box
+                p={1}
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                style={{ height: "50vh" }}
+              >
+                <Typography variant="h4" gutterBottom align="center">
+                  Add academics to improve ratings.
+                </Typography>
+
+                <Grid container justify="center" style={{ marginTop: 50 }}>
+                   <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    this.setState({ addnewdialog: true });
+                  }}
+                >
+                  Add Academics
+                </Button>
+                </Grid>
+              </Box>
+            </Paper>
+          </Grid>
+        </Grid>
         ) : (
           <Grid>
             <Box p={2}>
@@ -217,7 +247,12 @@ export class index extends Component {
                 </TableBody>
               </Table>
             </TableContainer>
-            <Dialog
+           
+            
+          </Grid>
+        )
+        }
+         <Dialog
               open={this.state.updateDialogOpen}
               onClose={() =>
                 this.setState({
@@ -244,8 +279,9 @@ export class index extends Component {
                 >
                   <Grid item fullWidth xs={12}>
                     <TextField
-                      id="dob"
+                      name="Start date"
                       label="Startdate"
+                   
                       defaultValue={this.state.updatedresult.startDate}
                       onChange={(event) => {
                         this.setState({
@@ -385,7 +421,8 @@ export class index extends Component {
                 >
                   <Grid item fullWidth xs={12}>
                     <TextField
-                      id="dob"
+                      name="Start date"
+                      InputLabelProps={{ shrink: true, required: true }}
                       label="Startdate"
                       onChange={(event) => {
                         this.setState({
@@ -402,8 +439,9 @@ export class index extends Component {
                   </Grid>
                   <Grid item fullWidth xs={12}>
                     <TextField
-                      id="dob"
+                      name="End date"
                       label="Enddate"
+                      InputLabelProps={{ shrink: true, required: true }}
                       onChange={(event) => {
                         this.setState({
                           newAcademics: {
@@ -549,9 +587,6 @@ export class index extends Component {
                 </Button>
               </DialogActions>
             </Dialog>
-            );
-          </Grid>
-        )}
       </div>
     );
   }

@@ -672,10 +672,9 @@ class signUp extends Component {
       response = await response.json();
      
       if (response.token) {
-        localStorage.setItem("Token", response.token);
+        localStorage.setItem("Token","Token "+response.token);
         localStorage.setItem("id", response.user.id);
-
-
+       
         if (response.user.is_admin) {
           this.props.history.push({
             pathname: "/admin",
