@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Button } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+// import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -22,7 +22,7 @@ import Box from "@material-ui/core/Box";
 import { Typography } from "@material-ui/core";
 import { Select } from "@material-ui/core";
 import { MenuItem } from "@material-ui/core";
-import { Label } from "@material-ui/core";
+// import { Label } from "@material-ui/core";
 import { CircularProgress } from "@material-ui/core";
 import InputLabel from '@material-ui/core/InputLabel';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
@@ -30,8 +30,6 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import {Snackbar} from '@material-ui/core'
 import MuiAlert from '@material-ui/lab/Alert';
 import NetworkDetector from  '../../../NetworkDetector';
-
-let token1 = "";
 let token = "";
 let id = "";
 let result = [];
@@ -353,8 +351,10 @@ class MyProfile extends Component {
 
                       <Grid item fullWidth xs={12}>
                         <TextField
-                          id="dob"
-                          // label="Date of birth"
+                          
+                          name="Date of birth"
+                           label="Date of birth"
+                           InputLabelProps={{ shrink: true, required: true }}
                           // defaultValue={result[this.state.selectedIndex].dob}
                           onChange={(event) => {
                             this.setState({ Dob: event.target.value });
