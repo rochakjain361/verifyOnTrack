@@ -36,7 +36,8 @@ import FormGroup from "@material-ui/core/FormGroup";
 import TabsEmployment from "../EmployementCodes/tabsEmployment";
 import Onboarding from "../../../EmployerPageComponents/MyCodes/EmployementCodes/Onboarding";
 import Axios from "axios";
-
+import employerList from "./employerList";
+import {get} from '../../../../API'
 const styles = (theme) => ({});
 
 export default function Indexemployment() {
@@ -44,6 +45,7 @@ export default function Indexemployment() {
   const [id] = React.useState(localStorage.getItem("id"));
   const [Loading, setLoading] = React.useState(true);
   const [OnboardingResponse, setOnboardingResponse] = React.useState([]);
+  const [employerlist,setEmployerlist]=React.useState([])
 
   // constructor(props) {
   //     super(props);
@@ -57,10 +59,16 @@ export default function Indexemployment() {
     }).then((response) => {
       console.log("response for oboffers", OnboardingResponse);
       setOnboardingResponse(response.data);
-      setLoading(false);
+      
       
     });
   };
+  const employerList=async()=>{
+    await get("http://3.22.17.212:8000/api/v1/employees/employers",Token).then((response)=>{
+      console.log("response from employee",response);
+      setEmployerlist(response.data)
+    })
+  }
   const isloading = () => {
     return (
       <Grid
@@ -82,9 +90,11 @@ export default function Indexemployment() {
     );
   };
 
-  useEffect(() => {
+   useEffect(async() => {
     
-    Onboardingdata();
+   await Onboardingdata();
+    await employerList();
+    setLoading(false);
     
   }, []);
 
@@ -100,7 +110,7 @@ export default function Indexemployment() {
         </Box>
       </Grid>
       <Grid item xs={12}>
-        <TabsEmployment Onboarding={OnboardingResponse} refresh={Onboardingdata} />
+        <TabsEmployment Onboarding={OnboardingResponse} employerdata={employerlist} refresh={Onboardingdata} />
       </Grid>
     </Grid>
   );

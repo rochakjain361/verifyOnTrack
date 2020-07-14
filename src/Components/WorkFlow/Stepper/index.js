@@ -7,15 +7,12 @@ import Button from "@material-ui/core/Button";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
 import Grid from "@material-ui/core/Grid";
 import clsx from "clsx";
 import { withStyles } from "@material-ui/core/styles";
 import StepConnector from "@material-ui/core/StepConnector";
 import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import Academics from "../../DashBoardComponents/Academics/index";
-import Verification from "../Verification/index";
 import MyProfile from "../../DashBoardComponents/MyProfile/index";
 import Addresses from "../../DashBoardComponents/Addresses/index";
 import Identities from "../../DashBoardComponents/Identities/index";
@@ -203,11 +200,11 @@ export default function HorizontalLinearStepper(props) {
     ) {
       setActiveStep(2);
     }
-    //  else if (
-    //   props.location.state.detail.user.info_provided_field.academics === false
-    // ) {
-    //   setActiveStep(3);
-    // }
+     else if (
+      props.location.state.detail.user.info_provided_field.academics === false
+    ) {
+      setActiveStep(3);
+    }
      else if (
       props.location.state.detail.user.info_provided_field.phone === false
     ) {
