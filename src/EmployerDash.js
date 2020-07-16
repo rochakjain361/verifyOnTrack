@@ -31,6 +31,7 @@ import Index from './Components/EmployerPageComponents/Messages/Inbox/index'
 import AccessCodes from './Components/EmployerPageComponents/MyCodes/AccessCodes'
 import EmployementCodes from './Components/EmployerPageComponents/MyCodes/EmployementCodes/EmploymentVerification'
 import EmploymentTabs from './Components/EmployerPageComponents/MyCodes/EmployementCodes/EmploymentTabs'
+import ApprovalCodes from './Components/EmployerPageComponents/MyCodes/ApprovalCodes';
 
 const drawerWidth = 240;
 let token1 = "";
@@ -293,6 +294,7 @@ export default function MiniDrawer(props) {
                                     />
                                 </ListItem>
                             </Link>
+
                         </List>
                     </Collapse>
 
@@ -374,6 +376,7 @@ export default function MiniDrawer(props) {
                   <EmploymentTabs />
                 </Container>
               </Route>
+              
             </Switch>
                 </main>
             </div>

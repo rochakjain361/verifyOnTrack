@@ -149,7 +149,7 @@ class index extends Component {
 
                                     <Grid item xs={12}>
                                         <Typography variant='h4'>
-                                            Job Verification
+                                            Employement Verification
                                     </Typography>
                                     </Grid>
 
@@ -258,13 +258,46 @@ class index extends Component {
             <TableBody>
                 {this.state.pendingVerifications.map((row, index) => (
                     <TableRow key={row.id}>
-                        <TableCell align="left"></TableCell>
+                       <TableCell align="left">
+                            <Avatar
+                                src={row.employeeDetails.picture_url}
+                                style={{ height: "4rem", width: "4rem" }}
+                            >
+                                <img src={id.picture} width="65" height="65" alt="" />
+                            </Avatar>
+                        </TableCell>
                         <TableCell align="left">{row.employeeDetails.firstname}</TableCell>
                         <TableCell align="left">{row.jobDetails.jobTitle}</TableCell>
                         <TableCell align="left">{row.employeeDetails.ontrac_id}</TableCell>
                         <TableCell align="left">{row.empVerDetails.codeString}</TableCell>
                         <TableCell align="left"></TableCell>
-                        <TableCell align="left"><Button variant='outlined' color='primary'>View Details</Button></TableCell>
+                        <TableCell align="left">{row.empVerDetails.updateStatus}</TableCell>
+                        <TableCell align="left">
+                            <Button
+                                variant='outlined'
+                                color='primary'
+                                onClick={() => this.setState({
+                                    viewDetails: [row],
+
+                                    employeeJobId: row.empVerDetails.jobProfile,
+                                    employeePicture: row.employeeDetails.picture_url,
+                                    employeeFirstName: row.employeeDetails.firstname,
+                                    employeeMiddleName: row.employeeDetails.middlename,
+                                    employeeLastName: row.employeeDetails.surname,
+                                    employeeEmail: row.employeeDetails.email,
+                                    employeeVotId: row.employeeDetails.ontrac_id,
+                                    jobTitle: row.jobDetails.jobTitle,
+                                    employeeJobCategory: row.jobDetails.job_category_field,
+                                    employeeEndDate: row.jobDetails.endDate,
+                                    employeeJobDescription: row.jobDetails.jobDescription,
+
+                                    codeDetailsDialog: true,
+                                },
+                                    () => console.log('viewDetails:', this.state.viewDetails))}
+                            >
+                                Details
+                                </Button>
+                        </TableCell>
                     </TableRow>
                 ))}
             </TableBody>
