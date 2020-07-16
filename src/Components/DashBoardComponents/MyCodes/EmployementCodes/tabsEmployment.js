@@ -91,7 +91,7 @@ export default function TabsEmployment(props) {
           <Offboarding/>
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
-          <Employerlist data={props.employerdata}/>
+          <Employerlist data={props.employerdata} refresh={props.employerrefresh}/>
         </TabPanel>
       </SwipeableViews>
     </div>

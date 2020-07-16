@@ -94,9 +94,25 @@ function EmployerList(props) {
   const jobupdation=async()=>{
     setUpdationdialog(false);
     await update("http://3.22.17.212:8000/api/v1/employers/newEmpUpdate",Token,employmentupdate).then((response)=>{
+      props.refresh()
+      setEmploymentupdate({jobProfile : "",
+      jobCategory: "",
+      jobTitle : "",
+      jobDescription : ""})
 
     })
 
+  }
+  const confirmupdates=async(id)=>{
+    await post("http://3.22.17.212:8000/api/v1/employers/confirmEmpUpdate/"+id,Token,"").then((response)=>{
+      
+      props.refresh()
+    })
+  }
+  const rejectupdates=async(id)=>{
+    await post("http://3.22.17.212:8000/api/v1/employers/confirmEmpVerification/"+id,Token,"").then((response)=>{
+      props.refresh()
+    })
   }
   const getTerminationapi = async () => {
     setLoading(true);
@@ -546,7 +562,7 @@ function EmployerList(props) {
                           setEmploymentupdate({...employmentupdate,jobProfile:row.jobDetails.id})
                         }}
                       >
-                        Updation
+                        update
                       </Button>
                     ) : null}
                     {row.showConfirmRejectUpdates ? (
@@ -555,7 +571,7 @@ function EmployerList(props) {
                           size="small"
                           color="primary"
                           variant="outlined"
-                          onClick={() => {}}
+                          onClick={() => {confirmupdates(row.jobDetails.id)}}
                         >
                           Confirm updates
                         </Button>
@@ -563,7 +579,7 @@ function EmployerList(props) {
                           size="small"
                           color="primary"
                           variant="outlined"
-                          onClick={() => {}}
+                          onClick={() => {rejectupdates(row.jobDetails.id)}}
                         >
                           Reject updates
                         </Button>
