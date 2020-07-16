@@ -49,7 +49,8 @@ import PaymentIcon from '@material-ui/icons/Payment';
 import PhoneIcon from '@material-ui/icons/Phone';
 import  { useState, useEffect } from 'react';
 import { Title } from '@material-ui/icons';
-
+import Academicstitle from './Components/DashBoardComponents/Academics/title'
+import SchoolIcon from '@material-ui/icons/School';
 const drawerWidth = 240;
 let token1 = "";
 
@@ -151,7 +152,7 @@ export default function MiniDrawer(props) {
   const [open, setOpen] = React.useState(false);
   const [auth, setAuth] = React.useState(true);
   const [Token,setToken]=React.useState("");
-  // const [Token1,setToken1]=React.useState("");
+  
   const [id,setid]=React.useState("");
   // const [anchorEl, setAnchorEl] = React.useState(false);
   useEffect(() => {
@@ -177,6 +178,7 @@ export default function MiniDrawer(props) {
   };
 
   const logout = async () => {
+    props.history.push('/signin')
     console.log(token);
     let headers = {
       headers: {
@@ -197,7 +199,7 @@ export default function MiniDrawer(props) {
       });
 
     console.log("////////////////////////////////////////");
-    props.history.push('/signin')
+    
   }
 
   return (
@@ -312,6 +314,17 @@ export default function MiniDrawer(props) {
                 />
               </ListItem>
             </Link>
+            <Link to="/employee/academics" className={classes.link}>
+              <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
+              <ListItemIcon>
+              <SchoolIcon style={{color:"white"}}/>
+            </ListItemIcon>
+                <ListItemText
+                  primary="Academics"
+                  className={classes.textColor}
+                />
+              </ListItem>
+            </Link>
 
             <Link to="/phones" className={classes.link}>
               <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
@@ -325,7 +338,10 @@ export default function MiniDrawer(props) {
               </ListItem>
             </Link>
           </List>
+          
         </Collapse>
+        
+        
 
         <Divider />
 
@@ -451,6 +467,12 @@ export default function MiniDrawer(props) {
               <Route exact path="/identities">
                 <Container>
                   <Identitiestitle />
+                </Container>
+              </Route>
+
+              <Route exact path="/employee/Academics">
+                <Container>
+                  <Academicstitle />
                 </Container>
               </Route>
 
