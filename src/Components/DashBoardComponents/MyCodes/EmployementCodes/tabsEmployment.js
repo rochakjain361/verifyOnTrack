@@ -75,7 +75,7 @@ export default function TabsEmployment(props) {
           aria-label="full width tabs example"
         >
           <Tab label="Onboarding"   style={{ fontWeight: "bolder", }}{...a11yProps(0)} />
-          <Tab label="Offboarding"   style={{ fontWeight: "bolder", }}{...a11yProps(1)} />
+          <Tab label="Comments"   style={{ fontWeight: "bolder", }}{...a11yProps(1)} />
           <Tab label="Employerlist"  style={{ fontWeight: "bolder", }} {...a11yProps(2)} />
         </Tabs>
       </AppBar>
@@ -88,7 +88,7 @@ export default function TabsEmployment(props) {
           <Onboarding data={props.Onboarding} refresh={props.refresh}/>
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          <Offboarding/>
+          <Offboarding data={props.comments}/>
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
           <Employerlist data={props.employerdata} refresh={props.employerrefresh}/>

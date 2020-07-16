@@ -38,6 +38,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { get, post, update } from "../../../../API";
+import { AddComment } from "@material-ui/icons";
 function EmployerList(props) {
   const [data] = React.useState(props.data);
   const [Token] = React.useState(localStorage.getItem("Token"));
@@ -50,22 +51,32 @@ function EmployerList(props) {
   const [Loading, setLoading] = React.useState(true);
   const [viewrating, setViewrating] = React.useState(false);
   const [viewsurvey, setViewsurvey] = React.useState(false);
-  const [ratingentry, setRatingentry] = React.useState([]);
-  const [choiceentry, setChoiceentry] = React.useState([]);
+  const [ratingSurvey, setRatingentry] = React.useState({});
+  const [choiceSurvey, setChoiceentry] = React.useState([]);
+  // const[ratingsurvey,setRatingsurvey]=React.useState({})
+  // const[choiceSurvey,setChoicesurvey]=React.useState({})
   const [updationdialouge, setUpdationdialog] = React.useState(false);
   const [Jobcategory, setJobcategory] = React.useState([]);
-  const [employmentupdate,setEmploymentupdate]=React.useState({jobProfile : "",
-  jobCategory: "",
-  jobTitle : "",
-  jobDescription : ""})
-  const [offboarddata, setOffboarddata] = React.useState({
-    offboard: {
-      jobProfile: "",
-      offboardType: "",
-      leavingReason: "",
-      description: "",
-      endDate: "",
-    },
+  const [commentdialog, setcommentdialog] = React.useState(false);
+  // const [currentid,setcurrentid]=React.useState()
+  const [comentdata, setCommentdata] = React.useState({
+    employer: "",
+    comment: "",
+  });
+  const [employmentupdate, setEmploymentupdate] = React.useState({
+    jobProfile: "",
+    jobCategory: "",
+    jobTitle: "",
+    jobDescription: "",
+  });
+  const [offboard, setOffboard] = React.useState({
+    // offboard: {
+    //   jobProfile: "",
+    //   offboardType: "",
+    //   leavingReason: "",
+    //   description: "",
+    //   endDate: "",
+    // },
   });
   useEffect(() => {
     getTerminationapi();
@@ -91,29 +102,56 @@ function EmployerList(props) {
       </Grid>
     );
   };
-  const jobupdation=async()=>{
+  const terminateemployee=async ()=>{
+     
+    // await setRatingsurvey({"ratingSurvey":ratingentry})
+    // await setChoicesurvey({"choiceSurvey":choiceentry})
+    await post("http://3.22.17.212:8000/api/v1/employers/newoffboard",Token,{offboard,ratingSurvey,choiceSurvey}).then((response)=>{
+      console.log(response)
+      props.refresh()
+    })
+  }
+  const jobupdation = async () => {
     setUpdationdialog(false);
-    await update("http://3.22.17.212:8000/api/v1/employers/newEmpUpdate",Token,employmentupdate).then((response)=>{
-      props.refresh()
-      setEmploymentupdate({jobProfile : "",
-      jobCategory: "",
-      jobTitle : "",
-      jobDescription : ""})
-
-    })
-
-  }
-  const confirmupdates=async(id)=>{
-    await post("http://3.22.17.212:8000/api/v1/employers/confirmEmpUpdate/"+id,Token,"").then((response)=>{
-      
-      props.refresh()
-    })
-  }
-  const rejectupdates=async(id)=>{
-    await post("http://3.22.17.212:8000/api/v1/employers/confirmEmpVerification/"+id,Token,"").then((response)=>{
-      props.refresh()
-    })
-  }
+    await update(
+      "http://3.22.17.212:8000/api/v1/employers/newEmpUpdate",
+      Token,
+      employmentupdate
+    ).then((response) => {
+      props.refresh();
+      setEmploymentupdate({
+        jobProfile: "",
+        jobCategory: "",
+        jobTitle: "",
+        jobDescription: "",
+      });
+    });
+  };
+  const sendComment = async () => {
+    await post(
+      "http://3.22.17.212:8000/api/v1/employers/post-comments",
+      Token,
+      comentdata
+    ).then((response) => {});
+  };
+  const confirmupdates = async (id) => {
+    await post(
+      "http://3.22.17.212:8000/api/v1/employers/confirmEmpUpdate/" + id,
+      Token,
+      ""
+    ).then((response) => {
+      props.refresh();
+    });
+  };
+  const rejectupdates = async (id) => {
+    await post(
+      "http://3.22.17.212:8000/api/v1/employers/confirmEmpVerification/" + id,
+      Token,
+      ""
+    ).then((response) => {
+      props.refresh();
+    });
+  };
   const getTerminationapi = async () => {
     setLoading(true);
 
@@ -139,7 +177,7 @@ function EmployerList(props) {
         // let newdata={"question":index.id,"answerRating":index.question}
         setRatingentry((prevvalue) => {
           console.log(prevvalue);
-          return { ...prevvalue, ["question" + index.id]: "" };
+          return { ...prevvalue, [index.id.toString()]: "" };
         });
         // setRatingentry({"question":index.id,"answerRating":index.question})
 
@@ -155,7 +193,10 @@ function EmployerList(props) {
       response.data.map((index) => {
         setChoiceentry((prevvalue) => {
           console.log(prevvalue);
-          return { ...prevvalue, ["question" + index.id]: "" };
+          let n = index.id.toString();
+          console.log("typeof", typeof typeof index.id.toString());
+
+          return { ...prevvalue, [index.id.toString()]: "" };
         });
       });
     });
@@ -180,15 +221,15 @@ function EmployerList(props) {
               <Rating
                 // id={}
                 name={question1.id}
-                value={ratingentry["question" + question1.id]}
+                value={ratingSurvey[question1.id]}
                 onChange={(event, newValue) => {
                   console.log("event", event);
                   console.log("newvalue", newValue);
                   // console.log("question.id",{question.id)
-
+                  console.log("typeof", typeof question1.id);
                   setRatingentry({
-                    ...ratingentry,
-                    ["question" + event.currentTarget.name]: newValue,
+                    ...ratingSurvey,
+                    [event.currentTarget.name]: newValue,
                   });
                 }}
               />
@@ -229,7 +270,12 @@ function EmployerList(props) {
                     labelId="demo-simple-select-required-label"
                     id="demo-simple-select-required"
                     value={employmentupdate.jobCategory}
-                    onChange={(event)=>{setEmploymentupdate({...employmentupdate,jobCategory:event.target.value})}}
+                    onChange={(event) => {
+                      setEmploymentupdate({
+                        ...employmentupdate,
+                        jobCategory: event.target.value,
+                      });
+                    }}
                     // className={classes.selectEmpty}
                   >
                     {Jobcategory.map((type) => (
@@ -241,9 +287,21 @@ function EmployerList(props) {
                 </FormControl>
               </Grid>
               <Grid item xs={8}>
-              <TextField id="standard-basic" 
-              value={employmentupdate.jobTitle}
-              label="Jobtitle" fullWidth autoFocus margin="dense" type="text" onChange={(event)=>{setEmploymentupdate({...employmentupdate,jobTitle:event.target.value})}} />
+                <TextField
+                  id="standard-basic"
+                  value={employmentupdate.jobTitle}
+                  label="Jobtitle"
+                  fullWidth
+                  autoFocus
+                  margin="dense"
+                  type="text"
+                  onChange={(event) => {
+                    setEmploymentupdate({
+                      ...employmentupdate,
+                      jobTitle: event.target.value,
+                    });
+                  }}
+                />
               </Grid>
               <Grid item xs={8}>
                 <TextField
@@ -257,26 +315,34 @@ function EmployerList(props) {
                   variant="outlined"
                   rows={4}
                   value={employmentupdate.jobDescription}
-                  onChange={(event) => { setEmploymentupdate({...employmentupdate,jobDescription:event.target.value}) }}
+                  onChange={(event) => {
+                    setEmploymentupdate({
+                      ...employmentupdate,
+                      jobDescription: event.target.value,
+                    });
+                  }}
                 />
               </Grid>
-             
             </Grid>
           </DialogContent>
           <DialogActions>
-                
-                <Button onClick={() => {jobupdation()}} color="primary">
-                  Update
-                </Button>
-                <Button
-                  onClick={() => {
-                    setUpdationdialog(false);
-                  }}
-                  color="primary"
-                >
-                  Cancel
-                </Button>
-              </DialogActions>
+            <Button
+              onClick={() => {
+                jobupdation();
+              }}
+              color="primary"
+            >
+              Update
+            </Button>
+            <Button
+              onClick={() => {
+                setUpdationdialog(false);
+              }}
+              color="primary"
+            >
+              Cancel
+            </Button>
+          </DialogActions>
         </Dialog>
       </div>
     );
@@ -289,15 +355,15 @@ function EmployerList(props) {
             <p>{choice.question}</p>
             <RadioGroup
               row
-              name={choice.id}
+              name={choice.id.toString()}
+              value={choiceSurvey[choice.id]}
               onChange={(event, newValue) => {
                 setChoiceentry({
-                  ...choiceentry,
-                  ["question" + event.currentTarget.name]: event.target.value,
+                  ...choiceSurvey,
+                  [event.currentTarget.name.toString()]: event.target.value,
                 });
               }}
               aria-label="position"
-              value={choiceentry["question" + choice.id]}
               defaultValue="top"
             >
               <FormControlLabel
@@ -323,6 +389,74 @@ function EmployerList(props) {
             </RadioGroup>
           </div>
         ))}
+      </div>
+    );
+  };
+  const AddComment = () => {
+    return (
+      <div>
+        <Dialog
+          fullWidth={"sm"}
+          maxWidth={"sm"}
+          open={commentdialog}
+          onClose={() => {
+            setcommentdialog(false);
+          }}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title" align="center">
+            Comment
+          </DialogTitle>
+          <DialogContent>
+            <Grid
+              container
+              // align="center"
+              justify="center"
+              direction="row"
+              spacing={2}
+            >
+              <Grid item xs={8}>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="newMessage"
+                  label="comment"
+                  type="text"
+                  fullWidth
+                  multiline
+                  variant="outlined"
+                  rows={4}
+                  value={comentdata.comment}
+                  onChange={(event) => {
+                    setCommentdata({
+                      ...comentdata,
+                      comment: event.target.value,
+                    });
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                setcommentdialog(false);
+                sendComment();
+              }}
+              color="primary"
+            >
+              Add comment
+            </Button>
+            <Button
+              onClick={() => {
+                setcommentdialog(false);
+              }}
+              color="primary"
+            >
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   };
@@ -361,8 +495,8 @@ function EmployerList(props) {
                       <Select
                         labelId="demo-simple-select-required-label"
                         id="demo-simple-select-required"
-                        value={offboardingTypes}
-                        // onChange={}
+                        value={offboard.offboardType}
+                        onChange={(event) => { setOffboard({...offboard,"offboardType":event.target.value}) }}
                         // className={classes.selectEmpty}
                       >
                         {offboardingTypes.map((type) => (
@@ -381,8 +515,8 @@ function EmployerList(props) {
                       <Select
                         labelId="demo-simple-select-required-label"
                         id="demo-simple-select-required"
-                        value={offboardingTypes}
-                        // onChange={}
+                        value={offboard.leavingReason}
+                        onChange={(event) => { setOffboard({...offboard,"leavingReason":event.target.value}) }}
                         // className={classes.selectEmpty}
                       >
                         {leavingReason.map((reason) => (
@@ -402,17 +536,19 @@ function EmployerList(props) {
                       multiline
                       variant="outlined"
                       rows={4}
-                      // onChange={(event) => { addSetMessage(event.target.value) }}
+                      value={offboard.description}
+                      onChange={(event) => { setOffboard({...offboard,"description":event.target.value}) }}
                     />
                   </Grid>
                   <Grid item xs={8}>
                     <TextField
                       fullWidth
-                      name="someDate"
-                      label="Some Date"
+                      name="EndDate"
+                      label="EndDate"
                       InputLabelProps={{ shrink: true, required: true }}
                       type="date"
-                      // defaultValue={values.someDate}
+                      value={offboard.endDate}
+                      onChange={(event)=>{setOffboard({...offboard,"endDate":event.target.value})}}
                     />
                   </Grid>
                   <DialogContentText align="center">
@@ -470,7 +606,7 @@ function EmployerList(props) {
                 >
                   Cancel
                 </Button>
-                <Button onClick={() => {}} color="primary">
+                <Button onClick={() => {terminateemployee()}} color="primary">
                   Terminate
                 </Button>
               </DialogActions>
@@ -511,7 +647,7 @@ function EmployerList(props) {
               {data.map((row, index) => (
                 <TableRow key={row.id}>
                   <TableCell align="center">
-                    {row.employer.companyName}
+                    {row.company.companyName}
                   </TableCell>
                   <TableCell align="center">
                     {row.jobDetails.startDate}
@@ -534,6 +670,7 @@ function EmployerList(props) {
                         variant="outlined"
                         onClick={() => {
                           setTermination(true);
+                          setOffboard({...offboard,"jobProfile":row.jobDetails.id})
                         }}
                       >
                         Termination
@@ -557,9 +694,12 @@ function EmployerList(props) {
                         color="primary"
                         variant="outlined"
                         onClick={() => {
-                          console.log("row.jobDetails.id",row.jobDetails.id)
+                          console.log("row.jobDetails.id", row.jobDetails.id);
                           setUpdationdialog(true);
-                          setEmploymentupdate({...employmentupdate,jobProfile:row.jobDetails.id})
+                          setEmploymentupdate({
+                            ...employmentupdate,
+                            jobProfile: row.jobDetails.id,
+                          });
                         }}
                       >
                         update
@@ -571,7 +711,9 @@ function EmployerList(props) {
                           size="small"
                           color="primary"
                           variant="outlined"
-                          onClick={() => {confirmupdates(row.jobDetails.id)}}
+                          onClick={() => {
+                            confirmupdates(row.jobDetails.id);
+                          }}
                         >
                           Confirm updates
                         </Button>
@@ -579,7 +721,9 @@ function EmployerList(props) {
                           size="small"
                           color="primary"
                           variant="outlined"
-                          onClick={() => {rejectupdates(row.jobDetails.id)}}
+                          onClick={() => {
+                            rejectupdates(row.jobDetails.id);
+                          }}
                         >
                           Reject updates
                         </Button>
@@ -591,7 +735,13 @@ function EmployerList(props) {
                       size="small"
                       color="primary"
                       variant="outlined"
-                      onClick={() => {}}
+                      onClick={() => {
+                        setcommentdialog(true);
+                        setCommentdata({
+                          ...comentdata,
+                          employer: row.company.employer,
+                        });
+                      }}
                     >
                       Comment
                     </Button>
@@ -603,6 +753,7 @@ function EmployerList(props) {
         </TableContainer>
         {Terminationdialouge()}
         {Updationdialouge()}
+        {AddComment()}
       </Grid>
     </div>
   );
