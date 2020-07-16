@@ -3,9 +3,14 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import {Provider} from 'react-redux';
+import {createStore} from 'redux'
+import reducer from './Reducer/reducer'
 window.$IP = '3.22.17.212'
+export const store=createStore(reducer)
 ReactDOM.render(
-    <App />,
+  <Provider store={store}> 
+    <App /></Provider>,
   document.getElementById('root')
 );
 
