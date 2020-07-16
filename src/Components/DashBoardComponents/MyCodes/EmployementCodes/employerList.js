@@ -25,7 +25,7 @@ import {
   TableRow,
   Fab,
 } from "@material-ui/core/";
-import Rating from '@material-ui/lab/Rating';
+import Rating from "@material-ui/lab/Rating";
 
 import {
   MuiPickersUtilsProvider,
@@ -50,8 +50,14 @@ function EmployerList(props) {
   const [Loading, setLoading] = React.useState(true);
   const [viewrating, setViewrating] = React.useState(false);
   const [viewsurvey, setViewsurvey] = React.useState(false);
-  const[ratingentry,setRatingentry]=React.useState([])
-  const[choiceentry,setChoiceentry]=React.useState([])
+  const [ratingentry, setRatingentry] = React.useState([]);
+  const [choiceentry, setChoiceentry] = React.useState([]);
+  const [updationdialouge, setUpdationdialog] = React.useState(false);
+  const [Jobcategory, setJobcategory] = React.useState([]);
+  const [employmentupdate,setEmploymentupdate]=React.useState({jobProfile : "",
+  jobCategory: "",
+  jobTitle : "",
+  jobDescription : ""})
   const [offboarddata, setOffboarddata] = React.useState({
     offboard: {
       jobProfile: "",
@@ -85,6 +91,13 @@ function EmployerList(props) {
       </Grid>
     );
   };
+  const jobupdation=async()=>{
+    setUpdationdialog(false);
+    await update("http://3.22.17.212:8000/api/v1/employers/newEmpUpdate",Token,employmentupdate).then((response)=>{
+
+    })
+
+  }
   const getTerminationapi = async () => {
     setLoading(true);
 
@@ -105,67 +118,153 @@ function EmployerList(props) {
       Token
     ).then((response) => {
       setRatingdata(response.data);
-      response.data.map((index)=>{
-        console.log("index",index)
+      response.data.map((index) => {
+        console.log("index", index);
         // let newdata={"question":index.id,"answerRating":index.question}
-        setRatingentry(prevvalue=>{console.log(prevvalue)
-          return {...prevvalue,["question"+index.id]:""}})
+        setRatingentry((prevvalue) => {
+          console.log(prevvalue);
+          return { ...prevvalue, ["question" + index.id]: "" };
+        });
         // setRatingentry({"question":index.id,"answerRating":index.question})
-       
+
         // setRatingentry(ratingentry.push( {question:index.id}))
         // console.log("ratingentry",ratingentry)
-      })
-      
+      });
     });
     await get(
       "http://3.22.17.212:8000/api/v1/resManager/job/surveyq/employer/choice/",
       Token
-      ).then((response) => {
-        setChoicedata(response.data);
-        response.data.map((index)=>{
-          setChoiceentry(prevvalue=>{console.log(prevvalue)
-            return {...prevvalue,["question"+index.id]:""}})
-        })
-        
+    ).then((response) => {
+      setChoicedata(response.data);
+      response.data.map((index) => {
+        setChoiceentry((prevvalue) => {
+          console.log(prevvalue);
+          return { ...prevvalue, ["question" + index.id]: "" };
+        });
       });
-      setLoading(false);
-    };
-  
+    });
+    await get(
+      "http://3.22.17.212:8000/api/v1/resManager/job/categories/",
+      Token
+    ).then((response) => {
+      setJobcategory(response.data);
+    });
+    setLoading(false);
+  };
+
   const Ratingdialog = () => {
     return (
       <div>
-        
-        {ratingdata.map((question1,index) => (
+        {ratingdata.map((question1, index) => (
           <>
-          <div>
-            <p>{question1.question} {question1.id}</p>
-            <Rating
-            // id={}
-            name={question1.id}
-            
-            value={ratingentry["question"+question1.id]}
-           
-          onChange={(event,newValue) => {
-            console.log("event",event)
-            console.log("newvalue",newValue)
-            // console.log("question.id",{question.id)
-           
-            setRatingentry({...ratingentry,["question"+event.currentTarget.name]:newValue})
-          }}
-        />
-          </div>
+            <div>
+              <p>
+                {question1.question} {question1.id}
+              </p>
+              <Rating
+                // id={}
+                name={question1.id}
+                value={ratingentry["question" + question1.id]}
+                onChange={(event, newValue) => {
+                  console.log("event", event);
+                  console.log("newvalue", newValue);
+                  // console.log("question.id",{question.id)
+
+                  setRatingentry({
+                    ...ratingentry,
+                    ["question" + event.currentTarget.name]: newValue,
+                  });
+                }}
+              />
+            </div>
           </>
         ))}
       </div>
     );
   };
-  const Updationdialouge=()=>{
-    return(
+  const Updationdialouge = () => {
+    return (
       <div>
-        
+        <Dialog
+          fullWidth={"sm"}
+          maxWidth={"sm"}
+          open={updationdialouge}
+          onClose={() => {
+            setUpdationdialog(false);
+          }}
+        >
+          <DialogTitle id="form-dialog-title" align="center">
+            Job Updation
+          </DialogTitle>
+          <DialogContent>
+            <Grid
+              container
+              // align="center"
+              justify="center"
+              direction="row"
+              spacing={2}
+            >
+              <Grid item xs={8}>
+                <FormControl fullWidth required>
+                  <InputLabel id="demo-simple-select-required-label">
+                    Jobcategory
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-required-label"
+                    id="demo-simple-select-required"
+                    value={employmentupdate.jobCategory}
+                    onChange={(event)=>{setEmploymentupdate({...employmentupdate,jobCategory:event.target.value})}}
+                    // className={classes.selectEmpty}
+                  >
+                    {Jobcategory.map((type) => (
+                      <MenuItem value={type.id}>
+                        {type.positionCategory}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={8}>
+              <TextField id="standard-basic" 
+              value={employmentupdate.jobTitle}
+              label="Jobtitle" fullWidth autoFocus margin="dense" type="text" onChange={(event)=>{setEmploymentupdate({...employmentupdate,jobTitle:event.target.value})}} />
+              </Grid>
+              <Grid item xs={8}>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="newMessage"
+                  label="Description"
+                  type="text"
+                  fullWidth
+                  multiline
+                  variant="outlined"
+                  rows={4}
+                  value={employmentupdate.jobDescription}
+                  onChange={(event) => { setEmploymentupdate({...employmentupdate,jobDescription:event.target.value}) }}
+                />
+              </Grid>
+             
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+                
+                <Button onClick={() => {jobupdation()}} color="primary">
+                  Update
+                </Button>
+                <Button
+                  onClick={() => {
+                    setUpdationdialog(false);
+                  }}
+                  color="primary"
+                >
+                  Cancel
+                </Button>
+              </DialogActions>
+        </Dialog>
       </div>
-    )
-  }
+    );
+  };
   const Survey = () => {
     return (
       <div>
@@ -175,34 +274,32 @@ function EmployerList(props) {
             <RadioGroup
               row
               name={choice.id}
-              onChange={(event,newValue)=>{
-                setChoiceentry({...choiceentry,["question"+event.currentTarget.name]:event.target.value})
-
+              onChange={(event, newValue) => {
+                setChoiceentry({
+                  ...choiceentry,
+                  ["question" + event.currentTarget.name]: event.target.value,
+                });
               }}
               aria-label="position"
-             value={choiceentry["question"+choice.id]}
+              value={choiceentry["question" + choice.id]}
               defaultValue="top"
             >
               <FormControlLabel
-              
                 value="Yes"
-                control={<Radio color="primary" size="small"/>}
+                control={<Radio color="primary" size="small" />}
                 label="Yes"
               />
               <FormControlLabel
-             
                 value="No"
                 control={<Radio color="primary" size="small" />}
                 label="No"
               />
               <FormControlLabel
-             
                 value="Maybe"
                 control={<Radio color="primary" size="small" />}
                 label="Maybe"
               />
               <FormControlLabel
-             
                 value="NotApplicable"
                 control={<Radio color="primary" size="small" />}
                 label="NotApplicable"
@@ -443,29 +540,34 @@ function EmployerList(props) {
                         size="small"
                         color="primary"
                         variant="outlined"
-                        onClick={() => {}}
+                        onClick={() => {
+                          console.log("row.jobDetails.id",row.jobDetails.id)
+                          setUpdationdialog(true);
+                          setEmploymentupdate({...employmentupdate,jobProfile:row.jobDetails.id})
+                        }}
                       >
                         Updation
                       </Button>
                     ) : null}
                     {row.showConfirmRejectUpdates ? (
                       <>
-                         <Button
-                         size="small"
-                         color="primary"
-                         variant="outlined"
-                         onClick={() => {}}
-                       >
-                         Confirm updates
-                       </Button>
-                      <Button
-                        size="small"
-                        color="primary"
-                        variant="outlined"
-                        onClick={() => {}}
-                      >
-                        Reject updates
-                      </Button></>
+                        <Button
+                          size="small"
+                          color="primary"
+                          variant="outlined"
+                          onClick={() => {}}
+                        >
+                          Confirm updates
+                        </Button>
+                        <Button
+                          size="small"
+                          color="primary"
+                          variant="outlined"
+                          onClick={() => {}}
+                        >
+                          Reject updates
+                        </Button>
+                      </>
                     ) : null}
                   </TableCell>
                   <TableCell align="center">

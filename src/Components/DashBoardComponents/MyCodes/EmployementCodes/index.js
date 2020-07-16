@@ -90,10 +90,10 @@ export default function Indexemployment() {
     );
   };
 
-   useEffect(async() => {
+   useEffect(() => {
     
-   await Onboardingdata();
-    await employerList();
+    Onboardingdata();
+     employerList();
     setLoading(false);
     
   }, []);

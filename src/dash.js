@@ -178,6 +178,7 @@ export default function MiniDrawer(props) {
   };
 
   const logout = async () => {
+    props.history.push('/signin')
     console.log(token);
     let headers = {
       headers: {
@@ -198,7 +199,7 @@ export default function MiniDrawer(props) {
       });
 
     console.log("////////////////////////////////////////");
-    props.history.push('/signin')
+    
   }
 
   return (
