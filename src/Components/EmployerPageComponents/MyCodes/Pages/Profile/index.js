@@ -68,7 +68,7 @@ class index extends React.Component{
                       </Avatar>
                         </Grid>
 
-                      <Grid item fullWidth xs={12}>
+                      <Grid item xs={12}>
                         <TextField
                           id="firstName"
                           label="First Name"
@@ -82,7 +82,7 @@ class index extends React.Component{
                         />
                       </Grid>
 
-                      <Grid item fullWidth xs={12}>
+                      <Grid item xs={12}>
                         <TextField
                           id="middleName"
                           label="Middle Name"
@@ -96,7 +96,7 @@ class index extends React.Component{
                         />
                       </Grid>
 
-                      <Grid item fullWidth xs={12}>
+                      <Grid item xs={12}>
                         <TextField
                           id="surname"
                           label="Surname"
@@ -110,7 +110,7 @@ class index extends React.Component{
                         />
                       </Grid>
 
-                      <Grid item fullWidth xs={12}>
+                      <Grid item xs={12}>
                         <TextField
                           id="dob"
                           label="Date of birth"
@@ -124,7 +124,7 @@ class index extends React.Component{
                         />
                       </Grid>
 
-                      <Grid item fullWidth xs={12}>
+                      <Grid item xs={12}>
                       <TextField
                           id="email"
                           label="Email ID"
@@ -138,7 +138,7 @@ class index extends React.Component{
                         />
                       </Grid>
 
-                      <Grid item fullWidth xs={12}>
+                      <Grid item xs={12}>
                       <TextField
                           id="gender"
                           label="Gender"

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles';
-import { TextField, Paper, Grid, Typography, Button, TableContainer, FormControlLabel, Checkbox, FormControl, Select, InputLabel, MenuItem } from '@material-ui/core/';
+import { TextField, IconButton, Avatar, CircularProgress, Paper, Grid, Typography, Button, TableContainer, FormControlLabel, Checkbox, FormControl, Select, InputLabel, MenuItem } from '@material-ui/core/';
 
 import {
     Table,
@@ -19,6 +19,9 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import CancelIcon from '@material-ui/icons/Cancel';
+
+import axios from 'axios';
 
 let token1 = "";
 let token = "";
@@ -50,8 +53,25 @@ class index extends Component {
 
     state = {
         generateNewEmployementCodeDialog: false,
+        pendingCodesCheck: false,
+        codeDetailsDialog: false,
 
-        onboardOffers: []
+        allVerifications: [],
+        pendingVerifications: [],
+        codeMapLogic: '',
+        viewDetails: [],
+
+        employeeJobId: '',
+        employeePicture: '',
+        employeeFirstName: '',
+        employeeMiddleName: '',
+        employeeLastName: '',
+        employeeEmail: '',
+        employeeVotId: '',
+        jobTitle: '',
+        employeeJobCategory: '',
+        employeeEndDate: '',
+        employeeJobDescription: ''
     }
 
     // constructor(props) {
@@ -59,25 +79,59 @@ class index extends Component {
     //     this.generateNewEmployementCodeButton = this.generateNewEmployementCodeButton.bind(this);
     //   }
 
-    async fetchOnboardOffers() {
+    async fetchVerifications() {
 
-        let response = await fetch(api + "/api/v1/employers/oboffers",
+        let response = await fetch(api + "/api/v1/employers/empVerifications",
             {
                 headers: {
                     'Authorization': token
                 }
             });
         response = await response.json();
-        console.log('obSuccess:', response)
-        this.setState({ onboardOffers: response });
+        console.log('verSuccess:', response)
+        console.log("currentId:", id)
+        this.setState({ allVerifications: response });
+    }
+
+    async fetchPendingVerifications() {
+
+        let response = await fetch(api + "/api/v1/employers/empVerifications?pending=true",
+            {
+                headers: {
+                    'Authorization': token
+                }
+            });
+        response = await response.json();
+        console.log('pendingVerSuccess:', response)
+        this.setState({ pendingVerifications: response });
     }
 
     async componentDidMount() {
-        token1 = localStorage.getItem("Token");
-        token = "Token " + token1;
+
+        token = localStorage.getItem("Token");
         id = localStorage.getItem("id");
 
-        this.fetchOnboardOffers();
+        this.fetchVerifications();
+        this.fetchPendingVerifications();
+
+    }
+
+    isloading() {
+        return (
+            <>
+                <Grid
+                    container
+                    spacing={0}
+                    direction="column"
+                    alignItems="center"
+                    justify="center"
+                    display="flex"
+                    style={{ minHeight: "0vh" }}
+                >
+                    <CircularProgress />
+                </Grid>
+            </>
+        );
     }
 
     render() {
@@ -85,227 +139,253 @@ class index extends Component {
         const { classes } = this.props;
 
         return (
-            <div style={{ marginTop: 20 }}>
-                {/* <Paper style={{ padding: 20, height: '100vh' }}> */}
-                <Grid container justify='space-between' alignItems='center' spacing={4}>
-
-                    <Grid item xs={8}>
-                        <Typography variant='h4'>
-                            Verification Requests
-                                </Typography>
-                    </Grid>
-
-                    <Grid item xs={4}>
-                        <Button color='secondary' variant='contained' onClick={() => this.setState({ generateNewEmployementCodeDialog: true })} fullWidth>  Generate New Employment </Button>
-                    </Grid>
-
-                    <Grid item>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    // checked={state.checkedB}
-                                    // onChange={handleChange}
-                                    name="checkedB"
-                                    color="primary"
-                                />
-                            }
-                            label="Show open codes"
-                        />
-                    </Grid>
-
-                </Grid>
-
-                <Grid container justify='flex-start' alignItems='center' spacing={2}>
-
-                    <TableContainer component={Paper} style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }} elevation={5}>
-                        <Table stickyHeader>
-                            <TableHead>
-                                <TableRow style={{ backgroundColor: 'black' }}>
-                                    <TableCell align="left">Created on</TableCell>
-                                    <TableCell align="left">OnTrac Id</TableCell>
-                                    <TableCell align="left">Job Category</TableCell>
-                                    <TableCell align="left">Job title</TableCell>
-                                    <TableCell align="left">Start date</TableCell>
-                                    <TableCell align="left">Onboard Status</TableCell>
-                                    <TableCell align="left">Actions</TableCell>
-                                    {/* <TableCell align="left">Update</TableCell> */}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {rows.map((row, index) => (
-                                    <TableRow key={row.id}>
-                                        <TableCell align="left">{row.createdOn}</TableCell>
-                                        <TableCell align="left">{row.codeString}</TableCell>
-                                        <TableCell align="left">{row.employerCompanyField}</TableCell>
-                                        <TableCell align="left">{row.codeStatus}</TableCell>
-                                        <TableCell align="left">{row.statusChangeDate}</TableCell>
-                                        <TableCell align="left"></TableCell>
-                                        <TableCell align="left"><Button size='small' color="primary" variant="outlined">View Details</Button></TableCell>
-                                        {/* <TableCell align="right"><Button size='small' color="secondary" variant="outlined">Update</Button></TableCell> */}
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-
-                </Grid>
-                {/* </Paper> */}
-
+            <>
                 {
-                    this.generateNewEmploymentDialog()
-                }
+                    this.state.isLoading ? (this.isloading()) :
+                        (
+                            <div style={{ marginTop: 20, marginRight: 20 }}>
 
-            </div>
+                                <Grid container justify='space-between' alignItems='center' spacing={4}>
+
+                                    <Grid item xs={12}>
+                                        <Typography variant='h4'>
+                                            Employement Verification
+                                    </Typography>
+                                    </Grid>
+
+                                    <Grid item >
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={this.state.pendingCodesCheck}
+                                                    onChange={event => {
+                                                        this.setState({ pendingCodesCheck: !this.state.pendingCodesCheck })
+                                                        console.log('check1:', this.state.pendingCodesCheck)
+                                                    }}
+                                                    name="checkedB"
+                                                    color="primary"
+                                                />
+                                            }
+                                            label="Pending verifications"
+                                        />
+                                    </Grid>
+
+                                </Grid>
+
+                                <Grid container justify='flex-start' alignItems='center' spacing={2}>
+
+                                    <TableContainer component={Paper} style={{ maxWidth: '94%', marginTop: 20, marginLeft: 10, marginRight: 10 }} elevation={5}>
+                                        <Table stickyHeader>
+                                            <TableHead>
+                                                <TableRow style={{ backgroundColor: 'black' }}>
+                                                    <TableCell align="left">Picture</TableCell>
+                                                    <TableCell align="left">Name</TableCell>
+                                                    <TableCell align="left">Job Title</TableCell>
+                                                    <TableCell align="left">Verify Ontrac ID</TableCell>
+                                                    <TableCell align="left">Code String</TableCell>
+                                                    <TableCell align="left">Date</TableCell>
+                                                    <TableCell align="left">Status</TableCell>
+                                                    <TableCell align="center">View</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            {this.tableDisplayLogic()}
+                                            {this.viewCodeDetails()}
+                                        </Table>
+                                    </TableContainer>
+
+                                </Grid>
+                            </div>
+                        )
+                }
+            </>
+
         )
     }
 
-    generateNewEmploymentDialog() {
-        // const options = this.state.adminList.map((option) => {
-        //     const firstLetter = option.username[0].toUpperCase();
-        //     return {
-        //         firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
-        //         ...option,
-        //     };
-        // });
+    allCodesTable() {
+        return (
+            <TableBody>
+                {this.state.allVerifications.map((row, index) => (
+                    <TableRow key={row.id}>
+                        <TableCell align="left">
+                            <Avatar
+                                src={row.employeeDetails.picture_url}
+                                style={{ height: "4rem", width: "4rem" }}
+                            >
+                                <img src={id.picture} width="65" height="65" alt="" />
+                            </Avatar>
+                        </TableCell>
+                        <TableCell align="left">{row.employeeDetails.firstname}</TableCell>
+                        <TableCell align="left">{row.jobDetails.jobTitle}</TableCell>
+                        <TableCell align="left">{row.employeeDetails.ontrac_id}</TableCell>
+                        <TableCell align="left">{row.empVerDetails.codeString}</TableCell>
+                        <TableCell align="left"></TableCell>
+                        <TableCell align="left">{row.empVerDetails.updateStatus}</TableCell>
+                        <TableCell align="left">
+                            <Button
+                                variant='outlined'
+                                color='primary'
+                                onClick={() => this.setState({
+                                    viewDetails: [row],
+
+                                    employeeJobId: row.empVerDetails.jobProfile,
+                                    employeePicture: row.employeeDetails.picture_url,
+                                    employeeFirstName: row.employeeDetails.firstname,
+                                    employeeMiddleName: row.employeeDetails.middlename,
+                                    employeeLastName: row.employeeDetails.surname,
+                                    employeeEmail: row.employeeDetails.email,
+                                    employeeVotId: row.employeeDetails.ontrac_id,
+                                    jobTitle: row.jobDetails.jobTitle,
+                                    employeeJobCategory: row.jobDetails.job_category_field,
+                                    employeeEndDate: row.jobDetails.endDate,
+                                    employeeJobDescription: row.jobDetails.jobDescription,
+
+                                    codeDetailsDialog: true,
+                                },
+                                    () => console.log('viewDetails:', this.state.viewDetails))}
+                            >
+                                Details
+                                </Button>
+                        </TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        );
+    }
+
+    openCodesTable() {
+        return (
+            <TableBody>
+                {this.state.pendingVerifications.map((row, index) => (
+                    <TableRow key={row.id}>
+                       <TableCell align="left">
+                            <Avatar
+                                src={row.employeeDetails.picture_url}
+                                style={{ height: "4rem", width: "4rem" }}
+                            >
+                                <img src={id.picture} width="65" height="65" alt="" />
+                            </Avatar>
+                        </TableCell>
+                        <TableCell align="left">{row.employeeDetails.firstname}</TableCell>
+                        <TableCell align="left">{row.jobDetails.jobTitle}</TableCell>
+                        <TableCell align="left">{row.employeeDetails.ontrac_id}</TableCell>
+                        <TableCell align="left">{row.empVerDetails.codeString}</TableCell>
+                        <TableCell align="left"></TableCell>
+                        <TableCell align="left">{row.empVerDetails.updateStatus}</TableCell>
+                        <TableCell align="left">
+                            <Button
+                                variant='outlined'
+                                color='primary'
+                                onClick={() => this.setState({
+                                    viewDetails: [row],
+
+                                    employeeJobId: row.empVerDetails.jobProfile,
+                                    employeePicture: row.employeeDetails.picture_url,
+                                    employeeFirstName: row.employeeDetails.firstname,
+                                    employeeMiddleName: row.employeeDetails.middlename,
+                                    employeeLastName: row.employeeDetails.surname,
+                                    employeeEmail: row.employeeDetails.email,
+                                    employeeVotId: row.employeeDetails.ontrac_id,
+                                    jobTitle: row.jobDetails.jobTitle,
+                                    employeeJobCategory: row.jobDetails.job_category_field,
+                                    employeeEndDate: row.jobDetails.endDate,
+                                    employeeJobDescription: row.jobDetails.jobDescription,
+
+                                    codeDetailsDialog: true,
+                                },
+                                    () => console.log('viewDetails:', this.state.viewDetails))}
+                            >
+                                Details
+                                </Button>
+                        </TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        );
+    }
+
+    tableDisplayLogic() {
+        return (
+            this.state.pendingCodesCheck ? (this.openCodesTable()) : (this.allCodesTable())
+        );
+    }
+
+    viewCodeDetails() {
         return (
             <div>
-                <Dialog open={this.state.generateNewEmployementCodeDialog} onClose={() => this.setState({ generateNewEmployementCodeDialog: false })} >
-                    <DialogTitle id="alert-dialog-title">{"Code Generator"}</DialogTitle>
+                <Dialog open={this.state.codeDetailsDialog} onClose={() => this.setState({ codeDetailsDialog: false, viewDetails: '' })} >
+                    <DialogTitle id="codeDetails">
+                        <Grid container justify='space-between' alignItems='center'>
+                            <Grid item>
+                                Job Details
+                            </Grid>
+                            <Grid item>
+                                <IconButton onClick={() => this.setState({ codeDetailsDialog: false })}>
+                                    <CancelIcon />
+                                </IconButton>
+                            </Grid>
+                        </Grid>
+                    </DialogTitle>
                     <DialogContent>
+
+
+
+                        {/* <Paper variant='outlined' style={{ padding: 20 }}> */}
+
                         <Grid
                             container
-                            justify="flex-start"
+                            justify="center"
                             direction="row"
                             alignItems="center"
-                            spacing={2}
+                            spacing={1}
                         // style={{ padding: 20 }}
                         >
-
                             <Grid item xs={12}>
-                                <FormControl component="fieldset">
-                                    <FormLabel component="legend">Search employee by:</FormLabel>
-                                    <RadioGroup
-                                        name="searchCategory"
-                                        value={this.state.employeeByRadio}
-                                        onChange={(event) => {
-                                            this.setState({ employeeByRadio: event.target.value });
-                                            // console.log('Radio:', this.state.employeeByRadio);
-                                        }}
-                                    >
-                                        <Grid container direction="row" style={{ marginTop: 10 }}>
-                                            <FormControlLabel
-                                                value="searchByPhone"
-                                                control={<Radio />}
-                                                label="OnTrac Id"
-                                            />
-                                            <FormControlLabel
-                                                value="searchByOntracId"
-                                                control={<Radio />}
-                                                label="Phone"
-
-                                            />
-                                        </Grid>
-                                    </RadioGroup>
-                                </FormControl>
-                            </Grid>
-
-
-                            {this.state.employeeByRadio !== 'searchByOntracId' ? (
-                                <Grid item xs={12}>
-                                    {/* <TextField
-                                        id="searchByOntracId"
-                                        label="OnTrac Id"
-                                        variant="outlined"
-                                        // helperText="Incorrect entry."
-                                        fullWidth
-                                        // value={this.state.generateCodeData}
-                                        onChange={(event) => {
-                                            this.setState({ generateCodeData: event.target.value })
-                                            // this.fetchEmployeeOntracId(this.state.generateCodeData)
-                                        }}
-                                    /> */}
-
-                                    {/* <Autocomplete
-                                        id="combo-box-demo"
-                                        options={this.state.onTracId}
-                                        getOptionLabel={(option) => option.ontrac_id}
-                                        style={{ width: 300 }}
-                                        renderInput={(params) => <TextField {...params} label="Verify OnTrac Id" variant="outlined" />}
-                                        fullWidth
-                                        Username
-                                        // onChange={(event, value)=> {this.setState(employeeVotId: value)}}
-                                    /> */}
-
-                                    <Autocomplete
-                                        id="searchByOntracId"
-                                        options={this.state.onTracId}
-                                        getOptionLabel={(VOTId) => VOTId.ontrac_id}
-                                        Username
-                                        fullWidth
-                                        value={this.state.selectedstate}
-                                        onChange={(event, value) => {
-                                            this.setState({ selectedstate: value })
-                                            this.setState({ employeeVotId: value['id'] }, console.log("employeeVotId", value['id']))
-                                            console.log("selectedstate", value);
-
-                                        }}
-                                        inputValue={this.state.enteredOntracId}
-                                        onInputChange={(event, newInputValue) => {
-                                            this.setState({ enteredOntracId: newInputValue });
-                                            // console.log(newInputValue);
-                                        }}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="Verify OnTrac Id"
-                                                margin="normal"
-                                                variant="outlined"
-                                            />
-                                        )}
-                                    />
-
-                                </Grid>
-                            ) : (
-                                    <Grid item xs={12}>
-                                        <Autocomplete
-                                        id="searchByOntracId"
-                                        options={this.state.onTracId}
-                                        getOptionLabel={(VOTId) => VOTId.ontrac_id}
-                                        Username
-                                        fullWidth
-                                        value={this.state.selectedstate}
-                                        onChange={(event, value) => {
-                                            this.setState({ selectedstate: value })
-                                            this.setState({ employeeVotId: value['id'] }, console.log("employeeVotId", value['id']))
-                                            console.log("selectedstate", value);
-
-                                        }}
-                                        inputValue={this.state.enteredOntracId}
-                                        onInputChange={(event, newInputValue) => {
-                                            this.setState({ enteredOntracId: newInputValue });
-                                            // console.log(newInputValue);
-                                        }}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="Phone"
-                                                margin="normal"
-                                                variant="outlined"
-                                            />
-                                        )}
-                                    />
-                                    </Grid>)}
-
-                            <Grid item xs={12}>
-                                <FormLabel component="legend">Enter Job Details:</FormLabel>
+                                <FormLabel component="legend">Employee Details:</FormLabel>
                             </Grid>
 
                             <Grid item xs={12}>
+                                <Avatar
+                                    src={this.state.employeePicture}
+                                    style={{ height: "8rem", width: "8rem" }}
+                                >
+                                    <img src={id.picture} width="130" height="130" alt="" />
+                                </Avatar>
+                            </Grid>
+
+                            <Grid item xs={4}>
                                 <TextField
-                                    id="verifyOntracId"
-                                    label="Verify Ontrac Id"
-                                    variant="outlined"
-                                    // defaultValue={id.firstname}
+                                    id="fullName"
+                                    label="Fisrt Name"
+                                    defaultValue={this.state.employeeFirstName}
+                                    type="text"
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    fullWidth
+                                    size='small'
+                                />
+                            </Grid>
+
+                            <Grid item xs={4}>
+                                <TextField
+                                    id="middleName"
+                                    label="Middle Name"
+                                    defaultValue={this.state.employeeMiddleName}
+                                    type="text"
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    fullWidth
+                                    size='small'
+                                />
+                            </Grid>
+
+                            <Grid item xs={4}>
+                                <TextField
+                                    id="surname"
+                                    label="Surname"
+                                    defaultValue={this.state.employeeLastName}
                                     type="text"
                                     InputProps={{
                                         readOnly: true,
@@ -316,45 +396,14 @@ class index extends Component {
                             </Grid>
 
                             <Grid item xs={12}>
-                                <Autocomplete
-                                    // options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
-                                    // getOptionLabel={(option) => option.email}
-                                    // groupBy={(option) => option.firstLetter}
-                                    id="adminEmail"
-                                    Username
-                                    size='small'
-                                    fullWidth
-                                    value={this.state.selectedstate}
-                                    onChange={(event, value) => {
-                                        this.setState({ selectedstate: value });
-                                        this.setState({ assignAdminId: value['id'] })
-                                        console.log("selectedstate", value);
-                                        console.log("assignAdminID", this.state.assignAdminId);
-                                    }}
-                                    inputValue={this.state.enteredUsername}
-                                    onInputChange={(event, newInputValue) => {
-                                        this.setState({ enteredUsername: newInputValue });
-                                        // console.log(newInputValue);
-                                    }}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label="Job Type"
-                                            margin="normal"
-                                            variant="outlined"
-                                        />
-                                    )}
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
                                 <TextField
-                                    id="startingSalary"
-                                    label="Starting Salary"
-                                    variant="outlined"
-                                    // value={id.firstname}
-                                    // onChange={}
-                                    type="number"
+                                    id="email"
+                                    label="Email Id"
+                                    defaultValue={this.state.employeeEmail}
+                                    type="text"
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
                                     fullWidth
                                     size='small'
                                 />
@@ -362,66 +411,150 @@ class index extends Component {
 
                             <Grid item xs={12}>
                                 <TextField
-                                    id="startingDate"
-                                    // label="Starting Salary"
-                                    variant="outlined"
-                                    // value={id.firstname}
-                                    // onChange={}
-                                    type="date"
-                                    helperText="Starting date"
+                                    id="emailId"
+                                    label="Verify Ontrac Id"
+                                    defaultValue={this.state.employeeVotId}
+                                    type="text"
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
                                     fullWidth
                                     size='small'
                                 />
                             </Grid>
 
                             <Grid item xs={12}>
+                                <TextField
+                                    id="jobTitle"
+                                    label="Job Title"
+                                    defaultValue={this.state.jobTitle}
+                                    type="text"
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    fullWidth
+                                    size='small'
+                                />
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <TextField
+                                    id="jobCategory"
+                                    label="Job Category"
+                                    defaultValue={this.state.employeeJobCategory}
+                                    type="text"
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    fullWidth
+                                    size='small'
+                                />
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <TextField
+                                    id="endDate"
+                                    label="End Date"
+                                    defaultValue={this.state.employeeEndDate === null ? 'NA' : this.state.employeeEndDate}
+                                    type="text"
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    fullWidth
+                                    size='small'
+                                />
+                            </Grid>
+
+                            <Grid item xs={12} style={{ marginTop: 5 }}>
                                 <TextField
                                     id="jobDescription"
                                     label="Job Description"
-                                    variant="outlined"
-                                    // value={id.firstname}
-                                    // onChange={}
-                                    type="date"
+                                    defaultValue={this.state.employeeJobDescription}
+                                    type="text"
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
                                     fullWidth
+                                    size='small'
+                                    variant='outlined'
                                     multiline
                                     rows={3}
-                                    size='small'
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <TextField
-                                    id="otherConditions"
-                                    label="Other Conditions"
-                                    variant="outlined"
-                                    // value={id.firstname}
-                                    // onChange={}
-                                    type="date"
-                                    fullWidth
-                                    multiline
-                                    rows={3}
-                                    size='small'
                                 />
                             </Grid>
 
                         </Grid>
 
+                        {/* </Paper> */}
                     </DialogContent>
                     <DialogActions style={{ padding: 15 }}>
-                        <Button color="secondary" variant="contained" onClick={() => this.setState({ generateNewEmployementCodeDialog: false, selectedIndex: -1 })}>
-                            Generate One-time Code
-                            </Button>
+                        <Button color="primary" variant="contained" style={{ minWidth: 100 }}
+                            onClick={()=> this.approveVerification(this.employeeJobId)}
+                        >
+                            Approve
+                        </Button>
+
+                        <Button color="secondary" variant="contained" style={{ minWidth: 100 }}
+                            onClick={()=> this.approveVerification(this.employeeJobId)}
+                        >
+                            Reject
+                        </Button>
                     </DialogActions>
                 </Dialog>
             </div>
         );
     }
 
-    // generateNewEmployementCodeButton() {
-    //     return(
-    //  
-    //     )
-    // }
+    async approveVerification(JobId) {
+
+        try {
+            let response = await fetch(api + '/api/v1/employers/confirmEmpVerification/' + JobId,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify("")
+                }
+            );
+            response = await response.json();
+            console.log('approveJob:', response);
+
+            // this.setState({ codeDetailsDialog: false })
+            // this.fetchVerifications();
+            // this.fetchPendingVerifications();
+
+
+        } catch (error) {
+            console.log("[!ON_REGISTER] " + error);
+        }
+    }
+
+    async approveVerification(JobId) {
+
+        try {
+            let response = await fetch(api + '/api/v1/employers/rejectEmpVerification/' + JobId,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify("")
+                }
+            );
+            response = await response.json();
+            console.log('approveJob:', response);
+
+            // this.setState({ codeDetailsDialog: false })
+            // this.fetchVerifications();
+            // this.fetchPendingVerifications();
+
+
+        } catch (error) {
+            console.log("[!ON_REGISTER] " + error);
+        }
+    }
 }
 
 export default withStyles(styles)(index);
