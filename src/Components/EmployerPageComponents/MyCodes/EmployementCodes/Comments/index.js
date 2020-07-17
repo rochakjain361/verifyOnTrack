@@ -246,19 +246,19 @@ class index extends Component {
             )
     }
 
-    async componentDidMount() {
-        this.setState({ isLoading: true })
+    // async componentDidMount() {
+    //     this.setState({ isLoading: true })
 
-        token = localStorage.getItem("Token");
-        id = localStorage.getItem("id");
+    //     token = localStorage.getItem("Token");
+    //     id = localStorage.getItem("id");
 
-        this.fetchOnboardOffers();
-        this.fetchAllEmployeesOntracId();
-        this.fetchAllEmployeesPhones();
-        this.fetchAllJobTypes();
+    //     this.fetchOnboardOffers();
+    //     this.fetchAllEmployeesOntracId();
+    //     this.fetchAllEmployeesPhones();
+    //     this.fetchAllJobTypes();
 
-        this.setState({ isLoading: false })
-    }
+    //     this.setState({ isLoading: false })
+    // }
 
     render() {
 
@@ -598,8 +598,8 @@ class index extends Component {
                                 />
                             </Grid>
                             {
-                                // true
-                                this.state.showNewOffer_field
+                                true
+                                // this.state.showNewOffer_field
                                     ? (
                                         <>
                                             <Grid item>
@@ -618,8 +618,8 @@ class index extends Component {
                                     ) : <div />}
 
                             {
-                                // true
-                                this.state.showNewOffer_field
+                                true
+                                // this.state.showNewOffer_field
                                     ? (
                                         this.state.modifyOfferButton ? (
                                             <>
@@ -783,7 +783,7 @@ class index extends Component {
                                                                             id="ModifiedjobType"
                                                                             label="Job type"
                                                                             variant="outlined"
-                                                                            // defaultValue={this.state.viewDetailsData[0].jobCategory}
+                                                                            defaultValue={this.state.selectedJobType1}
                                                                             // onChange={}
                                                                             type="text"
                                                                             fullWidth
@@ -799,7 +799,7 @@ class index extends Component {
                                                                             id="ModifiedjobTitle"
                                                                             label="Job title"
                                                                             variant="outlined"
-                                                                            // defaultValue={this.state.viewDetailsData[0].jobTitle}
+                                                                            defaultValue={this.state.jobTitle1}
                                                                             // onChange={}
                                                                             type="text"
                                                                             fullWidth
@@ -815,7 +815,7 @@ class index extends Component {
                                                                             id="ModifiedstartingSalary"
                                                                             label="Starting Salary"
                                                                             variant="outlined"
-                                                                            // defaultValue={this.state.viewDetailsData[0].startSalary}
+                                                                            defaultValue={this.state.jobSalary1}
                                                                             // onChange={}
                                                                             type="number"
                                                                             fullWidth
@@ -831,7 +831,7 @@ class index extends Component {
                                                                             id="ModifiedstartingDate"
                                                                             // label="Starting Salary"
                                                                             variant="outlined"
-                                                                            // defaultValue={this.state.viewDetailsData[0].startDate}
+                                                                            defaultValue={this.state.startDate1}
                                                                             // onChange={}
                                                                             type="date"
                                                                             helperText="Starting date"
@@ -848,7 +848,7 @@ class index extends Component {
                                                                             id="ModifiedjobDescription"
                                                                             label="Job Description"
                                                                             variant="outlined"
-                                                                            // defaultValue={this.state.viewDetailsData[0].jobDescription}
+                                                                            defaultValue={this.state.jobDescription1}
                                                                             // onChange={}
                                                                             type="date"
                                                                             fullWidth
@@ -866,7 +866,7 @@ class index extends Component {
                                                                             id="ModifiedotherConditions"
                                                                             label="Other Conditions"
                                                                             variant="outlined"
-                                                                            // defaultValue={this.state.viewDetailsData[0].conditions}
+                                                                            defaultValue={this.state.otherConditions1}
                                                                             // onChange={}
                                                                             type="date"
                                                                             fullWidth
@@ -898,105 +898,105 @@ class index extends Component {
                                                                     </Grid>
 
                                                                     <Grid item xs={12}>
-                                                                        <TextField
-                                                                            id="OriginaljobType"
-                                                                            label="Job type"
-                                                                            variant="outlined"
-                                                                            // defaultValue={this.state.viewDetailsData[1].jobCategory}
-                                                                            // onChange={}
-                                                                            type="text"
-                                                                            fullWidth
-                                                                            size='small'
-                                                                            InputProps={{
-                                                                                readOnly: true,
-                                                                            }}
-                                                                        />
-                                                                    </Grid>
+                                                                <TextField
+                                                                    id="OriginaljobType"
+                                                                    label="Job type"
+                                                                    variant="outlined"
+                                                                    defaultValue={this.state.selectedJobType}
+                                                                    // onChange={}
+                                                                    type="text"
+                                                                    fullWidth
+                                                                    size='small'
+                                                                    InputProps={{
+                                                                        readOnly: true,
+                                                                    }}
+                                                                />
+                                                            </Grid>
 
-                                                                    <Grid item xs={12}>
-                                                                        <TextField
-                                                                            id="OriginaljobTitle"
-                                                                            label="Job title"
-                                                                            variant="outlined"
-                                                                            // defaultValue={this.state.viewDetailsData[1].jobTitle}
-                                                                            // onChange={}
-                                                                            type="text"
-                                                                            fullWidth
-                                                                            size='small'
-                                                                            InputProps={{
-                                                                                readOnly: true,
-                                                                            }}
-                                                                        />
-                                                                    </Grid>
+                                                            <Grid item xs={12}>
+                                                                <TextField
+                                                                    id="OriginaljobTitle"
+                                                                    label="Job title"
+                                                                    variant="outlined"
+                                                                    defaultValue={this.state.jobTitle}
+                                                                    // onChange={}
+                                                                    type="text"
+                                                                    fullWidth
+                                                                    size='small'
+                                                                    InputProps={{
+                                                                        readOnly: true,
+                                                                    }}
+                                                                />
+                                                            </Grid>
 
-                                                                    <Grid item xs={12}>
-                                                                        <TextField
-                                                                            id="OriginalstartingSalary"
-                                                                            label="Starting Salary"
-                                                                            variant="outlined"
-                                                                            // defaultValue={this.state.viewDetailsData[1].startSalary}
-                                                                            // onChange={}
-                                                                            type="number"
-                                                                            fullWidth
-                                                                            size='small'
-                                                                            InputProps={{
-                                                                                readOnly: true,
-                                                                            }}
-                                                                        />
-                                                                    </Grid>
+                                                            <Grid item xs={12}>
+                                                                <TextField
+                                                                    id="OriginalstartingSalary"
+                                                                    label="Starting Salary"
+                                                                    variant="outlined"
+                                                                    defaultValue={this.state.jobSalary}
+                                                                    // onChange={}
+                                                                    type="number"
+                                                                    fullWidth
+                                                                    size='small'
+                                                                    InputProps={{
+                                                                        readOnly: true,
+                                                                    }}
+                                                                />
+                                                            </Grid>
 
-                                                                    <Grid item xs={12}>
-                                                                        <TextField
-                                                                            id="OriginalstartingDate"
-                                                                            // label="Starting Salary"
-                                                                            variant="outlined"
-                                                                            // defaultValue={this.state.viewDetailsData[1].startDate}
-                                                                            // onChange={}
-                                                                            type="date"
-                                                                            helperText="Starting date"
-                                                                            fullWidth
-                                                                            size='small'
-                                                                            InputProps={{
-                                                                                readOnly: true,
-                                                                            }}
-                                                                        />
-                                                                    </Grid>
+                                                            <Grid item xs={12}>
+                                                                <TextField
+                                                                    id="OriginalstartingDate"
+                                                                    // label="Starting Salary"
+                                                                    variant="outlined"
+                                                                    defaultValue={this.state.startDate}
+                                                                    // onChange={}
+                                                                    type="date"
+                                                                    helperText="Starting date"
+                                                                    fullWidth
+                                                                    size='small'
+                                                                    InputProps={{
+                                                                        readOnly: true,
+                                                                    }}
+                                                                />
+                                                            </Grid>
 
-                                                                    <Grid item xs={12}>
-                                                                        <TextField
-                                                                            id="OriginaljobDescription"
-                                                                            label="Job Description"
-                                                                            variant="outlined"
-                                                                            // defaultValue={this.state.viewDetailsData[1].jobDescription}
-                                                                            // onChange={}
-                                                                            type="date"
-                                                                            fullWidth
-                                                                            multiline
-                                                                            rows={3}
-                                                                            size='small'
-                                                                            InputProps={{
-                                                                                readOnly: true,
-                                                                            }}
-                                                                        />
-                                                                    </Grid>
+                                                            <Grid item xs={12}>
+                                                                <TextField
+                                                                    id="OriginaljobDescription"
+                                                                    label="Job Description"
+                                                                    variant="outlined"
+                                                                    defaultValue={this.state.jobDescription}
+                                                                    // onChange={}
+                                                                    type="date"
+                                                                    fullWidth
+                                                                    multiline
+                                                                    rows={3}
+                                                                    size='small'
+                                                                    InputProps={{
+                                                                        readOnly: true,
+                                                                    }}
+                                                                />
+                                                            </Grid>
 
-                                                                    <Grid item xs={12}>
-                                                                        <TextField
-                                                                            id="OriginalotherConditions"
-                                                                            label="Other Conditions"
-                                                                            variant="outlined"
-                                                                            // defaultValue={this.state.viewDetailsData[1].conditions}
-                                                                            // onChange={}
-                                                                            type="date"
-                                                                            fullWidth
-                                                                            multiline
-                                                                            rows={3}
-                                                                            size='small'
-                                                                            InputProps={{
-                                                                                readOnly: true,
-                                                                            }}
-                                                                        />
-                                                                    </Grid>
+                                                            <Grid item xs={12}>
+                                                                <TextField
+                                                                    id="OriginalotherConditions"
+                                                                    label="Other Conditions"
+                                                                    variant="outlined"
+                                                                    defaultValue={this.state.otherConditions}
+                                                                    // onChange={}
+                                                                    type="date"
+                                                                    fullWidth
+                                                                    multiline
+                                                                    rows={3}
+                                                                    size='small'
+                                                                    InputProps={{
+                                                                        readOnly: true,
+                                                                    }}
+                                                                />
+                                                            </Grid>
 
                                                                 </Grid>
                                                             </Paper>
@@ -1030,7 +1030,7 @@ class index extends Component {
                                                                     id="OriginaljobType"
                                                                     label="Job type"
                                                                     variant="outlined"
-                                                                    defaultValue={this.state.viewDetailsData['jobCategory']}
+                                                                    defaultValue={this.state.selectedJobType}
                                                                     // onChange={}
                                                                     type="text"
                                                                     fullWidth
@@ -1046,7 +1046,7 @@ class index extends Component {
                                                                     id="OriginaljobTitle"
                                                                     label="Job title"
                                                                     variant="outlined"
-                                                                    defaultValue={this.state.viewDetailsData['jobTitle']}
+                                                                    defaultValue={this.state.jobTitle}
                                                                     // onChange={}
                                                                     type="text"
                                                                     fullWidth
@@ -1062,7 +1062,7 @@ class index extends Component {
                                                                     id="OriginalstartingSalary"
                                                                     label="Starting Salary"
                                                                     variant="outlined"
-                                                                    defaultValue={this.state.viewDetailsData['startSalary']}
+                                                                    defaultValue={this.state.jobSalary}
                                                                     // onChange={}
                                                                     type="number"
                                                                     fullWidth
@@ -1078,7 +1078,7 @@ class index extends Component {
                                                                     id="OriginalstartingDate"
                                                                     // label="Starting Salary"
                                                                     variant="outlined"
-                                                                    defaultValue={this.state.viewDetailsData['startDate']}
+                                                                    defaultValue={this.state.startDate}
                                                                     // onChange={}
                                                                     type="date"
                                                                     helperText="Starting date"
@@ -1095,7 +1095,7 @@ class index extends Component {
                                                                     id="OriginaljobDescription"
                                                                     label="Job Description"
                                                                     variant="outlined"
-                                                                    defaultValue={this.state.viewDetailsData['jobDescription']}
+                                                                    defaultValue={this.state.jobDescription}
                                                                     // onChange={}
                                                                     type="date"
                                                                     fullWidth
@@ -1113,7 +1113,7 @@ class index extends Component {
                                                                     id="OriginalotherConditions"
                                                                     label="Other Conditions"
                                                                     variant="outlined"
-                                                                    defaultValue={this.state.viewDetailsData['conditions']}
+                                                                    defaultValue={this.state.otherConditions}
                                                                     // onChange={}
                                                                     type="date"
                                                                     fullWidth
