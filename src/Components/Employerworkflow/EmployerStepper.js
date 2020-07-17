@@ -23,12 +23,15 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
+import { Paper } from "@material-ui/core";
+import SettingsBackupRestoreIcon from "@material-ui/icons/SettingsBackupRestore";
+
 const useQontoStepIconStyles = makeStyles({
   root: {
-    color: '#eaeaf0',
-    display: 'flex',
-    height: 22,
-    alignItems: 'center',
+    // color: '#eaeaf0',
+    // display: 'flex',
+    // height: 22,
+    // alignItems: 'center',
     width:"100%"
   },
   active: {
@@ -44,6 +47,9 @@ const useQontoStepIconStyles = makeStyles({
     color: '#784af4',
     zIndex: 1,
     fontSize: 18,
+  },
+  title: {
+    flexGrow: 1,
   },
 });
 
@@ -191,6 +197,8 @@ export default function EmployerStepper(props) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
+  const [Approval, setApproval] = React.useState(false);
+
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -202,6 +210,27 @@ export default function EmployerStepper(props) {
 
   const handleReset = () => {
     setActiveStep(0);
+  };
+  const requestconfirmation = async () => {
+    let headers = {
+      headers: {
+        Authorization: Token,
+      },
+    };
+    //  let bodyFormData = new FormData();
+    await axios
+      .post(
+        "http://3.22.17.212:8000/api/v1/codes/approval/new-code",
+        "",
+
+        headers
+      )
+      .then((response) => {
+        console.log(response);
+        if (response.status === 200) {
+          setApproval(true);
+        }
+      });
   };
   const logout = async () => {
     let headers = {
@@ -246,14 +275,83 @@ export default function EmployerStepper(props) {
      
       <div>
         {activeStep === steps.length ? (
-          <div>
-            <Typography className={classes.instructions}>
-              All steps completed - you&apos;re finished
-            </Typography>
-            <Button onClick={handleReset} className={classes.button}>
-              Reset
-            </Button>
-          </div>
+          <Grid spacing={3} container direction="column">
+          <Grid item xs={12}>
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="center"
+            >
+              <Grid item>
+                <Button
+                  size="medium"
+                  variant="contained"
+                  color="primary"
+                  disabled={activeStep === 0}
+                  onClick={handleBack}
+                  className={classes.button}
+                >
+                  <>
+                    <ArrowBackIcon />
+                    Previous
+                  </>
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  size="medium"
+                  onClick={handleReset}
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                >
+                  <SettingsBackupRestoreIcon />
+                  Reset
+                </Button>{" "}
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            spacing={3}
+            direction="column"
+            justify="center"
+            align="center"
+          >
+            <Grid item xs={12}>
+              <Paper elevation={3} direction="column">
+                <Box
+                  p={3}
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent="center"
+                  alignItems="center"
+                  style={{ height: "50vh" }}
+                >
+                  <Grid container spacing={2} direction="column">
+                    <Typography justify="center" align="center">
+                      By submitting for approval you acknowlege that all
+                      the information provided by you is authentic and
+                      can be verified by our team.
+                    </Typography>
+                    <br />
+                    <Button
+                      // disabled={allData}
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        requestconfirmation();
+                      }}
+                    >
+                      Submit for approval
+                    </Button>
+                  </Grid>
+                </Box>
+              </Paper>
+            </Grid>
+          </Grid>
+        </Grid>
         ) : (
           <div>
           
