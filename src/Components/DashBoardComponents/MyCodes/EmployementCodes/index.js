@@ -48,10 +48,6 @@ export default function Indexemployment() {
   const [employerlist,setEmployerlist]=React.useState([])
   const [comments,setcomments]=React.useState([])
 
-  // constructor(props) {
-  //     super(props);
-  //     this.generateNewEmployementCodeButton = this.generateNewEmployementCodeButton.bind(this);
-  //   }
   const Onboardingdata = async () => {
     await Axios.get("http://3.22.17.212:8000/api/v1/employers/oboffers", {
       headers: {

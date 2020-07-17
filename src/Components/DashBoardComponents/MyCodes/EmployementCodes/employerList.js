@@ -774,7 +774,7 @@ choiceSurvey}).then(()=>{})
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map((row, index) => (
+              {props.data.map((row, index) => (
                 <TableRow key={row.id}>
                   <TableCell align="center">
                     {row.company.companyName}
