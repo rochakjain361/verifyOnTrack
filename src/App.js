@@ -28,7 +28,7 @@ import SuccessSnackbar from './sucesssnackbar';
 import {createStore} from 'redux';
 import reducer from './Reducer/reducer'
 // const store = createStore(reducer);
-
+import EmployerStepper from './Components/Employerworkflow/EmployerStepper'
 class App extends React.PureComponent {
  
   render() {
@@ -51,6 +51,7 @@ class App extends React.PureComponent {
               <Route exact path='/signIn' component={signIn} />
               <Route exact path='/dash' component={dash} />
               <Route exact path='/workflow' component={Stepper} />
+              <Route exact path="/employerworkflow" component={EmployerStepper}/>
 
               {/* Employee PAGE PATHS */}
               <Route exact path='/Homepage' component={dash} />
@@ -74,8 +75,8 @@ class App extends React.PureComponent {
               <Route exact path='/employerMessages' component={EmployerDash} />
               <Route exact path='/employerAccessCodes' component={EmployerDash} />
               <Route exact path='/employerEmployementCodes' component={EmployerDash} />
-              <Route exact path='/employerInbox' component={EmployerDash} />
-              <Route exact path='/employerOutbox' component={EmployerDash} />
+              <Route exact path='/employerInbox' component={EmployerDash}/>
+              <Route exact path='/employerOutbox' component={EmployerDash}/>
               <Route exact path='/employerEmployment' component={EmployerDash} />
 
               {/* ADMIN PAGE PATHS */}
