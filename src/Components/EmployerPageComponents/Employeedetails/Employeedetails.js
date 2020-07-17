@@ -43,6 +43,8 @@ export class Employeedetails extends Component {
       fax: "",
       logo: null,
       category: "",
+     
+
       updateDialogOpen: false,
       addDialogOpen: false,
     };
@@ -51,7 +53,7 @@ export class Employeedetails extends Component {
     let bodyFormData = new FormData();
     bodyFormData.append("phone", this.state.phone);
     bodyFormData.append("email", this.state.email);
-    if (this.state.logo !== "") {
+    if (this.state.logo !== null) {
       bodyFormData.append("logo", this.state.logo);
     }
     bodyFormData.append("fax", this.state.fax);
@@ -215,6 +217,146 @@ export class Employeedetails extends Component {
             onClick={() =>
               this.setState({
                 addDialogOpen: false,
+              })
+            }
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }
+  updatedialog() {
+    return (
+      <Dialog
+        open={this.state.updateDialogOpen}
+        onClose={() => this.setState({ updateDialogOpen: false })}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title" justify="center">
+          Update company details
+        </DialogTitle>
+        <DialogContent>
+          {/* <DialogContentText>
+                      Enter the details of your profile to be added
+                </DialogContentText> */}
+
+          <Grid
+            container
+            justify="flex-start"
+            direction="row"
+            alignItems="center"
+            spacing={3}
+          >
+            <Grid item fullWidth xs={12}>
+              <TextField
+                id="firstName"
+                label="Phone"
+                value={this.state.firstname}
+                defaultValue={this.state.result.phone}
+                onChange={(event) => {
+                  // this.capitalizefirstname(event.target.value)
+                  this.setState({ phone: event.target.value });
+                  // console.log(this.state.firstname);
+                }}
+                type="text"
+                fullWidth
+              />
+            </Grid>
+
+            <Grid item fullWidth xs={12}>
+              <TextField
+                id="middleName"
+                label="Email"
+                value={this.state.middlename}
+                defaultValue={this.state.result.email}
+                onChange={(event) => {
+                  // this.capitalizemiddlename(event.target.value)
+                  this.setState({ email: event.target.value });
+                  // console.log(this.state.middlename);
+                }}
+                type="text"
+                fullWidth
+              />
+            </Grid>
+
+            <Grid item fullWidth xs={12}>
+              <TextField
+                id="surname"
+                label="Fax"
+                value={this.state.lastname}
+                defaultValue={this.state.result.fax}
+                onChange={(event) => {
+                  // this.capitalizelastname(event.target.value)
+                  this.setState({ fax: event.target.value });
+                  // console.log(this.state.lastname);
+                }}
+                type="text"
+                fullWidth
+              />
+            </Grid>
+
+            <Grid item fullWidth xs={12}>
+              <TextField
+                id="chooseFile"
+                label="Logo"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <CloudUploadIcon />
+                    </InputAdornment>
+                  ),
+                }}
+                onChange={(event) => {
+                  this.setState({ logo: event.target.files[0] });
+                }}
+                type="file"
+                fullWidth
+              />
+            </Grid>
+
+            <Grid item fullWidth xs={12}>
+              <FormControl fullWidth>
+                <InputLabel id="gender">Cateogry</InputLabel>
+                <Select
+                  label="gender"
+                  id="gender"
+                  // value={age}
+                  defaultValue={this.state.result.category}
+                  onChange={(event) => {
+                    this.setState({ category: event.target.value });
+                    console.log(this.state.gender);
+                  }}
+                >
+                  {this.state.categories.map((cat) => (
+                    <MenuItem value={cat.id}>{cat.positionCategory}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              this.setState(
+                {
+                  updateDialogOpen: false,
+                },
+                this.postprofile
+              );
+            }}
+          >
+            update
+          </Button>
+          <Button
+            color="secondary"
+            variant="contained"
+            onClick={() =>
+              this.setState({
+                updateDialogOpen: false,
               })
             }
           >
@@ -404,13 +546,11 @@ export class Employeedetails extends Component {
                         onClick={() =>
                           this.setState({
                             updateDialogOpen: true,
-                            // selectedIndex: index,
-                            // updatedlastname: result[index].surname,
-                            // updatedfirstname: result[index].firstname,
-                            // updatedMiddlename: result[index].middlename,
-                            // updatedDob: result[index].dob,
-                            updateresponse: "",
-                            file: "",
+                           phone:this.state.result.phone,
+                           email:this.state.result.email,
+                           fax:this.state.result.fax,
+                           category:this.state.result.category,
+                          
 
                             // add the updatedstate elements here after passing the token and adding data
                           })
@@ -425,6 +565,7 @@ export class Employeedetails extends Component {
             </TableContainer>
           </div>
         )}
+        {this.updatedialog()}
         {this.addDialog()}
       </div>
     );
