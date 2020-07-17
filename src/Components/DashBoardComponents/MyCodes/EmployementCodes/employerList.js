@@ -37,7 +37,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { get, post, update } from "../../../../API";
+import { get, post, update, put } from "../../../../API";
 import { AddComment } from "@material-ui/icons";
 function EmployerList(props) {
   const [data] = React.useState(props.data);
@@ -63,6 +63,7 @@ function EmployerList(props) {
     employer: "",
     comment: "",
   });
+  const [offboardid,setoffboardid]=React.useState();
   const [employmentupdate, setEmploymentupdate] = React.useState({
     jobProfile: "",
     jobCategory: "",
@@ -78,6 +79,102 @@ function EmployerList(props) {
     //   endDate: "",
     // },
   });
+  const [confirmterminationdailog,setconfirmTerminationdialg]=React.useState(false)
+  const confirmterminationapi=async()=>{
+await put("http://3.22.17.212:8000/8000/api/v1/employers/confirmTermination/"+offboardid,Token,{ ratingSurvey,
+choiceSurvey}).then(()=>{})
+  }
+  const confirmtermination = () => {
+    return (
+      <div>
+        <Dialog
+          fullWidth={"sm"}
+          maxWidth={"sm"}
+          open={confirmterminationdailog}
+          onClose={() => {
+            setconfirmTerminationdialg(false)
+          }}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title" align="center">
+            Confirm Termination
+          </DialogTitle>
+          <DialogContent>
+            <Grid
+            container
+            align="flex-start"
+            justify="center"
+            direction="row"
+            spacing={2}>
+            <Grid item xs={12}>
+                  Do you want to rate your employer?
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      setViewrating(true);
+                    }}
+                  >
+                    Yes
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      setViewrating(false);
+                    }}
+                  >
+                    No
+                  </Button>
+                
+                    {viewrating ? <Ratingdialog /> : null}
+                  </Grid>{" "}
+                  {/* <DialogContentText align="center"> */}
+                  <Grid item xs={12}>
+                  Would you like to fill this survey about your employer?
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      setViewsurvey(true);
+                    }}
+                  >
+                    Yes
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      setViewsurvey(false);
+                    }}
+                  >
+                    No
+                  </Button>
+                  {/* </DialogContentText> */}
+                  {/* </DialogContentText> */}
+                  
+                    {viewsurvey ? <Survey /> : null}
+                  </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+          <Button
+              onClick={() => {
+               confirmterminationapi()
+              }}
+              color="primary"
+            >
+           Confirm termination
+            </Button>
+            <Button
+              onClick={() => {
+                setconfirmTerminationdialg(false);
+              }}
+              color="primary"
+            >
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
+  };
   useEffect(() => {
     getTerminationapi();
   }, []);
@@ -102,15 +199,19 @@ function EmployerList(props) {
       </Grid>
     );
   };
-  const terminateemployee=async ()=>{
-     
+  const terminateemployee = async () => {
     // await setRatingsurvey({"ratingSurvey":ratingentry})
     // await setChoicesurvey({"choiceSurvey":choiceentry})
-    await post("http://3.22.17.212:8000/api/v1/employers/newoffboard",Token,{offboard,ratingSurvey,choiceSurvey}).then((response)=>{
-      console.log(response)
-      props.refresh()
-    })
-  }
+    setTermination(false);
+    await post("http://3.22.17.212:8000/api/v1/employers/newoffboard", Token, {
+      offboard,
+      ratingSurvey,
+      choiceSurvey,
+    }).then((response) => {
+      console.log(response);
+      props.refresh();
+    });
+  };
   const jobupdation = async () => {
     setUpdationdialog(false);
     await update(
@@ -134,18 +235,18 @@ function EmployerList(props) {
       comentdata
     ).then((response) => {});
   };
-  const confirmupdates = async (id) => {
-    await post(
-      "http://3.22.17.212:8000/api/v1/employers/confirmEmpUpdate/" + id,
+  const confirmupdates = async (updateid) => {
+    await put(
+      "http://3.22.17.212:8000/api/v1/employers/confirmEmpUpdate/"+updateid,
       Token,
       ""
     ).then((response) => {
       props.refresh();
     });
   };
-  const rejectupdates = async (id) => {
-    await post(
-      "http://3.22.17.212:8000/api/v1/employers/confirmEmpVerification/" + id,
+  const rejectupdates = async (updateid) => {
+    await put(
+      "http://3.22.17.212:8000/api/v1/employers/rejectEmpUpdate/"+updateid,
       Token,
       ""
     ).then((response) => {
@@ -482,12 +583,12 @@ function EmployerList(props) {
               <DialogContent>
                 <Grid
                   container
-                  // align="center"
+                  align="flex-start"
                   justify="center"
                   direction="row"
                   spacing={2}
                 >
-                  <Grid item xs={8}>
+                  <Grid item xs={12}>
                     <FormControl fullWidth required>
                       <InputLabel id="demo-simple-select-required-label">
                         Offboarddata Type
@@ -496,7 +597,12 @@ function EmployerList(props) {
                         labelId="demo-simple-select-required-label"
                         id="demo-simple-select-required"
                         value={offboard.offboardType}
-                        onChange={(event) => { setOffboard({...offboard,"offboardType":event.target.value}) }}
+                        onChange={(event) => {
+                          setOffboard({
+                            ...offboard,
+                            offboardType: event.target.value,
+                          });
+                        }}
                         // className={classes.selectEmpty}
                       >
                         {offboardingTypes.map((type) => (
@@ -507,7 +613,7 @@ function EmployerList(props) {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={8}>
+                  <Grid item xs={12}>
                     <FormControl fullWidth required>
                       <InputLabel id="demo-simple-select-required-label">
                         Leaving Reason
@@ -516,7 +622,12 @@ function EmployerList(props) {
                         labelId="demo-simple-select-required-label"
                         id="demo-simple-select-required"
                         value={offboard.leavingReason}
-                        onChange={(event) => { setOffboard({...offboard,"leavingReason":event.target.value}) }}
+                        onChange={(event) => {
+                          setOffboard({
+                            ...offboard,
+                            leavingReason: event.target.value,
+                          });
+                        }}
                         // className={classes.selectEmpty}
                       >
                         {leavingReason.map((reason) => (
@@ -525,7 +636,7 @@ function EmployerList(props) {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={8}>
+                  <Grid item xs={12}>
                     <TextField
                       autoFocus
                       margin="dense"
@@ -537,10 +648,15 @@ function EmployerList(props) {
                       variant="outlined"
                       rows={4}
                       value={offboard.description}
-                      onChange={(event) => { setOffboard({...offboard,"description":event.target.value}) }}
+                      onChange={(event) => {
+                        setOffboard({
+                          ...offboard,
+                          description: event.target.value,
+                        });
+                      }}
                     />
                   </Grid>
-                  <Grid item xs={8}>
+                  <Grid item xs={12}>
                     <TextField
                       fullWidth
                       name="EndDate"
@@ -548,54 +664,63 @@ function EmployerList(props) {
                       InputLabelProps={{ shrink: true, required: true }}
                       type="date"
                       value={offboard.endDate}
-                      onChange={(event)=>{setOffboard({...offboard,"endDate":event.target.value})}}
+                      onChange={(event) => {
+                        setOffboard({
+                          ...offboard,
+                          endDate: event.target.value,
+                        });
+                      }}
                     />
                   </Grid>
-                  <DialogContentText align="center">
-                    Do you want to rate your employer?
-                    <Button
-                      size="small"
-                      onClick={() => {
-                        setViewrating(true);
-                      }}
-                    >
-                      Yes
-                    </Button>
-                    <Button
-                      size="small"
-                      onClick={() => {
-                        setViewrating(false);
-                      }}
-                    >
-                      No
-                    </Button>
-                  </DialogContentText>
-                  <Grid item xs={8}>
+                  {/* <DialogContentText align="center"> */}
+                  <Grid item xs={12}>
+                  Do you want to rate your employer?
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      setViewrating(true);
+                    }}
+                  >
+                    Yes
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      setViewrating(false);
+                    }}
+                  >
+                    No
+                  </Button>
+                
                     {viewrating ? <Ratingdialog /> : null}
                   </Grid>{" "}
-                  <DialogContentText align="center">
-                    Would you like to fill this survey about your employer?
-                    <Button
-                      size="small"
-                      onClick={() => {
-                        setViewsurvey(true);
-                      }}
-                    >
-                      Yes
-                    </Button>
-                    <Button
-                      size="small"
-                      onClick={() => {
-                        setViewsurvey(false);
-                      }}
-                    >
-                      No
-                    </Button>
-                  </DialogContentText>
-                  <Grid item xs={8}>
+                  {/* <DialogContentText align="center"> */}
+                  <Grid item xs={12}>
+                  Would you like to fill this survey about your employer?
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      setViewsurvey(true);
+                    }}
+                  >
+                    Yes
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      setViewsurvey(false);
+                    }}
+                  >
+                    No
+                  </Button>
+                  {/* </DialogContentText> */}
+                  {/* </DialogContentText> */}
+                  
                     {viewsurvey ? <Survey /> : null}
-                  </Grid>{" "}
-                </Grid>
+                  </Grid>
+                  </Grid>
+              
+
               </DialogContent>
               <DialogActions>
                 <Button
@@ -606,7 +731,12 @@ function EmployerList(props) {
                 >
                   Cancel
                 </Button>
-                <Button onClick={() => {terminateemployee()}} color="primary">
+                <Button
+                  onClick={() => {
+                    terminateemployee();
+                  }}
+                  color="primary"
+                >
                   Terminate
                 </Button>
               </DialogActions>
@@ -670,7 +800,10 @@ function EmployerList(props) {
                         variant="outlined"
                         onClick={() => {
                           setTermination(true);
-                          setOffboard({...offboard,"jobProfile":row.jobDetails.id})
+                          setOffboard({
+                            ...offboard,
+                            jobProfile: row.jobDetails.id,
+                          });
                         }}
                       >
                         Termination
@@ -681,7 +814,10 @@ function EmployerList(props) {
                         size="small"
                         color="primary"
                         variant="outlined"
-                        onClick={() => {}}
+                        onClick={() => {
+                          setconfirmTerminationdialg(true)
+                          setoffboardid(row.offboard.id)
+                        }}
                       >
                         Confirm Termination
                       </Button>
@@ -706,28 +842,28 @@ function EmployerList(props) {
                       </Button>
                     ) : null}
                     {row.showConfirmRejectUpdates ? (
-                      <>
+                      <Grid container justify="space-evenly">
                         <Button
                           size="small"
                           color="primary"
                           variant="outlined"
                           onClick={() => {
-                            confirmupdates(row.jobDetails.id);
+                            confirmupdates(row.empUpdate.id);
                           }}
                         >
                           Confirm updates
                         </Button>
                         <Button
                           size="small"
-                          color="primary"
+                          color="secondary"
                           variant="outlined"
                           onClick={() => {
-                            rejectupdates(row.jobDetails.id);
+                            rejectupdates(row.empUpdate.id);
                           }}
                         >
                           Reject updates
                         </Button>
-                      </>
+                      </Grid>
                     ) : null}
                   </TableCell>
                   <TableCell align="center">
@@ -754,6 +890,7 @@ function EmployerList(props) {
         {Terminationdialouge()}
         {Updationdialouge()}
         {AddComment()}
+        {confirmtermination()}
       </Grid>
     </div>
   );
