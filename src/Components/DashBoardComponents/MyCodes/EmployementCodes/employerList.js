@@ -37,7 +37,8 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { get, post, update } from "../../../../API";
+import { get, post, update, put } from "../../../../API";
+import { AddComment } from "@material-ui/icons";
 function EmployerList(props) {
   const [data] = React.useState(props.data);
   const [Token] = React.useState(localStorage.getItem("Token"));
@@ -50,23 +51,130 @@ function EmployerList(props) {
   const [Loading, setLoading] = React.useState(true);
   const [viewrating, setViewrating] = React.useState(false);
   const [viewsurvey, setViewsurvey] = React.useState(false);
-  const [ratingentry, setRatingentry] = React.useState([]);
-  const [choiceentry, setChoiceentry] = React.useState([]);
+  const [ratingSurvey, setRatingentry] = React.useState({});
+  const [choiceSurvey, setChoiceentry] = React.useState([]);
+  // const[ratingsurvey,setRatingsurvey]=React.useState({})
+  // const[choiceSurvey,setChoicesurvey]=React.useState({})
   const [updationdialouge, setUpdationdialog] = React.useState(false);
   const [Jobcategory, setJobcategory] = React.useState([]);
-  const [employmentupdate,setEmploymentupdate]=React.useState({jobProfile : "",
-  jobCategory: "",
-  jobTitle : "",
-  jobDescription : ""})
-  const [offboarddata, setOffboarddata] = React.useState({
-    offboard: {
-      jobProfile: "",
-      offboardType: "",
-      leavingReason: "",
-      description: "",
-      endDate: "",
-    },
+  const [commentdialog, setcommentdialog] = React.useState(false);
+  // const [currentid,setcurrentid]=React.useState()
+  const [comentdata, setCommentdata] = React.useState({
+    employer: "",
+    comment: "",
   });
+  const [offboardid,setoffboardid]=React.useState();
+  const [employmentupdate, setEmploymentupdate] = React.useState({
+    jobProfile: "",
+    jobCategory: "",
+    jobTitle: "",
+    jobDescription: "",
+  });
+  const [offboard, setOffboard] = React.useState({
+    // offboard: {
+    //   jobProfile: "",
+    //   offboardType: "",
+    //   leavingReason: "",
+    //   description: "",
+    //   endDate: "",
+    // },
+  });
+  const [confirmterminationdailog,setconfirmTerminationdialg]=React.useState(false)
+  const confirmterminationapi=async()=>{
+await put("http://3.22.17.212:8000/8000/api/v1/employers/confirmTermination/"+offboardid,Token,{ ratingSurvey,
+choiceSurvey}).then(()=>{})
+  }
+  const confirmtermination = () => {
+    return (
+      <div>
+        <Dialog
+          fullWidth={"sm"}
+          maxWidth={"sm"}
+          open={confirmterminationdailog}
+          onClose={() => {
+            setconfirmTerminationdialg(false)
+          }}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title" align="center">
+            Confirm Termination
+          </DialogTitle>
+          <DialogContent>
+            <Grid
+            container
+            align="flex-start"
+            justify="center"
+            direction="row"
+            spacing={2}>
+            <Grid item xs={12}>
+                  Do you want to rate your employer?
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      setViewrating(true);
+                    }}
+                  >
+                    Yes
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      setViewrating(false);
+                    }}
+                  >
+                    No
+                  </Button>
+                
+                    {viewrating ? <Ratingdialog /> : null}
+                  </Grid>{" "}
+                  {/* <DialogContentText align="center"> */}
+                  <Grid item xs={12}>
+                  Would you like to fill this survey about your employer?
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      setViewsurvey(true);
+                    }}
+                  >
+                    Yes
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      setViewsurvey(false);
+                    }}
+                  >
+                    No
+                  </Button>
+                  {/* </DialogContentText> */}
+                  {/* </DialogContentText> */}
+                  
+                    {viewsurvey ? <Survey /> : null}
+                  </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+          <Button
+              onClick={() => {
+               confirmterminationapi()
+              }}
+              color="primary"
+            >
+           Confirm termination
+            </Button>
+            <Button
+              onClick={() => {
+                setconfirmTerminationdialg(false);
+              }}
+              color="primary"
+            >
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
+  };
   useEffect(() => {
     getTerminationapi();
   }, []);
@@ -91,13 +199,60 @@ function EmployerList(props) {
       </Grid>
     );
   };
-  const jobupdation=async()=>{
+  const terminateemployee = async () => {
+    // await setRatingsurvey({"ratingSurvey":ratingentry})
+    // await setChoicesurvey({"choiceSurvey":choiceentry})
+    setTermination(false);
+    await post("http://3.22.17.212:8000/api/v1/employers/newoffboard", Token, {
+      offboard,
+      ratingSurvey,
+      choiceSurvey,
+    }).then((response) => {
+      console.log(response);
+      props.refresh();
+    });
+  };
+  const jobupdation = async () => {
     setUpdationdialog(false);
-    await update("http://3.22.17.212:8000/api/v1/employers/newEmpUpdate",Token,employmentupdate).then((response)=>{
-
-    })
-
-  }
+    await update(
+      "http://3.22.17.212:8000/api/v1/employers/newEmpUpdate",
+      Token,
+      employmentupdate
+    ).then((response) => {
+      props.refresh();
+      setEmploymentupdate({
+        jobProfile: "",
+        jobCategory: "",
+        jobTitle: "",
+        jobDescription: "",
+      });
+    });
+  };
+  const sendComment = async () => {
+    await post(
+      "http://3.22.17.212:8000/api/v1/employers/post-comments",
+      Token,
+      comentdata
+    ).then((response) => {});
+  };
+  const confirmupdates = async (updateid) => {
+    await put(
+      "http://3.22.17.212:8000/api/v1/employers/confirmEmpUpdate/"+updateid,
+      Token,
+      ""
+    ).then((response) => {
+      props.refresh();
+    });
+  };
+  const rejectupdates = async (updateid) => {
+    await put(
+      "http://3.22.17.212:8000/api/v1/employers/rejectEmpUpdate/"+updateid,
+      Token,
+      ""
+    ).then((response) => {
+      props.refresh();
+    });
+  };
   const getTerminationapi = async () => {
     setLoading(true);
 
@@ -123,7 +278,7 @@ function EmployerList(props) {
         // let newdata={"question":index.id,"answerRating":index.question}
         setRatingentry((prevvalue) => {
           console.log(prevvalue);
-          return { ...prevvalue, ["question" + index.id]: "" };
+          return { ...prevvalue, [index.id.toString()]: "" };
         });
         // setRatingentry({"question":index.id,"answerRating":index.question})
 
@@ -139,7 +294,10 @@ function EmployerList(props) {
       response.data.map((index) => {
         setChoiceentry((prevvalue) => {
           console.log(prevvalue);
-          return { ...prevvalue, ["question" + index.id]: "" };
+          let n = index.id.toString();
+          console.log("typeof", typeof typeof index.id.toString());
+
+          return { ...prevvalue, [index.id.toString()]: "" };
         });
       });
     });
@@ -164,15 +322,15 @@ function EmployerList(props) {
               <Rating
                 // id={}
                 name={question1.id}
-                value={ratingentry["question" + question1.id]}
+                value={ratingSurvey[question1.id]}
                 onChange={(event, newValue) => {
                   console.log("event", event);
                   console.log("newvalue", newValue);
                   // console.log("question.id",{question.id)
-
+                  console.log("typeof", typeof question1.id);
                   setRatingentry({
-                    ...ratingentry,
-                    ["question" + event.currentTarget.name]: newValue,
+                    ...ratingSurvey,
+                    [event.currentTarget.name]: newValue,
                   });
                 }}
               />
@@ -213,7 +371,12 @@ function EmployerList(props) {
                     labelId="demo-simple-select-required-label"
                     id="demo-simple-select-required"
                     value={employmentupdate.jobCategory}
-                    onChange={(event)=>{setEmploymentupdate({...employmentupdate,jobCategory:event.target.value})}}
+                    onChange={(event) => {
+                      setEmploymentupdate({
+                        ...employmentupdate,
+                        jobCategory: event.target.value,
+                      });
+                    }}
                     // className={classes.selectEmpty}
                   >
                     {Jobcategory.map((type) => (
@@ -225,9 +388,21 @@ function EmployerList(props) {
                 </FormControl>
               </Grid>
               <Grid item xs={8}>
-              <TextField id="standard-basic" 
-              value={employmentupdate.jobTitle}
-              label="Jobtitle" fullWidth autoFocus margin="dense" type="text" onChange={(event)=>{setEmploymentupdate({...employmentupdate,jobTitle:event.target.value})}} />
+                <TextField
+                  id="standard-basic"
+                  value={employmentupdate.jobTitle}
+                  label="Jobtitle"
+                  fullWidth
+                  autoFocus
+                  margin="dense"
+                  type="text"
+                  onChange={(event) => {
+                    setEmploymentupdate({
+                      ...employmentupdate,
+                      jobTitle: event.target.value,
+                    });
+                  }}
+                />
               </Grid>
               <Grid item xs={8}>
                 <TextField
@@ -241,26 +416,34 @@ function EmployerList(props) {
                   variant="outlined"
                   rows={4}
                   value={employmentupdate.jobDescription}
-                  onChange={(event) => { setEmploymentupdate({...employmentupdate,jobDescription:event.target.value}) }}
+                  onChange={(event) => {
+                    setEmploymentupdate({
+                      ...employmentupdate,
+                      jobDescription: event.target.value,
+                    });
+                  }}
                 />
               </Grid>
-             
             </Grid>
           </DialogContent>
           <DialogActions>
-                
-                <Button onClick={() => {jobupdation()}} color="primary">
-                  Update
-                </Button>
-                <Button
-                  onClick={() => {
-                    setUpdationdialog(false);
-                  }}
-                  color="primary"
-                >
-                  Cancel
-                </Button>
-              </DialogActions>
+            <Button
+              onClick={() => {
+                jobupdation();
+              }}
+              color="primary"
+            >
+              Update
+            </Button>
+            <Button
+              onClick={() => {
+                setUpdationdialog(false);
+              }}
+              color="primary"
+            >
+              Cancel
+            </Button>
+          </DialogActions>
         </Dialog>
       </div>
     );
@@ -273,15 +456,15 @@ function EmployerList(props) {
             <p>{choice.question}</p>
             <RadioGroup
               row
-              name={choice.id}
+              name={choice.id.toString()}
+              value={choiceSurvey[choice.id]}
               onChange={(event, newValue) => {
                 setChoiceentry({
-                  ...choiceentry,
-                  ["question" + event.currentTarget.name]: event.target.value,
+                  ...choiceSurvey,
+                  [event.currentTarget.name.toString()]: event.target.value,
                 });
               }}
               aria-label="position"
-              value={choiceentry["question" + choice.id]}
               defaultValue="top"
             >
               <FormControlLabel
@@ -310,6 +493,74 @@ function EmployerList(props) {
       </div>
     );
   };
+  const AddComment = () => {
+    return (
+      <div>
+        <Dialog
+          fullWidth={"sm"}
+          maxWidth={"sm"}
+          open={commentdialog}
+          onClose={() => {
+            setcommentdialog(false);
+          }}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title" align="center">
+            Comment
+          </DialogTitle>
+          <DialogContent>
+            <Grid
+              container
+              // align="center"
+              justify="center"
+              direction="row"
+              spacing={2}
+            >
+              <Grid item xs={8}>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="newMessage"
+                  label="comment"
+                  type="text"
+                  fullWidth
+                  multiline
+                  variant="outlined"
+                  rows={4}
+                  value={comentdata.comment}
+                  onChange={(event) => {
+                    setCommentdata({
+                      ...comentdata,
+                      comment: event.target.value,
+                    });
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                setcommentdialog(false);
+                sendComment();
+              }}
+              color="primary"
+            >
+              Add comment
+            </Button>
+            <Button
+              onClick={() => {
+                setcommentdialog(false);
+              }}
+              color="primary"
+            >
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
+  };
   const Terminationdialouge = () => {
     return (
       <div>
@@ -332,12 +583,12 @@ function EmployerList(props) {
               <DialogContent>
                 <Grid
                   container
-                  // align="center"
+                  align="flex-start"
                   justify="center"
                   direction="row"
                   spacing={2}
                 >
-                  <Grid item xs={8}>
+                  <Grid item xs={12}>
                     <FormControl fullWidth required>
                       <InputLabel id="demo-simple-select-required-label">
                         Offboarddata Type
@@ -345,8 +596,13 @@ function EmployerList(props) {
                       <Select
                         labelId="demo-simple-select-required-label"
                         id="demo-simple-select-required"
-                        value={offboardingTypes}
-                        // onChange={}
+                        value={offboard.offboardType}
+                        onChange={(event) => {
+                          setOffboard({
+                            ...offboard,
+                            offboardType: event.target.value,
+                          });
+                        }}
                         // className={classes.selectEmpty}
                       >
                         {offboardingTypes.map((type) => (
@@ -357,7 +613,7 @@ function EmployerList(props) {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={8}>
+                  <Grid item xs={12}>
                     <FormControl fullWidth required>
                       <InputLabel id="demo-simple-select-required-label">
                         Leaving Reason
@@ -365,8 +621,13 @@ function EmployerList(props) {
                       <Select
                         labelId="demo-simple-select-required-label"
                         id="demo-simple-select-required"
-                        value={offboardingTypes}
-                        // onChange={}
+                        value={offboard.leavingReason}
+                        onChange={(event) => {
+                          setOffboard({
+                            ...offboard,
+                            leavingReason: event.target.value,
+                          });
+                        }}
                         // className={classes.selectEmpty}
                       >
                         {leavingReason.map((reason) => (
@@ -375,7 +636,7 @@ function EmployerList(props) {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={8}>
+                  <Grid item xs={12}>
                     <TextField
                       autoFocus
                       margin="dense"
@@ -386,64 +647,80 @@ function EmployerList(props) {
                       multiline
                       variant="outlined"
                       rows={4}
-                      // onChange={(event) => { addSetMessage(event.target.value) }}
+                      value={offboard.description}
+                      onChange={(event) => {
+                        setOffboard({
+                          ...offboard,
+                          description: event.target.value,
+                        });
+                      }}
                     />
                   </Grid>
-                  <Grid item xs={8}>
+                  <Grid item xs={12}>
                     <TextField
                       fullWidth
-                      name="someDate"
-                      label="Some Date"
+                      name="EndDate"
+                      label="EndDate"
                       InputLabelProps={{ shrink: true, required: true }}
                       type="date"
-                      // defaultValue={values.someDate}
+                      value={offboard.endDate}
+                      onChange={(event) => {
+                        setOffboard({
+                          ...offboard,
+                          endDate: event.target.value,
+                        });
+                      }}
                     />
                   </Grid>
-                  <DialogContentText align="center">
-                    Do you want to rate your employer?
-                    <Button
-                      size="small"
-                      onClick={() => {
-                        setViewrating(true);
-                      }}
-                    >
-                      Yes
-                    </Button>
-                    <Button
-                      size="small"
-                      onClick={() => {
-                        setViewrating(false);
-                      }}
-                    >
-                      No
-                    </Button>
-                  </DialogContentText>
-                  <Grid item xs={8}>
+                  {/* <DialogContentText align="center"> */}
+                  <Grid item xs={12}>
+                  Do you want to rate your employer?
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      setViewrating(true);
+                    }}
+                  >
+                    Yes
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      setViewrating(false);
+                    }}
+                  >
+                    No
+                  </Button>
+                
                     {viewrating ? <Ratingdialog /> : null}
                   </Grid>{" "}
-                  <DialogContentText align="center">
-                    Would you like to fill this survey about your employer?
-                    <Button
-                      size="small"
-                      onClick={() => {
-                        setViewsurvey(true);
-                      }}
-                    >
-                      Yes
-                    </Button>
-                    <Button
-                      size="small"
-                      onClick={() => {
-                        setViewsurvey(false);
-                      }}
-                    >
-                      No
-                    </Button>
-                  </DialogContentText>
-                  <Grid item xs={8}>
+                  {/* <DialogContentText align="center"> */}
+                  <Grid item xs={12}>
+                  Would you like to fill this survey about your employer?
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      setViewsurvey(true);
+                    }}
+                  >
+                    Yes
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      setViewsurvey(false);
+                    }}
+                  >
+                    No
+                  </Button>
+                  {/* </DialogContentText> */}
+                  {/* </DialogContentText> */}
+                  
                     {viewsurvey ? <Survey /> : null}
-                  </Grid>{" "}
-                </Grid>
+                  </Grid>
+                  </Grid>
+              
+
               </DialogContent>
               <DialogActions>
                 <Button
@@ -454,7 +731,12 @@ function EmployerList(props) {
                 >
                   Cancel
                 </Button>
-                <Button onClick={() => {}} color="primary">
+                <Button
+                  onClick={() => {
+                    terminateemployee();
+                  }}
+                  color="primary"
+                >
                   Terminate
                 </Button>
               </DialogActions>
@@ -492,10 +774,10 @@ function EmployerList(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map((row, index) => (
+              {props.data.map((row, index) => (
                 <TableRow key={row.id}>
                   <TableCell align="center">
-                    {row.employer.companyName}
+                    {row.company.companyName}
                   </TableCell>
                   <TableCell align="center">
                     {row.jobDetails.startDate}
@@ -518,6 +800,10 @@ function EmployerList(props) {
                         variant="outlined"
                         onClick={() => {
                           setTermination(true);
+                          setOffboard({
+                            ...offboard,
+                            jobProfile: row.jobDetails.id,
+                          });
                         }}
                       >
                         Termination
@@ -528,7 +814,10 @@ function EmployerList(props) {
                         size="small"
                         color="primary"
                         variant="outlined"
-                        onClick={() => {}}
+                        onClick={() => {
+                          setconfirmTerminationdialg(true)
+                          setoffboardid(row.offboard.id)
+                        }}
                       >
                         Confirm Termination
                       </Button>
@@ -541,33 +830,40 @@ function EmployerList(props) {
                         color="primary"
                         variant="outlined"
                         onClick={() => {
-                          console.log("row.jobDetails.id",row.jobDetails.id)
+                          console.log("row.jobDetails.id", row.jobDetails.id);
                           setUpdationdialog(true);
-                          setEmploymentupdate({...employmentupdate,jobProfile:row.jobDetails.id})
+                          setEmploymentupdate({
+                            ...employmentupdate,
+                            jobProfile: row.jobDetails.id,
+                          });
                         }}
                       >
-                        Updation
+                        update
                       </Button>
                     ) : null}
                     {row.showConfirmRejectUpdates ? (
-                      <>
+                      <Grid container justify="space-evenly">
                         <Button
                           size="small"
                           color="primary"
                           variant="outlined"
-                          onClick={() => {}}
+                          onClick={() => {
+                            confirmupdates(row.empUpdate.id);
+                          }}
                         >
                           Confirm updates
                         </Button>
                         <Button
                           size="small"
-                          color="primary"
+                          color="secondary"
                           variant="outlined"
-                          onClick={() => {}}
+                          onClick={() => {
+                            rejectupdates(row.empUpdate.id);
+                          }}
                         >
                           Reject updates
                         </Button>
-                      </>
+                      </Grid>
                     ) : null}
                   </TableCell>
                   <TableCell align="center">
@@ -575,7 +871,13 @@ function EmployerList(props) {
                       size="small"
                       color="primary"
                       variant="outlined"
-                      onClick={() => {}}
+                      onClick={() => {
+                        setcommentdialog(true);
+                        setCommentdata({
+                          ...comentdata,
+                          employer: row.company.employer,
+                        });
+                      }}
                     >
                       Comment
                     </Button>
@@ -587,6 +889,8 @@ function EmployerList(props) {
         </TableContainer>
         {Terminationdialouge()}
         {Updationdialouge()}
+        {AddComment()}
+        {confirmtermination()}
       </Grid>
     </div>
   );

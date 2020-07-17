@@ -68,6 +68,27 @@ export const post=async(url,token,formdata)=>{
 })
 
 }
+export const put=async(url,token,formdata)=>{
+  let headers = {
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+  };
+ return await Axios.put(url,formdata,headers ).then((response) => {
+     res=response;
+      ShowSuccessSnackbar("Added succesfully")
+     return res
+  }).catch((error)=>{
+   
+     res=error
+      // console.log(error.response.status)
+      // if(error.response.status===401){
+          
+      // }
+})
+
+}
 
   
 

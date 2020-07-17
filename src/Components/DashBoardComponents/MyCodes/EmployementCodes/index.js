@@ -46,11 +46,8 @@ export default function Indexemployment() {
   const [Loading, setLoading] = React.useState(true);
   const [OnboardingResponse, setOnboardingResponse] = React.useState([]);
   const [employerlist,setEmployerlist]=React.useState([])
+  const [comments,setcomments]=React.useState([])
 
-  // constructor(props) {
-  //     super(props);
-  //     this.generateNewEmployementCodeButton = this.generateNewEmployementCodeButton.bind(this);
-  //   }
   const Onboardingdata = async () => {
     await Axios.get("http://3.22.17.212:8000/api/v1/employers/oboffers", {
       headers: {
@@ -67,7 +64,15 @@ export default function Indexemployment() {
     await get("http://3.22.17.212:8000/api/v1/employees/employers",Token).then((response)=>{
       console.log("response from employee",response);
       setEmployerlist(response.data)
+      
     })
+  }
+  const getcoments=async()=>{
+await get("http://3.22.17.212:8000/api/v1/employees/"+id+"/comments",Token,"").then((response)=>{
+console.log("response for comments",response);  
+setcomments(response.data)
+setLoading(false);
+})
   }
   const isloading = () => {
     return (
@@ -94,7 +99,8 @@ export default function Indexemployment() {
     
     Onboardingdata();
      employerList();
-    setLoading(false);
+     getcoments()
+    
     
   }, []);
 
@@ -110,7 +116,7 @@ export default function Indexemployment() {
         </Box>
       </Grid>
       <Grid item xs={12}>
-        <TabsEmployment Onboarding={OnboardingResponse} employerdata={employerlist} refresh={Onboardingdata} />
+        <TabsEmployment Onboarding={OnboardingResponse} employerdata={employerlist} refresh={Onboardingdata} employerrefresh={employerList}comments={comments} />
       </Grid>
     </Grid>
   );
