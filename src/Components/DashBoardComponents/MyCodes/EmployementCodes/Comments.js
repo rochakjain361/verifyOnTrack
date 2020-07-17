@@ -35,16 +35,16 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListItemText';
 
-function offboarding(props) {
+function Comments(props) {
   return (
     <div>
         <List>
       {props.data.map((comment) => (<Grid  justify="flex-start">
 
        
-<h1>
-{comment.employer}
-</h1>
+<h3>
+{comment.company_name_field}
+</h3>
 <ListItemText>
 {comment.comment}
 </ListItemText>
@@ -55,4 +55,4 @@ function offboarding(props) {
   );
 }
 
-export default offboarding;
+export default Comments;

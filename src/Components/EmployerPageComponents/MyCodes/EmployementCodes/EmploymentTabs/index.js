@@ -8,7 +8,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import EmploymentVerification from '../EmploymentVerification'
-import Onboarding from '../Onboarding'
+// import Onboarding from '../Onboarding'
 import Offboarding from '../Offboarding'
 import EmployeesList from '../EmployeesList'
 
@@ -89,7 +89,7 @@ export default function FullWidthTabs() {
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <Onboarding/>
+          {/* <Onboarding/> */}
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
           <Offboarding/>
