@@ -290,7 +290,7 @@ class MyProfile extends Component {
 
                 {<Dialog
                   open={this.state.addDialogOpen}
-                  onClose={() => this.setState({ addDialogOpen: true })}
+                  onClose={() => this.setState({ addDialogOpen: false })}
                   aria-labelledby="form-dialog-title"
                 >
                   <DialogTitle id="form-dialog-title" justify="center">

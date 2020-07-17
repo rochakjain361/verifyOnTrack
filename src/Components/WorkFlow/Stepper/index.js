@@ -187,43 +187,43 @@ export default function HorizontalLinearStepper(props) {
   })(StepConnector);
 
   useEffect(() => {
-    if (
-      props.location.state.detail.user.info_provided_field.profile === false
-    ) {
-      setActiveStep(0);
-    } else if (
-      props.location.state.detail.user.info_provided_field.address === false
-    ) {
-      setActiveStep(1);
-    } else if (
-      props.location.state.detail.user.info_provided_field.identity === false
-    ) {
-      setActiveStep(2);
-    }
-     else if (
-      props.location.state.detail.user.info_provided_field.academics === false
-    ) {
-      setActiveStep(3);
-    }
-     else if (
-      props.location.state.detail.user.info_provided_field.phone === false
-    ) {
-      setActiveStep(4);
-    } else if (
-      props.location.state.detail.user.info_provided_field.jobHistory === false
-    ) {
-      setActiveStep(5);
-    } else {
-      if (
-        props.location.state.detail.user.accountStatus ===
-        "Approval In Progress"
-      ) {
-        setApproval(true);
-        setActiveStep(6);
-      } else {
-        setActiveStep(5);
-      }
-    }
+    // if (
+    //   props.location.state.detail.user.info_provided_field.profile === false
+    // ) {
+    //   setActiveStep(0);
+    // } else if (
+    //   props.location.state.detail.user.info_provided_field.address === false
+    // ) {
+    //   setActiveStep(1);
+    // } else if (
+    //   props.location.state.detail.user.info_provided_field.identity === false
+    // ) {
+    //   setActiveStep(2);
+    // }
+    //  else if (
+    //   props.location.state.detail.user.info_provided_field.academics === false
+    // ) {
+    //   setActiveStep(3);
+    // }
+    //  else if (
+    //   props.location.state.detail.user.info_provided_field.phone === false
+    // ) {
+    //   setActiveStep(4);
+    // } else if (
+    //   props.location.state.detail.user.info_provided_field.jobHistory === false
+    // ) {
+    //   setActiveStep(5);
+    // } else {
+    //   if (
+    //     props.location.state.detail.user.accountStatus ===
+    //     "Approval In Progress"
+    //   ) {
+    //     setApproval(true);
+    //     setActiveStep(6);
+    //   } else {
+    //     setActiveStep(5);
+    //   }
+    // }
     //    if(props.location.state.detail.user.info_provided_field.profile === true&&props.location.state.detail.user.info_provided_field.address === true&&Approval===false&&props.location.state.detail.user.info_provided_field.identity === true&&props.location.state.detail.user.info_provided_field.phone === true){
     //     apiCheck()
     //     console.log("apicheck")
