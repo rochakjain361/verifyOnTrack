@@ -28,7 +28,7 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import StarBorder from '@material-ui/icons/StarBorder';
 import Collapse from '@material-ui/core/Collapse';
-
+import axios from "axios";
 import ManageStates from './AdminPageComponents/Settings/AddressSettings/ManageStates'
 import ManageLGAs from './AdminPageComponents/Settings/AddressSettings/ManageLGAs'
 import ManageCities from './AdminPageComponents/Settings/AddressSettings/ManageCities'
@@ -42,9 +42,13 @@ import ManageJobLeavingReasons from './AdminPageComponents/Settings/ManageJobSet
 import AddAdminUser from './AdminPageComponents/Administration/AddAdminUser'
 import AdminAccessCodes from './AdminPageComponents/ManageCodes/AdminAccessCodes'
 import AdminEvaluationCodes from './AdminPageComponents/ManageCodes/AdminEvaluationCodes'
+import ApprovalCodes from './AdminPageComponents/ManageCodes/ApprovalCodes'
+
 
 const drawerWidth = 255;
-
+let token1 = "";
+let token = "" ;
+let id = "";
 const styles = theme => ({
     root: {
         display: 'flex',
@@ -91,319 +95,471 @@ const styles = theme => ({
 });
 
 class AdminLandingPage extends React.PureComponent {
+  state = {
+    open1: false,
+    open2: false,
+    open3: false,
+    open4: false,
+    open5: false,
+    open6: false,
+    open7: false,
+  };
+  async logout() {
+    console.log(token);
+    let headers = {
+      headers: {
+        Authorization: token,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    await axios
+      .post(
+        "http://3.22.17.212:8000/api/v1/accounts/auth/logout",
+        {},
 
-    state = {
-        open1: false,
-        open2: false,
-        open3: false,
-        open4: false,
-        open5: false,
-        open6: false,
-        open7: false
-    }
+        headers
+      )
+      .then((response) => {
+        localStorage.clear();
+        console.log(response);
+      });
 
-    render() {
-        const { classes } = this.props;
+    console.log("////////////////////////////////////////");
+    this.props.history.push({
+      pathname: "/signin",
+    });
+  }
+  async componentDidMount(){
+    
+token = localStorage.getItem("Token");
+id = localStorage.getItem("id");
+  }
 
-        return (
-            <Router>
+  render() {
+    const { classes } = this.props;
 
-                <div className={classes.root}>
-                    <CssBaseline />
-                    <AppBar position="fixed" className={classes.appBar}>
-                        <Toolbar>
+    return (
+      <Router>
+        <div className={classes.root}>
+          <CssBaseline />
+          <AppBar position="fixed" className={classes.appBar}>
+            <Toolbar>
+              <Grid container justify="space-between">
+                <Grid item>
+                  <Typography variant="h6" noWrap>
+                    Verify OnTrack
+                  </Typography>
+                </Grid>
 
-                            <Grid container justify='space-between' >
+                <Grid item>
+                  <Button color="inherit" variant="outlined" onClick={()=>{this.logout()}}>
+                    Logout
+                  </Button>
+                </Grid>
+              </Grid>
+            </Toolbar>
+          </AppBar>
+          <Drawer
+            className={classes.drawer}
+            variant="permanent"
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+          >
+            <Toolbar />
+            <div className={classes.drawerContainer}>
+              <ListItem
+                button
+                onClick={() => this.setState({ open5: !this.state.open5 })}
+              >
+                <ListItemIcon>
+                  <SettingsIcon style={{ color: "white" }} />
+                </ListItemIcon>
+                <ListItemtext
+                  className={classes.textColor}
+                  primary="Settings"
+                />
+                {this.state.open5 ? (
+                  <ExpandLess className={classes.textColor} />
+                ) : (
+                  <ExpandMore className={classes.textColor} />
+                )}
+              </ListItem>
 
-                                <Grid item >
-                                    <Typography variant="h6" noWrap>
-                                        Verify OnTrack
-                    </Typography>
-                                </Grid>
+              <Collapse in={this.state.open5} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <ListItem
+                    button
+                    onClick={() => this.setState({ open6: !this.state.open6 })}
+                    className={classes.nested}
+                  >
+                    <ListItemIcon>
+                      <PinDropIcon style={{ color: "white" }} />
+                    </ListItemIcon>
+                    <ListItemtext
+                      className={classes.textColor}
+                      primary="Address Settings"
+                    />
+                    {this.state.open6 ? (
+                      <ExpandLess className={classes.textColor} />
+                    ) : (
+                      <ExpandMore className={classes.textColor} />
+                    )}
+                  </ListItem>
 
-                                <Grid item >
-                                    <Button color="inherit" variant='outlined'>Logout</Button>
-                                </Grid>
-                            </Grid>
+                  <Collapse
+                    in={this.state.open6}
+                    timeout="auto"
+                    unmountOnExit
+                    className={classes.collapseNested}
+                  >
+                    <List component="div" disablePadding>
+                      <Link to="/manageStates" className={classes.link}>
+                        <ListItem button className={classes.nested}>
+                          <ListItemtext
+                            className={classes.textColor}
+                            primary="Manage States"
+                          />
+                        </ListItem>
+                      </Link>
 
-                        </Toolbar>
-                    </AppBar>
-                    <Drawer
-                        className={classes.drawer}
-                        variant="permanent"
-                        classes={{
-                            paper: classes.drawerPaper,
-                        }}
-                    >
-                        <Toolbar />
-                        <div className={classes.drawerContainer}>
+                      <Link to="/manageLGAs" className={classes.link}>
+                        <ListItem button className={classes.nested}>
+                          <ListItemtext
+                            className={classes.textColor}
+                            primary="Manage LGAs"
+                          />
+                        </ListItem>
+                      </Link>
 
-                            <ListItem button onClick={() => this.setState({ open5: !this.state.open5 })}>
-                                <ListItemIcon>
-                                    <SettingsIcon style={{ color: "white" }} />
-                                </ListItemIcon>
-                                <ListItemtext className={classes.textColor} primary="Settings" />
-                                {this.state.open5 ? <ExpandLess className={classes.textColor} /> : <ExpandMore className={classes.textColor} />}
-                            </ListItem>
+                      <Link to="/manageCities" className={classes.link}>
+                        <ListItem button className={classes.nested}>
+                          <ListItemtext
+                            className={classes.textColor}
+                            primary="Cities"
+                          />
+                        </ListItem>
+                      </Link>
 
-                            <Collapse in={this.state.open5} timeout="auto" unmountOnExit>
+                      <Link to="/manageAddressTypes" className={classes.link}>
+                        <ListItem button className={classes.nested}>
+                          <ListItemtext
+                            className={classes.textColor}
+                            primary="Manage Address Types"
+                          />
+                        </ListItem>
+                      </Link>
 
-                                <List component="div" disablePadding>
+                      <Link to="/manageAddressReasons" className={classes.link}>
+                        <ListItem button className={classes.nested}>
+                          <ListItemtext
+                            className={classes.textColor}
+                            primary="Manage Address Reasons"
+                          />
+                        </ListItem>
+                      </Link>
+                    </List>
+                  </Collapse>
 
-                                    <ListItem button onClick={() => this.setState({ open6: !this.state.open6 })} className={classes.nested}>
-                                        <ListItemIcon>
-                                            <PinDropIcon style={{ color: "white" }} />
-                                        </ListItemIcon>
-                                        <ListItemtext className={classes.textColor} primary="Address Settings" />
-                                        {this.state.open6 ? <ExpandLess className={classes.textColor} /> : <ExpandMore className={classes.textColor} />}
-                                    </ListItem>
+                  <Divider />
 
-                                    <Collapse in={this.state.open6} timeout="auto" unmountOnExit className={classes.collapseNested}>
-                                        <List component="div" disablePadding>
-                                            <Link to="/manageStates" className={classes.link} >
-                                                <ListItem button className={classes.nested}>
-                                                    <ListItemtext className={classes.textColor} primary="Manage States" />
-                                                </ListItem>
-                                            </Link>
+                  <ListItem
+                    button
+                    onClick={() => this.setState({ open2: !this.state.open2 })}
+                    className={classes.nested}
+                  >
+                    <ListItemIcon>
+                      <PhoneIcon style={{ color: "white" }} />
+                    </ListItemIcon>
+                    <ListItemtext
+                      className={classes.textColor}
+                      primary="Phone Settings"
+                    />
+                    {this.state.open2 ? (
+                      <ExpandLess className={classes.textColor} />
+                    ) : (
+                      <ExpandMore className={classes.textColor} />
+                    )}
+                  </ListItem>
 
-                                            <Link to="/manageLGAs" className={classes.link} >
-                                                <ListItem button className={classes.nested}>
-                                                    <ListItemtext className={classes.textColor} primary="Manage LGAs" />
-                                                </ListItem>
-                                            </Link>
+                  <Collapse
+                    in={this.state.open2}
+                    timeout="auto"
+                    unmountOnExit
+                    className={classes.collapseNested}
+                  >
+                    <List component="div" disablePadding>
+                      <Link to="/managePhoneTypes" className={classes.link}>
+                        <ListItem button className={classes.nested}>
+                          <ListItemtext
+                            className={classes.textColor}
+                            primary="Manage Phone Types"
+                          />
+                        </ListItem>
+                      </Link>
 
-                                            <Link to="/manageCities" className={classes.link} >
-                                                <ListItem button className={classes.nested}>
-                                                    <ListItemtext className={classes.textColor} primary="Cities" />
-                                                </ListItem>
-                                            </Link>
+                      <Link to="/managePhoneReasons" className={classes.link}>
+                        <ListItem button className={classes.nested}>
+                          <ListItemtext
+                            className={classes.textColor}
+                            primary="Manage Phones Reasons"
+                          />
+                        </ListItem>
+                      </Link>
+                    </List>
+                  </Collapse>
 
-                                            <Link to="/manageAddressTypes" className={classes.link}>
-                                                <ListItem button className={classes.nested}>
-                                                    <ListItemtext className={classes.textColor} primary="Manage Address Types" />
-                                                </ListItem>
-                                            </Link>
+                  <Divider />
 
+                  <Link
+                    to="/manageIdSources"
+                    className={classes.link}
+                    style={{ paddingLeft: 25 }}
+                  >
+                    <List component="div" disablePadding>
+                      <ListItem button className={classes.nested}>
+                        <ListItemIcon>
+                          <PermIdentityIcon style={{ color: "white" }} />
+                        </ListItemIcon>
+                        <ListItemtext
+                          className={classes.textColor}
+                          primary="Manage ID sources"
+                        />
+                      </ListItem>
+                    </List>
+                  </Link>
+                  <Divider />
 
-                                            <Link to="/manageAddressReasons" className={classes.link}>
-                                                <ListItem button className={classes.nested}>
-                                                    <ListItemtext className={classes.textColor} primary="Manage Address Reasons" />
-                                                </ListItem>
-                                            </Link>
+                  <ListItem
+                    button
+                    onClick={() => this.setState({ open7: !this.state.open7 })}
+                    className={classes.nested}
+                  >
+                    <ListItemIcon>
+                      <WorkIcon style={{ color: "white" }} />
+                    </ListItemIcon>
+                    <ListItemtext
+                      className={classes.textColor}
+                      primary="Manage Job Settings"
+                    />
+                    {this.state.open7 ? (
+                      <ExpandLess className={classes.textColor} />
+                    ) : (
+                      <ExpandMore className={classes.textColor} />
+                    )}
+                  </ListItem>
 
-                                        </List>
-                                    </Collapse>
+                  <Collapse
+                    in={this.state.open7}
+                    timeout="auto"
+                    unmountOnExit
+                    className={classes.collapseNested}
+                  >
+                    <List component="div" disablePadding>
+                      <Link to="/manageJobCategories" className={classes.link}>
+                        <ListItem button className={classes.nested}>
+                          <ListItemtext
+                            className={classes.textColor}
+                            primary="Manage Categories"
+                          />
+                        </ListItem>
+                      </Link>
 
-                                    <Divider />
+                      <Link
+                        to="/manageJobLeavingReasons"
+                        className={classes.link}
+                      >
+                        <ListItem button className={classes.nested}>
+                          <ListItemtext
+                            className={classes.textColor}
+                            primary="Manage Job Reasons"
+                          />
+                        </ListItem>
+                      </Link>
+                    </List>
+                  </Collapse>
+                </List>
+              </Collapse>
 
-                                    <ListItem button onClick={() => this.setState({ open2: !this.state.open2 })} className={classes.nested}>
-                                        <ListItemIcon>
-                                            <PhoneIcon style={{ color: "white" }} />
-                                        </ListItemIcon>
-                                        <ListItemtext className={classes.textColor} primary="Phone Settings" />
-                                        {this.state.open2 ? <ExpandLess className={classes.textColor} /> : <ExpandMore className={classes.textColor} />}
-                                    </ListItem>
+              <Divider />
 
-                                    <Collapse in={this.state.open2} timeout="auto" unmountOnExit className={classes.collapseNested}>
-                                        <List component="div" disablePadding>
+              <ListItem
+                button
+                onClick={() => this.setState({ open3: !this.state.open3 })}
+              >
+                <ListItemIcon>
+                  <SupervisorAccountIcon style={{ color: "white" }} />
+                </ListItemIcon>
+                <ListItemtext
+                  className={classes.textColor}
+                  primary="Administration"
+                />
+                {this.state.open2 ? (
+                  <ExpandLess className={classes.textColor} />
+                ) : (
+                  <ExpandMore className={classes.textColor} />
+                )}
+              </ListItem>
 
-                                            <Link to="/managePhoneTypes" className={classes.link}>
-                                                <ListItem button className={classes.nested}>
-                                                    <ListItemtext className={classes.textColor} primary="Manage Phone Types" />
-                                                </ListItem>
-                                            </Link>
+              <Collapse in={this.state.open3} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <Link to="/addAdmin" className={classes.link}>
+                    <ListItem button className={classes.nested2}>
+                      <ListItemtext
+                        className={classes.textColor}
+                        primary="Add Admin User"
+                      />
+                    </ListItem>
+                  </Link>
+                </List>
+              </Collapse>
 
-                                            <Link to="/managePhoneReasons" className={classes.link}>
-                                                <ListItem button className={classes.nested}>
-                                                    <ListItemtext className={classes.textColor} primary="Manage Phones Reasons" />
-                                                </ListItem>
-                                            </Link>
+              <Divider />
 
-                                        </List>
-                                    </Collapse>
+              <ListItem
+                button
+                onClick={() => this.setState({ open4: !this.state.open4 })}
+              >
+                <ListItemIcon>
+                  <CodeIcon style={{ color: "white" }} />
+                </ListItemIcon>
+                <ListItemtext
+                  className={classes.textColor}
+                  primary="Manage Codes"
+                />
+                {this.state.open4 ? (
+                  <ExpandLess className={classes.textColor} />
+                ) : (
+                  <ExpandMore className={classes.textColor} />
+                )}
+              </ListItem>
 
-                                    <Divider />
+              <Collapse in={this.state.open4} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <Link to="/adminAccessCodes" className={classes.link}>
+                    <ListItem button className={classes.nested2}>
+                      <ListItemtext
+                        className={classes.textColor}
+                        primary="Access Codes"
+                      />
+                    </ListItem>
+                  </Link>
 
-                                    <Link to="/manageIdSources" className={classes.link} style={{ paddingLeft: 25 }}>
-                                        <List component="div" disablePadding>
-                                            <ListItem button className={classes.nested}>
-                                                <ListItemIcon>
-                                                    <PermIdentityIcon style={{ color: "white" }} />
-                                                </ListItemIcon>
-                                                <ListItemtext className={classes.textColor} primary="Manage ID sources" />
-                                            </ListItem>
-                                        </List>
-                                    </Link>
-                                    <Divider />
+                  <Link to="/adminEvaluationCodes" className={classes.link}>
+                    <ListItem button className={classes.nested2}>
+                      <ListItemtext
+                        className={classes.textColor}
+                        primary="Evaluation Codes"
+                      />
+                    </ListItem>
+                  </Link>
 
-                                    <ListItem button onClick={() => this.setState({ open7: !this.state.open7 })} className={classes.nested}>
-                                        <ListItemIcon>
-                                            <WorkIcon style={{ color: "white" }} />
-                                        </ListItemIcon>
-                                        <ListItemtext className={classes.textColor} primary="Manage Job Settings" />
-                                        {this.state.open7 ? <ExpandLess className={classes.textColor} /> : <ExpandMore className={classes.textColor} />}
-                                    </ListItem>
+                  <Link to="/approvalCodes" className={classes.link}>
+                    <ListItem button className={classes.nested2}>
+                      <ListItemtext
+                        className={classes.textColor}
+                        primary="Approval Codes"
+                      />
+                    </ListItem>
+                  </Link>
+                </List>
+              </Collapse>
 
-                                    <Collapse in={this.state.open7} timeout="auto" unmountOnExit className={classes.collapseNested}>
-                                        <List component="div" disablePadding>
+              <Divider />
+            </div>
+          </Drawer>
+          <main className={classes.content}>
+            <Toolbar />
+            <Switch>
+              <Route exact path="/manageStates">
+                <Container>
+                  <ManageStates />
+                </Container>
+              </Route>
 
-                                            <Link to="/manageJobCategories" className={classes.link}>
-                                                <ListItem button className={classes.nested}>
-                                                    <ListItemtext className={classes.textColor} primary="Manage Categories" />
-                                                </ListItem>
-                                            </Link>
+              <Route exact path="/manageLGAs">
+                <Container>
+                  <ManageLGAs />
+                </Container>
+              </Route>
 
-                                            <Link to="/manageJobLeavingReasons" className={classes.link}>
-                                                <ListItem button className={classes.nested}>
-                                                    <ListItemtext className={classes.textColor} primary="Manage Job Reasons" />
-                                                </ListItem>
-                                            </Link>
+              <Route exact path="/manageCities">
+                <Container>
+                  <ManageCities />
+                </Container>
+              </Route>
 
-                                        </List>
-                                    </Collapse>
-                                </List>
-                            </Collapse>
+              <Route exact path="/manageAddressTypes">
+                <Container>
+                  <ManageAddressTypes />
+                </Container>
+              </Route>
 
-                            <Divider />
+              <Route exact path="/manageAddressReasons">
+                <Container>
+                  <ManageAddressReasons />
+                </Container>
+              </Route>
 
-                            <ListItem button onClick={() => this.setState({ open3: !this.state.open3 })}>
-                                <ListItemIcon>
-                                    <SupervisorAccountIcon style={{ color: "white" }} />
-                                </ListItemIcon >
-                                <ListItemtext className={classes.textColor} primary="Administration" />
-                                {this.state.open2 ? <ExpandLess className={classes.textColor} /> : <ExpandMore className={classes.textColor} />}
-                            </ListItem>
+              <Route exact path="/managePhoneTypes">
+                <Container>
+                  <ManagePhoneTypes />
+                </Container>
+              </Route>
 
-                            <Collapse in={this.state.open3} timeout="auto" unmountOnExit>
-                                <List component="div" disablePadding>
-                                <Link to="/addAdmin" className={classes.link}>
-                                    <ListItem button className={classes.nested2}>
-                                        <ListItemtext className={classes.textColor} primary="Add Admin User" />
-                                    </ListItem>
-                                </Link>
-                                </List>
-                            </Collapse>
+              <Route exact path="/managePhoneReasons">
+                <Container>
+                  <ManagePhoneReasons />
+                </Container>
+              </Route>
 
-                            <Divider />
+              <Route exact path="/manageIdSources">
+                <Container>
+                  <ManageIdSources />
+                </Container>
+              </Route>
 
-                            <ListItem button onClick={() => this.setState({ open4: !this.state.open4 })}>
+              <Route exact path="/manageJobCategories">
+                <Container>
+                  <ManageJobCategories />
+                </Container>
+              </Route>
 
-                                <ListItemIcon>
-                                    <CodeIcon style={{ color: "white" }} />
-                                </ListItemIcon>
-                                <ListItemtext className={classes.textColor} primary="Manage Codes" />
-                                {this.state.open4 ? <ExpandLess className={classes.textColor} /> : <ExpandMore className={classes.textColor} />}
-                            </ListItem>
+              <Route exact path="/manageJobLeavingReasons">
+                <Container>
+                  <ManageJobLeavingReasons />
+                </Container>
+              </Route>
 
-                            <Collapse in={this.state.open4} timeout="auto" unmountOnExit>
-                                <List component="div" disablePadding>
+              <Route exact path="/addAdmin">
+                <Container>
+                  <AddAdminUser />
+                </Container>
+              </Route>
 
-                                <Link to="/adminAccessCodes" className={classes.link}>
-                                    <ListItem button className={classes.nested2}>
-                                        <ListItemtext className={classes.textColor} primary="Access Codes" />
-                                    </ListItem>
-                                </Link>
+              <Route exact path="/adminAccessCodes">
+                <Container>
+                  <AdminAccessCodes />
+                </Container>
+              </Route>
 
-                                <Link to="/adminEvaluationCodes" className={classes.link}>
-                                    <ListItem button className={classes.nested2}>
-                                        <ListItemtext className={classes.textColor} primary="Evaluation Codes" />
-                                    </ListItem>
-                                </Link>
-                                </List>
-                            </Collapse>
+              <Route exact path="/AdminEvaluationCodes">
+                <Container>
+                  <AdminEvaluationCodes />
+                </Container>
+              </Route>
 
-                            <Divider />
-
-                        </div>
-                    </Drawer>
-                    <main className={classes.content}>
-                        <Toolbar />
-                        <Switch>
-
-                            <Route exact path="/manageStates">
-                                <Container>
-                                    < ManageStates />
-                                </Container>
-                            </Route>
-
-                            <Route exact path="/manageLGAs">
-                                <Container>
-                                    < ManageLGAs />
-                                </Container>
-                            </Route>
-
-                            <Route exact path="/manageCities">
-                                <Container>
-                                    < ManageCities />
-                                </Container>
-                            </Route>
-
-                            <Route exact path="/manageAddressTypes">
-                                <Container>
-                                    < ManageAddressTypes />
-                                </Container>
-                            </Route>
-
-                            <Route exact path="/manageAddressReasons">
-                                <Container>
-                                    < ManageAddressReasons />
-                                </Container>
-                            </Route>
-
-                            <Route exact path="/managePhoneTypes">
-                                <Container>
-                                    < ManagePhoneTypes />
-                                </Container>
-                            </Route>
-
-                            <Route exact path="/managePhoneReasons">
-                                <Container>
-                                    < ManagePhoneReasons />
-                                </Container>
-                            </Route>
-
-                            <Route exact path="/manageIdSources">
-                                <Container>
-                                    < ManageIdSources />
-                                </Container>
-                            </Route>
-
-                            <Route exact path="/manageJobCategories">
-                                <Container>
-                                    < ManageJobCategories />
-                                </Container>
-                            </Route>
-
-                            <Route exact path="/manageJobLeavingReasons">
-                                <Container>
-                                    < ManageJobLeavingReasons />
-                                </Container>
-                            </Route>
-
-                            <Route exact path="/addAdmin">
-                                <Container>
-                                    < AddAdminUser />
-                                </Container>
-                            </Route>
-
-                            <Route exact path="/adminAccessCodes">
-                                <Container>
-                                    < AdminAccessCodes />
-                                </Container>
-                            </Route>
-
-                            <Route exact path="/AdminEvaluationCodes">
-                                <Container>
-                                    < AdminEvaluationCodes />
-                                </Container>
-                            </Route>
-                        </Switch>
-                    </main>
-                </div>
-
-            </Router >
-        );
-    }
+              <Route exact path="/approvalCodes">
+                <Container>
+                  <ApprovalCodes />
+                </Container>
+              </Route>
+            </Switch>
+          </main>
+        </div>
+      </Router>
+    );
+  }
 };
 
 export default withStyles(styles)(AdminLandingPage);

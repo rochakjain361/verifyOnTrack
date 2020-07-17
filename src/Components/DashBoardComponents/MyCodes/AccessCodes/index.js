@@ -14,6 +14,7 @@ import {
   InputLabel,
   MenuItem,
   CircularProgress,
+  Snackbar
 } from "@material-ui/core/";
 
 import {
@@ -23,6 +24,7 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core/";
+import MuiAlert from '@material-ui/lab/Alert';
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -34,9 +36,10 @@ import FormLabel from "@material-ui/core/FormLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import axios from "axios";
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+
+let token1 = "";
+let token = "";
+let id = "";
 // let result = [];
 let codes = [];
 let pendingcodes = [];
@@ -46,7 +49,9 @@ let emails = [];
 let companys = [];
 
 const styles = (theme) => ({});
-
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 class index extends Component {
   state = {
     opencodes: false,
@@ -70,6 +75,14 @@ class index extends Component {
     identites: false,
     phone: false,
     jobHistory: false,
+    viewDialog: false,
+    codedetails: "",
+    codes: [],
+    pendingcodes: [],
+    status:"",
+    updatesnackbar:false,
+    updateresponse:"",
+    addDialogOpen:false
   };
 
   isloading() {
@@ -94,11 +107,31 @@ class index extends Component {
       }
     });
   }
+  updatesnackbar() {
+
+
+    return (
+      this.state.updateresponse === 200 ?
+        (<div>
+          {console.log("//////////////////////////////////////")}
+
+          <Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ updatesnackbar: false }) }>
+            <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="success">
+              status updated sucessfully
+      </Alert>
+          </Snackbar>
+        </div>) : (<Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }}>
+          <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="error">
+            Something went wrong please try again
+      </Alert>
+        </Snackbar>))
+
+  }
   async searchusername(username) {
     await axios
       .get(
         `http://3.22.17.212:80008000/api/v1/accounts/employer?username=` +
-          username,
+        username,
 
         {
           headers: {
@@ -138,7 +171,7 @@ class index extends Component {
               name="searchCategory"
               // value={value}
               onChange={(event) => {
-                this.setState({ employerby: event.target.value });
+                this.setState({ employerby: event.target.value })
               }}
             >
               <Grid container direction="row" style={{ marginTop: 10 }}>
@@ -146,39 +179,37 @@ class index extends Component {
                   value="searchByEmail"
                   control={<Radio />}
                   label="Email"
-                  //   onChange={this.setState({
-                  //     choicecompany: false,
-                  //     choiceusername: false,
-                  //     choiceemail: true,
-                  //   })}
+                //   onChange={this.setState({
+                //     choicecompany: false,
+                //     choiceusername: false,
+                //     choiceemail: true,
+                //   })}
                 />
                 <FormControlLabel
                   value="searchByUsername"
                   control={<Radio />}
                   label="Username"
-                  //   onChange={this.setState({
-                  //     choicecompany: false,
-                  //     choiceusername: true,
-                  //     choiceemail: false,
-                  //   })}
+                //   onChange={this.setState({
+                //     choicecompany: false,
+                //     choiceusername: true,
+                //     choiceemail: false,
+                //   })}
                 />
                 <FormControlLabel
                   value="searchByCompany"
                   control={<Radio />}
                   label="Company"
-                  //   onChange={this.setState({
-                  //     choicecompany: true,
-                  //     choiceusername: false,
-                  //     choiceemail: false,
-                  //   })}
+                //   onChange={this.setState({
+                //     choicecompany: true,
+                //     choiceusername: false,
+                //     choiceemail: false,
+                //   })}
                 />
               </Grid>
             </RadioGroup>
           </FormControl>
         </Grid>
-        <Button onClick={() => this.searchemail(this.state.dummyvalue)}>
-          check
-        </Button>
+
 
         {this.state.employerby === "searchByEmail" ? (
           <Grid item xs={12}>
@@ -229,54 +260,63 @@ class index extends Component {
             />
           </Grid>
         ) : (
-          <Grid item xs={12}>
-            <Autocomplete
-              options={companys}
-              getOptionLabel={(option) => option.companyName}
-              size="small"
-              id="comapny"
-              Company
-              value={this.state.companyvalue}
-              onChange={(event, value) => {
-                this.setState({ companyvalue: value });
-                console.log("companyvalue", value);
-                // this.setState({ employerid: value.id });
-              }}
-              inputValue={this.state.dummyvalue}
-              onInputChange={(event, newInputValue) => {
-                this.setState({ dummyvalue: newInputValue });
-                // console.log(newInputValue);
-              }}
-              renderInput={(params) => (
-                <TextField {...params} label="Company" margin="normal" />
-              )}
-            />
-          </Grid>
-        )}
+              <Grid item xs={12}>
+                <Autocomplete
+                  options={companys}
+                  getOptionLabel={(option) => option.companyName}
+                  size="small"
+                  id="comapny"
+                  Company
+                  value={this.state.companyvalue}
+                  onChange={(event, value) => {
+                    this.setState({ companyvalue: value });
+                    console.log("companyvalue", value);
+                    // this.setState({ employerid: value.id });
+                  }}
+                  inputValue={this.state.dummyvalue}
+                  onInputChange={(event, newInputValue) => {
+                    this.setState({ dummyvalue: newInputValue });
+                    // console.log(newInputValue);
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Company" margin="normal" />
+                  )}
+                />
+              </Grid>
+            )}
       </>
     );
   }
+  async getcodes(){
+    await axios
+    .get("http://3.22.17.212:8000/api/v1/codes/access/codes", {
+      headers: {
+        Authorization: token,
+      },
+    })
+    .then((res) => {
+      codes = res.data;
+      this.setState({ codes: res.data })
+      console.log("codes", codes);
+    });
+  await axios
+    .get("http://3.22.17.212:8000/api/v1/codes/access/pending-codes", {
+      headers: {
+        Authorization: token,
+      },
+    })
+    .then((res) => {
+      pendingcodes = res.data;
+      this.setState({ pendingcodes: res.data })
+      console.log("pendingcodes", pendingcodes);
+    });
+  }
   async componentDidMount() {
-    await axios
-      .get("http://3.22.17.212:8000/api/v1/codes/access/codes", {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        codes = res.data;
-        console.log("codes", codes);
-      });
-    await axios
-      .get("http://3.22.17.212:8000/api/v1/codes/access/pending-codes", {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        pendingcodes = res.data;
-        console.log("pendingcodes", pendingcodes);
-      });
+    
+    token =  localStorage.getItem("Token");
+    id = localStorage.getItem("id");
+    await this.getcodes()
+
     await axios
       .get(
         `http://3.22.17.212:8000/api/v1/accounts/employer?email=`,
@@ -291,7 +331,6 @@ class index extends Component {
         emails = res.data;
         console.log("emails", emails);
       });
-
     await axios
       .get(
         `http://3.22.17.212:8000/api/v1/accounts/employer?username=`,
@@ -323,6 +362,25 @@ class index extends Component {
       });
     this.setState({ loading: false });
   }
+  async getcode(codeid) {
+
+    this.setState({ viewDialog: true });
+    await axios
+      .get(
+        "http://3.22.17.212:8000/api/v1/codes/access/codes/" + codeid,
+
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        this.setState({ codedetails: res.data });
+        console.log("codedetails", this.state.codedetails.canAccessProfile);
+      });
+
+  }
   async postcode() {
     this.setState({
       generateNewEmployementCodeDialog: false,
@@ -340,16 +398,13 @@ class index extends Component {
       ? this.state.employerby === "searchByEmail"
         ? bodyFormData.append("employer", this.state.emailsvalue.id)
         : this.state.employerby === "searchByUsername"
-        ? bodyFormData.append("employer", this.state.usernamevalue.id)
-        : bodyFormData.append("employer", this.state.companyvalue.id)
+          ? bodyFormData.append("employer", this.state.usernamevalue.id)
+          : bodyFormData.append("employer", this.state.companyvalue.id)
       : bodyFormData.append("forAdmin", this.state.isadmin);
 
     bodyFormData.append("employee", id);
 
-    bodyFormData.append(
-      "canAccessProfile",
-      this.state.profile
-    );
+    bodyFormData.append("canAccessProfile", this.state.profile);
     bodyFormData.append("canAccessAddresses", this.state.address);
     bodyFormData.append("canAccessJobHistory", this.state.jobHistory);
     bodyFormData.append("canAccessPhones", this.state.phone);
@@ -366,28 +421,39 @@ class index extends Component {
         console.log(response);
       });
   }
+  async updatestatus(){
+    let headers = {
+      headers: {
+        Authorization: token,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    let bodyFormData = new FormData();
+    bodyFormData.append("codeStatus", this.state.status);
+    console.log("check",this.state.status,this.state.currentid)
+   
+
+    await axios
+      .put(
+        "http://3.22.17.212:8000/api/v1/codes/access/update-code/"+this.state.currentid,
+        bodyFormData,
+        headers
+      )
+      .then((response) => {
+        console.log(response);
+        this.setState({updateresponse:response.status, updatesnackbar: true })
+      });
+      await this.getcodes()
+  }
+
   gettable() {
     return (
       <>
         <Grid container justify="space-between" alignItems="center" spacing={4}>
           <Grid item xs={8}>
-            <Typography variant="h4">Access Codes</Typography>
+            <Typography variant="h4">Access Request</Typography>
           </Grid>
-
-          <Grid item xs={4}>
-            <Button
-              color="secondary"
-              variant="contained"
-              onClick={() =>
-                this.setState({ generateNewEmployementCodeDialog: true })
-              }
-              fullWidth
-            >
-              Create New code
-            </Button>
-          </Grid>
-
-          <Grid item>
+          <Grid item xs={12}>
             <FormControlLabel
               control={
                 <Checkbox
@@ -416,132 +482,183 @@ class index extends Component {
             <Table stickyHeader>
               <TableHead>
                 <TableRow style={{ backgroundColor: "black" }}>
-                  <TableCell align="left">Date</TableCell>
-                  <TableCell align="left">Code</TableCell>
-                  <TableCell align="left">Employer</TableCell>
-                  <TableCell align="left">Code Status</TableCell>
-                  <TableCell align="left">Last Updated</TableCell>
-                  <TableCell align="left">Details</TableCell>
-                  <TableCell align="left">Actions</TableCell>
-                  <TableCell align="left">Update</TableCell>
+                  <TableCell align="center">Date</TableCell>
+                  <TableCell align="center">Code</TableCell>
+                  <TableCell align="center">Employer</TableCell>
+                  <TableCell align="center">Code Status</TableCell>
+                  <TableCell align="center">Last Updated</TableCell>
+                  <TableCell align="center">Details</TableCell>
+                  <TableCell align="center">Actions</TableCell>
+                  {/* <TableCell align="center">Update</TableCell> */}
                 </TableRow>
               </TableHead>
               <TableBody>
-                {this.state.opencodes
-                  ? codes.map((row, index) => (
-                      <TableRow key={row.id}>
-                        <TableCell align="left">{row.createdOn}</TableCell>
-                        <TableCell align="left">{row.codeString}</TableCell>
-                        <TableCell align="left">
-                          {row.employer_company_field}
-                        </TableCell>
-                        <TableCell align="left">{row.codeStatus}</TableCell>
-                        <TableCell align="left">
-                          {row.statusChangeDate}
-                        </TableCell>
-                        <TableCell align="left">
-                          <Button
-                            size="small"
-                            color="primary"
-                            variant="outlined"
-                          >
-                            View Details
+                {!this.state.opencodes
+                  ? this.state.codes.map((row, index) => (
+                    <TableRow key={row.id}>
+                      <TableCell align="center"> {new Date(row.createdOn).toDateString()}</TableCell>
+                      <TableCell align="center">{row.codeString}</TableCell>
+                      <TableCell align="center">
+                        {row.employer_company_field}
+                      </TableCell>
+                      <TableCell align="center">{row.codeStatus}</TableCell>
+                      <TableCell align="center">
+                        {new Date(row.statusChangeDate).toDateString()}
+                      </TableCell>
+                      <TableCell align="center">
+                        <Button
+                          size="small"
+                          color="primary"
+                          variant="outlined"
+                          onClick={() => this.getcode(row.id)}
+                        >
+                          View Details
                           </Button>
-                        </TableCell>
-                        <TableCell align="left">
-                          <FormControl
-                            style={{ minWidth: 85 }}
-                            variant="outlined"
-                            size="small"
-                            fullWidth
+                      </TableCell>
+                      <TableCell align="center">
+                      <FormControl variant="outlined"  size="small" style={{ minWidth: 85 }}
+                          fullWidth >
+                          <InputLabel id="demo-simple-select-outlined-label">Status</InputLabel>
+                          <Select
+                         
+                            labelId="demo-simple-select-outlined-label"
+                            id={row.id}
+                            //  value={this.state.status}
+                             onChange={(event)=>{this.setState({status:event.target.value,addDialogOpen:true,currentid:row.id})}}
+                            label="Status"
                           >
-                            <InputLabel id="">Status</InputLabel>
-                            <Select
-                              labelId="statusOptionsEmployeeField"
-                              id="statusOptionsEmployeeField"
-                              fullWidth
-                              // value={age}
-                              // onChange={handleChange}
-                            >
-                              {row.status_options_employee_field.map((val) =>
-                                val.map((i) => (
-                                  <MenuItem value={i}>{i}</MenuItem>
-                                ))
-                              )}
-                            </Select>
-                          </FormControl>
-                        </TableCell>
-                        <TableCell align="right">
-                          <Button
-                            size="small"
-                            color="secondary"
-                            variant="outlined"
-                          >
-                            Update
+                           
+                            {row.status_options_employee_field.map((val) =>
+                              <MenuItem value={val.status}>{val.action}</MenuItem>
+                            )}
+
+                          </Select>
+                        </FormControl>
+                      </TableCell>
+                      
+                      {/* <TableCell align="right">
+                        <Button
+                          size="small"
+                          color="secondary"
+                          variant="outlined"
+                          onClick={()=>{this.updatestatus(row.id)}}
+                          
+                        >
+                          Update status
                           </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))
+                      </TableCell> */}
+                    </TableRow>
+                  ))
                   : pendingcodes.map((row, index) => (
-                      <TableRow key={row.id}>
-                        <TableCell align="left">{row.createdOn}</TableCell>
-                        <TableCell align="left">{row.codeString}</TableCell>
-                        <TableCell align="left">
-                          {row.employer_company_field}
-                        </TableCell>
-                        <TableCell align="left">{row.codeStatus}</TableCell>
-                        <TableCell align="left">
-                          {row.statusChangeDate}
-                        </TableCell>
-                        <TableCell align="left">
-                          <Button
-                            size="small"
-                            color="primary"
-                            variant="outlined"
-                          >
-                            View Details
+                    <TableRow key={row.id}>
+                      <TableCell align="center"> {new Date(row.createdOn).toDateString()}</TableCell>
+                      <TableCell align="center">{row.codeString}</TableCell>
+                      <TableCell align="center">
+                        {row.employer_company_field}
+                      </TableCell>
+                      <TableCell align="center">{row.codeStatus}</TableCell>
+                      <TableCell align="center">
+                        {new Date(row.statusChangeDate).toDateString()}
+                      </TableCell>
+                      <TableCell align="center">
+                        <Button
+                          size="small"
+                          color="primary"
+                          variant="outlined"
+                          onClick={() => this.getcode(row.id)}
+                        >
+                          View Details
                           </Button>
-                        </TableCell>
-                        <TableCell align="left">
-                          <FormControl
-                            style={{ minWidth: 85 }}
-                            variant="outlined"
-                            size="small"
-                            fullWidth
+                      </TableCell>
+                      <TableCell align="center">
+                        <FormControl variant="outlined"  size='small'  style={{ minWidth: 85 }}
+                          fullWidth >
+                          <InputLabel id="demo-simple-select-outlined-label">Status</InputLabel>
+                          <Select
+                         
+                            labelId="demo-simple-select-outlined-label"
+                            id={row.id}
+                            //  value={this.state.status}
+                             onChange={(event)=>{this.setState({status:event.target.value,addDialogOpen:true,currentid:row.id})}}
+                            label="Status"
                           >
-                            <InputLabel id="">Status</InputLabel>
-                            <Select
-                              labelId="statusOptionsEmployeeField"
-                              id="statusOptionsEmployeeField"
-                              fullWidth
-                              // value={age}
-                              // onChange={handleChange}
-                            >
-                              {row.status_options_employee_field.map((val) =>
-                                val.map((i) => (
-                                  <MenuItem value={i}>{i}</MenuItem>
-                                ))
-                              )}
-                            </Select>
-                          </FormControl>
-                        </TableCell>
-                        <TableCell align="right">
-                          <Button
-                            size="small"
-                            color="secondary"
-                            variant="outlined"
-                          >
-                            Update
+                           
+                            {row.status_options_employee_field.map((val) =>
+                              <MenuItem value={val.status}>{val.action}</MenuItem>
+                            )}
+
+                          </Select>
+                        </FormControl>
+                      </TableCell>
+                      {/* <TableCell align="right">
+                        <Button
+                          size="small"
+                          color="secondary"
+                          variant="outlined"
+                          onClick={()=>{this.updatestatus(row.id)}}
+                        >
+                          Update
                           </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                      </TableCell> */}
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
         </Grid>
+       
+     
+        {
+          <div>
+          <Dialog
+                  open={this.state.addDialogOpen}
+                  onClose={() => this.setState({ addDialogOpen: true })}
+                  aria-labelledby="form-dialog-title"
+                >
+                  <DialogTitle id="form-dialog-title" justify="center">
+                    Update status
+              </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                    Are you sure you want to do this?
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      onClick={() => {
+                        this.setState(
+                          {
+                            addDialogOpen: false,
+                           
+                          },
+                          this.updatestatus
+                        );
+                      }}
+                    >
+                      Yes
+                </Button>
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      onClick={() =>
+                        this.setState({
+                          addDialogOpen: false,
+                          status:"",
+                          currentid:""
+                        })
+                      }
+                    >
+                      No
+                </Button>
+                  </DialogActions>
+                </Dialog>
+                </div>
+  }
         {/* </Paper> */}
-
+        {this.updatesnackbar()}
+        {/* {this.updatestatus()} */}
         {/* GENERATE NEW CODE DIALOG DATA */}
 
         <div>
@@ -676,6 +793,134 @@ class index extends Component {
                 Generate One-time Code
               </Button>
             </DialogActions>
+          </Dialog>
+          <Dialog
+            fullWidth={"lg"}
+            maxWidth={"lg"}
+            open={this.state.viewDialog}
+            onClose={() => this.setState({ viewDialog: false })}
+            aria-labelledby="responsive-dialog-title"
+          >
+            <DialogTitle id="codegenerator" align="center">Code Details</DialogTitle>
+            <DialogContent>
+              <TableContainer component={Paper} elevation={6} p={0}>
+                <Table stickyHeader>
+                  <TableHead>
+                    <TableRow style={{ backgroundColor: "black" }}>
+                      {[
+                        "Created Date",
+                        "Code String",
+                        "Employer company",
+                        "last updated",
+                        " current status",
+                        "Profile access",
+                      
+                        "Address access",
+                        "Phones access",
+                        "Identities access",
+                        "Jobhistory access",
+                        "Ratings access",
+                        
+                      ].map((text, index) => (
+                        <TableCell
+                          style={{
+                            fontWeight: "bolder",
+                            // fontFamily: "Montserrat",
+                          }}
+                          align="center"
+                        >
+                          {text}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {
+                      <TableRow key={this.state.codedetails.id}>
+                        <TableCell align="center">
+                          {this.state.codedetails.createdOn}
+                        </TableCell>
+                        <TableCell align="center">
+
+                          {this.state.codedetails.codeString}
+                        </TableCell>
+                        <TableCell align="center">
+                          {this.state.codedetails.employer_company_field}
+                        </TableCell>
+                        <TableCell align="center">
+                          {this.state.codedetails.statusChangeDate}
+                        </TableCell>
+
+                        <TableCell align="center">
+                          {this.state.codedetails.codeStatus}
+                        </TableCell>
+                        <TableCell align="center">
+                          <Checkbox
+                            checked={this.state.codedetails.canAccessProfile}
+                            defaultValue={
+                              this.state.codedetails.canAccessProfile
+                            }
+                            name="checkedB"
+                            color="primary"
+                          />
+                        </TableCell>
+                        <TableCell align="center">
+                          <Checkbox
+                            checked={this.state.codedetails.canAccessAddresses}
+                            defaultValue={
+                              this.state.codedetails.canAccessAddresses
+                            }
+                            name="checkedB"
+                            color="primary"
+                          />
+                        </TableCell>
+                        
+                        <TableCell align="center">
+                          <Checkbox
+                            checked={this.state.codedetails.canAccessPhones}
+                            defaultValue={
+                              this.state.codedetails.canAccessPhones
+                            }
+                            name="checkedB"
+                            color="primary"
+                          />
+                        </TableCell>
+                        <TableCell align="center">
+                          <Checkbox
+                            checked={this.state.codedetails.canAccessIdentities}
+                            defaultValue={
+                              this.state.codedetails.canAccessIdentities
+                            }
+                            name="checkedB"
+                            color="primary"
+                          />
+                        </TableCell>
+                        <TableCell component="th" align="center">
+                          <Checkbox
+                            checked={this.state.codedetails.canAccessJobHistory}
+                            defaultValue={
+                              this.state.codedetails.canAccessJobHistory
+                            }
+                            name="checkedB"
+                            color="primary"
+                          />
+                        </TableCell>
+                        <TableCell align="center">
+                          <Checkbox
+                            checked={this.state.codedetails.canAccessRatings}
+                            defaultValue={
+                              this.state.codedetails.canAccessRatings
+                            }
+                            name="checkedB"
+                            color="primary"
+                          />
+                        </TableCell>
+                      </TableRow>
+                    }
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </DialogContent>
           </Dialog>
         </div>
       </>

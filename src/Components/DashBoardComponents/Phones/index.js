@@ -22,13 +22,16 @@ import { Button } from "@material-ui/core";
 import { Select } from "@material-ui/core";
 import { MenuItem } from "@material-ui/core";
 import { InputLabel } from "@material-ui/core";
-import FormControl from '@material-ui/core/FormControl';
-
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
-let result = [];
+import { Snackbar } from '@material-ui/core'
+import MuiAlert from '@material-ui/lab/Alert';
+let token1 = "";
+let token = "";
+let id = "";
+// let result = [];
 let history = [];
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 class Phones extends Component {
   constructor(props) {
     super(props);
@@ -58,10 +61,29 @@ class Phones extends Component {
       updatestartedusingon: "",
       updatedefaultPhone: "",
       historyloading: true,
-      historyDialogeOpen: false,
+      historyDialougeOpen: false,
+      result: [],
+      buttondisabled: "disabled",
+      addsnackbar: false,
+      addresponse: "",
+      updateresponse: "",
+      updatesnackbar: false,
     };
   }
-  async componentDidMount() {
+  reasonforupdatevalidcheck = (event) => {
+    if (event.target.value.length > 0) {
+      //  console.log(event.target.value);
+      this.setState({ buttondisabled: "" });
+    } else if (event.target.value > 250) {
+      this.setState({ buttondisabled: "disabled" });
+    }
+    else {
+      this.setState({ buttondisabled: "disabled" });
+    }
+
+
+  };
+  async getphonedata() {
     await axios
       .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/phones", {
         headers: {
@@ -69,37 +91,73 @@ class Phones extends Component {
         },
       })
       .then((res) => {
-        result = res.data;
-        console.table("Phones", result);
+        //  result = res.data;
+        this.setState({ result: res.data })
+        console.table("Phones", this.state.result);
         // console.log(result[0].phone_reason);
       });
+  }
+  async componentDidMount() {
+    
+    token = localStorage.getItem("Token");
+    id = localStorage.getItem("id");
+    await this.getphonedata();
     await axios
-      .get(
-        "http://3.22.17.212:8000/api/v1/resManager/phone/reasons/",
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
+      .get("http://3.22.17.212:8000/api/v1/resManager/phone/reasons/", {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((res) => {
         this.setState({ phoneReasons: res.data });
         console.table("PhonesReason", this.state.phoneReasons);
       });
     await axios
-      .get(
-        "http://3.22.17.212:8000/api/v1/resManager/phone/types/",
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
+      .get("http://3.22.17.212:8000/api/v1/resManager/phone/types/", {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((res) => {
         this.setState({ phoneTypes: res.data });
         console.table("PhonesTypes", this.state.phoneTypes);
       });
     this.setState({ loading: false });
+  }
+  addsnackbar() {
+    return (
+      this.state.addresponse === 200 ?
+        (<div>
+
+          <Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() => this.setState({ addsnackbar: false })}>
+            <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addasnackbar }) }} severity="success">
+              Phone added sucessfully
+      </Alert>
+          </Snackbar>
+        </div>) : (<Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }}>
+          <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }} severity="error">
+            Something went wrong please try again
+      </Alert>
+        </Snackbar>))
+
+  }
+  updatesnackbar() {
+    return (
+      this.state.updateresponse === 200 ?
+        (<div>
+          {console.log("//////////////////////////////////////")}
+
+          <Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() => this.setState({ updatesnackbar: false })}>
+            <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="success">
+            Phone updated sucessfully
+      </Alert>
+          </Snackbar>
+        </div>) : (<Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }}>
+          <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="error">
+            Something went wrong please try again
+      </Alert>
+        </Snackbar>))
+
   }
   async postPhones() {
     let headers = {
@@ -127,7 +185,10 @@ class Phones extends Component {
       )
       .then((response) => {
         console.log(response);
+        this.setState({addresponse:response.status,addsnackbar: true})
+
       });
+    await this.getphonedata();
   }
   async updatePhones(phoneid) {
     this.setState({
@@ -163,15 +224,21 @@ class Phones extends Component {
       )
       .then((response) => {
         console.log(response);
+        this.setState({updateresponse:response.status, updatesnackbar: true })
       });
+    await this.getphonedata();
   }
   async getHistory(index) {
     this.setState({
-      historyDialogeOpen: true,
+      historyDialougeOpen: true,
     });
     await axios
       .get(
-        "http://3.22.17.212:8000/api/v1/employees/" + id + "/phones/" + index + "/history",
+        "http://3.22.17.212:8000/api/v1/employees/" +
+        id +
+        "/phones/" +
+        index +
+        "/history",
         {
           headers: {
             Authorization: token,
@@ -187,119 +254,160 @@ class Phones extends Component {
   getPhones() {
     return (
       <>
-        {result.length === 0 ? (
+        {this.state.result.length === 0 ? (
           <>
-            <Grid container spacing={3} justify="space-between" >
-              <Grid item xs={6}>
-                <h1>Phones</h1>
-              </Grid>
+            <Grid container spacing={3} justify="space-between">
+              <Grid item xs={12} >
+
+
+              </ Grid>
               <Grid item xs={12}>
-
                 <Paper style={{ padding: 20 }} elevation={3}>
-                  <Typography variant="h5" gutterBottom align='center'>
-                    Add phone details to improve ratings.
-              </Typography>
+                  <Box p={8} display="flex" flexDirection="column" justifyContent='center' alignItems="center" style={{ height: '50vh', }} >
+                    <Typography variant="h5" gutterBottom align="center">
+                      Add phone details to improve ratings.
+                  </Typography>
 
-                  <Grid container justify='center' style={{ marginTop: 50 }}>
-                    <Button color="primary" variant='contained' onClick={() => {
-                      this.setState({ addDialogOpen: true });
-                    }}>
-                      Add New Phone
-                </Button>
-                  </Grid>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        this.setState({ addDialogOpen: true });
+                      }}
+                    >
+                      Add Phone
+            </Button>
+
+                  </Box>
                 </Paper>
               </Grid>
-
             </Grid>
           </>
         ) : (
-            <TableContainer component={Paper} elevation={16}>
-              <Table stickyHeader>
-                <TableHead>
-                  <TableRow style={{ backgroundColor: "black" }}>
-                    {/* Date, Source, Fullname, DOB, Sex, Picture, VerifiedBy, Actions */}
-                    <TableCell align="left">Start Date</TableCell>
-                    <TableCell align="left">Default phone</TableCell>
-                    {/* <TableCell align="center">IdNumber</TableCell> */}
-                    <TableCell align="left">Source</TableCell>
-                    <TableCell align="left">Phone</TableCell>
-                    <TableCell align="left">IMEI</TableCell>
-                    {/* <TableCell align="center">picture</TableCell> */}
-                    <TableCell align="left">Verified by</TableCell>
-                    <TableCell align="left">Update</TableCell>
-                    <TableCell align="left">History</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {result.map((row, index) => (
-                    <TableRow key={row.id}>
-                      <TableCell align="left">{new Date(row.created_on).toDateString()}</TableCell>
-                      <TableCell align="left">{row.default_phone}</TableCell>
-                      <TableCell align="left">
-                        {row.source_name_field}
-                      </TableCell>
-                      <TableCell align="left">{row.phoneNumber}</TableCell>
-                      <TableCell align="left">{row.imeiNumber}</TableCell>
-                      <TableCell align="left">{row.owner_name_field}</TableCell>
+            <>
+              <Grid container direction="column" justify="center" alignItems="flex-end">
+                <Box p={2}>
 
-                      <TableCell align="left">
-                        <Button
-                          color="primary"
-                          variant="outlined"
-                          onClick={() =>
-                            this.setState({
-                              updateDialogOpen: true,
-                              selectedIndex: index,
-                            })
-                          }
-                        >
-                          Update
-                      </Button>
-                      </TableCell>
-                      <TableCell align="left">
-                        <Button
-                          size="small"
-                          color="primary"
-                          variant="outlined"
-                          onClick={() => {
-                            this.getHistory(row.id);
-                          }}
-                        >
-                          history
-                      </Button>
-                      </TableCell>
+                  <Grid item>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        this.setState({ addDialogOpen: true });
+                      }}
+                    >
+                      Add Phone
+            </Button>
+                  </Grid>
+                </Box>
+              </Grid>
+              <TableContainer component={Paper} elevation={16}>
+                <Table stickyHeader>
+                  <TableHead>
+                    <TableRow style={{ backgroundColor: "black", fontWeight: "bolder", }} >
+                      {/* Date, Source, Fullname, DOB, Sex, Picture, VerifiedBy, Actions */}
+                      <TableCell align="center" style={{ fontWeight: "bolder", }}>Phone</TableCell>
+                      <TableCell align="center" style={{ fontWeight: "bolder", }}>IMEI</TableCell>
+                      <TableCell align="center" style={{ fontWeight: "bolder", }}>Default phone</TableCell>
+                      <TableCell align="center" style={{ fontWeight: "bolder", }}>PhoneType</TableCell>
+                      <TableCell align="center" style={{ fontWeight: "bolder", }}>VerifiedBy</TableCell>
+                      <TableCell align="center" style={{ fontWeight: "bolder", }}>Start Date</TableCell>
+                      {/* <TableCell align="center">IdNumber</TableCell> */}
+                      {/* <TableCell align="center">picture</TableCell> */}
+                      <TableCell align="center" style={{ fontWeight: "bolder", }}>Update</TableCell>
+                      <TableCell align="center" style={{ fontWeight: "bolder", }}>History</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              {this.state.selectedIndex === -1 ? (
-                <div />
-              ) : (
+                  </TableHead>
+                  <TableBody>
+                    {this.state.result.map((row, index) => (
+                      <TableRow key={row.id}>
+                        <TableCell align="center">{row.phoneNumber}</TableCell>
+                        <TableCell align="center">{row.imeiNumber}</TableCell>
+                        <TableCell align="center">{row.default_phone}</TableCell>
+                        <TableCell align="center">
+                          {row.phone_type_name_field}
+                        </TableCell>
 
-                  <Dialog
-                    open={this.state.updateDialogOpen}
-                    onClose={() => this.setState({ updateDialogOpen: false })}
-                    aria-labelledby="responsive-dialog-title"
-                  >
-                    <DialogTitle id="form-dialog-title">Update Phone Data</DialogTitle>
+                        <TableCell align="center">{row.owner_name_field}</TableCell>
+                        <TableCell align="center">{new Date(row.created_on).toDateString()}</TableCell>
 
-                    <DialogContent>
+                        <TableCell align="center">
+                          <Button
+                            color="primary"
+                            variant="outlined"
+                            onClick={() =>
+                              this.setState({
+                                updateDialogOpen: true,
+                                selectedIndex: index,
 
-                      <Grid container justify='flex-start' direction='row' alignItems='center' spacing={3}>
+                                updatephoneType: this.state.result[index].phone_type,
 
+                                updatephoneReason: this.state.result[index].phone_reason,
 
-                        <Grid item fullWidth xs={12}>
-                          <FormControl fullWidth>
-                            <InputLabel id="phoneReason">Phone Reason</InputLabel>
+                                updateimeiNumber: this.state.result[index].imeiNumber,
+                                updatephoneNumber: this.state.result[index].phoneNumber,
+                                updatestartedusingon: this.state.result[index].dateObtained,
+                                updatedefaultPhone: this.state.result[index].default_phone,
+                              })
+                            }
+                          >
+                            Update
+                      </Button>
+                        </TableCell>
+                        <TableCell align="center">
+                          <Button
+
+                            color="secondary"
+                            variant="outlined"
+                            onClick={() => {
+                              this.getHistory(row.id);
+                            }}
+                          >
+                            history
+                      </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    {this.addsnackbar()}
+                  </TableBody>
+                </Table>
+                {this.state.selectedIndex === -1 ? (
+                  <div />
+                ) : (
+                    <Dialog
+                      open={this.state.updateDialogOpen}
+                      onClose={() => this.setState({ updateDialogOpen: false })}
+                      //  aria-labelledby="form-dialog-title"
+                      aria-labelledby="responsive-dialog-title"
+                    >
+                      <DialogTitle id="form-dialog-title" align="center">
+                        Update phone data
+                </DialogTitle>
+
+                      <DialogContent>
+                        <Grid
+                          container
+                          justify="flex-start"
+                          direction="row"
+                          alignItems="center"
+                          spacing={3}
+                        >
+                          <Grid item fullWidth xs={12}>
+                            <InputLabel>Phone Reason</InputLabel>
                             <Select
-                              labelId="phoneReason"
-                              id="phoneReason"
+                              // className="w3-input"
+                              autoFocus
+                              margin="dense"
+                              id="source"
+                              label="phonereason"
+                              type="text"
+                              fullWidth
                               onChange={(event) => {
                                 this.setState({
                                   updatephoneReason: event.target.value,
                                 });
                               }}
-                              defaultValue={result[this.state.selectedIndex].phone_reason}
+                              defaultValue={this.state.updatephoneReason}
                             >
                               {this.state.phoneReasons.map((phonetype) => (
                                 <MenuItem id={phonetype.id} value={phonetype.id}>
@@ -307,21 +415,22 @@ class Phones extends Component {
                                 </MenuItem>
                               ))}
                             </Select>
-                          </FormControl>
-                        </Grid>
-
-                        <Grid item fullWidth xs={12}>
-                          <FormControl fullWidth>
-                            <InputLabel id="phoneType">Phone Type</InputLabel>
+                          </Grid>
+                          <Grid item fullWidth xs={12}>
+                            <InputLabel>Phone Type</InputLabel>
                             <Select
-                              labelId="phoneType"
-                              id="phoneType"
+                              autoFocus
+                              margin="dense"
+                              id="id"
+                              label="phone type"
+                              type="text"
+                              fullWidth
                               onChange={(event) => {
                                 this.setState({
                                   updatephoneType: event.target.value,
                                 });
                               }}
-                              defaultValue={result[this.state.selectedIndex].phone_type}
+                              defaultValue={this.state.updatephoneType}
                             >
                               {this.state.phoneTypes.map((phonetype) => (
                                 <MenuItem id={phonetype.id} value={phonetype.id}>
@@ -329,265 +438,246 @@ class Phones extends Component {
                                 </MenuItem>
                               ))}
                             </Select>
-                          </FormControl>
-                        </Grid>
-
-                        <Grid item fullWidth xs={12}>
-                          <FormControl fullWidth>
-                            <InputLabel id="defaultPhone">Default Phone</InputLabel>
+                          </Grid>
+                          <Grid item fullWidth xs={12}>
+                            <InputLabel>DefaultPhone</InputLabel>
                             <Select
-                              labelId="defaultPhone"
-                              id="defaultPhone"
+                              autoFocus
+                              margin="dense"
+                              id="name"
+                              label=""
+                              type="text"
+                              fullWidth
                               onChange={(event) => {
                                 this.setState({
                                   updatedefaultPhone: event.target.value,
                                 });
                               }}
-                              defaultValue={
-                                result[this.state.selectedIndex].default_phone
-                              }
+                              defaultValue={this.state.updatedefaultPhone}
                             >
                               <MenuItem id={1} value="Yes">
                                 Yes
-              </MenuItem>
+                        </MenuItem>
                               <MenuItem id={2} value="No">
                                 No
-              </MenuItem>
+                        </MenuItem>
                             </Select>
-                          </FormControl>
+                          </Grid>
+                          <Grid item fullWidth xs={12}>
+                            <InputLabel>Phone number</InputLabel>
+                            <TextField
+                              autoFocus
+                              margin="dense"
+                              id="dob"
+                              label=""
+                              type="text"
+                              fullWidth
+                              onChange={(event) => {
+                                this.setState({
+                                  updatephoneNumber: event.target.value,
+                                });
+                              }}
+                              defaultValue={this.state.updatephoneNumber}
+                            />
+                          </Grid>
+                          <Grid item fullWidth xs={12}>
+                            <InputLabel>IMEI number</InputLabel>
+                            <TextField
+                              autoFocus
+                              margin="dense"
+                              id="dob"
+                              label=""
+                              type="text"
+                              fullWidth
+                              onChange={(event) => {
+                                this.setState({
+                                  updateimeiNumber: event.target.value,
+                                });
+                              }}
+                              defaultValue={this.state.updateimeiNumber}
+                            />
+                          </Grid>
+                          <Grid item fullWidth xs={12}>
+                            <InputLabel>Started using on</InputLabel>
+                            <TextField
+                              autoFocus
+                              margin="dense"
+                              id="dob"
+                              label=""
+                              type="date"
+                              fullWidth
+                              onChange={(event) => {
+                                this.setState({
+                                  updatestartedusingon: event.target.value,
+                                });
+                              }}
+                              defaultValue={this.state.updatestartedusingon}
+                            />
+                          </Grid>
+                          <Grid item fullWidth xs={12}>
+                            <InputLabel>Update Reason</InputLabel>
+                            <TextField
+                              autoFocus
+                              margin="dense"
+                              id="dob"
+                              label=""
+                              type="text"
+                              helperText="update reason can be less than 250 characters"
+                              onChange={(event) => {
+                                this.setState({
+                                  updateReason: event.target.value,
+                                },
+                                  this.reasonforupdatevalidcheck(event)
+                                );
+                              }}
+                              fullWidth
+                            />
+                          </Grid>
                         </Grid>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          disabled={this.state.buttondisabled}
+                          onClick={() => {
+                            this.updatePhones(this.state.result[this.state.selectedIndex].id);
+                          }}
+                        >
+                          Update
+                  </Button>
+                        <Button
+                          color="secondary"
+                          variant="contained"
+                          onClick={() =>
+                            this.setState({
+                              updateDialogOpen: false,
+                              selectedIndex: -1,
+                            })
+                          }
+                        >
+                          Cancel
+                  </Button>
+                      </DialogActions>
+                    </Dialog>
+                  )}
+                  {this.updatesnackbar()}
+              </TableContainer>
 
-                        <Grid item fullWidth xs={12}>
-                          <TextField
-                            id="phoneNumber"
-                            label="Phone Number"
-                            type='number'
-                            onChange={(event) => {
-                              this.setState({
-                                updatephoneNumber: event.target.value,
-                              });
-                            }}
-                            defaultValue={result[this.state.selectedIndex].phoneNumber}
-                            fullWidth
-                          />
-                        </Grid>
-
-                        <Grid item fullWidth xs={12}>
-                          <TextField
-                            id="imeiNumber"
-                            label="IMEI Number"
-                            type='number'
-                            onChange={(event) => {
-                              this.setState({
-                                updateimeiNumber: event.target.value,
-                              });
-                            }}
-                            defaultValue={result[this.state.selectedIndex].imeiNumber}
-                            fullWidth
-                          />
-                        </Grid>
-
-                        <Grid item fullWidth xs={12}>
-                          <TextField
-                            id="startedUsingOn"
-                            variant='outlined'
-                            helperText="Started using on"
-                            onChange={(event) => {
-                              this.setState({
-                                updatestartedusingon: event.target.value,
-                              });
-                            }}
-                            defaultValue={result[this.state.selectedIndex].dateObtained}
-                            type="date"
-                            fullWidth
-                          />
-                        </Grid>
-
-                        <Grid item fullWidth xs={12}>
-                          <TextField
-                            id="updateReason"
-                            label="Update Reason"
-                            onChange={(event) => {
-                              this.setState({
-                                updateReason: event.target.value,
-                              });
-                            }}
-                            type="text"
-                            fullWidth
-                          />
-                        </Grid>
-
-                        {/* <label>Update Reason</label>
-              <input
-                className="w3-input"
-                autoFocus
-                margin="dense"
-                id="dob"
-                label=""
-                type="text"
-                fullWidth
-                onChange={(event) => {
-                  this.setState({ updateReason: event.target.value });
-                }}
-                //   defaultValue={result[this.state.selectedIndex].idSource}
-              /> */}
-                      </Grid>
-                    </DialogContent>
-                    <DialogActions>
-                      <Button
-                        color="primary"
-                        variant="contained"
-                        onClick={() => {
-                          this.updatePhones(result[this.state.selectedIndex].id);
-                        }}
-                      >
-                        Update
-                </Button>
-                      <Button
-                        color="secondary"
-                        variant="contained"
-                        onClick={() =>
-                          this.setState({
-                            updateDialogOpen: false,
-                            selectedIndex: -1,
-                          })
-                        }
-                      >
-                        Cancel
-                </Button>
-                    </DialogActions>
-                  </Dialog>
-                )}
-            </TableContainer>
+            </>
           )}
-
         <Dialog
           open={this.state.addDialogOpen}
           onClose={() => this.setState({ addDialogOpen: false })}
-          aria-labelledby="responsive-dialog-title"
+          aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">Add Phone Data</DialogTitle>
+          <DialogTitle id="form-dialog-title" align="center">
+            Add new  phone data
+          </DialogTitle>
 
           <DialogContent>
+            <Grid container spacing={3} justify="center" alignItems="center">
 
-            <Grid container justify='flex-start' direction='row' alignItems='center' spacing={3}>
-
-
+              <Grid item fullWidth xs={12}  >
+                <InputLabel>Phone Reason</InputLabel>
+                <Select
+                  autoFocus
+                  margin="dense"
+                  id="source"
+                  label="fullname"
+                  type="text"
+                  fullWidth
+                  onChange={(event) => {
+                    this.setState({ phoneReason: event.target.value });
+                  }}
+                //   defaultValue={this.state.result[this.state.selectedIndex].fullname}
+                >
+                  {this.state.phoneReasons.map((phonetype) => (
+                    <MenuItem id={phonetype.id} value={phonetype.id}>
+                      {phonetype.phoneReason}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Grid>
               <Grid item fullWidth xs={12}>
-                <FormControl fullWidth>
-                  <InputLabel id="phoneReason">Phone Reason</InputLabel>
-                  <Select
-                    labelId="phoneReason"
-                    id="phoneReason"
-                    onChange={(event) => {
-                      this.setState({ phoneReason: event.target.value });
-                    }}
-                  >
-                    {this.state.phoneReasons.map((phonetype) => (
-                      <MenuItem id={phonetype.id} value={phonetype.id}>
-                        {phonetype.phoneReason}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                <InputLabel>Phone Type</InputLabel>
+                <Select
+                  fullWidth
+                  onChange={(event) => {
+                    this.setState({ phoneType: event.target.value });
+                  }}
+                //   defaultValue={this.state.result[this.state.selectedIndex].dob}
+                >
+                  {this.state.phoneTypes.map((phonetype) => (
+                    <MenuItem id={phonetype.id} value={phonetype.id}>
+                      {phonetype.phoneType}
+                    </MenuItem>
+                  ))}
+                </Select>
               </Grid>
 
               <Grid item fullWidth xs={12}>
-                <FormControl fullWidth>
-                  <InputLabel id="phoneType">Phone Type</InputLabel>
-                  <Select
-                    labelId="phoneType"
-                    id="phoneType"
-                    //   defaultValue={result[this.state.selectedIndex].dob}
-                    onChange={(event) => {
-                      this.setState({ phoneType: event.target.value });
-                    }}
-                  >
-                    {this.state.phoneTypes.map((phonetype) => (
-                      <MenuItem id={phonetype.id} value={phonetype.id}>
-                        {phonetype.phoneType}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                <InputLabel>DefaultPhone</InputLabel>
+                <Select
+                  fullWidth
+                  onChange={(event) => {
+                    this.setState({ defaultPhone: event.target.value });
+                  }}
+
+                //   defaultValue={this.state.result[this.state.selectedIndex].sex}
+                >
+                  <MenuItem id={1} value="Yes">
+                    Yes
+                  </MenuItem>
+                  <MenuItem id={2} value="No">
+                    No
+                  </MenuItem>
+                </Select>
               </Grid>
-
               <Grid item fullWidth xs={12}>
-                <FormControl fullWidth>
-                  <InputLabel id="defaultPhone">Default Phone</InputLabel>
-                  <Select
-                    labelId="defaultPhone"
-                    id="defaultPhone"
-                    onChange={(event) => {
-                      this.setState({ defaultPhone: event.target.value });
-                    }}
-
-                  //   defaultValue={result[this.state.selectedIndex].sex}
-                  >
-                    <MenuItem id={1} value="Yes">
-                      Yes
-              </MenuItem>
-                    <MenuItem id={2} value="No">
-                      No
-              </MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid item fullWidth xs={12}>
+                <InputLabel>Phone number</InputLabel>
                 <TextField
-                  id="phoneNumber"
-                  label="Phone Number"
-                  type='number'
+                  autoFocus
+                  margin="dense"
+                  id="dob"
+                  label=""
+                  type="text"
+                  fullWidth
                   onChange={(event) => {
                     this.setState({ phoneNumber: event.target.value });
                   }}
-                  //   defaultValue={result[this.state.selectedIndex].idSource}
-                  fullWidth
+                //   defaultValue={this.state.result[this.state.selectedIndex].idSource}
                 />
               </Grid>
-
               <Grid item fullWidth xs={12}>
+                <InputLabel>IMEI number</InputLabel>
                 <TextField
-                  id="imeiNumber"
-                  label="IMEI Number"
-                  type='number'
+                  autoFocus
+                  margin="dense"
+                  id="dob"
+                  label=""
+                  type="text"
+                  fullWidth
                   onChange={(event) => {
                     this.setState({ imeiNumber: event.target.value });
                   }}
-                  //   defaultValue={result[this.state.selectedIndex].idSource}
-                  fullWidth
+                //   defaultValue={this.state.result[this.state.selectedIndex].idSource}
                 />
               </Grid>
-
               <Grid item fullWidth xs={12}>
+                <InputLabel>Started using on</InputLabel>
                 <TextField
-                  id="startedUsingOn"
-                  variant='outlined'
-                  helperText="Started using on"
+                  autoFocus
+                  margin="dense"
+                  id="dob"
+                  label=""
+                  type="date"
+                  fullWidth
                   onChange={(event) => {
                     this.setState({ startedUsingOn: event.target.value });
                   }}
-                  //   defaultValue={result[this.state.selectedIndex].idSource}
-                  type="date"
-                  fullWidth
                 />
               </Grid>
-
-              {/* <label>Update Reason</label>
-              <input
-                className="w3-input"
-                autoFocus
-                margin="dense"
-                id="dob"
-                label=""
-                type="text"
-                fullWidth
-                onChange={(event) => {
-                  this.setState({ updateReason: event.target.value });
-                }}
-                //   defaultValue={result[this.state.selectedIndex].idSource}
-              /> */}
             </Grid>
           </DialogContent>
           <DialogActions>
@@ -603,8 +693,8 @@ class Phones extends Component {
                 )
               }
             >
-              Submit
-                </Button>
+              submit
+            </Button>
             <Button
               color="secondary"
               variant="contained"
@@ -615,40 +705,68 @@ class Phones extends Component {
               }
             >
               Cancel
-                </Button>
+            </Button>
           </DialogActions>
         </Dialog>
-
         <Dialog
           fullWidth={"md"}
           maxWidth={"md"}
-          open={this.state.historyDialogeOpen}
-          onClose={() => this.setState({ historyDialogeOpen: false })}
+          open={this.state.historyDialougeOpen}
+          onClose={() => this.setState({ historyDialougeOpen: false })}
           aria-labelledby="responsive-dialog-title"
-        >
-          <DialogTitle id="form-dialog-title">Phones History</DialogTitle>
-          {/* <DialogContent> */}
-         <TableContainer>
+        > <DialogTitle id="form-dialog-title" align="center">
+            Phone History
+      </DialogTitle>
+          <TableContainer p={3}>
             <Table stickyHeader>
-              <TableHead>
 
-              <TableRow style={{ backgroundColor: "black" }}>
-                    {['Phone reason',
-                      'Phone type',
-                      'Default Phone',
-                      'Phone number',
-                      'IMEI Number',
-                      'Records Updated',
-                      'Update reason'
-                    ].map((text, index) => (
-                      <TableCell
-                        style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                        align="left"
-                      >
-                        {text}
-                      </TableCell>
-                    ))}
-                  </TableRow>
+              <TableHead>
+                <TableRow style={{ backgroundColor: "black" }}>
+                  <TableCell
+                    style={{ fontWeight: "bolder", }}
+                    align="center"
+                  >
+                    phonenumber
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder", }}
+                    align="center"
+                  >
+                    phoneReason
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder", }}
+                    align="center"
+                  >
+                    phoneType
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder", }}
+                    align="center"
+                  >
+                    DefaultPhone
+                  </TableCell>
+
+                  <TableCell
+                    style={{ fontWeight: "bolder", }}
+                    align="center"
+                  >
+                    imeinumber
+                  </TableCell>
+
+                  <TableCell
+                    style={{ fontWeight: "bolder", }}
+                    align="center"
+                  >
+                    records updated date
+                  </TableCell>
+                  <TableCell
+                    style={{ fontWeight: "bolder", }}
+                    align="center"
+                  >
+                    Update reason
+                  </TableCell>
+                </TableRow>
               </TableHead>
 
               {this.state.historyloading ? (
@@ -657,15 +775,15 @@ class Phones extends Component {
                   <TableBody>
                     {history.map((row, index) => (
                       <TableRow key={row.id}>
-                        <TableCell align="center">{row.phone_reason}</TableCell>
-                        <TableCell align="center">{row.phone_type}</TableCell>
-                        <TableCell align="center">{row.default_phone}</TableCell>
                         <TableCell align="center">{row.phoneNumber}</TableCell>
+                        <TableCell align="center">{row.phone_reason_name_field}</TableCell>
+                        <TableCell align="center">{row.phone_type_name_field}</TableCell>
+                        <TableCell align="center">{row.default_phone}</TableCell>
                         <TableCell align="center">
                           {row.imeiNumber}
                         </TableCell>{" "}
                         <TableCell component="th" align="center">
-                        {new Date(row.created_on).toDateString()}
+                          {row.created_on}
                         </TableCell>
                         <TableCell align="center">{row.update_reason}</TableCell>
                       </TableRow>
@@ -674,15 +792,16 @@ class Phones extends Component {
                 )}
             </Table>
           </TableContainer>
-          {/* </DialogContent> */}
           <DialogActions style={{ padding: 15 }}>
             <Button
-              variant='contained'
+              variant="contained"
               color="secondary"
-              onClick={() => this.setState({ historyDialogeOpen: false, selectedIndex: -1 })}
+              onClick={() =>
+                this.setState({ historyDialougeOpen: false, selectedIndex: -1 })
+              }
             >
               Close
-                </Button>
+            </Button>
           </DialogActions>
         </Dialog>
       </>
@@ -709,22 +828,7 @@ class Phones extends Component {
   gettable() {
     return (
       <>
-        <Grid container justify="space-between" alignItems="center">
-          <Grid item>
-            <h1>Phones </h1>
-          </Grid>
-          <Grid item>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                this.setState({ addDialogOpen: true });
-              }}
-            >
-              Add Phone
-            </Button>
-          </Grid>
-        </Grid>
+
         {this.getPhones()}
       </>
     );

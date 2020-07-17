@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { ThemeProvider } from '@material-ui/core/styles';
 import signUp from './Components/signUp'
 import signIn from './Components/signIn'
 import LandingPage from './Components/LandingPage'
@@ -12,61 +13,94 @@ import PreRegistration from './Components/PreRegistration'
 import AdminLandingPage from './Components/AdminLandingPage'
 import EmployerLandingPage from './Components/EmployerLandingPage'
 import AdminRegistration from './Components/AdminRegistration'
+import theme from './theme';
+import dash from './dash'
+import Stepper from './Components/WorkFlow/Stepper'
+import ApprovalCodes from './Components/AdminPageComponents/ManageCodes/ApprovalCodes';
+import Job from './Components/AdminPageComponents/ManageCodes/Pages/Job';
+import AdminDash from './AdminDash'
+import EmployerDash from './EmployerDash'
+import EmloymentTabs from './Components/EmployerPageComponents/MyCodes/EmployementCodes/EmploymentTabs'
+import Academics from './Components/DashBoardComponents/Academics'
+import {CustomizedSnackbars} from './Snackbarpage'
+import { SnackbarProvider } from 'notistack';
+import SuccessSnackbar from './sucesssnackbar';
+import {createStore} from 'redux';
+import reducer from './Reducer/reducer'
+// const store = createStore(reducer);
 
 class App extends React.PureComponent {
+ 
   render() {
     return (
-      
-      <Router>
-        <div>
-          <Switch>
-            {/* Registration Paths */}
-            <Route exact path='/' component={PreRegistration} />
-            <Route exact path='/adminRegistration' component={AdminRegistration} />
-            <Route exact path='/signUp' component={signUp} />
-            <Route exact path='/signIn' component={signIn} />
-            
-            {/* Employee PAGE PATHS */}
-            <Route exact path='/Homepage' component={LandingPage} />
-            <Route exact path='/addresses' component={LandingPage} />
-            <Route exact path='/Identities' component={LandingPage} />
-            <Route exact path='/Phones' component={LandingPage} />
-            <Route exact path='/MyJobProfile' component={LandingPage} />
-            <Route exact path='/employeeInbox' component={LandingPage} />
-            <Route exact path='/employeeOutbox' component={LandingPage} />
-            <Route exact path='/profiles' component={LandingPage} />
-            <Route exact path='/dashboard' component={LandingPage} />
-            <Route exact path='/employeeAccessCodes' component={LandingPage} />
-            <Route exact path='/employeeAccessCodes' component={LandingPage} />
-            <Route exact path='/employeeEmployementCodes' component={LandingPage} />
+      <ThemeProvider theme={theme}>
+        <SnackbarProvider anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+    }}>
 
-            {/* Employer Page Paths */}
-            <Route exact path='/employer' component={EmployerLandingPage} />
-            <Route exact path='/employerDashboard' component={EmployerLandingPage} />
-            <Route exact path='/employerMessages' component={EmployerLandingPage} />
-            <Route exact path='/employerAccessCodes' component={EmployerLandingPage} />
-            <Route exact path='/employerEmployementCodes' component={EmployerLandingPage} />
-            <Route exact path='/employerInbox' component={EmployerLandingPage} />
-            <Route exact path='/employerOutbox' component={EmployerLandingPage} />
 
-          {/* ADMIN PAGE PATHS */}
-            <Route exact path='/admin' component={AdminLandingPage} />
-            <Route exact path='/managestates' component={AdminLandingPage} />
-            <Route exact path='/manageLGAs' component={AdminLandingPage} />
-            <Route exact path='/manageCities' component={AdminLandingPage} />
-            <Route exact path='/adminAccessCodes' component={AdminLandingPage} />
-            <Route exact path='/addAdmin' component={AdminLandingPage} />
-            <Route exact path='/manageAddressReasons' component={AdminLandingPage} />
-            <Route exact path='/manageAddressTypes' component={AdminLandingPage} />
-            <Route exact path='/managePhoneTypes' component={AdminLandingPage} />
-            <Route exact path='/managePhoneReasons' component={AdminLandingPage} />
-            <Route exact path='/manageIdSources' component={AdminLandingPage} />
-            <Route exact path='/manageJobCategories' component={AdminLandingPage} />
-            <Route exact path='/manageJobLeavingReasons' component={AdminLandingPage} />
+<SuccessSnackbar />
+        <Router>
+          <div>
+            <Switch>
+              {/* Registration Paths */}
+              <Route exact path='/' component={signIn} />
+              <Route exact path='/adminRegistration' component={AdminRegistration} />
+              <Route exact path='/signUp' component={signUp} />
+              <Route exact path='/signIn' component={signIn} />
+              <Route exact path='/dash' component={dash} />
+              <Route exact path='/workflow' component={Stepper} />
 
-          </Switch>
-        </div>
-      </Router>
+              {/* Employee PAGE PATHS */}
+              <Route exact path='/Homepage' component={dash} />
+              <Route exact path='/addresses' component={dash} />
+              <Route exact path='/Identities' component={dash} />
+              <Route exact path='/Phones' component={dash} />
+              <Route exact path='/MyJobProfile' component={dash} />
+              <Route exact path='/employeeInbox' component={dash} />
+              <Route exact path='/employeeOutbox' component={dash} />
+              <Route exact path='/profiles' component={dash} />
+              <Route exact path='/dashboard' component={dash} />
+              <Route exact path='/employeeAccessCodes' component={dash} />
+              <Route exact path='/employeeAccessCodes' component={dash} />
+              <Route exact path='/employeeEmployementCodes' component={dash} />
+              <Route exact path='/employee/academics' component={dash} />
+
+              {/* Employer Page Paths */}
+              {/* <Route exact path='/employerLanding' component={EmployerDash} /> */}
+              <Route exact path='/employer' component={EmployerDash} />
+              <Route exact path='/employerDashboard' component={EmployerDash} />
+              <Route exact path='/employerMessages' component={EmployerDash} />
+              <Route exact path='/employerAccessCodes' component={EmployerDash} />
+              <Route exact path='/employerEmployementCodes' component={EmployerDash} />
+              <Route exact path='/employerInbox' component={EmployerDash} />
+              <Route exact path='/employerOutbox' component={EmployerDash} />
+              <Route exact path='/employerEmployment' component={EmployerDash} />
+
+              {/* ADMIN PAGE PATHS */}
+              {/* <Route exact path='/adminLanding' component={AdminDash} /> */}
+              <Route exact path='/admin' component={AdminDash} />
+              <Route exact path='/managestates' component={AdminDash} />
+              <Route exact path='/manageLGAs' component={AdminDash} />
+              <Route exact path='/manageCities' component={AdminDash} />
+              <Route exact path='/adminAccessCodes' component={AdminDash} />
+              <Route exact path='/addAdmin' component={AdminDash} />
+              <Route exact path='/manageAddressReasons' component={AdminDash} />
+              <Route exact path='/manageAddressTypes' component={AdminDash} />
+              <Route exact path='/managePhoneTypes' component={AdminDash} />
+              <Route exact path='/managePhoneReasons' component={AdminDash} />
+              <Route exact path='/manageIdSources' component={AdminDash} />
+              <Route exact path='/manageJobCategories' component={AdminDash} />
+              <Route exact path='/manageJobLeavingReasons' component={AdminDash} />
+              <Route exact path='/approvalCodes' component={AdminDash} />
+              <Route exact path='/approvaljobs' component={Job} />
+
+            </Switch>
+          </div>
+        </Router>
+        </SnackbarProvider>
+      </ThemeProvider>
     );
   }
 }

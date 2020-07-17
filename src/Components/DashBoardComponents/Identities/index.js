@@ -27,15 +27,22 @@ import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
 import { InputLabel } from "@material-ui/core";
 import FormControl from '@material-ui/core/FormControl';
+import Typography from "@material-ui/core/Typography";
+import GridListTile from '@material-ui/core/GridListTile';
+import GridList from '@material-ui/core/GridList';
+import {Snackbar} from '@material-ui/core'
+import MuiAlert from '@material-ui/lab/Alert';
 
-const token1 = localStorage.getItem("Token");
+let token1 = "";
 
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
-let result = [];
+let token = "";
+let id = "";
+// let result = [];
 let history = [];
 let pictures = [];
-
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 class Identities extends Component {
   constructor(props) {
     super(props);
@@ -62,28 +69,85 @@ class Identities extends Component {
       historyloading: true,
       historyDialogeOpen: false,
       uploadpictures: "",
-      pictureloading: "false"
+      pictureloading: "false",
+      result:[],
+      buttondisabled: "disabled",
+      addsnackbar:false,
+      addresponse:"",
+      updateresponse:"",
+      updatesnackbar:false,
     };
     // this.updateidentites= this.updateidentites.bind();
   }
+  reasonforupdatevalidcheck = (event) => {
+    if (event.target.value.length > 0) {
+      //  console.log(event.target.value);
+      this.setState({ buttondisabled: "" });
+    }else if(event.target.value>250){
+      this.setState({ buttondisabled: "disabled" });
+    } 
+    else {
+      this.setState({ buttondisabled: "disabled" });
+    }
 
+
+  };
+  addsnackbar() {
+    return (
+      this.state.addresponse === 200 ?
+        (<div>
+
+          <Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ addsnackbar: false }) }>
+            <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addasnackbar }) }} severity="success">
+            Identites added sucessfully
+      </Alert>
+          </Snackbar>
+        </div>) : (<Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }}>
+          <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }} severity="error">
+            Something went wrong please try again
+      </Alert>
+        </Snackbar>))
+
+  }
+  updatesnackbar() {
+    return (
+      this.state.updateresponse === 200 ?
+        (<div>
+          {console.log("//////////////////////////////////////")}
+
+          <Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ updatesnackbar: false }) }>
+            <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="success">
+              Identites updated sucessfully
+      </Alert>
+          </Snackbar>
+        </div>) : (<Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }}>
+          <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="error">
+            Something went wrong please try again
+      </Alert>
+        </Snackbar>))
+
+  }
+async getidentites(){
+  await axios
+    .get(
+      "http://3.22.17.212:8000/api/v1/employees/" + id + "/identities-by/" + id,
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    )
+    .then((res) => {
+      //result = res.data;
+      this.setState({result:res.data});
+      console.table("identites", this.state.result);
+    });
+}
   async componentDidMount() {
-    await axios
-      .get(
-        "http://3.22.17.212:8000/api/v1/employees/" +
-        id +
-        "/identities-by/" +
-        id,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res) => {
-        result = res.data;
-        console.table("identites", result);
-      });
+  
+    token = localStorage.getItem("Token");
+    id = localStorage.getItem("id");
+    await this.getidentites();
     let idSource = await axios.get(
       "http://3.22.17.212:8000/api/v1/resManager/id/sources/?excludeSystem=true",
       {
@@ -162,7 +226,9 @@ class Identities extends Component {
       )
       .then((response) => {
         console.log(response);
+        this.setState({addresponse:response.status,addsnackbar: true})
       });
+      await this.getidentites();
   }
   async updateidentites(idsource) {
     this.setState({
@@ -190,38 +256,28 @@ class Identities extends Component {
       )
       .then((response) => {
         console.log(response);
+        this.setState({updateresponse:response.status, updatesnackbar: true })
       });
+      await this.getidentites();
   }
   render() {
     return (
       <div>
-        <Grid container justify="space-between" alignItems="center">
-          <Grid item>
-            <h1>My Identities</h1>
-          </Grid>
-
-          <Grid item>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                this.setState({ addDialogOpen: true });
-              }}
-            >
-              Add Identity
-            </Button>
-          </Grid>
-        </Grid>
+        
         {this.state.loading ? this.isloading() : this.getTableOfEmployees()}
 
         <Dialog
-          fullWidth={"md"}
-          maxWidth={"md"}
+          //  fullWidth={"sm"}
+          //  maxWidth={"sm"}
           open={this.state.viewDialogeOpen}
           onClose={() => this.setState({ viewDialogeOpen: false })}
           aria-labelledby="responsive-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">View pictures</DialogTitle>
+          <DialogTitle id="form-dialog-title">
+          <Typography variant="subtitle1" gutterBottom align="center">
+          View pictures
+              </Typography>
+          </DialogTitle>
           <DialogContent>
             <Grid
               container
@@ -229,159 +285,207 @@ class Identities extends Component {
               justify="space-evenly"
               alignItems="center"
             >
-              {this.state.pictureloading ? (
-                this.isloading()
-              ) : (
-                  pictures.map((picture, index) => (
-                    //  <image src={picture.picture}/>
-                    // <p> {picture.picture}</p>
-                    <Grid container>
-                      <Grid item xs={12}>
-                        {picture.picture}
-                      </Grid>
-                    </Grid>
-                  ))
-                )}
+                    <GridList cellHeight={160} style={{height:500,width:500}} cols={3}>
+              {this.state.pictureloading
+                ? this.isloading()
+                : pictures.map((pic, index) => (
+                  <GridListTile key={pic.id} cols={1}>
+                  <img src={pic.picture}  />
+                </GridListTile>
+                
 
-
+                  // <Grid container>
+                  //     <Grid item xs={12}>
+                  // <image src={pic.picture}/>
+                  //       {/* {pic.picture} */}
+                  //     </Grid>
+                  //   </Grid>
+                  ))} </GridList>
             </Grid>
           </DialogContent>
           <DialogActions style={{ padding: 15 }}>
             <Button
-              variant='contained'
+              variant="contained"
               color="secondary"
-              onClick={() => this.setState({ viewDialogeOpen: false, selectedIndex: -1 })}
+              onClick={() =>
+                this.setState({ viewDialogeOpen: false, selectedIndex: -1 })
+              }
             >
               Close
-                </Button>
+            </Button>
           </DialogActions>
         </Dialog>
-
-
-        {<Dialog
-          open={this.state.addDialogOpen}
-          onClose={() => this.setState({ addDialogOpen: false })}
+        <Dialog
+          open={this.state.uploadDialougeOpen}
+          onClose={() => this.setState({ uploadDialougeOpen: false })}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title" justify="center">
-            Add Profile
-              </DialogTitle>
+          <DialogTitle id="form-dialog-title">choose your file</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              Enter the details of your identity
-                </DialogContentText>
-
-            <Grid container justify='flex-start' direction='row' alignItems='center' spacing={3}>
-
-              <Grid item fullWidth xs={12}>
-                <TextField
-                  id="firstName"
-                  label="First Name"
-                  onChange={(event) => {
-                    this.setState({ fullName: event.target.value });
-                  }}
-                  type="text"
-                  fullWidth
-                />
-              </Grid>
-
-              <Grid item fullWidth xs={12}>
-                <TextField
-                  id="dob"
-                  variant='outlined'
-                  helperText="Date of Birth"
-                  onChange={(event) => {
-                    this.setState({ dob: event.target.value });
-                  }}
-                  type="date"
-                  fullWidth
-                />
-              </Grid>
-
-              <Grid item fullWidth xs={12}>
-
-                <FormControl fullWidth>
-                  <InputLabel id="gender">Gender</InputLabel>
-                  <Select
-                    labelId="gender"
-                    id="gender"
-                    // value={age}
-                    onChange={(event) => {
-                      this.setState({ sex: event.target.value });
-                    }}
-                  >
-                    <MenuItem value={"Male"}>Male</MenuItem>
-                    <MenuItem value={"Female"}>Female</MenuItem>
-                  </Select>
-                </FormControl>
-
-              </Grid>
-
-              <Grid item fullWidth xs={12}>
-                <TextField
-                  id="idNumber"
-                  label="Id Number"
-                  // defaultValue={result[this.state.selectedIndex].surname}
-                  onChange={(event) => {
-                    this.setState({ idNumber: event.target.value });
-                  }}
-                  type="text"
-                  fullWidth
-                />
-              </Grid>
-
-              <Grid item fullWidth xs={12}>
-                <FormControl fullWidth>
-                  <InputLabel id="idSource">Id Source</InputLabel>
-                  <Select
-                    labelId="idSource"
-                    id="idSource"
-                    // value={age}
-                    onChange={(event) => {
-                      this.setState({ selectedidSource: event.target.value });
-                    }}
-                  >
-                    {this.state.idSource.map((source) => (
-                      <MenuItem id={source.id} value={source.id}>
-                        {source.idSource}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+            <Grid container p={1}>
+              <TextField
+                type="file"
+                onChange={(event) => {
+                  this.setState({ uploadpictures: event.target.files[0] });
+                }}
+              ></TextField>
             </Grid>
+            <Box p={1}>
 
+            <Grid
+           
+           container
+           direction="column-reverse"
+           
+           alignItems="flex-end"
+           >
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={() => {
+                  this.postpictures(this.state.pictureid);
+                }}
+                >
+                upload
+              </Button>
+            </Grid>
+                </Box>
           </DialogContent>
-          <DialogActions>
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={() =>
-                this.setState(
-                  {
+        </Dialog>
+        {this.updatesnackbar()}
+
+        {
+          <Dialog
+            open={this.state.addDialogOpen}
+            onClose={() => this.setState({ addDialogOpen: false })}
+            aria-labelledby="form-dialog-title"
+          >
+            <DialogTitle id="form-dialog-title" align='center' justify="center">
+              Add Profile
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText align='center'>
+                Enter the details of your identity
+              </DialogContentText>
+
+              <Grid
+                container
+                justify="flex-start"
+                direction="row"
+                alignItems="center"
+                spacing={3}
+              >
+                <Grid item fullWidth xs={12}>
+                  <TextField
+                    id="firstName"
+                    label="First Name"
+                    onChange={(event) => {
+                      this.setState({ fullName: event.target.value });
+                    }}
+                    type="text"
+                    fullWidth
+                  />
+                </Grid>
+
+                
+
+                <Grid item fullWidth xs={12}>
+                  <FormControl fullWidth>
+                    <InputLabel id="gender">Gender</InputLabel>
+                    <Select
+                      labelId="gender"
+                      id="gender"
+                      // value={age}
+                      onChange={(event) => {
+                        this.setState({ sex: event.target.value });
+                      }}
+                    >
+                      <MenuItem value={"Male"}>Male</MenuItem>
+                      <MenuItem value={"Female"}>Female</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid item fullWidth xs={12}>
+                  <TextField
+                    id="idNumber"
+                    label="Id Number"
+                    // defaultValue={result[this.state.selectedIndex].surname}
+                    onChange={(event) => {
+                      this.setState({ idNumber: event.target.value });
+                    }}
+                    type="text"
+                    fullWidth
+                  />
+                </Grid>
+
+                <Grid item fullWidth xs={12}>
+                  <FormControl fullWidth >
+                    <InputLabel id="idSource">Id Source</InputLabel>
+                    <Select
+                      labelId="idSource"
+                      id="idSource"
+                      // value={age}
+                      onChange={(event) => {
+                        this.setState({ selectedidSource: event.target.value });
+                      }}
+                    >
+                      {this.state.idSource.map((source) => (
+                        <MenuItem id={source.id} value={source.id}>
+                          {source.idSource}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item fullWidth xs={12}>
+                <InputLabel id="dob">Date of birth</InputLabel>
+                  <TextField
+                    id="dob"
+                    // variant="outlined"
+                    // label="Date of birth"
+                    onChange={(event) => {
+                      this.setState({ dob: event.target.value });
+                    }}
+                    type="date"
+                    fullWidth
+                  />
+                </Grid>
+              </Grid>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={() =>
+                  this.setState(
+                    {
+                      addDialogOpen: false,
+                      // selectedIndex: -1,
+                    },
+                    this.postidentites
+                  )
+                }
+              >
+                Submit Identity
+              </Button>
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={() =>
+                  this.setState({
                     addDialogOpen: false,
                     // selectedIndex: -1,
-                  },
-                  this.postidentites
-                )
-              }
-            >
-              Submit Identity
-                </Button>
-            <Button
-              color="secondary"
-              variant="contained"
-              onClick={() =>
-                this.setState({
-                  addDialogOpen: false,
-                  // selectedIndex: -1,
-                })
-              }
-            >
-              Cancel
-                </Button>
-          </DialogActions>
-        </Dialog>}
+                  })
+                }
+              >
+                Cancel
+              </Button>
+            </DialogActions>
+          </Dialog>
+        }
+        {this.addsnackbar()}
+
       </div>
     );
   }
@@ -389,7 +493,34 @@ class Identities extends Component {
   adddata() {
     return (
       <>
-        <h1>Add identity to increase your rating</h1>
+       <Grid item xs={12}>
+     
+       </Grid>
+      
+        <Grid item xs={12}>
+            <Paper style={{ padding: 20 }} elevation={3}>
+            <Box p={8}   display="flex" flexDirection="column"  justifyContent='center' alignItems="center" style={{height: '50vh',}} >
+              <Typography variant="h5" gutterBottom align="center">
+                Add Identites to improve ratings.
+              </Typography>
+
+              <Grid container justify="center" style={{ marginTop: 50 }}>
+              <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                this.setState({ addDialogOpen: true });
+              }}
+            >
+              Add Identity
+            </Button>
+          
+        </Grid>
+              </Grid>
+              </Box>
+            </Paper>
+          </Grid>
       </>
     );
   }
@@ -417,6 +548,7 @@ class Identities extends Component {
   }
   async postpictures(id) {
 
+    this.setState({ uploadDialougeOpen: false });
     let headers = {
       headers: {
         Authorization: token,
@@ -436,239 +568,275 @@ class Identities extends Component {
       .then((response) => {
         console.log(response);
       });
-    this.setState({ uploadDialougeOpen: false });
+    await this.getidentites();
   }
 
   getTableOfEmployees() {
     return (
       <>
-        {result.length === 0 ? (
+        {this.state.result.length === 0 ? (
           this.adddata()
         ) : (
-            <TableContainer component={Paper} elevation={16}>
-              <Table stickyHeader>
-                <TableHead>
-                  <TableRow style={{ backgroundColor: "black" }}>
-                    {['Date',
-                      'Source',
-                      'Full Name',
-                      'Date of birth',
-                      'Sex',
-                      'Picture',
-                      'Verified by',
-                      'Update',
-                      'History'
-                    ].map((text, index) => (
-                      <TableCell
-                        style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                        align="left"
-                      >
-                        {text}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {result.map((row, index) => (
-                    <TableRow key={row.id}>
-                      <TableCell align="left">{new Date(row.created_on).toDateString()}</TableCell>
-                      <TableCell align="left">{row.idSource}</TableCell>
-                      <TableCell align="left">{row.fullname}</TableCell>
-                      <TableCell align="left">{row.dob}</TableCell>
-                      <TableCell align="left">{row.sex}</TableCell>
-                      <TableCell align="left">
-                        <Grid
-                          container
-                          display="flex"
-                          direction="row"
-                          alignItems="center"
-                          justify="center"
-                          spacing={1}
-                        >
-                          <Grid item>
-                            <Button
-                              size="small"
-                              color="primary"
-                              variant="outlined"
-                              onClick={() => this.getpictures(row.idSource)}
-                            >
-                              View
-                          </Button>
-                          </Grid>
-                          <Grid item>
-                            <Button
-                              size="small"
-                              color="primary"
-                              variant="outlined"
-                              onClick={() =>
-                                this.setState(
-                                  {
-                                    uploadDialougeOpen: true,
-                                    pictureid: row.id,
-                                  },
-                                  console.log("picturedid", this.state.pictureid)
-                                )
-                              }
-                            >
-                              upload
-                          </Button>
-                          </Grid>
-                        </Grid>
-                      </TableCell>
-                      <TableCell align="center">{row.owner_name_field}</TableCell>
+          <>
+          <Grid container direction="column" justify="center" alignItems="flex-end">
+            <Box p={2}>
 
-                      <TableCell align="center">
-                        <Button
-                          color="primary"
-                          variant="outlined"
-                          onClick={() =>
-                            this.setState({
-                              updateDialogOpen: true,
-                              selectedIndex: index,
-                            })
-                          }
-                        >
-                          Update
-                      </Button>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Button
-                          size="small"
-                          color="primary"
-                          variant="outlined"
-                          onClick={() => this.getHistory(row.idSource)}
-                        >
-                          history
-                      </Button>
-                      </TableCell>
-                    </TableRow>
+         
+
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                this.setState({ addDialogOpen: true });
+              }}
+              >
+              Add Identity
+            </Button>
+          </Grid>
+              </Box>
+        </Grid>
+          <TableContainer component={Paper} elevation={16}>
+            <Table stickyHeader>
+              <TableHead>
+                <TableRow style={{ backgroundColor: "black" }}>
+                  {[
+                    " Created Date",
+                    "Full Name",
+                    "Date of birth",
+                    "Sex",
+                    "Source",
+                    "Picture",
+                    "Verified by",
+                    "Update",
+                    "History",
+                  ].map((text, index) => (
+                    <TableCell
+                      style={{ fontWeight: "bolder",  }}
+                      align="center"
+                    >
+                      {text}
+                    </TableCell>
                   ))}
-                </TableBody>
-              </Table>
-              {this.state.selectedIndex === -1 ? (
-                <div />
-              ) : (
-                  <Dialog
-                    open={this.state.updateDialogOpen}
-                    onClose={() => this.setState({ updateDialogOpen: false })}
-                    aria-labelledby="form-dialog-title"
-                  >
-                    <DialogTitle id="form-dialog-title">Update Identity</DialogTitle>
-                    <DialogContent>
-                      <DialogContentText>
-                        Type in details to update
-                </DialogContentText>
-
-                      <Grid container justify='flex-start' direction='row' alignItems='center' spacing={3}>
-
-                        <Grid item fullWidth xs={12}>
-                          <TextField
-                            id="fullName"
-                            label="Full name"
-                            defaultValue={result[this.state.selectedIndex].fullname}
-                            onChange={(event) => {
-                              this.setState({ updateFullName: event.target.value });
-                            }}
-                            type="text"
-                            fullWidth
-                          />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {this.state.result.map((row, index) => (
+                  <TableRow key={row.id}>
+                    <TableCell align="center">
+                      {new Date(row.created_on).toDateString()}
+                    </TableCell>
+                    <TableCell align="center">{row.fullname}</TableCell>
+                    <TableCell align="center">{row.dob}</TableCell>
+                    <TableCell align="center">{row.sex}</TableCell>
+                    <TableCell align="center">{row.idSource_name_field}</TableCell>
+                    <TableCell align="center">
+                      <Grid
+                        container
+                        display="flex"
+                        direction="row"
+                        alignItems="center"
+                        justify="center"
+                        spacing={1}
+                      >
+                        <Grid item>
+                          <Button
+                            size="small"
+                            color="primary"
+                            variant="outlined"
+                            onClick={() => this.getpictures(row.idSource)}
+                          >
+                            View
+                          </Button>
                         </Grid>
-
-                        <Grid item fullWidth xs={12}>
-                          <TextField
-                            id="dob"
-                            label="Date of birth"
-                            defaultValue={result[this.state.selectedIndex].dob}
-                            onChange={(event) => {
-                              this.setState({ updatedob: event.target.value });
-                            }}
-                            type="date"
-                            fullWidth
-                          />
-                        </Grid>
-
-                        <Grid item fullWidth xs={12}>
-
-                          <FormControl fullWidth>
-                            <InputLabel id="gender">Gender</InputLabel>
-                            <Select
-                              labelId="gender"
-                              id="gender"
-                              // value={age}
-                              defaultValue={result[this.state.selectedIndex].sex}
-                              onChange={(event) => {
-                                this.setState({ updatesex: event.target.value });
-                              }}
-                            >
-                              <MenuItem value={"Male"}>Male</MenuItem>
-                              <MenuItem value={"Female"}>Female</MenuItem>
-                            </Select>
-                          </FormControl>
-
-                        </Grid>
-
-                        <Grid item fullWidth xs={12}>
-                          <TextField
-                            id="idSource"
-                            label="Id Source"
-                            defaultValue={result[this.state.selectedIndex].idSource}
-                            // onChange={(event) => {
-                            //   this.setState({ updateidnumber: event.target.value });
-                            // }}
-                            type="texy"
-                            fullWidth
-                          />
-                        </Grid>
-
-                        <Grid item fullWidth xs={12}>
-                          <TextField
-                            id="updatereason"
-                            label="Update Reason"
-                            // defaultValue={result[this.state.selectedIndex].idSource}
-                            onChange={(event) => {
-                              this.setState({ updatereason: event.target.value });
-                            }}
-                            type="text"
-                            fullWidth
-                          />
+                        <Grid item>
+                          <Button
+                            size="small"
+                            color="secondary"
+                            variant="outlined"
+                            onClick={() =>
+                              this.setState(
+                                {
+                                  uploadDialougeOpen: true,
+                                  pictureid: row.id,
+                                },
+                                console.log("picturedid", this.state.pictureid)
+                              )
+                            }
+                          >
+                            upload
+                          </Button>
                         </Grid>
                       </Grid>
-                    </DialogContent>
+                    </TableCell>
+                    <TableCell align="center">{row.owner_name_field}</TableCell>
 
-                    <DialogActions style={{ padding: 15 }}>
+                    <TableCell align="center">
                       <Button
-                        disabled={this.state.buttondisabled}
                         color="primary"
-                        variant="contained"
-                        onClick={() => {
-                          this.updateidentites(
-                            result[this.state.selectedIndex].idSource
-                          );
-                        }}
-                      >
-                        Update
-                </Button>
-                      <Button
-                        color="secondary"
-                        variant="contained"
+                        variant="outlined"
                         onClick={() =>
                           this.setState({
-                            updateDialogOpen: false,
-                            selectedIndex: -1,
+                            updateDialogOpen: true,
+                            selectedIndex: index,
+                            updateFullName: this.state.result[index].fullname,
+                            updatedob: this.state.result[index].dob,
+                            updatesex: this.state.result[index].sex,
+                            updateidnumber: this.state.result[index].idSource,
                           })
                         }
                       >
-                        Cancel
-                </Button>
-                    </DialogActions>
-                  </Dialog>
+                        Update
+                      </Button>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        size="small"
+                        color="secondary"
+                        variant="outlined"
+                        onClick={() => this.getHistory(row.idSource)}
+                      >
+                        history
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            {this.state.selectedIndex === -1 ? (
+              <div />
+            ) : (
+              <Dialog
+                open={this.state.updateDialogOpen}
+                onClose={() => this.setState({ updateDialogOpen: false })}
+                aria-labelledby="form-dialog-title"
+              >
+                <DialogTitle id="form-dialog-title" align='center'>
+                  Update Identity
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText align='center'>
+                    Type in details to update
+                  </DialogContentText>
 
+                  <Grid
+                    container
+                    justify="flex-start"
+                    direction="row"
+                    alignItems="center"
+                    spacing={3}
+                  >
+                    <Grid item fullWidth xs={12}>
+                      <TextField
+                        id="fullName"
+                        label="Full name"
+                        defaultValue={this.state.updateFullName}
+                        onChange={(event) => {
+                          this.setState({ updateFullName: event.target.value });
+                        }}
+                        type="text"
+                        fullWidth
+                      />
+                    </Grid>
 
+                    <Grid item fullWidth xs={12}>
+                    {/* <InputLabel id="dob">Date of birth</InputLabel> */}
+                      <TextField
+                        id="dob"
+                        label="Date of birth"
+                        defaultValue={this.state.updatedob}
+                        onChange={(event) => {
+                          this.setState({ updatedob: event.target.value });
+                        }}
+                        type="date"
+                        fullWidth
+                      />
+                    </Grid>
 
-                )}
-            </TableContainer>
-          )
-        }
+                    <Grid item fullWidth xs={12}>
+                      <FormControl fullWidth>
+                        <InputLabel id="gender">Gender</InputLabel>
+                        <Select
+                          labelId="gender"
+                          id="gender"
+                          // value={age}
+                          defaultValue={this.state.updatesex}
+                          onChange={(event) => {
+                            this.setState({ updatesex: event.target.value });
+                          }}
+                        >
+                          <MenuItem value={"Male"}>Male</MenuItem>
+                          <MenuItem value={"Female"}>Female</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item fullWidth xs={12}>
+                      <Select
+                        id="idSource"
+                        label="Id Source"
+                        defaultValue={this.state.updateidnumber}
+                        onChange={(event) => {
+                          this.setState({ updateidnumber: event.target.value });
+                        }}
+                        type="text"
+                        fullWidth
+                      >
+                      {this.state.idSource.map((source) => (
+                        <MenuItem id={source.id} value={source.id}>
+                          {source.idSource}
+                        </MenuItem>
+                      ))}</Select>
+                    </Grid>
+
+                    <Grid item fullWidth xs={12}>
+                      <TextField
+                        id="updatereason"
+                        label="Update Reason"
+                        helperText="update reason should be less than 250 characters"
+                        // defaultValue={this.state.result[this.state.selectedIndex].idSource}
+                        onChange={(event) => {
+                          this.setState({ updatereason: event.target.value },this.reasonforupdatevalidcheck(event));
+                        }}
+                        type="text"
+                        fullWidth
+                      />
+                    </Grid>
+                  </Grid>
+                </DialogContent>
+
+                <DialogActions style={{ padding: 15 }}>
+                  <Button
+                    disabled={this.state.buttondisabled}
+                    color="primary"
+                    variant="contained"
+                    disabled={this.state.buttondisabled}
+                    onClick={() => {
+                      this.updateidentites(
+                        this.state.result[this.state.selectedIndex].idSource
+                      );
+                    }}
+                  >
+                    Update
+                  </Button>
+                  <Button
+                    color="secondary"
+                    variant="contained"
+                    onClick={() =>
+                      this.setState({
+                        updateDialogOpen: false,
+                        selectedIndex: -1,
+                      })
+                    }
+                  >
+                    Cancel
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            )}
+          </TableContainer>
+          </>
+        )}
 
         <Dialog
           fullWidth={"md"}
@@ -677,23 +845,24 @@ class Identities extends Component {
           onClose={() => this.setState({ historyDialogeOpen: false })}
           aria-labelledby="responsive-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">Identities History</DialogTitle>
+          <DialogTitle id="form-dialog-title" align='center'>Identities History</DialogTitle>
           {/* <DialogContent> */}
           <TableContainer p={3}>
             <Table stickyHeader>
               <TableHead>
                 <TableRow style={{ backgroundColor: "black" }}>
-                  {['Full Name',
-                    'Date of birth',
-                    'Sex',
-                    'Id Source',
-                    'Id Number',
-                    'Records Updated Date',
-                    'Update Reason',
+                  {[
+                    "Full Name",
+                    "Date of birth",
+                    "Sex",
+                    "Id Source",
+                    "Id Number",
+                    "Records Updated Date",
+                    "Update Reason",
                   ].map((text, index) => (
                     <TableCell
-                      style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
-                      align="left"
+                      style={{ fontWeight: "bolder",  }}
+                      align="center"
                     >
                       {text}
                     </TableCell>
@@ -704,33 +873,35 @@ class Identities extends Component {
               {this.state.historyloading ? (
                 this.isloading()
               ) : (
-                  <TableBody>
-                    {history.map((row, index) => (
-                      <TableRow key={row.id}>
-                        <TableCell align="center">{row.fullname}</TableCell>
-                        <TableCell align="center">{row.dob}</TableCell>
-                        <TableCell align="center">{row.sex}</TableCell>
-                        <TableCell align="center">{row.idSource}</TableCell>
-                        <TableCell align="center">{row.idNumber}</TableCell>{" "}
-                        <TableCell component="th" align="center">
-                          {new Date(row.created_on).toDateString()}
-                        </TableCell>
-                        <TableCell align="center">{row.update_reason}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                )}
+                <TableBody>
+                  {history.map((row, index) => (
+                    <TableRow key={row.id}>
+                      <TableCell align="center">{row.fullname}</TableCell>
+                      <TableCell align="center">{row.dob}</TableCell>
+                      <TableCell align="center">{row.sex}</TableCell>
+                      <TableCell align="center">{row.idSource_name_field}</TableCell>
+                      <TableCell align="center">{row.idNumber}</TableCell>{" "}
+                      <TableCell component="th" align="center">
+                        {new Date(row.created_on).toDateString()}
+                      </TableCell>
+                      <TableCell align="center">{row.update_reason}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              )}
             </Table>
           </TableContainer>
           {/* </DialogContent> */}
           <DialogActions style={{ padding: 15 }}>
             <Button
-              variant='contained'
+              variant="contained"
               color="secondary"
-              onClick={() => this.setState({ historyDialogeOpen: false, selectedIndex: -1 })}
+              onClick={() =>
+                this.setState({ historyDialogeOpen: false, selectedIndex: -1 })
+              }
             >
               Close
-                </Button>
+            </Button>
           </DialogActions>
         </Dialog>
       </>

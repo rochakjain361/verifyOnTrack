@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Button } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+// import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -22,23 +22,26 @@ import Box from "@material-ui/core/Box";
 import { Typography } from "@material-ui/core";
 import { Select } from "@material-ui/core";
 import { MenuItem } from "@material-ui/core";
-import { InputLabel } from "@material-ui/core";
+// import { Label } from "@material-ui/core";
 import { CircularProgress } from "@material-ui/core";
-
+import InputLabel from '@material-ui/core/InputLabel';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+import InputAdornment from '@material-ui/core/InputAdornment';
+import {Snackbar} from '@material-ui/core'
+import MuiAlert from '@material-ui/lab/Alert';
+import NetworkDetector from  '../../../NetworkDetector';
+let token = "";
+let id = "";
 let result = [];
 let history = []
-
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 class MyProfile extends Component {
   state = {
     updateDialogOpen: false,
     addDialogOpen: false,
     selectedIndex: -1,
-    result: null,
     isloading: false,
     updatedval: "",
     updatedfirstname: "",
@@ -58,9 +61,14 @@ class MyProfile extends Component {
     id: "",
     file: null,
     gender: "",
+    result: [],
+    addsnackbar:false,
+    addresponse:"",
+    updateresponse:"",
+    updatesnackbar:false,
+
   };
-  async componentDidMount() {
-    console.log(token);
+  async getprofiledata() {
     await axios
       .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/profiles", {
         headers: {
@@ -69,16 +77,19 @@ class MyProfile extends Component {
       })
       .then((res) => {
         result = res.data;
-        // this.setState({ id: result[0].employee });
-        // this.setState({ updatedfirstname: result[0].firstname });
-        // this.setState({ updatedMiddlename: result[0].middlename });
-        // this.setState({ updatedlastname: result[0].surname });
-        // this.setState({ updatedDob: result[0].dob });
+        this.setState({ result: result })
+        console.log("Profile Data", result);
       });
+  }
+  async componentDidMount() {
+    this.setState({ isloading: true })
+   
+    token = localStorage.getItem("Token");
+    id = localStorage.getItem("id");
+    await this.getprofiledata();
     this.setState({ isloading: false });
 
-    // console.table(result);
-    // console.log(result[0].id);
+
   }
 
   _handleChangeEvent(event) {
@@ -91,22 +102,39 @@ class MyProfile extends Component {
     if (event.target.value.length > 0) {
       //  console.log(event.target.value);
       this.setState({ buttondisabled: "" });
-    } else {
+    }
+    else if (event.target.value.length > 250) {
+      this.setState({ buttondisabled: "disabled" });
+
+    }
+    else {
       this.setState({ buttondisabled: "disabled" });
     }
 
 
+
   };
+  capitalizelastname(lastname1){
+    lastname1=lastname1.charAt(0).toUpperCase()+lastname1.slice(1)
+   
+    this.setState({ lastname: lastname1 })
+    console.log("lastname1",lastname1)
 
-  // async updatedetails(){
-  //   console.log("///////////////////////////////////////////////");
-  //  let data = {
-  //     employee: this.state.id,
-  //     update_reason: this.state.updatedReasonforupdating,
-  //     sex: this.state.updatedsex,
-  //     dob: this.state.updatedDob,
-  //   };
+  }
+  capitalizemiddlename(middlename1){
+    middlename1=middlename1.charAt(0).toUpperCase()+middlename1.slice(1)
+   
+    this.setState({ middlename: middlename1 })
+    console.log("middlename1",this.state.middlename)
 
+  }
+  capitalizefirstname(firstname1){
+    firstname1=firstname1.charAt(0).toUpperCase()+firstname1.slice(1)
+   
+    this.setState({ firstname: firstname1 })
+    console.log("firstname1",this.state.firstname)
+
+  }
   async updatedetails() {
     this.setState({
       updateDialogOpen: false,
@@ -120,7 +148,9 @@ class MyProfile extends Component {
     let bodyFormData = new FormData();
     bodyFormData.append("employee", id);
     bodyFormData.append("update_reason", this.state.updatedReasonforupdating);
-    bodyFormData.append("picture", this.state.file);
+    if(this.state.file!==""){
+    bodyFormData.append("picture", this.state.file)
+    }
     bodyFormData.append("dob", this.state.updatedDob);
     bodyFormData.append("firstname", this.state.updatedfirstname);
     bodyFormData.append("middlename", this.state.updatedMiddlename);
@@ -133,8 +163,11 @@ class MyProfile extends Component {
         headers
       )
       .then((response) => {
-        console.log(response);
+        console.log("update response",response.status);
+        this.setState({updateresponse:response.status, updatesnackbar: true })
+        
       });
+    await this.getprofiledata();
   }
   async postprofile() {
     let headers = {
@@ -159,7 +192,49 @@ class MyProfile extends Component {
       )
       .then((response) => {
         console.log(response);
+        this.setState({addresponse:response.status,addsnackbar: true})
+       
       });
+    await this.getprofiledata();
+  }
+  addsnackbar() {
+
+
+    return (
+      this.state.addresponse === 200 ?
+        (<div>
+
+          <Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ addsnackbar: false }) }>
+            <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addasnackbar }) }} severity="success">
+              Profile added sucessfully
+      </Alert>
+          </Snackbar>
+        </div>) : (<Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }}>
+          <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }} severity="error">
+            Something went wrong please try again
+      </Alert>
+        </Snackbar>))
+
+  }
+  updatesnackbar() {
+
+
+    return (
+      this.state.updateresponse === 200 ?
+        (<div>
+          {console.log("//////////////////////////////////////")}
+
+          <Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ updatesnackbar: false }) }>
+            <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="success">
+              Profile updated sucessfully
+      </Alert>
+          </Snackbar>
+        </div>) : (<Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }}>
+          <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="error">
+            Something went wrong please try again
+      </Alert>
+        </Snackbar>))
+
   }
   isloading() {
     return (
@@ -180,32 +255,36 @@ class MyProfile extends Component {
   }
 
   tabledata() {
+    
     return (
       <>
         {
-          result.length === 0
-            // true
+          this.state.result.length === 0
+
             ? (
               <div>
 
-                <Grid container spacing={3} justify="space-between" >
-                  <Grid item xs={6}>
-                    <h1>My Profile</h1>
-                  </Grid>
-                  <Grid item xs={12}>
+                <Grid container spacing={3} direction="column" justify='center' align="center">
 
-                    <Paper style={{ padding: 20 }} elevation={3}>
-                      <Typography variant="h5" gutterBottom align='center'>
-                        Add job profiles to improve ratings.
+
+                  <Grid item xs={12}  >
+
+                    <Paper elevation={3} direction="column" >
+                      <Box p={3} display="flex" flexDirection="column" justifyContent='center' alignItems="center" style={{ height: '50vh', }} >
+
+                        <Typography variant="h4" gutterBottom align='center' justify="center">
+                          Add  profiles to improve ratings.
                       </Typography>
 
-                      <Grid container justify='center' style={{ marginTop: 50 }}>
                         <Button color="primary" variant='contained' onClick={() => this.setState({ addDialogOpen: true })}>
                           Add New Job Profile
                         </Button>
-                      </Grid>
+
+                      </Box>
                     </Paper>
+
                   </Grid>
+
 
                 </Grid>
 
@@ -219,7 +298,7 @@ class MyProfile extends Component {
               </DialogTitle>
                   <DialogContent>
                     <DialogContentText>
-                      Enter the details of your profile to be updated
+                      Enter the details of your profile to be added
                 </DialogContentText>
 
                     <Grid container justify='flex-start' direction='row' alignItems='center' spacing={3}>
@@ -227,10 +306,12 @@ class MyProfile extends Component {
                         <TextField
                           id="firstName"
                           label="First Name"
+                          value={this.state.firstname}
                           // defaultValue={result[this.state.selectedIndex].firstname}
                           onChange={(event) => {
-                            this.setState({ firstname: event.target.value });
-                            console.log(this.state.firstname);
+                            this.capitalizefirstname(event.target.value)
+                            // this.setState({ firstname: event.target.value });
+                            // console.log(this.state.firstname);
                           }}
                           type="text"
                           fullWidth
@@ -241,10 +322,12 @@ class MyProfile extends Component {
                         <TextField
                           id="middleName"
                           label="Middle Name"
+                          value={this.state.middlename}
                           // defaultValue={result[this.state.selectedIndex].middlename}
                           onChange={(event) => {
-                            this.setState({ middlename: event.target.value });
-                            console.log(this.state.middlename);
+                            this.capitalizemiddlename(event.target.value)
+                           
+                            // console.log(this.state.middlename);
                           }}
                           type="text"
                           fullWidth
@@ -255,10 +338,11 @@ class MyProfile extends Component {
                         <TextField
                           id="surname"
                           label="Surname"
+                          value={this.state.lastname}
                           // defaultValue={result[this.state.selectedIndex].surname}
                           onChange={(event) => {
-                            this.setState({ lastname: event.target.value });
-                            console.log(this.state.lastname);
+                            this.capitalizelastname(event.target.value)
+                            // console.log(this.state.lastname);
                           }}
                           type="text"
                           fullWidth
@@ -267,8 +351,10 @@ class MyProfile extends Component {
 
                       <Grid item fullWidth xs={12}>
                         <TextField
-                          id="dob"
-                          // label="Date of birth"
+                          
+                          name="Date of birth"
+                           label="Date of birth"
+                           InputLabelProps={{ shrink: true, required: true }}
                           // defaultValue={result[this.state.selectedIndex].dob}
                           onChange={(event) => {
                             this.setState({ Dob: event.target.value });
@@ -279,20 +365,19 @@ class MyProfile extends Component {
                         />
                       </Grid>
 
-                      <Grid item xs={12}>
-                        <Button
-                          variant="contained"
-                          color="default"
-                          startIcon={<CloudUploadIcon />}
-                        >
-                          Choose file
-                      </Button>
-                      </Grid>
+
 
                       <Grid item fullWidth xs={12}>
                         <TextField
                           id="chooseFile"
                           label="Choose File"
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <CloudUploadIcon />
+                              </InputAdornment>
+                            ),
+                          }}
                           onChange={(event) => {
                             this.setState({ initialfile: event.target.files[0] });
                             console.log(this.state.initialfile);
@@ -307,7 +392,7 @@ class MyProfile extends Component {
                         <FormControl fullWidth>
                           <InputLabel id="gender">Gender</InputLabel>
                           <Select
-                            labelId="gender"
+                            label="gender"
                             id="gender"
                             // value={age}
                             onChange={(event) => {
@@ -350,38 +435,66 @@ class MyProfile extends Component {
                       Cancel
                 </Button>
                   </DialogActions>
-                </Dialog>}
+                </Dialog>
+                }
+                {this.addsnackbar()}
+               
               </div>
             ) : (
               <div>
                 <Paper elevation={2} style={{ marginTop: 20 }}>
 
-                  <Grid container style={{ padding: 20 }} spacing={3}
+
+
+                  <Grid container
                     direction="row"
                     justify="flex-start"
-                    alignItems="center">
-                    <Grid item xs={3}>
+                    style={{ padding: 20 }} spacing={3}
+                  >
+                    <Grid container
+                      direction="row"
+                      justify="center"
+                      alignItems="center" xs={3}>
                       <Avatar
-                        src={result[0].picture}
+                        src={this.state.result[0].picture}
                         style={{ height: "12rem", width: "12rem" }}
                       >
-                        <img src="/images/sampleuserphoto.jpg" width="185" height="185" />
+                        {/* <img src="/images/sampleuserphoto.jpg" width="185" height="185" alt="" /> */}
                       </Avatar>
                     </Grid>
-                    <Grid item xs={9}>
-                      <Typography variant='h2' style={{ fontFamily: "Montserrat", textTransform: 'capitalize' }}>
-                        {result[0].firstname} {result[0].middlename}
+                    <Grid container
+                      direction="column"
+                      justify="center"
+                      alignItems="center"
+
+
+                      xs={6}>
+
+                      <Typography variant='h2'
+                      style={{textTransform: 'capitalize'}}
+                      >
+                        {this.state.result[0].firstname} {this.state.result[0].middlename} {this.state.result[0].surname}
                       </Typography>
 
-                      <Typography variant='h5' style={{ fontFamily: "Montserrat" }}>
-                        Dob:{result[0].dob}
+                      <Typography variant='h5'
+                      // style={{ fontFamily: "Montserrat" }}
+                      >
+                        {this.state.result[0].dob}
                       </Typography>
 
-                      <Typography variant='h5' style={{ fontFamily: "Montserrat" }}>
-                        Sex:{result[0].sex}
+                      <Typography variant='h5'
+                      // style={{ fontFamily: "Montserrat" }}
+                      >
+                        {this.state.result[0].employee_email_field}
                       </Typography>
+                      {/* <Typography variant='h5'
+                      
+                      >
+                        {this.state.result[0].ontrac_id}
+                      </Typography> */}
                     </Grid>
                   </Grid>
+
                 </Paper>
                 <div style={{ marginTop: 50 }}>
                   {this.getTableOfEmployees()}
@@ -390,55 +503,8 @@ class MyProfile extends Component {
 
 
 
-                {/* <Box p={4}>
-              <Grid
-                container
-                // style={{backgroundColor:"red"}}
-              >
-                <Grid
-                  container
-                  spacing={0}
-                  direction="column"
-                  alignItems="center"
-                  justify="center"
-                  display="flex"
-                >
-                  <h1>My Profile</h1>
-                </Grid>
-                <Grid container spacing={3} m={3} p={3}>
-                  <Grid
-                    container
-                    xs={9}
-                    direction="column"
-                    justify="center"
-                    alignItems="center"
-                    // style={{backgroundColor:"red"}}
-                  >
-                    <Grid alignItems="left" elevation={6}>
-                      <h3>
-                        Name:{result[0].firstname} {result[0].middlename}
-                        {result[0].surname}
-                      </h3>
-                      <h4>Dob:{result[0].dob}</h4>
-                      <h4>Sex:{result[0].sex}</h4>
-                      <h4>date:{result[0].created_on}</h4>
-                      <h4>source:{result[0].source_name_field}</h4>
-                    </Grid>
-                  </Grid>
 
-                  <Grid item xs={3} alignItems="flex-end" justify="flex-end">
-                    <Avatar
-                      src={result[0].picture}
-                      style={{ height: "14rem", width: "14rem" }}
-                    >
-                      Picture
-                    </Avatar>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Box> */}
 
-                {/* {this.getTableOfEmployees()} */}
               </div>
             )}
       </>
@@ -472,11 +538,20 @@ class MyProfile extends Component {
         <TableContainer component={Paper} elevation={16} p={3}>
           <Table stickyHeader>
             <TableHead>
-
               <TableRow style={{ backgroundColor: "black" }}>
-                {['Picture', 'Date', 'Source', 'Full name', 'Date of birth', 'Sex', 'verifier', 'Update', 'History'].map((text, index) => (
+                {[
+                  "Picture",
+                  "Full name",
+                  "Sex",
+                  "Date of birth",
+                  "Source",
+                  "Verifier",
+                  "Created On",
+                  "Update",
+                  "History",
+                ].map((text, index) => (
                   <TableCell
-                    style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                    style={{ fontWeight: "bolder", }}
                     align="center"
                   >
                     {text}
@@ -486,19 +561,26 @@ class MyProfile extends Component {
             </TableHead>
 
             <TableBody>
-              {result.map((row, index) => (
+              {this.state.result.map((row, index) => (
                 <TableRow key={row.id}>
                   <TableCell align="center">
-                    <Avatar src={row.picture}><img src="/images/sampleuserphoto.jpg" width="40" height="40" /></Avatar>
+                    <Avatar src={row.picture}>
+                      {/* <img
+                        src="/images/sampleuserphoto.jpg"
+                        width="40"
+                        height="40"
+                        alt=""
+                      /> */}
+                    </Avatar>
                   </TableCell>
+                  <TableCell align="center" style={{textTransform: 'capitalize'}}> {row.firstname} {row.middlename} {row.surname}</TableCell>
+                  <TableCell align="center">{row.sex}</TableCell>
+                  <TableCell align="center">{row.dob}</TableCell>
+                  <TableCell align="center">{row.source_name_field}</TableCell>
+                  <TableCell align="center">{row.owner_name_field}</TableCell>
                   <TableCell component="th" align="center">
                     {new Date(row.created_on).toDateString()}
                   </TableCell>
-                  <TableCell align="center">{row.source_name_field}</TableCell>
-                  <TableCell align="center">{row.firstname}</TableCell>
-                  <TableCell align="center">{row.dob}</TableCell>
-                  <TableCell align="center">{row.sex}</TableCell>
-                  <TableCell align="center">{row.owner_name_field}</TableCell>
                   <TableCell align="center">
                     <Button
                       color="primary"
@@ -507,6 +589,14 @@ class MyProfile extends Component {
                         this.setState({
                           updateDialogOpen: true,
                           selectedIndex: index,
+                          updatedlastname: result[index].surname,
+                          updatedfirstname: result[index].firstname,
+                          updatedMiddlename: result[index].middlename,
+                          updatedDob: result[index].dob,
+                          updateresponse:"",
+                          file:""
+                          
+
                           // add the updatedstate elements here after passing the token and adding data
                         })
                       }
@@ -537,21 +627,27 @@ class MyProfile extends Component {
           ) : (
               <Dialog
                 open={this.state.updateDialogOpen}
-                onClose={() => this.setState({ updateDialogOpen: false })}
+                onClose={() => this.setState({ updateDialogOpen: false,buttondisabled: "disabled" })}
                 aria-labelledby="form-dialog-title"
               >
-                <DialogTitle id="form-dialog-title">Update Profile</DialogTitle>
+                <DialogTitle id="form-dialog-title" align="center">Update Profile</DialogTitle>
                 <DialogContent>
-                  <DialogContentText>
+                  <DialogContentText align="center">
                     Enter the details of your profile to be updated
                 </DialogContentText>
 
-                  <Grid container justify='flex-start' direction='row' alignItems='center' spacing={3}>
+                  <Grid
+                    container
+                    justify="flex-start"
+                    direction="row"
+                    alignItems="center"
+                    spacing={3}
+                  >
                     <Grid item fullWidth xs={12}>
                       <TextField
                         id="firstName"
                         label="First Name"
-                        defaultValue={result[this.state.selectedIndex].firstname}
+                        defaultValue={this.state.updatedfirstname}
                         onChange={(event) =>
                           this.setState({ updatedfirstname: event.target.value })
                         }
@@ -564,7 +660,7 @@ class MyProfile extends Component {
                       <TextField
                         id="middleName"
                         label="Middle Name"
-                        defaultValue={result[this.state.selectedIndex].middlename}
+                        defaultValue={this.state.updatedMiddlename}
                         onChange={(event) =>
                           this.setState({ updatedMiddlename: event.target.value })
                         }
@@ -577,10 +673,9 @@ class MyProfile extends Component {
                       <TextField
                         id="surname"
                         label="Surname"
-                        defaultValue={result[this.state.selectedIndex].surname}
+                        defaultValue={this.state.updatedlastname}
                         onChange={(event) => {
                           this.setState({ updatedlastname: event.target.value });
-                          console.log(this.state.updatedsex);
                         }}
                         type="text"
                         fullWidth
@@ -591,7 +686,7 @@ class MyProfile extends Component {
                       <TextField
                         id="dob"
                         label="Date of birth"
-                        defaultValue={result[this.state.selectedIndex].dob}
+                        defaultValue={this.state.updatedDob}
                         onChange={(event) => {
                           this.setState({ updatedDob: event.target.value });
                           console.log(event.target.value);
@@ -601,20 +696,19 @@ class MyProfile extends Component {
                       />
                     </Grid>
 
-                    <Grid item xs={12}>
-                      <Button
-                        variant="contained"
-                        color="default"
-                        startIcon={<CloudUploadIcon />}
-                      >
-                        Choose file
-                      </Button>
-                    </Grid>
+
 
                     <Grid item fullWidth xs={12}>
                       <TextField
                         id="chooseFile"
                         label="Choose File"
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <CloudUploadIcon />
+                            </InputAdornment>
+                          ),
+                        }}
                         onChange={(event) => {
                           this.setState({ file: event.target.files[0] });
                           console.log(event.target.files[0]);
@@ -628,6 +722,7 @@ class MyProfile extends Component {
                       <TextField
                         id="reasonForUpdating"
                         label="Reason for updating:"
+                        helperText="update reason can be less than 250 characters"
                         onChange={(event) =>
                           this.setState(
                             {
@@ -660,6 +755,8 @@ class MyProfile extends Component {
                       this.setState({
                         updateDialogOpen: false,
                         selectedIndex: -1,
+                        buttondisabled: "disabled"
+
                       })
                     }
                   >
@@ -668,6 +765,7 @@ class MyProfile extends Component {
                 </DialogActions>
               </Dialog>
             )}
+             {this.updatesnackbar()}
         </TableContainer>
 
         <Dialog
@@ -677,24 +775,24 @@ class MyProfile extends Component {
           onClose={() => this.setState({ historyDialogeOpen: false })}
           aria-labelledby="responsive-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">Profile History</DialogTitle>
+          <DialogTitle id="form-dialog-title" align="center">Profile History</DialogTitle>
           {/* <DialogContent> */}
-          <TableContainer p={3} >
+          <TableContainer p={3}>
             <Table stickyHeader>
               <TableHead>
-
                 <TableRow style={{ backgroundColor: "black" }}>
-                  {['Fullname', 
-                  'Middlename', 
-                  'Surname', 
-                  'Date of birth', 
-                  'Picture', 
-                  'Sex', 
-                  'Records updated date', 
-                  'Updated reason'
-                ].map((text, index) => (
+                  {[
+                    "Picture",
+                    "Fullname",
+                    "Middlename",
+                    "Surname",
+                    "Date of birth",
+                    "Sex",
+                    "Records updated date",
+                    "Updated reason",
+                  ].map((text, index) => (
                     <TableCell
-                      style={{ fontWeight: "bolder", fontFamily: "Montserrat" }}
+                      style={{ fontWeight: "bolder", }}
                       align="left"
                     >
                       {text}
@@ -709,13 +807,16 @@ class MyProfile extends Component {
                   <TableBody>
                     {history.map((row, index) => (
                       <TableRow key={row.id}>
-                        <TableCell align="left">{row.firstname}</TableCell>
-                        <TableCell align="left">{row.middlename}</TableCell>
-                        <TableCell align="left">{row.surname}</TableCell>
-                        <TableCell align="left">{new Date(row.dob).toDateString()}</TableCell>
                         <TableCell align="left">
                           <Avatar src={row.picture}>Picture</Avatar>
                         </TableCell>
+                        <TableCell align="left">{row.firstname}</TableCell>
+                        <TableCell align="left">{row.middlename}</TableCell>
+                        <TableCell align="left">{row.surname}</TableCell>
+                        <TableCell align="left">
+                          {new Date(row.dob).toDateString()}
+                        </TableCell>
+
                         {/* <TableCell align="center">{row.source_name_field}</TableCell> */}
                         <TableCell align="left">{row.sex}</TableCell>{" "}
                         <TableCell component="th" align="left">
@@ -731,22 +832,26 @@ class MyProfile extends Component {
           {/* </DialogContent> */}
           <DialogActions style={{ padding: 15 }}>
             <Button
-              variant='contained'
+              variant="contained"
               color="secondary"
-              onClick={() => this.setState({ historyDialogeOpen: false, selectedIndex: -1 })}
+              onClick={() =>
+                this.setState({ historyDialogeOpen: false, selectedIndex: -1 })
+              }
             >
               Close
-                </Button>
+            </Button>
           </DialogActions>
         </Dialog>
       </>
     );
   }
   render() {
+   
     return <>{this.state.isloading ? this.isloading() : this.tabledata()}</>;
+   
   }
 }
 
 
 
-export default MyProfile;
+export default NetworkDetector(MyProfile);

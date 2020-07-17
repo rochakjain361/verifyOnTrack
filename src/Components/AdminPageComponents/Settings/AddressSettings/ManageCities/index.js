@@ -18,7 +18,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
+import axios from "axios";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from '@material-ui/icons/Delete';
 import PhoneIcon from '@material-ui/icons/Phone';
@@ -26,310 +26,463 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
-const api = "http://3.22.17.212:8000"
+import { CircularProgress } from "@material-ui/core";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+let token1 = "";
+let token = "";
+let id = "";
 const cors = "https://cors-anywhere.herokuapp.com/"
 
-const rows = [
-    {
-        "city": "testCity1",
-    },
-    {
-        "city": "testCity2",
-    },
-    {
-        "city": "testCity3",
-    },
-    {
-        "city": "testCity4",
-    }
-];
+
 
 const styles = theme => ({
 
 })
-
+let states = [];
+let Lga = [];
+let Cities = [];
+// let addlga=[];
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 class index extends Component {
-
-    state = {
-        states: "",
-        deleteDialogBox: false,
-
-        allStates: [],
-        allCities: [],
-
-        city: "",
-        lga: "",
-        selectedCityText: "",
-        enteredCityText: "",
-
-        enteredLGAtext: "",
-    }
-
-    async getCities() {
-        let response = await fetch(cors + api + "/api/v1/resManager/address/cities",
-            {
-                headers: {
-                    'Authorization': token
-                }
-            });
-        response = await response.json();
-        console.log("getCitiesSuccess:", response)
-        this.setState({ allStates: response });
-        this.setState({ allCities: this.state.allStates.map(city => city.cityName) })
-        console.log("allStatesList:", this.state.allStates)
-        console.log("allCities:", this.state.allCities)
-    }
-
-    async componentDidMount() {
-        this.getCities();
-    }
-
-    render() {
-
-        const allCitiesData = {
-            options: this.state.allStates,
-            getOptionLabel: (city) => city.cityName,
-        };
-
-        const allLgasData = {
-            options: this.state.allStates,
-            getOptionLabel: (lga) => lga.lga,
+  state = {
+    states: "",
+    deleteDialogBox: false,
+    deletecity:"",
+    selectedstate: "",
+    loading: false,
+    addlga: [],
+    selectedLga: "",
+    filterstate: "",
+    filterlga: [],
+    filterlgavalue: "",
+    filtercity: [],
+    butondisable:true,
+    snackbar:"",
+    snackbarresponse:"",
+    addcity:""
+  };
+  async filterforlga(state) {
+    this.setState({ filterstate: state });
+    await axios
+      .get(
+        "http://3.22.17.212:8000/api/v1/resManager/address/lgas/?stateId=" +
+        state,
+        {
+          headers: {
+            Authorization: token,
+          },
         }
+      )
+      .then((res) => {
+        //  addlga = res.data;
+        this.setState({ filterlga: res.data });
+        console.log("addlga", this.state.addlga);
+      });
 
-        const { classes } = this.props;
+  }
+  async filtercity(lga) {
 
-        return (
-            <div style={{ marginTop: 20 }}>
-                {/* <Paper style={{ padding: 20, height: '100vh' }}> */}
-                <Grid container justify='space-between' alignItems='center' spacing={4}>
+    this.setState({ filterlgavalue: lga })
+    await axios.get(
+      "http://3.22.17.212:8000/api/v1/resManager/address/cities/?lgaId=" +
+      lga,
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    )
+      .then((res) => {
+        //  addlga = res.data;
+        this.setState({ filtercity: res.data });
+        console.log("addlga", this.state.filtercity);
+      });
 
-                    <Grid item>
-                        <Typography variant='h4'>
-                            Cities
-                            </Typography>
-                    </Grid>
 
-                    <Grid item xs={6}>
-                        <Autocomplete
-                            options={this.state.allStates}
-                            getOptionLabel={(option) => option.cityName}
-                            size="small"
-                            id="cities"
-                            Username
-                            value={this.state.city}
-                            onChange={(event, value) => {
-                                this.setState({ city: value });
-                                console.log("city", value);
-                            }}
-                            inputValue={this.state.enteredCitytext}
-                            onInputChange={(event, newInputValue) => {
-                                this.setState({ enteredCitytext: newInputValue });
-                                // console.log(newInputValue);
-                            }}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Cities"
-                                    margin="normal"
-                                    variant="outlined"
-                                    size="small"
-                                />
-                            )}
-                        />
-                    </Grid>
 
-                    {/* <Grid item xs={6}>
-                        <Autocomplete
-                            size='small'
-                            {...allCitiesData}
-                            id="cities"
-                            onChange={event => this.setState({ city: event.target.value })}
-                            value={this.state.city}
-                            renderInput={(params) => <TextField {...params} label="Cities" margin="normal" variant='outlined' size='small' />}
-                        />
-                    </Grid> */}
+  }
+  async getLga() {
+   
+    await axios
+    .get("http://3.22.17.212:8000/api/v1/resManager/address/cities/", {
+      headers: {
+        Authorization: token,
+      },
+    })
+    .then((res) => {
+      Cities = res.data;
+      this.setState({ filtercity: Cities });
+      console.log("cities", Cities);
+    });
+    
+    
+  }
+  async deletecities(id) {
+    this.setState({ deleteDialogBox: false, selectedIndex: -1 });
+    await axios.delete(
+      "http://3.22.17.212:8000/api/v1/resManager/address/cities/" + id + "/",
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    ).then((response)=>
+    {
+      this.setState({ snackbar:true,snackbarresponse:response });
+  
+    }).catch((error)=>{
+      if (error.response) {
+        this.setState({snackbar:true,snackbarresponse:error.response})
+      }
 
+    })
+    this.getLga();
+  }
+  async getStateLga(){
+    await axios
+    .get("http://3.22.17.212:8000/api/v1/resManager/address/states/", {
+      headers: {
+        Authorization: token,
+      },
+    })
+    .then((res) => {
+      states = res.data;
+      console.log("states", states);
+    });
+    await axios
+    .get("http://3.22.17.212:8000/api/v1/resManager/address/lgas/", {
+      headers: {
+        Authorization: token,
+      },
+    })
+    .then((res) => {
+      Lga = res.data;
+
+      this.setState({ selectedLga: Lga, });
+      console.log("lga", Lga);
+    });
+ 
+
+  }
+  async componentDidMount() {
+    this.setState({ loading: true });
+   
+    token = localStorage.getItem("Token");
+    id = localStorage.getItem("id");
+    await this.getLga();
+    await this.getStateLga();
+    this.setState({ loading: false });
+  }
+  isloading() {
+    return (
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        display="flex"
+        style={{ minHeight: "100vh" }}
+      >
+        <CircularProgress />
+      </Grid>
+    );
+  }
+  async filterLga(state) {
+    this.setState({ selectedstate: state });
+    console.log("state", state);
+    await axios
+      .get(
+        "http://3.22.17.212:8000/api/v1/resManager/address/lgas/?stateId=" +
+        state,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        //  addlga = res.data;
+        this.setState({ addlga: res.data });
+        console.log("addlga", this.state.addlga);
+      });
+  }
+  async addcity() {
+    console.log("/////////////", this.state.selectedLga);
+    console.log(this.state.addcity);
+    let headers = {
+      headers: {
+        Authorization: token,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    let bodyFormData = new FormData();
+    bodyFormData.append("lga", this.state.selectedLga);
+    bodyFormData.append("cityName", this.state.addcity);
+
+    await axios
+      .post(
+        "http://3.22.17.212:8000/api/v1/resManager/address/cities/",
+        bodyFormData,
+        headers
+      )
+      .then((response) => {
+        console.log(response);
+        this.setState({ snackbar:true,snackbarresponse:response,addcity:"" });
+        this.getLga();
+      })  .catch((error) => {
+        if (error.response) {
+          this.setState({snackbar:true,snackbarresponse:error.response,})
+        }})
+  }
+  render() {
+
+
+
+    return (
+      <div style={{ marginTop: 20 }}>
+        {this.state.loading ? (
+          this.isloading()
+        ) : (
+            <>
+              <Grid
+                container
+                justify="space-between"
+                alignItems="center"
+                justify="center"
+                spacing={4}
+              >
+                <Grid item>
+                  <Typography variant="h4">Cities</Typography>
+                </Grid>
+              </Grid>
+              <Typography variant="h4" gutterBottom align="center" justify="center">
+                Add a city
+              </Typography>
+              <Grid
+                container
+                justify="flex-start"
+                direction="row"
+                alignItems="center"
+                style={{ paddingTop: 10 }}
+                style={{ paddingBottom: 10 }}
+                spacing={2}
+              >
+                <Grid item xs={3}>
+                  <FormControl fullWidth variant="outlined" size="medium">
+                    <InputLabel id="states">State</InputLabel>
+                    <Select
+                      labelId="states"
+                      id="states"
+                      value={this.state.selectedstate}
+                      onChange={(event) => {
+                        this.filterLga(event.target.value);
+                      }}
+                      label="states"
+                      fullWidth
+                    >
+                      {states.map((state) => (
+                        <MenuItem value={state.id}>{state.stateName}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={3}>
+                  <FormControl fullWidth variant="outlined" size="medium">
+                    <InputLabel id="states">Lga</InputLabel>
+                    <Select
+                      labelId="Lga"
+                      id="Lga"
+                      value={this.state.selectedLga}
+                      onChange={(event) => {
+                        this.setState({ selectedLga: event.target.value });
+                      }}
+                      label="Lga"
+                      fullWidth
+                    >
+                      {this.state.addlga.map((lga) => (
+                        <MenuItem value={lga.id}>{lga.lgaName}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    size="medium"
+                    label="Add City"
+                    variant="outlined"
+                    fullWidth
+                    value={this.state.addcity}
+                    onChange={(event) => {
+                     
+                      this.setState({ addcity: event.target.value,butondisable:false })
+                    }}
+                  />
                 </Grid>
 
-                <Grid container justify='flex-start' direction='row' alignItems='center' style={{ marginTop: 20 }} spacing={2}>
-
-                    <Grid item xs={3}>
-                        <TextField
-                            size='small'
-                            label="Add City"
-                            variant='outlined'
-                            fullWidth
-                        />
-                    </Grid>
-
-                    <Grid item xs={3}>
-                        <Fab size="small" color="secondary">
-                            <AddIcon />
-                        </Fab>
-                    </Grid>
-
-                    <Grid item xs={6}>
-                        <Autocomplete
-                            size='small'
-                            {...allLgasData}
-                            id="LGAs"
-                            renderInput={(params) => <TextField {...params} label="LGAs" margin="normal" variant='outlined' size='small' />}
-                        />
-                    </Grid>
-
-                    <TableContainer component={Paper} style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }} elevation={5}>
-                        <Table stickyHeader>
-                            <TableHead>
-                                <TableRow style={{ backgroundColor: 'black' }}>
-                                    <TableCell align="left">City</TableCell>
-                                    <TableCell align="right"></TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {rows.map((row, index) => (
-                                    <TableRow key={row.id}>
-                                        <TableCell align="left">{row.city}</TableCell>
-                                        <TableCell align="right"><IconButton color='default' aria-label="delete">
-                                            <DeleteIcon fontSize="medium" />
-                                        </IconButton></TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                <Grid item xs={3}>
+                  <Fab
+                    size="small"
+                    disabled={this.state.addcity.length<1}
+                    color="secondary"
+                    onClick={() => {
+                      this.addcity();
+                    }}
+                  >
+                    <AddIcon />
+                  </Fab>
 
                 </Grid>
-                {/* </Paper> */}
+                <Grid>
 
-                {
-                    <Dialog open={this.state.deleteDialogBox} onClose={() => this.setState({ deleteDialogBox: false })} aria-labelledby="form-dialog-title">
-                        <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                All associated cities will also be deleted, do you want to continue?
-                    </DialogContentText>
-                        </DialogContent>
-                        <DialogActions style={{ padding: 15 }}>
-                            <Button style={{ width: 85 }} color="primary" variant="contained">
-                                Agree
-                        </Button>
-                            <Button color="secondary" variant="contained" onClick={() => this.setState({ deleteDialogBox: false, selectedIndex: -1 })}>
-                                Disagree
-                        </Button>
-                        </DialogActions>
-                    </Dialog>
+<Snackbar open={this.state.snackbar} autoHideDuration={6000} onClick={() => { this.setState({ snackbar: !this.state.snackbar }) }}>
+{this.state.snackbarresponse.status === 201 ?  <Alert onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }} severity="success">
+    City added sucessfully
+</Alert>:this.state.snackbarresponse.status===204? <Alert onClose={() => { this.setState({ snackbar: !this.state.asnackbar }) }} severity="success">
+    City deleted sucessfully
+</Alert>:<Alert onClose={() => { this.setState({ snackbar: !this.state.snackbar }) }} severity="error">
+  Something went wrong please try again
+</Alert>}
+</Snackbar>
+</Grid> 
+                <Grid container align="center" justify="center" direction="row">
+                  <Typography variant="h5" gutterBottom >
+                    Filter city
+                  </Typography>
+                </Grid>
+                <Grid
+                  container
+                  justify="flex-start"
+                  direction="row"
+                  alignItems="center"
+                  style={{ marginTop: 10 }}
+                  spacing={2}
+                >
+                  <Grid item xs={4}>
+
+                    <FormControl fullWidth variant="outlined" size="small">
+                      <InputLabel id="states">State</InputLabel>
+                      <Select
+                        labelId="states"
+                        id="states"
+                        value={this.state.filterstate}
+                        onChange={(event) => {
+                          this.filterforlga(event.target.value);
+                        }}
+                        label="states"
+                        fullWidth
+                      >
+                        <MenuItem selected value="none">
+                          None
+                    </MenuItem>
+                        {states.map((state) => (
+                          <MenuItem value={state.id}>{state.stateName}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <FormControl fullWidth variant="outlined" size="small">
+                      <InputLabel id="states">Lga</InputLabel>
+                      <Select
+                        labelId="Lga"
+                        id="Lga"
+                        value={this.state.filterlgavalue}
+                        onChange={(event) => {
+                          this.filtercity(event.target.value);
+                        }}
+                        label="Lga"
+                        fullWidth
+                      >
+                        <MenuItem selected value="none">
+                          None
+                    </MenuItem>
+                        {this.state.filterlga.map((lga) => (
+                          <MenuItem value={lga.id}>{lga.lgaName}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+                <TableContainer
+                  component={Paper}
+                  style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }}
+                  elevation={5}
+                >
+                  <Table stickyHeader>
+                    <TableHead>
+                      <TableRow style={{ backgroundColor: "black" }}>
+                        <TableCell align="center">City</TableCell>
+                        <TableCell align="center"></TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {this.state.filtercity.map((row, index) => (
+                        <TableRow key={row.id}>
+                          <TableCell align="center">{row.cityName}</TableCell>
+                          <TableCell align="center">
+                            {/* <IconButton color="default" aria-label="delete">
+                              <DeleteIcon fontSize="medium" />
+                            </IconButton> */}
+                            <Button
+                              color="primary"
+                              variant="outlined"
+                              onClick={() =>
+                                this.setState({
+                                  deleteDialogBox: true,
+                                  selectedIndex: index,
+                                  deletecity: row.id,
+                                })
+                              }
+                            >
+                              Delete
+                      </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
+              {/* </Paper> */}
+            </>
+          )}
+        {
+          <Dialog
+            open={this.state.deleteDialogBox}
+            onClose={() => this.setState({ deleteDialogBox: false })}
+            aria-labelledby="form-dialog-title"
+          >
+            <DialogTitle id="alert-dialog-title">{"Are you sure you want to delete this city?"}</DialogTitle>
+            <DialogContent>
+             
+            </DialogContent>
+            <DialogActions style={{ padding: 15 }}>
+              <Button style={{ width: 85 }} color="primary" variant="contained"  onClick={() =>
+                this.deletecities(this.state.deletecity)
+                }>
+              Delete
+              </Button>
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={() =>
+                  this.setState({ deleteDialogBox: false, selectedIndex: -1 })
                 }
-            </div>
-        )
-    }
+              >
+               Cancel
+              </Button>
+            </DialogActions>
+          </Dialog>
+        }
+      </div>
+    );
+  }
 }
 
-const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 },
-    { title: '12 Angry Men', year: 1957 },
-    { title: "Schindler's List", year: 1993 },
-    { title: 'Pulp Fiction', year: 1994 },
-    { title: 'The Lord of the Rings: The Return of the King', year: 2003 },
-    { title: 'The Good, the Bad and the Ugly', year: 1966 },
-    { title: 'Fight Club', year: 1999 },
-    { title: 'The Lord of the Rings: The Fellowship of the Ring', year: 2001 },
-    { title: 'Star Wars: Episode V - The Empire Strikes Back', year: 1980 },
-    { title: 'Forrest Gump', year: 1994 },
-    { title: 'Inception', year: 2010 },
-    { title: 'The Lord of the Rings: The Two Towers', year: 2002 },
-    { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
-    { title: 'Goodfellas', year: 1990 },
-    { title: 'The Matrix', year: 1999 },
-    { title: 'Seven Samurai', year: 1954 },
-    { title: 'Star Wars: Episode IV - A New Hope', year: 1977 },
-    { title: 'City of God', year: 2002 },
-    { title: 'Se7en', year: 1995 },
-    { title: 'The Silence of the Lambs', year: 1991 },
-    { title: "It's a Wonderful Life", year: 1946 },
-    { title: 'Life Is Beautiful', year: 1997 },
-    { title: 'The Usual Suspects', year: 1995 },
-    { title: 'Léon: The Professional', year: 1994 },
-    { title: 'Spirited Away', year: 2001 },
-    { title: 'Saving Private Ryan', year: 1998 },
-    { title: 'Once Upon a Time in the West', year: 1968 },
-    { title: 'American History X', year: 1998 },
-    { title: 'Interstellar', year: 2014 },
-    { title: 'Casablanca', year: 1942 },
-    { title: 'City Lights', year: 1931 },
-    { title: 'Psycho', year: 1960 },
-    { title: 'The Green Mile', year: 1999 },
-    { title: 'The Intouchables', year: 2011 },
-    { title: 'Modern Times', year: 1936 },
-    { title: 'Raiders of the Lost Ark', year: 1981 },
-    { title: 'Rear Window', year: 1954 },
-    { title: 'The Pianist', year: 2002 },
-    { title: 'The Departed', year: 2006 },
-    { title: 'Terminator 2: Judgment Day', year: 1991 },
-    { title: 'Back to the Future', year: 1985 },
-    { title: 'Whiplash', year: 2014 },
-    { title: 'Gladiator', year: 2000 },
-    { title: 'Memento', year: 2000 },
-    { title: 'The Prestige', year: 2006 },
-    { title: 'The Lion King', year: 1994 },
-    { title: 'Apocalypse Now', year: 1979 },
-    { title: 'Alien', year: 1979 },
-    { title: 'Sunset Boulevard', year: 1950 },
-    { title: 'Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb', year: 1964 },
-    { title: 'The Great Dictator', year: 1940 },
-    { title: 'Cinema Paradiso', year: 1988 },
-    { title: 'The Lives of Others', year: 2006 },
-    { title: 'Grave of the Fireflies', year: 1988 },
-    { title: 'Paths of Glory', year: 1957 },
-    { title: 'Django Unchained', year: 2012 },
-    { title: 'The Shining', year: 1980 },
-    { title: 'WALL·E', year: 2008 },
-    { title: 'American Beauty', year: 1999 },
-    { title: 'The Dark Knight Rises', year: 2012 },
-    { title: 'Princess Mononoke', year: 1997 },
-    { title: 'Aliens', year: 1986 },
-    { title: 'Oldboy', year: 2003 },
-    { title: 'Once Upon a Time in America', year: 1984 },
-    { title: 'Witness for the Prosecution', year: 1957 },
-    { title: 'Das Boot', year: 1981 },
-    { title: 'Citizen Kane', year: 1941 },
-    { title: 'North by Northwest', year: 1959 },
-    { title: 'Vertigo', year: 1958 },
-    { title: 'Star Wars: Episode VI - Return of the Jedi', year: 1983 },
-    { title: 'Reservoir Dogs', year: 1992 },
-    { title: 'Braveheart', year: 1995 },
-    { title: 'M', year: 1931 },
-    { title: 'Requiem for a Dream', year: 2000 },
-    { title: 'Amélie', year: 2001 },
-    { title: 'A Clockwork Orange', year: 1971 },
-    { title: 'Like Stars on Earth', year: 2007 },
-    { title: 'Taxi Driver', year: 1976 },
-    { title: 'Lawrence of Arabia', year: 1962 },
-    { title: 'Double Indemnity', year: 1944 },
-    { title: 'Eternal Sunshine of the Spotless Mind', year: 2004 },
-    { title: 'Amadeus', year: 1984 },
-    { title: 'To Kill a Mockingbird', year: 1962 },
-    { title: 'Toy Story 3', year: 2010 },
-    { title: 'Logan', year: 2017 },
-    { title: 'Full Metal Jacket', year: 1987 },
-    { title: 'Dangal', year: 2016 },
-    { title: 'The Sting', year: 1973 },
-    { title: '2001: A Space Odyssey', year: 1968 },
-    { title: "Singin' in the Rain", year: 1952 },
-    { title: 'Toy Story', year: 1995 },
-    { title: 'Bicycle Thieves', year: 1948 },
-    { title: 'The Kid', year: 1921 },
-    { title: 'Inglourious Basterds', year: 2009 },
-    { title: 'Snatch', year: 2000 },
-    { title: '3 Idiots', year: 2009 },
-    { title: 'Monty Python and the Holy Grail', year: 1975 },
-];
 
 export default withStyles(styles)(index);
 

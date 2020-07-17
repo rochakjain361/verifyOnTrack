@@ -23,15 +23,18 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import StarBorder from '@material-ui/icons/StarBorder';
 import Collapse from '@material-ui/core/Collapse';
-
+import axios from "axios";
 import Dashboard from './EmployerPageComponents/Dashboard'
 import Inbox from './EmployerPageComponents/Messages/Inbox'
-import Outbox from './EmployerPageComponents/Messages/Outbox'
+// import Outbox from './EmployerPageComponents/Messages/Outbox'
 import AccessCodes from './EmployerPageComponents/MyCodes/AccessCodes'
-import EmployementCodes from './EmployerPageComponents/MyCodes/EmployementCodes'
+import EmployementCodes from './EmployerPageComponents/MyCodes/EmployementCodes/EmploymentVerification'
+import EmploymentTabs from './EmployerPageComponents/MyCodes/EmployementCodes/EmploymentTabs'
 
 const drawerWidth = 240;
-
+let token="";
+let token1="";
+let id="";
 const styles = theme => ({
   root: {
     display: 'flex',
@@ -52,7 +55,7 @@ const styles = theme => ({
   },
   content: {
     flexGrow: 1,
-    padding: 10,
+    padding: 0,
   },
   nested: {
     paddingLeft: 72,
@@ -70,12 +73,42 @@ const styles = theme => ({
     fontFamily: "Montserrat"
   }
 });
-
+ 
 class EmployerLandingPage extends React.PureComponent {
-
   state = {
     open1: false,
     open2: false,
+  };
+  async componentDidMount() {
+  
+    token = localStorage.getItem("Token");
+    id = localStorage.getItem("id");
+
+  }
+  async logout() {
+    console.log(token);
+    let headers = {
+      headers: {
+        Authorization: token,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    await axios
+      .post(
+        "http://3.22.17.212:8000/api/v1/accounts/auth/logout",
+        {},
+
+        headers
+      )
+      .then((response) => {
+        localStorage.clear();
+        console.log(response);
+      });
+
+    console.log("////////////////////////////////////////");
+    this.props.history.push({
+      pathname: "/signin",
+    });
   }
 
   render() {
@@ -83,25 +116,29 @@ class EmployerLandingPage extends React.PureComponent {
 
     return (
       <Router>
-
         <div className={classes.root}>
           <CssBaseline />
           <AppBar position="fixed" className={classes.appBar}>
             <Toolbar>
-
-              <Grid container justify='space-between' >
-
-                <Grid item >
+              <Grid container justify="space-between">
+                <Grid item>
                   <Typography variant="h6" noWrap>
                     Verify OnTrack
-                    </Typography>
+                  </Typography>
                 </Grid>
 
-                <Grid item >
-                  <Button color="inherit" variant='outlined'>Logout</Button>
+                <Grid item>
+                  <Button
+                    color="inherit"
+                    variant="outlined"
+                    onClick={() => {
+                      this.logout();
+                    }}
+                  >
+                    Logout
+                  </Button>
                 </Grid>
               </Grid>
-
             </Toolbar>
           </AppBar>
           <Drawer
@@ -113,78 +150,110 @@ class EmployerLandingPage extends React.PureComponent {
           >
             <Toolbar />
             <div className={classes.drawerContainer}>
-
               <Link to="/employerDashboard" className={classes.link}>
                 <ListItem button>
                   <ListItemIcon>
                     <DashboardIcon style={{ color: "white" }} />
                   </ListItemIcon>
-                  <ListItemText primary={"Dashboard"} className={classes.textColor} />
+                  <ListItemText
+                    primary={"Dashboard"}
+                    className={classes.textColor}
+                  />
                 </ListItem>
               </Link>
 
               <Divider />
 
-              <ListItem button onClick={() => this.setState({ open2: !this.state.open2 })}>
+              <ListItem
+                button
+                onClick={() => this.setState({ open2: !this.state.open2 })}
+              >
                 <ListItemIcon>
                   <MessageIcon style={{ color: "white" }} />
                 </ListItemIcon>
-                <ListItemText primary="Messages" className={classes.textColor} />
-                {this.state.open2 ? <ExpandLess style={{ color: 'white' }} /> : <ExpandMore style={{ color: 'white' }} />}
+                <ListItemText
+                  primary="Messages"
+                  className={classes.textColor}
+                />
+                {this.state.open2 ? (
+                  <ExpandLess style={{ color: "white" }} />
+                ) : (
+                  <ExpandMore style={{ color: "white" }} />
+                )}
               </ListItem>
 
               <Collapse in={this.state.open2} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                  <Link to="/employerInbox" className={classes.link} >
+                  <Link to="/employerInbox" className={classes.link}>
                     <ListItem button className={classes.nested}>
-                      <ListItemText primary="Inbox" className={classes.textColor} />
+                      <ListItemText
+                        primary="Inbox"
+                        className={classes.textColor}
+                      />
                     </ListItem>
                   </Link>
 
-                  <Link to="/employerOutbox" className={classes.link}>
+                  {/* <Link to="/employerOutbox" className={classes.link}>
                     <ListItem button className={classes.nested}>
-                      <ListItemText primary="Outbox" className={classes.textColor} />
+                      <ListItemText
+                        primary="Outbox"
+                        className={classes.textColor}
+                      />
                     </ListItem>
-                  </Link>
+                  </Link> */}
                 </List>
               </Collapse>
 
               <Divider />
 
-              <ListItem button onClick={() => this.setState({ open1: !this.state.open1 })}>
+              <ListItem
+                button
+                onClick={() => this.setState({ open1: !this.state.open1 })}
+              >
                 <ListItemIcon>
                   <CodeIcon style={{ color: "white" }} />
                 </ListItemIcon>
-                <ListItemText primary="My Codes" className={classes.textColor} />
-                {this.state.open1 ? <ExpandLess style={{ color: 'white' }} /> : <ExpandMore style={{ color: 'white' }} />}
+                <ListItemText
+                  primary="My Codes"
+                  className={classes.textColor}
+                />
+                {this.state.open1 ? (
+                  <ExpandLess style={{ color: "white" }} />
+                ) : (
+                  <ExpandMore style={{ color: "white" }} />
+                )}
               </ListItem>
 
               <Collapse in={this.state.open1} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                  <Link to="/employerAccessCodes" className={classes.link} >
+                  <Link to="/employerAccessCodes" className={classes.link}>
                     <ListItem button className={classes.nested}>
-                      <ListItemText primary="Access Codes" className={classes.textColor} />
+                      <ListItemText
+                        primary="Access Codes"
+                        className={classes.textColor}
+                      />
                     </ListItem>
                   </Link>
 
                   <Link to="/employerEmployementCodes" className={classes.link}>
                     <ListItem button className={classes.nested}>
-                      <ListItemText primary="Employement Codes" className={classes.textColor} />
+                      <ListItemText
+                        primary="Employment Requests"
+                        className={classes.textColor}
+                      />
                     </ListItem>
                   </Link>
                 </List>
               </Collapse>
 
               <Divider />
-
             </div>
           </Drawer>
           <main className={classes.content}>
             <Toolbar />
             <Switch>
-
               <Route exact path="/employerDashboard">
-                <Container>
+                <Container >
                   <Dashboard />
                 </Container>
               </Route>
@@ -195,11 +264,11 @@ class EmployerLandingPage extends React.PureComponent {
                 </Container>
               </Route>
 
-              <Route exact path="/employerOutbox">
+              {/* <Route exact path="/employerOutbox">
                 <Container>
                   <Outbox />
                 </Container>
-              </Route>
+              </Route> */}
 
               <Route exact path="/employerAccessCodes">
                 <Container>
@@ -209,14 +278,12 @@ class EmployerLandingPage extends React.PureComponent {
 
               <Route exact path="/employerEmployementCodes">
                 <Container>
-                  <EmployementCodes />
+                  <EmploymentTabs />
                 </Container>
               </Route>
-
             </Switch>
           </main>
         </div>
-
       </Router>
     );
   }
