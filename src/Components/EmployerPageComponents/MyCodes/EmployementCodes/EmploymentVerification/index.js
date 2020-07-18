@@ -228,7 +228,7 @@ class index extends Component {
                                 onClick={() => this.setState({
                                     viewDetails: [row],
 
-                                    employeeJobId: row.empVerDetails.jobProfile,
+                                    employeeJobId: row.empVerDetails.id,
                                     employeePicture: row.employeeDetails.picture_url,
                                     employeeFirstName: row.employeeDetails.firstname,
                                     employeeMiddleName: row.employeeDetails.middlename,
@@ -279,7 +279,7 @@ class index extends Component {
                                 onClick={() => this.setState({
                                     viewDetails: [row],
 
-                                    employeeJobId: row.empVerDetails.jobProfile,
+                                    employeeJobId: row.empVerDetails.id,
                                     employeePicture: row.employeeDetails.picture_url,
                                     employeeFirstName: row.employeeDetails.firstname,
                                     employeeMiddleName: row.employeeDetails.middlename,
@@ -494,7 +494,7 @@ class index extends Component {
                         </Button>
 
                         <Button color="secondary" variant="contained" style={{ minWidth: 100 }}
-                            onClick={()=> this.approveVerification(this.employeeJobId)}
+                            onClick={()=> this.rejectVerification(this.employeeJobId)}
                         >
                             Reject
                         </Button>
@@ -506,8 +506,10 @@ class index extends Component {
 
     async approveVerification(JobId) {
 
+        console.log('jobId:',this.state.employeeJobId)
+
         try {
-            let response = await fetch(api + '/api/v1/employers/confirmEmpVerification/' + JobId,
+            let response = await fetch(api + '/api/v1/employers/confirmEmpVerification/' + this.state.employeeJobId,
                 {
                     method: 'PUT',
                     headers: {
@@ -520,9 +522,9 @@ class index extends Component {
             response = await response.json();
             console.log('approveJob:', response);
 
-            // this.setState({ codeDetailsDialog: false })
-            // this.fetchVerifications();
-            // this.fetchPendingVerifications();
+            this.setState({ codeDetailsDialog: false })
+            this.fetchVerifications();
+            this.fetchPendingVerifications();
 
 
         } catch (error) {
@@ -530,10 +532,12 @@ class index extends Component {
         }
     }
 
-    async approveVerification(JobId) {
+    async rejectVerification(JobId) {
+
+        console.log('jobId:',this.state.employeeJobId)
 
         try {
-            let response = await fetch(api + '/api/v1/employers/rejectEmpVerification/' + JobId,
+            let response = await fetch(api + '/api/v1/employers/rejectEmpVerification/' + this.state.employeeJobId,
                 {
                     method: 'PUT',
                     headers: {
@@ -544,11 +548,11 @@ class index extends Component {
                 }
             );
             response = await response.json();
-            console.log('approveJob:', response);
+            console.log('rejectJob:', response);
 
-            // this.setState({ codeDetailsDialog: false })
-            // this.fetchVerifications();
-            // this.fetchPendingVerifications();
+            this.setState({ codeDetailsDialog: false })
+            this.fetchVerifications();
+            this.fetchPendingVerifications();
 
 
         } catch (error) {
