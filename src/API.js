@@ -41,7 +41,7 @@ export const get=async(url,token, params)=>{
     };
     await Axios.post(url,formdata,headers ).then((response) => {
        res=response;
-        ShowSuccessSnackbar("updated succesfully")
+        // ShowSuccessSnackbar("updated succesfully")
       }).catch((error)=>{
         
         res=error
@@ -61,7 +61,7 @@ export const post=async(url,token,formdata)=>{
   };
   await Axios.post(url,formdata,headers ).then((response) => {
      res=response;
-      ShowSuccessSnackbar("Added succesfully")
+      // ShowSuccessSnackbar("Added succesfully")
     }).catch((error)=>{
       
       res=error
@@ -82,7 +82,7 @@ export const put=async(url,token,formdata)=>{
   };
  return await Axios.put(url,formdata,headers ).then((response) => {
      res=response;
-      ShowSuccessSnackbar("Added succesfully")
+      // ShowSuccessSnackbar("Added succesfully")
     }).catch((error)=>{
       
       res=error
