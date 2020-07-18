@@ -81,7 +81,7 @@ class index extends Component {
 
     async fetchVerifications() {
 
-        let response = await fetch(api + "/api/v1/employers/empVerifications",
+        let response = await fetch(api + "/api/v1/employers/empUpdations",
             {
                 headers: {
                     'Authorization': token
@@ -95,7 +95,7 @@ class index extends Component {
 
     async fetchPendingVerifications() {
 
-        let response = await fetch(api + "/api/v1/employers/empVerifications?pending=true",
+        let response = await fetch(api + "/api/v1/employers/empUpdations?pending=true",
             {
                 headers: {
                     'Authorization': token
@@ -149,7 +149,7 @@ class index extends Component {
 
                                     <Grid item xs={12}>
                                         <Typography variant='h4'>
-                                            Employement Verification
+                                            Employee Updations
                                     </Typography>
                                     </Grid>
 
@@ -218,9 +218,9 @@ class index extends Component {
                         <TableCell align="left">{row.employeeDetails.firstname}</TableCell>
                         <TableCell align="left">{row.jobDetails.jobTitle}</TableCell>
                         <TableCell align="left">{row.employeeDetails.ontrac_id}</TableCell>
-                        <TableCell align="left">{row.empVerDetails.codeString}</TableCell>
+                        <TableCell align="left">{row.empUpdateDetails.codeString}</TableCell>
                         <TableCell align="left"></TableCell>
-                        <TableCell align="left">{row.empVerDetails.updateStatus}</TableCell>
+                        <TableCell align="left">{row.empUpdateDetails.updateStatus}</TableCell>
                         <TableCell align="left">
                             <Button
                                 variant='outlined'
@@ -228,7 +228,7 @@ class index extends Component {
                                 onClick={() => this.setState({
                                     viewDetails: [row],
 
-                                    employeeJobId: row.empVerDetails.id,
+                                    employeeJobId: row.empUpdateDetails.id,
                                     employeePicture: row.employeeDetails.picture_url,
                                     employeeFirstName: row.employeeDetails.firstname,
                                     employeeMiddleName: row.employeeDetails.middlename,
@@ -269,9 +269,9 @@ class index extends Component {
                         <TableCell align="left">{row.employeeDetails.firstname}</TableCell>
                         <TableCell align="left">{row.jobDetails.jobTitle}</TableCell>
                         <TableCell align="left">{row.employeeDetails.ontrac_id}</TableCell>
-                        <TableCell align="left">{row.empVerDetails.codeString}</TableCell>
+                        <TableCell align="left">{row.empUpdateDetails.codeString}</TableCell>
                         <TableCell align="left"></TableCell>
-                        <TableCell align="left">{row.empVerDetails.updateStatus}</TableCell>
+                        <TableCell align="left">{row.empUpdateDetails.updateStatus}</TableCell>
                         <TableCell align="left">
                             <Button
                                 variant='outlined'
@@ -279,7 +279,7 @@ class index extends Component {
                                 onClick={() => this.setState({
                                     viewDetails: [row],
 
-                                    employeeJobId: row.empVerDetails.id,
+                                    employeeJobId: row.empUpdateDetails.id,
                                     employeePicture: row.employeeDetails.picture_url,
                                     employeeFirstName: row.employeeDetails.firstname,
                                     employeeMiddleName: row.employeeDetails.middlename,
@@ -490,7 +490,7 @@ class index extends Component {
                         <Button color="primary" variant="contained" style={{ minWidth: 100 }}
                             onClick={()=> this.approveVerification(this.employeeJobId)}
                         >
-                            Approve
+                            Confirm
                         </Button>
 
                         <Button color="secondary" variant="contained" style={{ minWidth: 100 }}
@@ -509,7 +509,7 @@ class index extends Component {
         console.log('jobId:',this.state.employeeJobId)
 
         try {
-            let response = await fetch(api + '/api/v1/employers/confirmEmpVerification/' + this.state.employeeJobId,
+            let response = await fetch(api + '/api/v1/employers/confirmEmpUpdate/' + this.state.employeeJobId,
                 {
                     method: 'PUT',
                     headers: {
@@ -537,7 +537,7 @@ class index extends Component {
         console.log('jobId:',this.state.employeeJobId)
 
         try {
-            let response = await fetch(api + '/api/v1/employers/rejectEmpVerification/' + this.state.employeeJobId,
+            let response = await fetch(api + '/api/v1/employers/confirmEmpUpdate/' + this.state.employeeJobId,
                 {
                     method: 'PUT',
                     headers: {
@@ -548,7 +548,7 @@ class index extends Component {
                 }
             );
             response = await response.json();
-            console.log('rejectJob:', response);
+            console.log('approveJob:', response);
 
             this.setState({ codeDetailsDialog: false })
             this.fetchVerifications();

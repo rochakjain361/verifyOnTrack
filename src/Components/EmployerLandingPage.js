@@ -28,7 +28,6 @@ import Dashboard from './EmployerPageComponents/Dashboard'
 import Inbox from './EmployerPageComponents/Messages/Inbox'
 // import Outbox from './EmployerPageComponents/Messages/Outbox'
 import AccessCodes from './EmployerPageComponents/MyCodes/AccessCodes'
-import EmployementCodes from './EmployerPageComponents/MyCodes/EmployementCodes/EmploymentVerification'
 import EmploymentTabs from './EmployerPageComponents/MyCodes/EmployementCodes/EmploymentTabs'
 
 const drawerWidth = 240;

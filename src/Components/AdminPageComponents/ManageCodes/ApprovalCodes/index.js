@@ -32,6 +32,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import ViewPagesComponent from '../ViewPagesComponent'
+import ViewEmployerPageComponents from '../ViewEmployerPageComponents'
 
 import Profile from '../Pages/Profile'
 import Address from '../Pages/Address'
@@ -61,6 +62,8 @@ class index extends Component {
         viewLogic: true,
         adminByRadio: "searchByEmail",
         adminIndex: '',
+
+        isEmployerCondition: '',
 
         allCodes: [],
         assignedToMe: [],
@@ -364,7 +367,7 @@ class index extends Component {
                                     row.codeStatus== "Closed" ? ("Closed") : (
                                         <Button variant='outlined' color='primary'
                                         onClick={() => {
-                                            this.setState({ userID: row.user, approvalCode: row.codeString, viewId: row.id }, ()=> console.log('userId:', this.state.userID))
+                                            this.setState({ isEmployerCondition:row.is_employer_field, userID: row.user, approvalCode: row.codeString, viewId: row.id }, ()=> console.log('userId:', this.state.userID, 'isEmployer', this.state.isEmployerCondition))
                                             this.viewAndApprove(row.id, row.codeString)
                                         }}
                                     // disabled={this.state.viewLogic}
@@ -432,7 +435,7 @@ class index extends Component {
                                     row.codeStatus== "Closed" ? ("Closed") : (
                                         <Button variant='outlined' color='primary'
                                         onClick={() => {
-                                            this.setState({ userID: row.user, approvalCode: row.codeString, viewId: row.id }, ()=> console.log('userId:', this.state.userID))
+                                            this.setState({ isEmployerCondition:row.is_employer_field, userID: row.user, approvalCode: row.codeString, viewId: row.id }, ()=> console.log('userId:', this.state.userID, 'isEmployer', this.state.isEmployerCondition))
                                             this.viewAndApprove(row.id, row.codeString)
                                         }}
                                     // disabled={this.state.viewLogic}
@@ -499,7 +502,7 @@ class index extends Component {
                                     row.codeStatus== "Closed" ? ("Closed") : (
                                         <Button variant='outlined' color='primary'
                                         onClick={() => {
-                                            this.setState({ userID: row.user, approvalCode: row.codeString, viewId: row.id }, ()=> console.log('userId:', this.state.userID))
+                                            this.setState({ isEmployerCondition:row.is_employer_field, userID: row.user, approvalCode: row.codeString, viewId: row.id }, ()=> console.log('userId:', this.state.userID, 'isEmployer', this.state.isEmployerCondition))
                                             this.viewAndApprove(row.id, row.codeString)
                                         }}
                                     // disabled={this.state.viewLogic}
@@ -577,7 +580,7 @@ class index extends Component {
                                     row.codeStatus== "Closed" ? ("Closed") : (
                                         <Button variant='outlined' color='primary'
                                         onClick={() => {
-                                            this.setState({ userID: row.user, approvalCode: row.codeString, viewId: row.id }, ()=> console.log('userId:', this.state.userID))
+                                            this.setState({ isEmployerCondition:row.is_employer_field, userID: row.user, approvalCode: row.codeString, viewId: row.id }, ()=> console.log('userId:', this.state.userID, 'isEmployer', this.state.isEmployerCondition))
                                             this.viewAndApprove(row.id, row.codeString)
                                         }}
                                     // disabled={this.state.viewLogic}
@@ -790,9 +793,12 @@ class index extends Component {
                     View and approve
             </DialogTitle>
                 <DialogContent>
-
-                    <ViewPagesComponent user={this.state.userID} approval={this.state.approvalCode} viewId={this.state.viewId} />
-
+                    {this.state.isEmployerCondition? (
+                        <ViewEmployerPageComponents user={this.state.userID} approval={this.state.approvalCode} viewId={this.state.viewId} />
+                    ):(
+                        <ViewPagesComponent user={this.state.userID} approval={this.state.approvalCode} viewId={this.state.viewId} />
+                    )}
+                    
                 </DialogContent>
 
                 <DialogActions style={{ padding: 15 }}>
@@ -828,7 +834,7 @@ class index extends Component {
             await this.fetchAssignedToMe();
             await this.fetchBothRequests();
             await this.fetchPendingApprovalRequests();
-            this.setState({ selectedstate: '' })
+            this.setState({ selectedstate: '', assignDialog: false })
 
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);

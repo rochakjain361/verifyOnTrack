@@ -9,8 +9,9 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import EmploymentVerification from '../EmploymentVerification'
 import Onboarding from '../Onboarding'
-import Offboarding from '../Offboarding'
+import Comments from '../Comments'
 import EmployeesList from '../EmployeesList'
+import UpdationRequests from '../UpdationRequests'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -78,9 +79,10 @@ export default function FullWidthTabs() {
           aria-label="full width tabs example"
         >
           <Tab label="Onboarding Requests" {...a11yProps(0)} />
-          <Tab label="Offboarding Requests" {...a11yProps(1)} />
-          <Tab label="Verification Requests" {...a11yProps(2)} />
-          <Tab label="Employees List" {...a11yProps(3)} />
+          <Tab label="Verification Requests" {...a11yProps(1)} />
+          <Tab label="Employees List" {...a11yProps(2)} />
+          <Tab label="Update Requests" {...a11yProps(3)} />
+          <Tab label="Comments" {...a11yProps(4)} />
         </Tabs>
       </AppBar>
       <SwipeableViews
@@ -92,13 +94,16 @@ export default function FullWidthTabs() {
           <Onboarding/>
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          <Offboarding/>
-        </TabPanel>
-        <TabPanel value={value} index={2} dir={theme.direction}>
         <EmploymentVerification/>
         </TabPanel>
-        <TabPanel value={value} index={3} dir={theme.direction}>
+        <TabPanel value={value} index={2} dir={theme.direction}>
           <EmployeesList/>
+        </TabPanel>
+        <TabPanel value={value} index={3} dir={theme.direction}>
+          <UpdationRequests/>
+        </TabPanel>
+        <TabPanel value={value} index={4} dir={theme.direction}>
+          <Comments/>
         </TabPanel>
       </SwipeableViews>
     </div>
