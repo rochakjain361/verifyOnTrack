@@ -53,7 +53,7 @@ function EmployerList(props) {
   const [Loading, setLoading] = React.useState(true);
   const [viewrating, setViewrating] = React.useState(false);
   const [viewsurvey, setViewsurvey] = React.useState(false);
-  const [ratingSurvey, setRatingentry] = React.useState({});
+  const [ratingSurvey, setRatingentry] = React.useState([]);
   const [choiceSurvey, setChoiceentry] = React.useState([]);
   // const[ratingsurvey,setRatingsurvey]=React.useState({})
   // const[choiceSurvey,setChoicesurvey]=React.useState({})
@@ -235,6 +235,8 @@ const [getcommentemployerid,setemployerid]=React.useState()
                   size="small"
                   onClick={() => {
                     setViewrating(false);
+                    setRatingentry(null)
+
                   }}
                 >
                   No
@@ -256,6 +258,8 @@ const [getcommentemployerid,setemployerid]=React.useState()
                   size="small"
                   onClick={() => {
                     setViewsurvey(false);
+                    setChoiceentry("")
+                    
                   }}
                 >
                   No
@@ -833,6 +837,7 @@ const [getcommentemployerid,setemployerid]=React.useState()
                       size="small"
                       onClick={() => {
                         setViewrating(false);
+                        setRatingentry([])
                       }}
                     >
                       No
@@ -854,6 +859,7 @@ const [getcommentemployerid,setemployerid]=React.useState()
                       size="small"
                       onClick={() => {
                         setViewsurvey(false);
+                        setChoiceentry([])
                       }}
                     >
                       No
