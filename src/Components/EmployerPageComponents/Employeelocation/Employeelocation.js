@@ -400,7 +400,24 @@ export class Employeelocation extends Component {
             </Grid>
           </Grid>
         ) : (
-          <Grid>
+            <Grid container  direction="row" justify="space-between" alignItems="center">
+            <Grid
+              container
+              justify="center"
+              direction="column"
+              alignItems="flex-end"
+            >
+              <Box p={2}>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={() => this.setState({ addDialogOpen: true })}
+                >
+                  Add New address
+                </Button>
+              </Box>
+            </Grid>
+          
             <TableContainer component={Paper} elevation={16} p={3}>
               <Table stickyHeader>
                 <TableHead>
@@ -480,7 +497,9 @@ export class Employeelocation extends Component {
                 </TableBody>
               </Table>
             </TableContainer>
+         
           </Grid>
+
         )}
         {this.AddLocation()}
       </div>

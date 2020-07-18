@@ -681,7 +681,8 @@ class signUp extends Component {
           });
         } else if (response.user.is_employer) {
           this.props.history.push({
-            pathname: "/employer",
+            pathname: "/employerworkflow",
+            state: { detail: response }
           });
         } else {
           this.props.history.push({

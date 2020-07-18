@@ -325,9 +325,18 @@ console.log("///////",window.$IP)
             pathname: "/manageStates",
           });
         } else if (data.user.is_employer) {
+          console.log("accountStatus", data.user.accountStatus)
+          if (data.user.accountStatus === "Approved") {
           this.props.history.push({
             pathname: "/employer",
           });
+        }else{
+          this.props.history.push({
+            pathname: "/employerworkflow",
+            state: { detail: data }
+          });
+
+        }
         } else {
           if (data.user.accountStatus == "Approved") {
             console.log("accountStatus", data.user.accountStatus)

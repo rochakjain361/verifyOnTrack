@@ -25,15 +25,34 @@ import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import { Paper } from "@material-ui/core";
 import SettingsBackupRestoreIcon from "@material-ui/icons/SettingsBackupRestore";
+import { useState, useEffect } from "react";
 
-const useQontoStepIconStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
-    // color: '#eaeaf0',
-    // display: 'flex',
-    // height: 22,
-    // alignItems: 'center',
-    width:"100%"
+    width: "100%",
   },
+  button: {
+    marginRight: theme.spacing(1),
+  },
+  instructions: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+}));
+const useQontoStepIconStyles = makeStyles({
+  // root: {
+  //   // color: '#eaeaf0',
+  //   // display: 'flex',
+  //   // height: 22,
+  //   // alignItems: 'center',
+  //   width:"100%"
+  // },
   active: {
     color: '#784af4',
   },
@@ -48,9 +67,9 @@ const useQontoStepIconStyles = makeStyles({
     zIndex: 1,
     fontSize: 18,
   },
-  title: {
-    flexGrow: 1,
-  },
+  // title: {
+  //   flexGrow: 1,
+  // },
 });
 
 function QontoStepIcon(props) {
@@ -163,18 +182,6 @@ ColorlibStepIcon.propTypes = {
   icon: PropTypes.node,
 };
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-  },
-  button: {
-    marginRight: theme.spacing(1),
-  },
-  instructions: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-  },
-}));
 
 function getSteps() {
   return ['EmployerProfile', 'Location'];
@@ -199,7 +206,16 @@ export default function EmployerStepper(props) {
   const steps = getSteps();
   const [Approval, setApproval] = React.useState(false);
 
-
+useEffect(() => {
+  if (
+    props.location.state.detail.user.accountStatus ===
+    "Approval In Progress"
+  ) {
+    setApproval(true);
+    setActiveStep(2);
+  }
+ 
+}, [])
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -275,6 +291,8 @@ export default function EmployerStepper(props) {
      
       <div>
         {activeStep === steps.length ? (
+           <Box m={3} p={2}>
+              {Approval === false ? (
           <Grid spacing={3} container direction="column">
           <Grid item xs={12}>
             <Grid
@@ -351,7 +369,35 @@ export default function EmployerStepper(props) {
               </Paper>
             </Grid>
           </Grid>
-        </Grid>
+        </Grid>):( <Grid
+                container
+                spacing={3}
+                direction="column"
+                justify="center"
+                align="center"
+              >
+                <Grid item xs={12}>
+                  <Paper elevation={3} direction="column">
+                    <Box
+                      p={3}
+                      display="flex"
+                      flexDirection="column"
+                      justifyContent="center"
+                      alignItems="center"
+                      style={{ height: "50vh" }}
+                    >
+                      <Typography
+                        variant="h4"
+                        gutterBottom
+                        align="center"
+                        justify="center"
+                      >
+                        You will be notified by mail soon.
+                      </Typography>
+                    </Box>
+                  </Paper>
+                </Grid>
+              </Grid>)}</Box>
         ) : (
           <div>
           
