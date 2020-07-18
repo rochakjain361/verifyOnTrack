@@ -29,6 +29,7 @@ import { Select } from "@material-ui/core";
 import { MenuItem } from "@material-ui/core";
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 import { AddLocation } from "@material-ui/icons";
+import axios from 'axios';
 let token = "";
 let id = "";
 export class Employeelocation extends Component {
@@ -40,13 +41,24 @@ export class Employeelocation extends Component {
       states: [],
       lga: [],
       city: [],
+      updatedlgastates:[],
+      updatedcityStates:[],
       loading: true,
       addDialogOpen: false,
+      updateDialogOpen:false,
       addstate: "",
       addlga: "",
       addcity: "",
       buildingno: "",
       street: "",
+      updatestate:"",
+      updatelga:"",
+      updatecity:"",
+      updatebuildingno:"",
+      updatestreet:"",
+      selectedlga:"",
+      selectedState:"",
+      updateid:"",
       location: {
         latitude: null,
         longtitude: null,
@@ -101,6 +113,24 @@ export class Employeelocation extends Component {
       this.getlocationdata();
     });
   }
+  updatelocationdata() {
+    let bodyFormData = new FormData();
+    bodyFormData.append("state", this.state.updatestate);
+    bodyFormData.append("lga", this.state.updatelga);
+    bodyFormData.append("city", this.state.updatecity);
+    bodyFormData.append("suite", this.state.updatebuildingno);
+    bodyFormData.append("street", this.state.updatestreet);
+    bodyFormData.append("google_coordinate1", this.state.location.latitude);
+    bodyFormData.append("google_coordinate2", this.state.location.longtitude);
+
+    put(
+      "http://3.22.17.212:8000/api/v1/employers/update-location/"+this.state.updateid,
+      token,
+      bodyFormData
+    ).then(() => {
+      this.getlocationdata();
+    });
+  }
   async getlocationdata() {
     await get(
       "http://3.22.17.212:8000/api/v1/employers/" + id + "/locations",
@@ -112,40 +142,55 @@ export class Employeelocation extends Component {
   }
   async lganames(stateid, val) {
     this.setState({ selectedState: stateid });
-    await get(
-      "http://3.22.17.212:8000/api/v1/resManager/address/lgas/",
-      token,
-      ""
-    ).then((res) => {
-      val === "update"
+    // await get(
+    //   "http://3.22.17.212:8000/api/v1/resManager/address/lgas/stateId="+this.state.selectedState,
+    //   token,
+    //   ""
+    // ).then((res) => {
+    //   val === "update"
+    //     ? this.setState({ updatedlgastates: res.data })
+    //     : this.setState({ lga: res.data });
+    // });
+    await axios
+      .get(
+        "http://3.22.17.212:8000/api/v1/resManager/address/lgas/?stateId=" +
+          stateid,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        val === "update"
         ? this.setState({ updatedlgastates: res.data })
         : this.setState({ lga: res.data });
-    });
-    // await axios
-    //   .get(
-    //     "http://3.22.17.212:8000/api/v1/resManager/address/lgas/?stateId=" +
-    //       stateid,
-    //     {
-    //       headers: {
-    //         Authorization: token,
-    //       },
-    //     }
-    //   )
-    //   .then((res) => {
-    //     val === "update"
-    //       ? this.setState({ updatedlgastates: res.data })
-    //       : this.setState({ lgaStates: res.data });
-    //     console.table("lga", this.state.lgaStates);
-    //   });
+      });
   }
   async citynames(lgaid, val) {
-    this.setState({ selectedLga: lgaid });
-    await get(
-      "http://3.22.17.212:8000/api/v1/resManager/address/cities/",
-      token,
-      ""
-    ).then((res) => {
-      val === "update"
+    // this.setState({ selectedLga: lgaid });
+    // await get(
+    //   "http://3.22.17.212:8000/api/v1/resManager/address/citieslgaId=" +
+    //   lgaid,
+    //   token,
+    //   ""
+    // ).then((res) => {
+    //   val === "update"
+    //     ? this.setState({ updatedcityStates: res.data })
+    //     : this.setState({ city: res.data });
+    // });
+    await axios
+    .get(
+      "http://3.22.17.212:8000/api/v1/resManager/address/cities/?lgaId=" +
+        lgaid,
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    )
+    .then((res) => {
+        val === "update"
         ? this.setState({ updatedcityStates: res.data })
         : this.setState({ city: res.data });
     });
@@ -160,7 +205,7 @@ export class Employeelocation extends Component {
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title" justify="center">
-          Add company details
+          Add company location details
         </DialogTitle>
         <Box display="flex" flexDirection="row" width={1}>
           <Box width={1 / 2}>
@@ -324,6 +369,183 @@ export class Employeelocation extends Component {
       </Dialog>
     );
   }
+  updatelocation() {
+    return (
+      <Dialog
+        fullWidth={"md"}
+        maxWidth={"md"}
+        open={this.state.updateDialogOpen}
+        onClose={() => this.setState({ updateDialogOpen: false })}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title" justify="center">
+          update company location details
+        </DialogTitle>
+        <Box display="flex" flexDirection="row" width={1}>
+          <Box width={1 / 2}>
+            <DialogContent>
+              {/* <DialogContentText>
+                  Enter the details of your profile to be added
+            </DialogContentText> */}
+
+              <Grid
+                container
+                justify="flex-start"
+                direction="row"
+                alignItems="center"
+                spacing={3}
+              >
+                <Grid item fullWidth xs={12}>
+                  <FormControl fullWidth>
+                    <InputLabel id="gender">State</InputLabel>
+                    <Select
+                      label="State"
+                      id="gender"
+                      // value={age}
+                      defaultValue={this.state.updatestate}
+                      onChange={(event) => {
+                        this.setState({ updatestate: event.target.value });
+                        this.lganames(event.target.value, "update");
+                        // console.log(this.state.gender);
+                      }}
+                    >
+                      {this.state.states.map((cat) => (
+                        <MenuItem value={cat.id}>{cat.stateName}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item fullWidth xs={12}>
+                  <FormControl fullWidth>
+                    <InputLabel id="gender">Lga</InputLabel>
+                    <Select
+                      label="gender"
+                      id="gender"
+                      // value={age}
+                      defaultValue={this.state.updatelga}
+                      onChange={(event) => {
+                        this.setState({ updatelga: event.target.value });
+                        this.citynames(event.target.value, "update");
+                        // console.log(this.state.gender);
+                      }}
+                    >
+                      {this.state.updatedlgastates.map((cat) => (
+                        <MenuItem value={cat.id}>{cat.lgaName}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item fullWidth xs={12}>
+                  <FormControl fullWidth>
+                    <InputLabel id="gender">City</InputLabel>
+                    <Select
+                      label="City"
+                      id="gender"
+                      // value={age}
+                      defaultValue={this.state.updatecity}
+                      onChange={(event) => {
+                        this.setState({ updatecity: event.target.value });
+
+                        // console.log(this.state.gender);
+                      }}
+                    >
+                      {this.state.updatedcityStates.map((cat) => (
+                        <MenuItem value={cat.id}>{cat.cityName}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item fullWidth xs={12}>
+                  <TextField
+                    id="firstName"
+                    label="Buildingno"
+                    defaultValue={this.state.updatebuildingno}
+                    // defaultValue={result[this.state.selectedIndex].firstname}
+                    onChange={(event) => {
+                      // this.capitalizefirstname(event.target.value)
+                      this.setState({ updatebuildingno: event.target.value });
+
+                      // console.log(this.state.firstname);
+                    }}
+                    type="text"
+                    fullWidth
+                  />
+                </Grid>
+
+                <Grid item fullWidth xs={12}>
+                  <TextField
+                    id="middleName"
+                    label="Street"
+                    defaultValue={this.state.updatestreet}
+                    // defaultValue={result[this.state.selectedIndex].middlename}
+                    onChange={(event) => {
+                      // this.capitalizemiddlename(event.target.value)
+                      this.setState({ updatestreet: event.target.value });
+                      // console.log(this.state.middlename);
+                    }}
+                    type="text"
+                    fullWidth
+                  />
+                </Grid>
+              </Grid>
+            </DialogContent>
+          </Box>
+          <Box width={1 / 2}>
+            <Map
+              initialCenter={{
+                lat: 9.0765,
+                lng: 7.3986,
+              }}
+              google={this.props.google}
+              zoom={12}
+              onClick={this.onMarkerClick}
+              style={{
+                width: "40%",
+                height: "75%",
+              }}
+              fullscreenControl={true}
+            >
+              <Marker
+                position={{
+                  lat: this.state.location.latitude,
+                  lng: this.state.location.longtitude,
+                }}
+              />
+              <InfoWindow onClose={this.onInfoWindowClose}></InfoWindow>
+            </Map>
+          </Box>
+        </Box>
+
+        <DialogActions>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              this.setState(
+                {
+                  updateDialogOpen: false,
+                },
+                this.updatelocationdata()
+              );
+            }}
+          >
+            Update
+          </Button>
+          <Button
+            color="secondary"
+            variant="contained"
+            onClick={() =>
+              this.setState({
+                updateDialogOpen: false,
+              })
+            }
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }
   isloading() {
     return (
       <Grid
@@ -477,16 +699,37 @@ export class Employeelocation extends Component {
                       <Button
                         color="primary"
                         variant="outlined"
-                        onClick={() =>
+                        onClick={() =>{
                           this.setState({
                             updateDialogOpen: true,
-                            phone: this.state.result.phone,
-                            email: this.state.result.email,
-                            fax: this.state.result.fax,
-                            category: this.state.result.category,
+                            updatestate:this.state.result[index].state,
+                            updatelga:this.state.result[index].lga,
+                            updatecity:this.state.result[index].city,
+                            updatebuildingno:this.state.result[index].suite,
+                            updatestreet:this.state.result[index].street,
+                            updateid:this.state.result[index].id,
+                            location: {
+                                latitude: this.state.result[index]
+                                  .google_coordinate1,
+                                longtitude: this.state.result[index]
+                                  .google_coordinate2,
+                              },
+                              
+
 
                             // add the updatedstate elements here after passing the token and adding data
-                          })
+                          }
+                         
+                        )
+                        this.lganames(
+                            this.state.result[index].state,
+                            "update"
+                          )
+                          this.citynames(
+                            this.state.result[index].lga,
+                            "update"
+                          )
+                        }
                         }
                       >
                         Update
@@ -502,6 +745,7 @@ export class Employeelocation extends Component {
 
         )}
         {this.AddLocation()}
+        {this.updatelocation()}
       </div>
     );
   }

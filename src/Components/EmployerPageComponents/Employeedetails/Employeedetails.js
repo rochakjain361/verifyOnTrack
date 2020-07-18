@@ -383,7 +383,7 @@ export class Employeedetails extends Component {
     id = localStorage.getItem("id");
     await this.getprofiledata();
     await get(
-      "http://3.22.17.212:8000/api/v1/resManager/job/categories/",
+      "http://3.22.17.212:8000/api/v1/resManager/employer/categories/",
       token,
       ""
     ).then((res) => this.setState({ categories: res.data, loading: false }));
