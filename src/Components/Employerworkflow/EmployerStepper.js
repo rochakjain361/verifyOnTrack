@@ -184,7 +184,7 @@ ColorlibStepIcon.propTypes = {
 
 
 function getSteps() {
-  return ['EmployerProfile', 'Location'];
+  return ['Details', 'Location'];
 }
 
 function getStepContent(step) {
