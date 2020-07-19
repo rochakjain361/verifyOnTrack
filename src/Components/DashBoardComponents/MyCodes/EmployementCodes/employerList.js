@@ -15,6 +15,8 @@ import {
   CircularProgress,
   Radio,
   RadioGroup,
+  Box,
+  Divider,
 } from "@material-ui/core/";
 
 import {
@@ -51,25 +53,29 @@ function EmployerList(props) {
   const [Loading, setLoading] = React.useState(true);
   const [viewrating, setViewrating] = React.useState(false);
   const [viewsurvey, setViewsurvey] = React.useState(false);
-  const [ratingSurvey, setRatingentry] = React.useState({});
+  const [ratingSurvey, setRatingentry] = React.useState([]);
   const [choiceSurvey, setChoiceentry] = React.useState([]);
   // const[ratingsurvey,setRatingsurvey]=React.useState({})
   // const[choiceSurvey,setChoicesurvey]=React.useState({})
   const [updationdialouge, setUpdationdialog] = React.useState(false);
   const [Jobcategory, setJobcategory] = React.useState([]);
   const [commentdialog, setcommentdialog] = React.useState(false);
-  // const [currentid,setcurrentid]=React.useState()
+  const [updateid, setupdateid] = React.useState();
+  const [commentbyemployer,setcommentbyemployer]=React.useState([])
+const [getcommentemployerid,setemployerid]=React.useState()
   const [comentdata, setCommentdata] = React.useState({
     employer: "",
     comment: "",
   });
-  const [offboardid,setoffboardid]=React.useState();
+  const [offboardid, setoffboardid] = React.useState();
+  const [updatedialog, setupdatedialog] = React.useState(false);
   const [employmentupdate, setEmploymentupdate] = React.useState({
     jobProfile: "",
     jobCategory: "",
     jobTitle: "",
     jobDescription: "",
   });
+  const [currentupdateid, setcurrentupdateid] = React.useState(0);
   const [offboard, setOffboard] = React.useState({
     // offboard: {
     //   jobProfile: "",
@@ -79,11 +85,119 @@ function EmployerList(props) {
     //   endDate: "",
     // },
   });
-  const [confirmterminationdailog,setconfirmTerminationdialg]=React.useState(false)
-  const confirmterminationapi=async()=>{
-await put("http://3.22.17.212:8000/8000/api/v1/employers/confirmTermination/"+offboardid,Token,{ ratingSurvey,
-choiceSurvey}).then(()=>{})
-  }
+  const [confirmterminationdailog, setconfirmTerminationdialg] = React.useState(
+    false
+  );
+  // const getcommentbyemployer=async(employerid)=>{
+  //   await get("http://3.22.17.212:8000/api/v1/employees/"+employerid+"/comments/mycomments",Token,"").then((res)=>{setcommentbyemployer(res.data)})
+  //     }
+  const confirmterminationapi = async () => {
+    await put(
+      "http://3.22.17.212:8000/api/v1/employers/confirmTermination/" +
+        offboardid,
+      Token,
+      { ratingSurvey, choiceSurvey }
+    ).then(() => {
+      props.refresh();
+      setconfirmTerminationdialg(false);
+    });
+  };
+  const updatedilaogconfirmation = () => {
+    return (
+      <Dialog
+        fullWidth={"sm"}
+        maxWidth={"sm"}
+        open={updatedialog}
+        onClose={() => {
+          setupdatedialog(false);
+        }}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle align="center">
+          <Typography variant="h5" component="h5" gutterBottom>
+            Updated Job Details
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          {data[currentupdateid].empUpdate.length > 0 ? (
+            <>
+              <Typography variant="body1" gutterBottom>
+                <Grid container direction="row">
+                  <Box fontWeight="fontWeightBold" p={1}>
+                    Jobtitle:
+                  </Box>
+                  <Box fontWeight="fontWeightRegular" p={1}>
+                    {data[currentupdateid].empUpdate[0].jobTitle}
+                  </Box>
+                </Grid>
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                <Grid container direction="row">
+                  <Box fontWeight="fontWeightBold" p={1}>
+                    JobDescription:
+                  </Box>
+                  <Box fontWeight="fontWeightRegular" p={1}>
+                    {data[currentupdateid].empUpdate[0].jobDescription}
+                  </Box>
+                </Grid>
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                <Grid container direction="row">
+                  <Box fontWeight="fontWeightBold" p={1}>
+                    Jobcategory:
+                  </Box>
+                  <Box fontWeight="fontWeightRegular" p={1}>
+                    {data[currentupdateid].empUpdate[0].jobCategory_name_field}
+                  </Box>
+                </Grid>
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                <Grid container direction="row">
+                  <Box fontWeight="fontWeightBold" p={1}>
+                    StatusReason:
+                  </Box>
+                  <Box fontWeight="fontWeightRegular" p={1}>
+                    {data[currentupdateid].empUpdate[0].statusReason}
+                  </Box>
+                </Grid>
+              </Typography>
+            </>
+          ) : (
+            console.log(
+              "data[currentupdateid].empUpdate.length",
+              data[currentupdateid].empUpdate.length
+            )
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Grid container justify="space-evenly">
+            <Button
+              size="small"
+              color="primary"
+              variant="outlined"
+              onClick={() => {
+                confirmupdates(updateid);
+                setupdatedialog(false);
+              }}
+            >
+              Confirm updates
+            </Button>
+            <Button
+              size="small"
+              color="secondary"
+              variant="outlined"
+              onClick={() => {
+                rejectupdates(updateid);
+                setupdatedialog(false);
+              }}
+            >
+              Reject updates
+            </Button>
+          </Grid>
+        </DialogActions>
+      </Dialog>
+    );
+  };
   const confirmtermination = () => {
     return (
       <div>
@@ -92,7 +206,7 @@ choiceSurvey}).then(()=>{})
           maxWidth={"sm"}
           open={confirmterminationdailog}
           onClose={() => {
-            setconfirmTerminationdialg(false)
+            setconfirmTerminationdialg(false);
           }}
           aria-labelledby="form-dialog-title"
         >
@@ -101,66 +215,69 @@ choiceSurvey}).then(()=>{})
           </DialogTitle>
           <DialogContent>
             <Grid
-            container
-            align="flex-start"
-            justify="center"
-            direction="row"
-            spacing={2}>
-            <Grid item xs={12}>
-                  Do you want to rate your employer?
-                  <Button
-                    size="small"
-                    onClick={() => {
-                      setViewrating(true);
-                    }}
-                  >
-                    Yes
-                  </Button>
-                  <Button
-                    size="small"
-                    onClick={() => {
-                      setViewrating(false);
-                    }}
-                  >
-                    No
-                  </Button>
-                
-                    {viewrating ? <Ratingdialog /> : null}
-                  </Grid>{" "}
-                  {/* <DialogContentText align="center"> */}
-                  <Grid item xs={12}>
-                  Would you like to fill this survey about your employer?
-                  <Button
-                    size="small"
-                    onClick={() => {
-                      setViewsurvey(true);
-                    }}
-                  >
-                    Yes
-                  </Button>
-                  <Button
-                    size="small"
-                    onClick={() => {
-                      setViewsurvey(false);
-                    }}
-                  >
-                    No
-                  </Button>
-                  {/* </DialogContentText> */}
-                  {/* </DialogContentText> */}
-                  
-                    {viewsurvey ? <Survey /> : null}
-                  </Grid>
+              container
+              align="flex-start"
+              justify="center"
+              direction="row"
+              spacing={2}
+            >
+              <Grid item xs={12}>
+                Do you want to rate your employer?
+                <Button
+                  size="small"
+                  onClick={() => {
+                    setViewrating(true);
+                  }}
+                >
+                  Yes
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => {
+                    setViewrating(false);
+                    setRatingentry(null)
+
+                  }}
+                >
+                  No
+                </Button>
+                {viewrating ? <Ratingdialog /> : null}
+              </Grid>{" "}
+              {/* <DialogContentText align="center"> */}
+              <Grid item xs={12}>
+                Would you like to fill this survey about your employer?
+                <Button
+                  size="small"
+                  onClick={() => {
+                    setViewsurvey(true);
+                  }}
+                >
+                  Yes
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => {
+                    setViewsurvey(false);
+                    setChoiceentry("")
+                    
+                  }}
+                >
+                  No
+                </Button>
+                {/* </DialogContentText> */}
+                {/* </DialogContentText> */}
+                {viewsurvey ? <Survey /> : null}
+              </Grid>
             </Grid>
           </DialogContent>
           <DialogActions>
-          <Button
+            <Button
               onClick={() => {
-               confirmterminationapi()
+                confirmterminationapi();
               }}
               color="primary"
             >
-           Confirm termination
+              Confirm termination
             </Button>
             <Button
               onClick={() => {
@@ -237,7 +354,7 @@ choiceSurvey}).then(()=>{})
   };
   const confirmupdates = async (updateid) => {
     await put(
-      "http://3.22.17.212:8000/api/v1/employers/confirmEmpUpdate/"+updateid,
+      "http://3.22.17.212:8000/api/v1/employers/confirmEmpUpdate/" + updateid,
       Token,
       ""
     ).then((response) => {
@@ -246,7 +363,7 @@ choiceSurvey}).then(()=>{})
   };
   const rejectupdates = async (updateid) => {
     await put(
-      "http://3.22.17.212:8000/api/v1/employers/rejectEmpUpdate/"+updateid,
+      "http://3.22.17.212:8000/api/v1/employers/rejectEmpUpdate/" + updateid,
       Token,
       ""
     ).then((response) => {
@@ -509,6 +626,7 @@ choiceSurvey}).then(()=>{})
             Comment
           </DialogTitle>
           <DialogContent>
+          
             <Grid
               container
               // align="center"
@@ -537,6 +655,38 @@ choiceSurvey}).then(()=>{})
                 />
               </Grid>
             </Grid>
+            {/* {commentbyemployer.map((comment) => (
+                        // <Paper variant='outlined' style={{padding: 10, marginTop: 20}}>
+                        <div style={{ padding: 10 }}>
+
+                            <Grid container justify='space-between' alignItems='flex-start' spacing={2}>
+
+                                <Grid item>
+                                    <Typography variant='subtitle1'>
+                                    {comment.company_name_field}
+                                        
+                                    </Typography>
+                                   
+                                </Grid>
+
+                                <Grid item>
+                                    <Typography variant='caption'>
+                                        {new Date(comment.created_on).toDateString()}
+                                    </Typography>
+                                </Grid>
+
+                                <Grid item xs={12} style={{ marginBottom: 10 }}>
+                                    <Typography variant='body2'>
+                                        {comment.comment}
+                                    </Typography>
+                                </Grid>
+                                <Divider />
+                            </Grid>
+                            <Divider />
+                            
+                        </div>
+                    ))} */}
+
           </DialogContent>
           <DialogActions>
             <Button
@@ -674,53 +824,51 @@ choiceSurvey}).then(()=>{})
                   </Grid>
                   {/* <DialogContentText align="center"> */}
                   <Grid item xs={12}>
-                  Do you want to rate your employer?
-                  <Button
-                    size="small"
-                    onClick={() => {
-                      setViewrating(true);
-                    }}
-                  >
-                    Yes
-                  </Button>
-                  <Button
-                    size="small"
-                    onClick={() => {
-                      setViewrating(false);
-                    }}
-                  >
-                    No
-                  </Button>
-                
+                    Do you want to rate your employer?
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        setViewrating(true);
+                      }}
+                    >
+                      Yes
+                    </Button>
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        setViewrating(false);
+                        setRatingentry([])
+                      }}
+                    >
+                      No
+                    </Button>
                     {viewrating ? <Ratingdialog /> : null}
                   </Grid>{" "}
                   {/* <DialogContentText align="center"> */}
                   <Grid item xs={12}>
-                  Would you like to fill this survey about your employer?
-                  <Button
-                    size="small"
-                    onClick={() => {
-                      setViewsurvey(true);
-                    }}
-                  >
-                    Yes
-                  </Button>
-                  <Button
-                    size="small"
-                    onClick={() => {
-                      setViewsurvey(false);
-                    }}
-                  >
-                    No
-                  </Button>
-                  {/* </DialogContentText> */}
-                  {/* </DialogContentText> */}
-                  
+                    Would you like to fill this survey about your employer?
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        setViewsurvey(true);
+                      }}
+                    >
+                      Yes
+                    </Button>
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        setViewsurvey(false);
+                        setChoiceentry([])
+                      }}
+                    >
+                      No
+                    </Button>
+                    {/* </DialogContentText> */}
+                    {/* </DialogContentText> */}
                     {viewsurvey ? <Survey /> : null}
                   </Grid>
-                  </Grid>
-              
-
+                </Grid>
               </DialogContent>
               <DialogActions>
                 <Button
@@ -748,150 +896,153 @@ choiceSurvey}).then(()=>{})
   };
   return (
     <div>
-      <Grid container justify="flex-start" alignItems="center" spacing={2}>
-        <TableContainer
-          component={Paper}
-          style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }}
-          elevation={5}
-        >
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow style={{ backgroundColor: "black" }}>
-                {[
-                  "Company Name",
-                  "Start Date",
-                  "End Date",
-                  "Job Title",
-                  "Job category",
-                  "Termination",
-                  "Updation",
-                  "Comment",
-                ].map((tablename) => (
-                  <TableCell align="center" style={{ fontWeight: "bolder" }}>
-                    {tablename}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {props.data.map((row, index) => (
-                <TableRow key={row.id}>
-                  <TableCell align="center">
-                    {row.company.companyName}
-                  </TableCell>
-                  <TableCell align="center">
-                    {row.jobDetails.startDate}
-                  </TableCell>
-                  <TableCell align="center">
-                    {row.jobDetails.endDate ? row.jobDetails.endDate : "--"}
-                  </TableCell>
-                  <TableCell align="center">
-                    {row.jobDetails.jobTitle}
-                  </TableCell>
-                  <TableCell align="center">
-                    {row.jobDetails.job_category_field}
-                  </TableCell>
+      {data.length == 0 ? (
+        <h1>You have not yet onboarded any job</h1>
+      ) : (
+        <Grid container justify="flex-start" alignItems="center" spacing={2}>
+          <TableContainer
+            component={Paper}
+            style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }}
+            elevation={5}
+          >
+            <Table stickyHeader>
+              <TableHead>
+                <TableRow style={{ backgroundColor: "black" }}>
+                  {[
+                    "Company Name",
+                    "Start Date",
+                    "End Date",
+                    "Job Title",
+                    "Job category",
+                    "Termination",
+                    "Updation",
+                    "Comment",
+                  ].map((tablename) => (
+                    <TableCell align="center" style={{ fontWeight: "bolder" }}>
+                      {tablename}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {props.data.map((row, index) => (
+                  <TableRow key={row.id}>
+                    <TableCell align="center">
+                      {row.company.companyName}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.jobDetails.startDate}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.jobDetails.endDate ? row.jobDetails.endDate : "--"}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.jobDetails.jobTitle}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.jobDetails.job_category_field}
+                    </TableCell>
 
-                  <TableCell align="center">
-                    {row.showTerminate ? (
-                      <Button
-                        size="small"
-                        color="primary"
-                        variant="outlined"
-                        onClick={() => {
-                          setTermination(true);
-                          setOffboard({
-                            ...offboard,
-                            jobProfile: row.jobDetails.id,
-                          });
-                        }}
-                      >
-                        Termination
-                      </Button>
-                    ) : null}
-                    {row.showConfirmTermination ? (
-                      <Button
-                        size="small"
-                        color="primary"
-                        variant="outlined"
-                        onClick={() => {
-                          setconfirmTerminationdialg(true)
-                          setoffboardid(row.offboard.id)
-                        }}
-                      >
-                        Confirm Termination
-                      </Button>
-                    ) : null}
-                  </TableCell>
-                  <TableCell align="center">
-                    {row.showUpdate ? (
-                      <Button
-                        size="small"
-                        color="primary"
-                        variant="outlined"
-                        onClick={() => {
-                          console.log("row.jobDetails.id", row.jobDetails.id);
-                          setUpdationdialog(true);
-                          setEmploymentupdate({
-                            ...employmentupdate,
-                            jobProfile: row.jobDetails.id,
-                          });
-                        }}
-                      >
-                        update
-                      </Button>
-                    ) : null}
-                    {row.showConfirmRejectUpdates ? (
-                      <Grid container justify="space-evenly">
+                    <TableCell align="center">
+                      {row.showTerminate ? (
                         <Button
                           size="small"
                           color="primary"
                           variant="outlined"
                           onClick={() => {
-                            confirmupdates(row.empUpdate.id);
+                            setTermination(true);
+                            setOffboard({
+                              ...offboard,
+                              jobProfile: row.jobDetails.id,
+                            });
                           }}
                         >
-                          Confirm updates
+                          Terminate 
                         </Button>
+                      ) : null}
+                      {row.showConfirmTermination ? (
                         <Button
                           size="small"
-                          color="secondary"
+                          color="primary"
                           variant="outlined"
                           onClick={() => {
-                            rejectupdates(row.empUpdate.id);
+                            setconfirmTerminationdialg(true);
+                            setoffboardid(row.offboard.id);
                           }}
                         >
-                          Reject updates
+                          Confirm Termination
                         </Button>
-                      </Grid>
-                    ) : null}
-                  </TableCell>
-                  <TableCell align="center">
-                    <Button
-                      size="small"
-                      color="primary"
-                      variant="outlined"
-                      onClick={() => {
-                        setcommentdialog(true);
-                        setCommentdata({
-                          ...comentdata,
-                          employer: row.company.employer,
-                        });
-                      }}
-                    >
-                      Comment
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        {Terminationdialouge()}
-        {Updationdialouge()}
-        {AddComment()}
-        {confirmtermination()}
-      </Grid>
+                      ) : null}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.showUpdate ? (
+                        <Button
+                          size="small"
+                          color="primary"
+                          variant="outlined"
+                          onClick={() => {
+                            console.log("row.jobDetails.id", row.jobDetails.id);
+                            setUpdationdialog(true);
+                            setEmploymentupdate({
+                              ...employmentupdate,
+                              jobProfile: row.jobDetails.id,
+                            });
+                          }}
+                        >
+                          update
+                        </Button>
+                      ) : null}
+                      {row.showConfirmRejectUpdates ? (
+                        <Grid container justify="space-evenly">
+                          <Button
+                            size="small"
+                            color="primary"
+                            variant="outlined"
+                            onClick={() => {
+                              console.log("row.empUpdate.length", index);
+
+                              setcurrentupdateid(index);
+                              setupdateid(row.empUpdate[0].id);
+                              setupdatedialog(true);
+                            }}
+                          >
+                            View updates
+                          </Button>
+                        </Grid>
+                      ) : null}
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        size="small"
+                        color="primary"
+                        variant="outlined"
+                        onClick={() => {
+                          
+                          // getcommentbyemployer(row.company.employer)
+                          setcommentdialog(true);
+                          setCommentdata({
+                            ...comentdata,
+                            employer: row.company.employer,
+
+                           
+                          });
+                        }}
+                      >
+                        Comment
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {Terminationdialouge()}
+          {Updationdialouge()}
+          {AddComment()}
+          {confirmtermination()}
+          {updatedilaogconfirmation()}
+        </Grid>
+      )}
     </div>
   );
 }

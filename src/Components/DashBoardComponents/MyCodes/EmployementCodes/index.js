@@ -34,7 +34,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import TabsEmployment from "../EmployementCodes/tabsEmployment";
-import Onboarding from "../../../EmployerPageComponents/MyCodes/EmployementCodes/Onboarding";
+// import Onboarding from "../../../EmployerPageComponents/MyCodes/EmployementCodes/Onboarding";
 import Axios from "axios";
 import employerList from "./employerList";
 import {get} from '../../../../API'
@@ -74,6 +74,7 @@ setcomments(response.data)
 setLoading(false);
 })
   }
+  
   const isloading = () => {
     return (
       <Grid

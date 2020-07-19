@@ -8,7 +8,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Onboarding from './onboarding'
-import Offboarding from './offboarding'
+import Comments from './Comments'
 import Employerlist from './employerList'
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -88,7 +88,7 @@ export default function TabsEmployment(props) {
           <Onboarding data={props.Onboarding} refresh={props.refresh}/>
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          <Offboarding data={props.comments}/>
+          <Comments data={props.comments}/>
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
           <Employerlist data={props.employerdata} refresh={props.employerrefresh}/>
