@@ -1110,7 +1110,7 @@ class myJobProfile extends Component {
         }
         console.log('verificationBody:', bodyData)
 
-        let response = await fetch('http://3.22.17.212:8000/api/v1/codes/emp/new-code',
+        let response = await fetch('http://3.22.17.212:8000/api/v1/employers/newEmpVerification',
             {
                 method: 'POST',
                 headers: {

@@ -71,7 +71,9 @@ class index extends Component {
         jobTitle: '',
         employeeJobCategory: '',
         employeeEndDate: '',
-        employeeJobDescription: ''
+        employeeJobDescription: '',
+
+        detailsStatus: ''
     }
 
     // constructor(props) {
@@ -183,7 +185,6 @@ class index extends Component {
                                                     <TableCell align="left">Job Title</TableCell>
                                                     <TableCell align="left">Verify Ontrac ID</TableCell>
                                                     <TableCell align="left">Code String</TableCell>
-                                                    <TableCell align="left">Date</TableCell>
                                                     <TableCell align="left">Status</TableCell>
                                                     <TableCell align="center">View</TableCell>
                                                 </TableRow>
@@ -219,7 +220,6 @@ class index extends Component {
                         <TableCell align="left">{row.jobDetails.jobTitle}</TableCell>
                         <TableCell align="left">{row.employeeDetails.ontrac_id}</TableCell>
                         <TableCell align="left">{row.empVerDetails.codeString}</TableCell>
-                        <TableCell align="left"></TableCell>
                         <TableCell align="left">{row.empVerDetails.updateStatus}</TableCell>
                         <TableCell align="left">
                             <Button
@@ -239,6 +239,8 @@ class index extends Component {
                                     employeeJobCategory: row.jobDetails.job_category_field,
                                     employeeEndDate: row.jobDetails.endDate,
                                     employeeJobDescription: row.jobDetails.jobDescription,
+
+                                    detailsStatus: row.empVerDetails.updateStatus,
 
                                     codeDetailsDialog: true,
                                 },
@@ -258,7 +260,7 @@ class index extends Component {
             <TableBody>
                 {this.state.pendingVerifications.map((row, index) => (
                     <TableRow key={row.id}>
-                       <TableCell align="left">
+                        <TableCell align="left">
                             <Avatar
                                 src={row.employeeDetails.picture_url}
                                 style={{ height: "4rem", width: "4rem" }}
@@ -270,7 +272,6 @@ class index extends Component {
                         <TableCell align="left">{row.jobDetails.jobTitle}</TableCell>
                         <TableCell align="left">{row.employeeDetails.ontrac_id}</TableCell>
                         <TableCell align="left">{row.empVerDetails.codeString}</TableCell>
-                        <TableCell align="left"></TableCell>
                         <TableCell align="left">{row.empVerDetails.updateStatus}</TableCell>
                         <TableCell align="left">
                             <Button
@@ -290,6 +291,9 @@ class index extends Component {
                                     employeeJobCategory: row.jobDetails.job_category_field,
                                     employeeEndDate: row.jobDetails.endDate,
                                     employeeJobDescription: row.jobDetails.jobDescription,
+
+                                    detailsStatus: row.empVerDetails.updateStatus,
+
 
                                     codeDetailsDialog: true,
                                 },
@@ -487,17 +491,22 @@ class index extends Component {
                         {/* </Paper> */}
                     </DialogContent>
                     <DialogActions style={{ padding: 15 }}>
-                        <Button color="primary" variant="contained" style={{ minWidth: 100 }}
-                            onClick={()=> this.approveVerification(this.employeeJobId)}
-                        >
-                            Approve
+
+                        {this.state.detailsStatus !== "Employment Verification Confirmed" && this.state.detailsStatus !== "Employment Verification Rejected" ? (
+                            <>
+                                <Button color="primary" variant="contained" style={{ minWidth: 100 }}
+                                    onClick={() => this.approveVerification(this.employeeJobId)}
+                                >
+                                    Approve
                         </Button>
 
-                        <Button color="secondary" variant="contained" style={{ minWidth: 100 }}
-                            onClick={()=> this.rejectVerification(this.employeeJobId)}
-                        >
-                            Reject
+                                <Button color="secondary" variant="contained" style={{ minWidth: 100 }}
+                                    onClick={() => this.rejectVerification(this.employeeJobId)}
+                                >
+                                    Reject
                         </Button>
+                            </>
+                        ) : <div />}
                     </DialogActions>
                 </Dialog>
             </div>
@@ -506,7 +515,7 @@ class index extends Component {
 
     async approveVerification(JobId) {
 
-        console.log('jobId:',this.state.employeeJobId)
+        console.log('jobId:', this.state.employeeJobId)
 
         try {
             let response = await fetch(api + '/api/v1/employers/confirmEmpVerification/' + this.state.employeeJobId,
@@ -534,7 +543,7 @@ class index extends Component {
 
     async rejectVerification(JobId) {
 
-        console.log('jobId:',this.state.employeeJobId)
+        console.log('jobId:', this.state.employeeJobId)
 
         try {
             let response = await fetch(api + '/api/v1/employers/rejectEmpVerification/' + this.state.employeeJobId,

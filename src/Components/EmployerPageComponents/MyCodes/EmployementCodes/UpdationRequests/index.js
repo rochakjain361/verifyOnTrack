@@ -71,7 +71,10 @@ class index extends Component {
         jobTitle: '',
         employeeJobCategory: '',
         employeeEndDate: '',
-        employeeJobDescription: ''
+        employeeJobDescription: '',
+
+        detailsStatus: '',
+        isLoading: true
     }
 
     // constructor(props) {
@@ -113,6 +116,8 @@ class index extends Component {
 
         this.fetchVerifications();
         this.fetchPendingVerifications();
+
+        this.setState({isLoading: false})
 
     }
 
@@ -183,7 +188,6 @@ class index extends Component {
                                                     <TableCell align="left">Job Title</TableCell>
                                                     <TableCell align="left">Verify Ontrac ID</TableCell>
                                                     <TableCell align="left">Code String</TableCell>
-                                                    <TableCell align="left">Date</TableCell>
                                                     <TableCell align="left">Status</TableCell>
                                                     <TableCell align="center">View</TableCell>
                                                 </TableRow>
@@ -219,7 +223,6 @@ class index extends Component {
                         <TableCell align="left">{row.jobDetails.jobTitle}</TableCell>
                         <TableCell align="left">{row.employeeDetails.ontrac_id}</TableCell>
                         <TableCell align="left">{row.empUpdateDetails.codeString}</TableCell>
-                        <TableCell align="left"></TableCell>
                         <TableCell align="left">{row.empUpdateDetails.updateStatus}</TableCell>
                         <TableCell align="left">
                             <Button
@@ -239,6 +242,8 @@ class index extends Component {
                                     employeeJobCategory: row.jobDetails.job_category_field,
                                     employeeEndDate: row.jobDetails.endDate,
                                     employeeJobDescription: row.jobDetails.jobDescription,
+
+                                    detailsStatus: row.empUpdateDetails.updateStatus,
 
                                     codeDetailsDialog: true,
                                 },
@@ -270,7 +275,6 @@ class index extends Component {
                         <TableCell align="left">{row.jobDetails.jobTitle}</TableCell>
                         <TableCell align="left">{row.employeeDetails.ontrac_id}</TableCell>
                         <TableCell align="left">{row.empUpdateDetails.codeString}</TableCell>
-                        <TableCell align="left"></TableCell>
                         <TableCell align="left">{row.empUpdateDetails.updateStatus}</TableCell>
                         <TableCell align="left">
                             <Button
@@ -290,6 +294,8 @@ class index extends Component {
                                     employeeJobCategory: row.jobDetails.job_category_field,
                                     employeeEndDate: row.jobDetails.endDate,
                                     employeeJobDescription: row.jobDetails.jobDescription,
+
+                                    detailsStatus: row.empUpdateDetails.updateStatus,
 
                                     codeDetailsDialog: true,
                                 },
@@ -487,7 +493,9 @@ class index extends Component {
                         {/* </Paper> */}
                     </DialogContent>
                     <DialogActions style={{ padding: 15 }}>
-                        <Button color="primary" variant="contained" style={{ minWidth: 100 }}
+                    {this.state.detailsStatus !== "UpdationRejected" && this.state.detailsStatus !== "UpdationConfirmed" ? (
+                            <>
+                                <Button color="primary" variant="contained" style={{ minWidth: 100 }}
                             onClick={()=> this.approveVerification(this.employeeJobId)}
                         >
                             Confirm
@@ -498,6 +506,9 @@ class index extends Component {
                         >
                             Reject
                         </Button>
+                            </>
+                        ) : <div />}
+                        
                     </DialogActions>
                 </Dialog>
             </div>

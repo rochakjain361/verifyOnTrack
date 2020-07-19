@@ -29,6 +29,8 @@ import {createStore} from 'redux';
 import reducer from './Reducer/reducer'
 // const store = createStore(reducer);
 
+import Profile from './Components/AdminPageComponents/ManageCodes/EmployerPages/Profile'
+
 class App extends React.PureComponent {
  
   render() {
@@ -95,6 +97,7 @@ class App extends React.PureComponent {
               <Route exact path='/manageJobLeavingReasons' component={AdminDash} />
               <Route exact path='/approvalCodes' component={AdminDash} />
               <Route exact path='/approvaljobs' component={Job} />
+              <Route exact path='/employerProfile' component={Profile} />
 
             </Switch>
           </div>

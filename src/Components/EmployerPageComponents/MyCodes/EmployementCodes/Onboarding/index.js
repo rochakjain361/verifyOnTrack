@@ -59,6 +59,7 @@ class index extends Component {
         newOfferButton: false,
         cancelOfferButton: false,
         confirmOfferButton: false,
+        confirmOpen: false,
         employeeByRadio: "searchByPhone",
 
         cancelButton: '',
@@ -102,6 +103,7 @@ class index extends Component {
         getAllJobTypes: [],
         viewDetailsData: [],
         isLoading: true,
+        joinId: '',
     }
 
     // constructor(props) {
@@ -238,7 +240,6 @@ class index extends Component {
     }
 
     async componentDidMount() {
-        this.setState({ isLoading: true })
 
         token = localStorage.getItem("Token");
         id = localStorage.getItem("id");
@@ -256,6 +257,7 @@ class index extends Component {
         const { classes } = this.props;
 
         return (
+
             this.state.isLoading ? this.isloading() : this.displayTable()
 
         );
@@ -335,9 +337,9 @@ class index extends Component {
                                                     <Button
                                                         style={{ minWidth: 125, marginTop: 10 }}
                                                         size='small'
-                                                        color="primary"
+                                                        color="secondary"
                                                         variant="outlined"
-                                                        onClick={() => this.joinEmployee(row.id)}
+                                                        onClick={() => this.setState({joinId: row.id, confirmOpen: true})}
                                                     >
                                                         Join Employee
                                                     </Button>
@@ -361,7 +363,30 @@ class index extends Component {
                 {this.confirmOfferDialog()}
                 {this.cancelOfferDialog()}
                 {this.newOfferDialog()}
+                {this.confirmEmloyeeOnboardDialog()}
             </div>
+        );
+    }
+
+    confirmEmloyeeOnboardDialog() {
+        return (
+            <Dialog open={this.state.confirmOpen} onClose={() => this.setState({ confirmOpen: false })} >
+                <DialogTitle id="alert-dialog-title">{"Are you sure do you want to onboard this employee?"}</DialogTitle>
+
+                <DialogActions style={{ padding: 15 }}>
+                    <Button color="primary" variant="contained" style={{ minWidth: 100 }}
+                    onClick={()=>this.joinEmployee(this.state.joinId)}
+                    >
+                        Yes
+                        </Button>
+
+                    <Button color="secondary" variant="contained" style={{ minWidth: 100 }}
+                        onClick={() => this.setState({ confirmOpen: false })}
+                    >
+                        No
+                        </Button>
+                </DialogActions>
+            </Dialog>
         );
     }
 
@@ -1320,6 +1345,7 @@ class index extends Component {
             this.fetchOnboardOffers();
 
             this.setState({
+                generateNewEmployementCodeDialog: false,
                 selectedVotId: "",
                 selectedJobType: "",
                 jobTitle: "",
@@ -1450,7 +1476,7 @@ class index extends Component {
             response = await response.json();
             console.log('cancelJob:', response);
 
-            this.setState({ cancelOfferButton: false })
+            this.setState({ confirmOpen: false })
             this.fetchOnboardOffers();
 
 
