@@ -10,7 +10,7 @@ import {
     let token1 = "";
     let token = "";
     let id = "";
-    const api = "http://3.22.17.212:8000"
+    const api = "http://3.22.17.212:8000"    
   
 const styles = theme => ({
 
@@ -46,7 +46,7 @@ class index extends React.Component{
   componentDidMount() {
    
     token = localStorage.getItem("Token");
-    id = localStorage.getItem("id");
+        id = localStorage.getItem("id");
     this.fetchProfiles()
   }
 

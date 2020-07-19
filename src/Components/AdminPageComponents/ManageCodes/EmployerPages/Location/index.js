@@ -44,6 +44,10 @@ class index extends React.Component {
        
         token =  localStorage.getItem("Token");
         id = localStorage.getItem("id");
+
+        const user = this.props.user;
+        const approval = this.props.approval;
+        console.log("LocationUserId:", this.props)
         this.fetchlocations()
     }
 
