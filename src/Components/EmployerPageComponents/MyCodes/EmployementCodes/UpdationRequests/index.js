@@ -60,6 +60,7 @@ class index extends Component {
         pendingVerifications: [],
         codeMapLogic: '',
         viewDetails: [],
+        updateDetails: [],
 
         employeeJobId: '',
         employeePicture: '',
@@ -117,7 +118,7 @@ class index extends Component {
         this.fetchVerifications();
         this.fetchPendingVerifications();
 
-        this.setState({isLoading: false})
+        this.setState({ isLoading: false })
 
     }
 
@@ -230,6 +231,7 @@ class index extends Component {
                                 color='primary'
                                 onClick={() => this.setState({
                                     viewDetails: [row],
+                                    updateDetails: row.empUpdateDetails,
 
                                     employeeJobId: row.empUpdateDetails.id,
                                     employeePicture: row.employeeDetails.picture_url,
@@ -247,7 +249,7 @@ class index extends Component {
 
                                     codeDetailsDialog: true,
                                 },
-                                    () => console.log('viewDetails:', this.state.viewDetails))}
+                                    () => console.log('viewDetails:', this.state.viewDetails, this.state.updateDetails))}
                             >
                                 Details
                                 </Button>
@@ -263,7 +265,7 @@ class index extends Component {
             <TableBody>
                 {this.state.pendingVerifications.map((row, index) => (
                     <TableRow key={row.id}>
-                       <TableCell align="left">
+                        <TableCell align="left">
                             <Avatar
                                 src={row.employeeDetails.picture_url}
                                 style={{ height: "4rem", width: "4rem" }}
@@ -429,95 +431,258 @@ class index extends Component {
                                 />
                             </Grid>
 
-                            <Grid item xs={12}>
-                                <TextField
-                                    id="jobTitle"
-                                    label="Job Title"
-                                    defaultValue={this.state.jobTitle}
-                                    type="text"
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    fullWidth
-                                    size='small'
-                                />
-                            </Grid>
+                            {this.state.detailsStatus !== "UpdationRejected" && this.state.detailsStatus !== "UpdationConfirmed" ? null : (
+                                <>
+                                    <>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                id="jobTitle"
+                                                label="Job Title"
+                                                defaultValue={this.state.jobTitle}
+                                                type="text"
+                                                InputProps={{
+                                                    readOnly: true,
+                                                }}
+                                                fullWidth
+                                                size='small'
+                                            />
+                                        </Grid>
 
-                            <Grid item xs={12}>
-                                <TextField
-                                    id="jobCategory"
-                                    label="Job Category"
-                                    defaultValue={this.state.employeeJobCategory}
-                                    type="text"
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    fullWidth
-                                    size='small'
-                                />
-                            </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                id="jobCategory"
+                                                label="Job Category"
+                                                defaultValue={this.state.employeeJobCategory}
+                                                type="text"
+                                                InputProps={{
+                                                    readOnly: true,
+                                                }}
+                                                fullWidth
+                                                size='small'
+                                            />
+                                        </Grid>
 
-                            <Grid item xs={12}>
-                                <TextField
-                                    id="endDate"
-                                    label="End Date"
-                                    defaultValue={this.state.employeeEndDate === null ? 'NA' : this.state.employeeEndDate}
-                                    type="text"
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    fullWidth
-                                    size='small'
-                                />
-                            </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                id="endDate"
+                                                label="End Date"
+                                                defaultValue={this.state.employeeEndDate === null ? 'NA' : this.state.employeeEndDate}
+                                                type="text"
+                                                InputProps={{
+                                                    readOnly: true,
+                                                }}
+                                                fullWidth
+                                                size='small'
+                                            />
+                                        </Grid>
 
-                            <Grid item xs={12} style={{ marginTop: 5 }}>
-                                <TextField
-                                    id="jobDescription"
-                                    label="Job Description"
-                                    defaultValue={this.state.employeeJobDescription}
-                                    type="text"
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    fullWidth
-                                    size='small'
-                                    variant='outlined'
-                                    multiline
-                                    rows={3}
-                                />
-                            </Grid>
+                                        <Grid item xs={12} style={{ marginTop: 5 }}>
+                                            <TextField
+                                                id="jobDescription"
+                                                label="Job Description"
+                                                defaultValue={this.state.employeeJobDescription}
+                                                type="text"
+                                                InputProps={{
+                                                    readOnly: true,
+                                                }}
+                                                fullWidth
+                                                size='small'
+                                                variant='outlined'
+                                                multiline
+                                                rows={3}
+                                            />
+                                        </Grid>
+                                    </>
+                                </>
+                            )}
 
                         </Grid>
+
+                        {this.state.detailsStatus !== "UpdationRejected" && this.state.detailsStatus !== "UpdationConfirmed" ? (
+                            <>
+                                <Grid container
+                                    direction="row"
+                                    justify="center"
+                                    alignItems="center" spacing={2}>
+
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            id="endDate2"
+                                            label="End Date"
+                                            defaultValue={this.state.employeeEndDate === null ? 'NA' : this.state.employeeEndDate}
+                                            type="text"
+                                            InputProps={{
+                                                readOnly: true,
+                                            }}
+                                            fullWidth
+                                            size='small'
+                                        />
+                                    </Grid>
+
+                                    <Grid item xs={6}>
+                                        <Paper variant='outlined' style={{ padding: 15 }}>
+
+                                            <Grid
+                                                container
+                                                justify="flex-start"
+                                                direction="row"
+                                                alignItems="center"
+                                                spacing={2}
+                                            // style={{ padding: 20 }}
+                                            >
+                                                <Grid item xs={12}>
+                                                    <FormLabel component="legend">Original details:</FormLabel>
+                                                </Grid>
+
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        id="originaljobTitle"
+                                                        label="Job Title"
+                                                        defaultValue={this.state.jobTitle}
+                                                        type="text"
+                                                        InputProps={{
+                                                            readOnly: true,
+                                                        }}
+                                                        fullWidth
+                                                        size='small'
+                                                    />
+                                                </Grid>
+
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        id="originaljobCategory"
+                                                        label="Job Category"
+                                                        defaultValue={this.state.employeeJobCategory}
+                                                        type="text"
+                                                        InputProps={{
+                                                            readOnly: true,
+                                                        }}
+                                                        fullWidth
+                                                        size='small'
+                                                    />
+                                                </Grid>
+
+                                                <Grid item xs={12} style={{ marginTop: 5 }}>
+                                                    <TextField
+                                                        id="originaljobDescription"
+                                                        label="Job Description"
+                                                        defaultValue={this.state.employeeJobDescription}
+                                                        type="text"
+                                                        InputProps={{
+                                                            readOnly: true,
+                                                        }}
+                                                        fullWidth
+                                                        size='small'
+                                                        variant='outlined'
+                                                        multiline
+                                                        rows={3}
+                                                    />
+                                                </Grid>
+
+                                            </Grid>
+
+                                        </Paper>
+
+                                    </Grid>
+
+                                    <Grid item xs={6}>
+                                        <Paper variant='outlined' style={{ padding: 15 }}>
+
+                                            <Grid
+                                                container
+                                                justify="flex-start"
+                                                direction="row"
+                                                alignItems="center"
+                                                spacing={2}
+                                            // style={{ padding: 20 }}
+                                            >
+                                                <Grid item xs={12}>
+                                                    <FormLabel component="legend">Updated details:</FormLabel>
+                                                </Grid>
+
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        id="updatedjobTitle"
+                                                        label="Job Title"
+                                                        defaultValue={this.state.updateDetails['jobTitle']}
+                                                        type="text"
+                                                        InputProps={{
+                                                            readOnly: true,
+                                                        }}
+                                                        fullWidth
+                                                        size='small'
+                                                    />
+                                                </Grid>
+
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        id="updatedjobCategory"
+                                                        label="Job Category"
+                                                        defaultValue={this.state.updateDetails['jobCategory_name_field']}
+                                                        type="text"
+                                                        InputProps={{
+                                                            readOnly: true,
+                                                        }}
+                                                        fullWidth
+                                                        size='small'
+                                                    />
+                                                </Grid>
+
+                                                <Grid item xs={12} style={{ marginTop: 5 }}>
+                                                    <TextField
+                                                        id="updatedjobDescription"
+                                                        label="Job Description"
+                                                        defaultValue={this.state.updateDetails['jobDescription']}
+                                                        type="text"
+                                                        InputProps={{
+                                                            readOnly: true,
+                                                        }}
+                                                        fullWidth
+                                                        size='small'
+                                                        variant='outlined'
+                                                        multiline
+                                                        rows={3}
+                                                    />
+                                                </Grid>
+
+                                            </Grid>
+
+                                        </Paper>
+                                    </Grid>
+
+                                </Grid>
+                            </>
+                        ) :
+                            null}
 
                         {/* </Paper> */}
                     </DialogContent>
                     <DialogActions style={{ padding: 15 }}>
-                    {this.state.detailsStatus !== "UpdationRejected" && this.state.detailsStatus !== "UpdationConfirmed" ? (
+                        {this.state.detailsStatus !== "UpdationRejected" && this.state.detailsStatus !== "UpdationConfirmed" ? (
                             <>
                                 <Button color="primary" variant="contained" style={{ minWidth: 100 }}
-                            onClick={()=> this.approveVerification(this.employeeJobId)}
-                        >
-                            Confirm
+                                    onClick={() => this.approveVerification(this.employeeJobId)}
+                                >
+                                    Confirm
                         </Button>
 
-                        <Button color="secondary" variant="contained" style={{ minWidth: 100 }}
-                            onClick={()=> this.rejectVerification(this.employeeJobId)}
-                        >
-                            Reject
+                                <Button color="secondary" variant="contained" style={{ minWidth: 100 }}
+                                    onClick={() => this.rejectVerification(this.employeeJobId)}
+                                >
+                                    Reject
                         </Button>
                             </>
                         ) : <div />}
-                        
+
                     </DialogActions>
                 </Dialog>
-            </div>
+            </div >
         );
     }
 
     async approveVerification(JobId) {
 
-        console.log('jobId:',this.state.employeeJobId)
+        console.log('jobId:', this.state.employeeJobId)
 
         try {
             let response = await fetch(api + '/api/v1/employers/confirmEmpUpdate/' + this.state.employeeJobId,
@@ -545,7 +710,7 @@ class index extends Component {
 
     async rejectVerification(JobId) {
 
-        console.log('jobId:',this.state.employeeJobId)
+        console.log('jobId:', this.state.employeeJobId)
 
         try {
             let response = await fetch(api + '/api/v1/employers/confirmEmpUpdate/' + this.state.employeeJobId,

@@ -72,7 +72,6 @@ class index extends Component {
         codeDetails: [],
         employeeDetailsData: [],
         selectedOnTracId: [],
-
         enteredOntracId: '',
         employeeVotId: '',
         selectedstate: '',
@@ -91,6 +90,19 @@ class index extends Component {
         codeAcademics: false,
         isLoading: true,
         // codeButton: true
+
+        votIdMatchesLength: '',
+        votIdAllMatches: [],
+
+        matchedVotId: '',
+        generateButton: true,
+
+        phoneMatchesLength: '',
+        phoneAllMatches: [],
+        votmatchError: '',
+        matchedPhone: '',
+        generateButton: true,
+        phonematchError: '',
     }
 
     constructor(props) {
@@ -122,18 +134,6 @@ class index extends Component {
         this.setState({ pendingCodes: response });
     }
 
-    // async fetchEmployeePhones() {
-    //     let response = await fetch(api + "/api/v1/accounts/employee?phone=23456332",
-    //         {
-    //             headers: {
-    //                 'Authorization': token
-    //             }
-    //         });
-    //     response = await response.json();
-    //     console.log('phoneSuccess:', response)
-    //     this.setState({ phones: response });
-    // }
-
     async fetchEmployeeOntracId() {
         let response = await fetch(api + "/api/v1/accounts/employee?ontrac_id",
             {
@@ -145,8 +145,9 @@ class index extends Component {
         console.log('OTIDSuccess:', response)
         this.setState({ onTracId: response });
     }
-    async selectedEmployeeOntracId() {
-        let response = await fetch(api + "/api/v1/accounts/employee?ontrac_id",
+
+    async selectedEmployeeOntracId(votId) {
+        let response = await fetch(api + "/api/v1/accounts/employee?ontrac_id=" + votId,
             {
                 headers: {
                     'Authorization': token
@@ -154,8 +155,43 @@ class index extends Component {
             });
         response = await response.json();
         console.log('OTIDSuccess:', response)
-        // this.setState({ selectedOnTracId: response, codeButton: false });
+        this.setState({ votIdAllMatches: response })
+        console.log('votIdAllMatches:', this.state.votIdAllMatches)
+        this.setState({votIdMatchesLength: this.state.votIdAllMatches.length})
+        console.log('votIdMatchesLength:', this.state.votIdMatchesLength)
+
+        this.state.votIdMatchesLength === 1 ? 
+        this.setState({
+            matchedVotId: this.state.votIdAllMatches, 
+            matchedVotId: this.state.votIdAllMatches[0].id,
+            generateButton: false,
+            votmatchError: false}) : 
+            this.setState({votmatchError: true, generateButton: true}, console.log('matchedEmployeeId:', this.state.matchedVotId))
     }
+
+    async fetchEmployeePhones(phone) {
+        let response = await fetch(api + "/api/v1/accounts/employee?phone=" + phone,
+            {
+                headers: {
+                    'Authorization': token
+                }
+            });
+        response = await response.json();
+        console.log('phoneSuccess:', response)
+        this.setState({ phoneAllMatches: response })
+        console.log('phoneAllMatches:', this.state.phoneAllMatches)
+        this.setState({phoneMatchesLength: this.state.phoneAllMatches.length})
+        console.log('phoneMatchesLength:', this.state.phoneMatchesLength)
+
+        this.state.phoneMatchesLength === 1 ? 
+        this.setState({
+            matchedVotId: this.state.phoneAllMatches, 
+            matchedVotId: this.state.phoneAllMatches[0].id,
+            generateButton: false,
+            phonematchError: false}) : 
+            this.setState({phonematchError: true, generateButton: true}, console.log('matchedEmployeeId:', this.state.matchedPhone))
+    }
+
 
     // async fetchCodeDetails(id) {
     //     this.setState({ codeDetailsDialog: true })
@@ -795,7 +831,7 @@ class index extends Component {
     generateAccessCode() {
         return (
             <div>
-                <Dialog open={this.state.generateNewEmployementCodeDialog} onClose={() => this.setState({ generateNewEmployementCodeDialog: false })} >
+                <Dialog open={this.state.generateNewEmployementCodeDialog} onClose={() => this.setState({ generateNewEmployementCodeDialog: false, votmatchError: '',phonematchError: '', votIdMatchesLength: '', generateButton: true })} >
                     <DialogTitle id="codegenerator">{"Code Generator"}</DialogTitle>
                     <DialogContent>
                         <Grid container justify='flex-start' direction='row' alignItems='center' spacing={2}>
@@ -831,57 +867,17 @@ class index extends Component {
 
                             {this.state.employeeByRadio !== 'searchByOntracId' ? (
                                 <Grid item xs={12}>
-                                    {/* <TextField
-                                        id="searchByOntracId"
-                                        label="OnTrac Id"
-                                        variant="outlined"
-                                        // helperText="Incorrect entry."
-                                        fullWidth
-                                        // value={this.state.generateCodeData}
-                                        onChange={(event) => {
-                                            this.setState({ generateCodeData: event.target.value })
-                                            // this.fetchEmployeeOntracId(this.state.generateCodeData)
-                                        }}
-                                    /> */}
 
-                                    {/* <Autocomplete
-                                        id="combo-box-demo"
-                                        options={this.state.onTracId}
-                                        getOptionLabel={(option) => option.ontrac_id}
-                                        style={{ width: 300 }}
-                                        renderInput={(params) => <TextField {...params} label="Verify OnTrac Id" variant="outlined" />}
-                                        fullWidth
-                                        Username
-                                        // onChange={(event, value)=> {this.setState(employeeVotId: value)}}
-                                    /> */}
-
-                                    <Autocomplete
-                                        id="searchByOntracId"
-                                        options={this.state.onTracId}
-                                        getOptionLabel={(VOTId) => VOTId.ontrac_id}
-                                        Username
-                                        fullWidth
-                                        value={this.state.selectedstate}
-                                        onChange={(event, value) => {
-                                            this.setState({ selectedstate: value })
-                                            this.setState({ employeeVotId: value['id'] }, console.log("employeeVotId", value['id']))
-                                            console.log("selectedstate", value);
-
-                                        }}
-                                        inputValue={this.state.enteredOntracId}
-                                        onInputChange={(event, newInputValue) => {
-                                            this.setState({ enteredOntracId: newInputValue });
-                                            // console.log(newInputValue);
-                                        }}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="Verify OnTrac Id"
-                                                margin="normal"
-                                                variant="outlined"
-                                            />
-                                        )}
-                                    />
+                                        <TextField
+                                            id="searchByOntracId"
+                                            label="Verify OnTrac Id"
+                                            variant="outlined"
+                                            type='text'
+                                            fullWidth
+                                            error={this.state.votmatchError}
+                                            helperText={this.state.votmatchError ? "Not an existing OnTrac Id!" : (this.state.votIdMatchesLength === 1 ? "Match found!" : "")}
+                                            onChange={(event)=> this.selectedEmployeeOntracId(event.target.value)}
+                                        />
 
                                 </Grid>
                             ) : (
@@ -892,8 +888,9 @@ class index extends Component {
                                             variant="outlined"
                                             type='number'
                                             fullWidth
-                                            // value={this.state.generateCodeData}
-                                            onChange={(event) => this.setState({ generateCodeData: event.target.value })}
+                                            error={this.state.phonematchError}
+                                            helperText={this.state.phonematchError ? "Not an existing phone number!" : (this.state.phoneMatchesLength === 1 ? "Match found!" : "")}
+                                            onChange={(event)=> this.fetchEmployeePhones(event.target.value)}
                                         />
                                     </Grid>)}
 
@@ -971,7 +968,7 @@ class index extends Component {
                             <Button
                                 color="secondary"
                                 variant="contained"
-                                disabled={this.state.codeButton}
+                                disabled={this.state.generateButton}
                                 onClick={() => this.postGenerateAccessCode()}
                             >
                                 Generate One-time Code
@@ -982,6 +979,7 @@ class index extends Component {
                                 <Button
                                     color="secondary"
                                     variant="contained"
+                                    disabled={this.state.generateButton}
                                     onClick={() => this.postGenerateAccessCode()}
                                 >
                                     Generate One-time Code
@@ -1055,7 +1053,7 @@ class index extends Component {
 
         let bodyData = {
             "employer": id,
-            "employee": this.state.employeeVotId,
+            "employee": this.state.matchedVotId,
             "canAccessProfile": this.state.codeProfile,
             "canAccessAddresses": this.state.codeAddress,
             "canAccessJobHistory": this.state.codeJobHistory,

@@ -66,6 +66,9 @@ class index extends Component {
         modifyButton: '',
         acceptButton: '',
 
+        categoryId: '',
+        newOfferId: '',
+
         selectedVotId: "",
         selectedJobType: "",
         selectedJobTypeNumeric: "",
@@ -157,7 +160,7 @@ class index extends Component {
 
     async fetchAllJobTypes() {
 
-        let response = await fetch(api + "/api/v1/resManager/employer/categories/",
+        let response = await fetch(api + "/api/v1/resManager/job/categories/",
             {
                 headers: {
                     'Authorization': token
@@ -329,6 +332,7 @@ class index extends Component {
                                                             cancelButton: row.showCancelOffer_field,
                                                             modifyButton: row.showNewOffer_field,
                                                             acceptButton: row.showAccept_field,
+                                                            newOfferId: row.id
                                                         }, () => this.fetchOnboardOfferDetails(row.id))
                                                     } >
                                                     View Details
@@ -720,8 +724,8 @@ class index extends Component {
                                                                         labelId="demo-simple-select-outlined-label"
                                                                         id="demo-simple-select-outlined"
                                                                         defaultValue={this.state.selectedJobTypeNumeric}
-                                                                        onChange={(event) => this.setState({ selectedJobType: event.target.value },
-                                                                            (event) => console.log('jobId:', this.state.selectedJobType))}
+                                                                        onChange={(event) => this.setState({ categoryId: event.target.value },
+                                                                            (event) => console.log('jobId!!!!:', this.state.selectedJobType))}
                                                                         label="Job Type"
                                                                     >
                                                                         {this.state.getAllJobTypes.map((row) => (
@@ -822,7 +826,7 @@ class index extends Component {
                                                                 // style={{ padding: 20 }}
                                                                 >
                                                                     <Grid item xs={12}>
-                                                                        <FormLabel component="legend">Modified offer:</FormLabel>
+                                                                        <FormLabel component="legend">Original offer:</FormLabel>
                                                                     </Grid>
 
                                                                     <Grid item xs={12}>
@@ -941,7 +945,7 @@ class index extends Component {
                                                                 // style={{ padding: 20 }}
                                                                 >
                                                                     <Grid item xs={12}>
-                                                                        <FormLabel component="legend">Original offer:</FormLabel>
+                                                                        <FormLabel component="legend">Modified offer:</FormLabel>
                                                                     </Grid>
 
                                                                     <Grid item xs={12}>
@@ -1413,11 +1417,11 @@ class index extends Component {
         }
     }
 
-    async newJobOffer(empId) {
+    async newJobOffer() {
 
         let bodyData = {
             "employee": this.state.selectedVotId,
-            "jobCategory": this.state.selectedJobType,
+            "jobCategory": this.state.categoryId,
             "jobTitle": this.state.jobTitle,
             "startSalary": this.state.jobSalary,
             "startDate": this.state.startDate,
@@ -1428,7 +1432,7 @@ class index extends Component {
         console.log('Body data:', bodyData)
 
         try {
-            let response = await fetch(api + '/api/v1/employers/oboffers/' + empId + '/modify',
+            let response = await fetch(api + '/api/v1/employers/oboffers/' + this.state.newOfferId + '/modify',
                 {
                     method: 'PUT',
                     headers: {
@@ -1450,7 +1454,10 @@ class index extends Component {
                 startDate: "",
                 jobDescription: "",
                 otherConditions: "",
-                jobSalary: ""
+                jobSalary: "",
+                viewOfferButton: false,
+                modifyOfferButton: false,
+                newOfferButton: false
             })
 
         } catch (error) {

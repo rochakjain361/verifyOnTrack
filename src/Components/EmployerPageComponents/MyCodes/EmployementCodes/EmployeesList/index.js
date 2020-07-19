@@ -464,7 +464,7 @@ class index extends Component {
                                                                             variant='outlined'
                                                                             color='primary'
                                                                             style={{ minWidth: 100 }}
-                                                                            onClick={() => this.setState({ viewUpdationDetails: emp.empUpdate, viewupdateDialogOpen: true, updateId: emp.empUpdate.id })}
+                                                                            onClick={() => this.setState({ viewUpdationDetails: emp.empUpdate[0], viewupdateDialogOpen: true, updateId: emp.empUpdate[0].id }, ()=> console.log('ViewUpdateDetails:', this.state.viewUpdationDetails))}
                                                                         >
                                                                             Update Details
                                                                         </Button>
@@ -1649,6 +1649,8 @@ class index extends Component {
 
     async confirmUpdation() {
 
+        console.log('UpdateId:', this.state.updateId)
+
         try {
             let response = await fetch(api + '/api/v1/employers/confirmEmpUpdate/' + this.state.updateId,
                 {
@@ -1663,7 +1665,7 @@ class index extends Component {
             response = await response.json();
             console.log('confirmUpdationApprove:', response);
 
-            // this.setState({ cancelOfferButton: false, cancelOfferButton: false })
+            this.setState({ viewupdateDialogOpen: false })
             this.fetchAllEmployees();
             this.fetchCurrentEmployees();
 
