@@ -956,7 +956,7 @@ class index extends Component {
                                                     checked={this.state.codeAcademics}
                                                     onChange={() => this.setState({ codeAcademics: !this.state.codeAcademics })}
                                                     name="academics" />}
-                                            label="Job History"
+                                            label="Academics"
                                         />
                                         
                                     </FormGroup>
