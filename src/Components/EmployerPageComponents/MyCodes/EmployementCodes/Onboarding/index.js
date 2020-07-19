@@ -157,7 +157,7 @@ class index extends Component {
 
     async fetchAllJobTypes() {
 
-        let response = await fetch(api + "/api/v1/resManager/job/categories/",
+        let response = await fetch(api + "/api/v1/resManager/employer/categories/",
             {
                 headers: {
                     'Authorization': token
