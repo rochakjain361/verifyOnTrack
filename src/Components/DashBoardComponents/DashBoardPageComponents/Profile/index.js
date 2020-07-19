@@ -89,7 +89,7 @@ class index extends Component {
                 alignItems="center"
               >
                 <Avatar
-                  src="/images/sampleuserphoto.jpg"
+                  src={profile.picture}
                   style={{
                     height: "10rem",
                     width: "10rem",
