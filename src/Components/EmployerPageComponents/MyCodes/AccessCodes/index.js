@@ -88,6 +88,7 @@ class index extends Component {
         codeIdentities: false,
         codePhones: false,
         codeJobHistory: false,
+        codeAcademics: false,
         isLoading: true,
         // codeButton: true
     }
@@ -949,6 +950,15 @@ class index extends Component {
                                                     name="jobHistory" />}
                                             label="Job History"
                                         />
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={this.state.codeAcademics}
+                                                    onChange={() => this.setState({ codeAcademics: !this.state.codeAcademics })}
+                                                    name="academics" />}
+                                            label="Job History"
+                                        />
+                                        
                                     </FormGroup>
                                 </FormControl>
                             </Grid>
@@ -1051,7 +1061,8 @@ class index extends Component {
             "canAccessJobHistory": this.state.codeJobHistory,
             "canAccessPhones": this.state.codePhones,
             "canAccessIdentities": this.state.codeIdentities,
-            "canAccessRatings": this.state.codeRatings
+            "canAccessRatings": this.state.codeRatings,
+            "canAccessAcademics": this.state.codeAcademics
         }
 
         console.log('Body data:', bodyData)
@@ -1080,6 +1091,7 @@ class index extends Component {
             this.setState({ codePhones: false })
             this.setState({ codeIdentities: false })
             this.setState({ codeRatings: false })
+            this.setState({ codeAcademics: false })
             this.setState({ employeeVotId: "" })
 
         } catch (error) {
