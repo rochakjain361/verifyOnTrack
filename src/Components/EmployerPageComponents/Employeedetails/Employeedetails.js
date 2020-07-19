@@ -417,7 +417,7 @@ export class Employeedetails extends Component {
                     align="center"
                     justify="center"
                   >
-                    please add your company details.
+                    Please add your company details.
                   </Typography>
 
                   <Button
@@ -467,27 +467,27 @@ export class Employeedetails extends Component {
                     variant="h3"
                     style={{ textTransform: "capitalize" }}
                   >
-                    CompanyName:{this.state.result.companyName}
+                    {this.state.result.companyName}
                   </Typography>
 
                   <Typography
                     variant="h5"
                     // style={{ fontFamily: "Montserrat" }}
                   >
-                    CompanyType:{this.state.result.category_name_field}
+                    {this.state.result.category_name_field}
                   </Typography>
 
                   <Typography
                     variant="h5"
                     // style={{ fontFamily: "Montserrat" }}
                   >
-                    Email:{this.state.result.email}
+                    {this.state.result.email}
                   </Typography>
                   <Typography variant="h5">
-                    Fax:{this.state.result.fax}
+                    {this.state.result.fax}
                   </Typography>
                   <Typography variant="h5">
-                    Phone:{this.state.result.phone}
+                    {this.state.result.phone}
                   </Typography>
                 </Grid>
               </Grid>
