@@ -189,7 +189,7 @@ export class Employeedetails extends Component {
                   }}
                 >
                   {this.state.categories.map((cat) => (
-                    <MenuItem value={cat.id}>{cat.positionCategory}</MenuItem>
+                    <MenuItem value={cat.id}>{cat.category}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -233,7 +233,7 @@ export class Employeedetails extends Component {
         onClose={() => this.setState({ updateDialogOpen: false })}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title" justify="center">
+        <DialogTitle id="form-dialog-title" alignItems="center">
           Update company details
         </DialogTitle>
         <DialogContent>
@@ -329,7 +329,7 @@ export class Employeedetails extends Component {
                   }}
                 >
                   {this.state.categories.map((cat) => (
-                    <MenuItem value={cat.id}>{cat.positionCategory}</MenuItem>
+                    <MenuItem value={cat.id}>{cat.category}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -518,7 +518,10 @@ export class Employeedetails extends Component {
                 <TableBody>
                   <TableRow>
                     <TableCell align="center">
+                      <Grid container justify="center">
+
                       <Avatar src={this.state.result.logo}></Avatar>
+                      </Grid>
                     </TableCell>
                     <TableCell align="center">
                       {" "}

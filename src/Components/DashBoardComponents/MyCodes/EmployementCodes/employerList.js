@@ -639,7 +639,7 @@ const [getcommentemployerid,setemployerid]=React.useState()
                   autoFocus
                   margin="dense"
                   id="newMessage"
-                  label="comment"
+                  label="Please add your comment"
                   type="text"
                   fullWidth
                   multiline

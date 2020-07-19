@@ -103,21 +103,21 @@ const ColorlibConnector = withStyles({
     top: 22,
   },
   active: {
-    '& $line': {
+    "& $line": {
       backgroundImage:
-        'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
+        "linear-gradient( 95deg,#757ce8 0%,#3f50b5 50%,#002884 100%)",
     },
   },
   completed: {
-    '& $line': {
+    "& $line": {
       backgroundImage:
-        'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
+        "linear-gradient( 95deg,#6fbf73 0%,#4caf50 50%,#357a38 100%)",
     },
   },
   line: {
     height: 3,
     border: 0,
-    backgroundColor: '#eaeaf0',
+    backgroundColor: "#eaeaf0",
     borderRadius: 1,
   },
 })(StepConnector);

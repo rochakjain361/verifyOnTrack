@@ -180,25 +180,11 @@ function Onboarding(props) {
   });
   return (
     <div>
-      <Grid container justify="space-between" alignItems="center" spacing={4}>
-        {/* <Grid item xs={4}>
-    <Button color='secondary' variant='contained' onClick={() => setGenerateNewEmployementCodeDialog(true)} fullWidth>  Generate new employment code </Button>
-</Grid> */}
-
-        {/* <Grid item>
-    <FormControlLabel
-        control={
-            <Checkbox
-                // checked={state.checkedB}
-                // onChange={handleChange}
-                name="checkedB"
-                color="primary"
-            />
-        }
-        label="Show open codes"
-    />
-</Grid> */}
-      </Grid>
+      
+        {
+          props.data.length===0?<h2>No Offers</h2>:(
+        
+      
 
       <Grid container justify="flex-start" alignItems="center" spacing={2}>
         <TableContainer
@@ -266,7 +252,7 @@ function Onboarding(props) {
             </TableBody>
           </Table>
         </TableContainer>
-      </Grid>
+      </Grid>)}
       {/* </Paper> */}
 
       <Dialog
