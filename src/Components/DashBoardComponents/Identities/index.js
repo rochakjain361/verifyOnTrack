@@ -361,7 +361,7 @@ async getidentites(){
             aria-labelledby="form-dialog-title"
           >
             <DialogTitle id="form-dialog-title" align='center' justify="center">
-              Add Profile
+              Add Identity
             </DialogTitle>
             <DialogContent>
               <DialogContentText align='center'>
