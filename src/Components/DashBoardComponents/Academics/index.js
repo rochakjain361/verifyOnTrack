@@ -536,7 +536,7 @@ export class index extends Component {
                         "School",
                         "Degree",
                         "Status",
-                        "Createdon",
+                        "CreatedOn",
                       ].map((text, index) => (
                         <TableCell
                           style={{ fontWeight: "bolder" }}

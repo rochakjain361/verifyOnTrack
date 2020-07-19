@@ -46,7 +46,7 @@ function Comments(props) {
                     </Grid>
                 </Grid> */}
 
-      {props.data.map((comment) => (
+      {props.data.length===0?<h2>No Comments</h2>:props.data.map((comment) => (
         <Paper variant="outlined" style={{ padding: 10, marginTop: 20 }}>
           <Grid
             container

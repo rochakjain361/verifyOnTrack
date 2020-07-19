@@ -635,7 +635,7 @@ export class Employeelocation extends Component {
                   variant="contained"
                   onClick={() => this.setState({ addDialogOpen: true })}
                 >
-                  Add New address
+                  Add New Location
                 </Button>
               </Box>
             </Grid>
