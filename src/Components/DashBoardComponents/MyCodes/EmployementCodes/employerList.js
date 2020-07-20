@@ -235,7 +235,7 @@ const [getcommentemployerid,setemployerid]=React.useState()
                   size="small"
                   onClick={() => {
                     setViewrating(false);
-                    setRatingentry(null)
+                    setRatingentry([])
 
                   }}
                 >
@@ -258,7 +258,7 @@ const [getcommentemployerid,setemployerid]=React.useState()
                   size="small"
                   onClick={() => {
                     setViewsurvey(false);
-                    setChoiceentry("")
+                    setChoiceentry([])
                     
                   }}
                 >
