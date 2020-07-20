@@ -9,9 +9,11 @@ import {
 import Rating from '@material-ui/lab/Rating';
 
 
-const token = localStorage.getItem("Token");
-const id = localStorage.getItem("id");
+let token1 = "";
+let token = "";
+let id = "";
 const api = "http://3.22.17.212:8000"
+
 
 const styles = theme => ({
 
@@ -43,8 +45,8 @@ class index extends React.Component {
 
     componentDidMount() {
         
-        const token = localStorage.getItem("Token");
-        const id = localStorage.getItem("id");
+        token = localStorage.getItem("Token");
+        id = localStorage.getItem("id");
         this.fetchJobs()
     }
 

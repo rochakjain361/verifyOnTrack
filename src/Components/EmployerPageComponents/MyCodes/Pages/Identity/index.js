@@ -7,9 +7,9 @@ import {
   Typography
 } from '@material-ui/core';
 
-const token1 = localStorage.getItem("Token");
-const token = "Token " + token1;
-const id = localStorage.getItem("id");
+let token1 = "";
+let token = "";
+let id = "";
 const api = "http://3.22.17.212:8000"
 
 const styles = theme => ({
@@ -41,9 +41,9 @@ class index extends React.Component {
   }
 
   componentDidMount() {
-    const token1 = localStorage.getItem("Token");
-    const token = "Token " + token1;
-    const id = localStorage.getItem("id");
+    token = localStorage.getItem("Token");
+        id = localStorage.getItem("id");
+
     this.fetchIdentities()
   }
 

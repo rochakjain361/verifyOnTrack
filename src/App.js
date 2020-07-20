@@ -28,6 +28,9 @@ import SuccessSnackbar from './sucesssnackbar';
 import {createStore} from 'redux';
 import reducer from './Reducer/reducer'
 // const store = createStore(reducer);
+
+import Profile from './Components/AdminPageComponents/ManageCodes/EmployerPages/Profile'
+
 import EmployerStepper from './Components/Employerworkflow/EmployerStepper'
 class App extends React.PureComponent {
  
@@ -96,6 +99,7 @@ class App extends React.PureComponent {
               <Route exact path='/manageJobLeavingReasons' component={AdminDash} />
               <Route exact path='/approvalCodes' component={AdminDash} />
               <Route exact path='/approvaljobs' component={Job} />
+              <Route exact path='/employerProfile' component={Profile} />
 
             </Switch>
           </div>

@@ -4,7 +4,7 @@ import {
     CircularProgress,
     Grid,
     Typography,
-    Paper,  
+    Paper,
 } from '@material-ui/core/';
 
 import BeachAccessIcon from '@material-ui/icons/BeachAccess';
@@ -32,7 +32,9 @@ const styles = theme => ({
 class index extends Component {
 
     state = {
-        allComments: []
+        allComments: [],
+
+        isLoading: true
     }
 
     // constructor(props) {
@@ -70,61 +72,72 @@ class index extends Component {
         response = await response.json();
         console.log('allcomments:', response)
         this.setState({ allComments: response });
+
     }
 
-    async componentDidMount() {
+    componentDidMount() {
 
         token = localStorage.getItem("Token");
         id = localStorage.getItem("id");
 
         this.fetchAllComments();
+
+        this.setState({ isLoading: false })
+
     }
 
     render() {
 
         const { classes } = this.props;
-
+        console.log('Loading', this.state.isLoading)
         return (
+
             <div style={{ marginTop: 20 }}>
 
-                <Grid container justify='space-between' alignItems='center' spacing={4}>
+                {this.state.isLoading ? this.isloading() :
+                    (
+                        <>
+                            <Grid container justify='space-between' alignItems='center' spacing={4}>
 
-                    <Grid item xs={8}>
-                        <Typography variant='h4'>
-                            Comments
-                        </Typography>
-                    </Grid>
+                                <Grid item xs={8}>
+                                    <Typography variant='h4'>
+                                        Comments
+                                    </Typography>
+                                </Grid>
 
-                </Grid>
+                            </Grid>
 
-                {this.state.allComments.map((comment)=> (
-                    <Paper variant='outlined' style={{padding: 10, marginTop: 20}}>
-                    <Grid container justify='space-between' alignItems='flex-start' spacing={2}>
+                            {this.state.allComments.map((comment) => (
+                                <Paper variant='outlined' style={{ padding: 10, marginTop: 20 }}>
+                                    <Grid container justify='space-between' alignItems='flex-start' spacing={2}>
 
-                        <Grid item>
-                            <Typography variant='h6'>
-                                {comment.employee_name_field}
-                </Typography>
-                            <Typography variant='subtitle1' color="textSecondary">
-                            {comment.company_name_field}
-                </Typography>
-                        </Grid>
+                                        <Grid item>
+                                            <Typography variant='h6'>
+                                                {comment.employee_name_field}
+                                            </Typography>
+                                            <Typography variant='subtitle1' color="textSecondary">
+                                                {comment.company_name_field}
+                                            </Typography>
+                                        </Grid>
 
-                        <Grid item>
-                            <Typography variant='subtitle2'>
-                                {new Date(comment.created_on).toDateString()}
-                </Typography>
-                        </Grid>
+                                        <Grid item>
+                                            <Typography variant='subtitle2'>
+                                                {new Date(comment.created_on).toDateString()}
+                                            </Typography>
+                                        </Grid>
 
-                        <Grid item xs={12}>
-                            <Typography>
-                            {comment.comment}
-                    </Typography>
-                        </Grid>
-                        
-                    </Grid>
-                </Paper>
-                ))}
+                                        <Grid item xs={12}>
+                                            <Typography>
+                                                {comment.comment}
+                                            </Typography>
+                                        </Grid>
+
+                                    </Grid>
+                                </Paper>
+                            ))}
+                        </>
+
+                    )}
 
             </div>
         );

@@ -100,6 +100,9 @@ class index extends Component {
         comment: '',
         commentbyEmployee: [],
 
+        ofBoardId: '',
+        updateId: '',
+
         terminateDialogOpen: false,
         updateDialogOpen: false,
         commentDialogOpen: false,
@@ -228,7 +231,7 @@ class index extends Component {
     async fetchCommentbyEmployee(empId) {
 
         console.log('Good1!!')
-        let response = await fetch(api + "/api/v1/employers/" + id + "/comments?employee=" + empId,
+        let response = await fetch(api + "/api/v1/employers/" + empId + "/comments/mycomments",
             {
                 headers: {
                     'Authorization': token
@@ -252,6 +255,8 @@ class index extends Component {
         this.fetchSurveyRatings();
         this.fetchJobCategories();
 
+        this.setState({ isLoading: false })
+
     }
 
     render() {
@@ -259,455 +264,458 @@ class index extends Component {
         const { classes } = this.props;
 
         return (
-            <div style={{ marginTop: 20 }}>
-                <Grid container justify='space-between' alignItems='center' spacing={4}>
+            this.state.isLoading ? this.isloading() : (
+                <>
+                    <div style={{ marginTop: 20 }}>
+                        <Grid container justify='space-between' alignItems='center' spacing={4}>
 
-                    <Grid item xs={8}>
-                        <Typography variant='h4'>
-                            My Employees
+                            <Grid item xs={8}>
+                                <Typography variant='h4'>
+                                    My Employees
                     </Typography>
-                    </Grid>
+                            </Grid>
 
-                    <Grid item >
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={this.state.currentEmployeesCheck}
-                                    onChange={(event) => this.setState({ currentEmployeesCheck: !this.state.currentEmployeesCheck }, console.log('check1:', this.state.currentEmployeesCheck))}
-                                    name="checkedB"
-                                    color="primary"
+                            <Grid item >
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={this.state.currentEmployeesCheck}
+                                            onChange={(event) => this.setState({ currentEmployeesCheck: !this.state.currentEmployeesCheck }, console.log('check1:', this.state.currentEmployeesCheck))}
+                                            name="checkedB"
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Current Employees"
                                 />
-                            }
-                            label="Current Employees"
-                        />
-                    </Grid>
+                            </Grid>
 
-                </Grid>
+                        </Grid>
 
-                {!this.state.currentEmployeesCheck ?
-                    (
-                        <Grid container justify='flex-start' alignItems='center' spacing={2} style={{ marginTop: 20 }}>
-                            {this.state.allEmployees.map((emp) => (
-                                <Grid item xs={12}>
-                                    <ExpansionPanel>
-                                        <ExpansionPanelSummary
-                                            expandIcon={<ExpandMoreIcon />}
-                                            aria-controls="panel1a-content"
-                                            id="panel1a-header"
-                                        >
-                                            <Grid container spacing={3} alignItems='center'>
-                                                <Grid item xs={1}>
-                                                    <ListItemAvatar>
-                                                        <Avatar
-                                                            // src={this.state.result[0].picture}
-                                                            style={{ height: "6rem", width: "6rem" }}
-                                                        >
-                                                            <img src={emp.employee.picture_url} width="93" height="93" alt="" />
-                                                        </Avatar>
-                                                    </ListItemAvatar>
-                                                </Grid>
-
-                                                <Grid item xs={7} style={{ marginLeft: 15 }}>
-                                                    {/* <ListItemText primary="Vacation" secondary="July 20, 2014" /> */}
-                                                    <Typography variant='h5'>{emp.employee.firstname} {emp.employee.middlename} {emp.employee.surname}</Typography>
-                                                    <Typography variant='h6' color="textSecondary">
-                                                        {emp.jobDetails.jobTitle}
-                                                    </Typography>
-                                                    <Typography variant='subtitle1' color="textSecondary">
-                                                        {emp.employee.email}
-                                                    </Typography>
-                                                </Grid>
-
-                                                <Grid item xs={3}>
-                                                    <Typography variant='subtitle1' color="textSecondary">
-                                                        {emp.jobDetails.ontrac_id}
-                                                    </Typography>
-                                                </Grid>
-                                            </Grid>
-
-                                        </ExpansionPanelSummary>
-                                        <ExpansionPanelDetails>
-                                            <Grid item xs={12}>
-                                                <List component="nav" aria-label="mailbox folders">
-                                                    <ListItem>
-                                                        <Grid container>
-                                                            <Grid item xs={3}>
-                                                                <Typography variant='subtitle1' color="textSecondary">
-                                                                    Date of birth
-                                         </Typography>
-                                                            </Grid>
-
-                                                            <Grid item xs={9}>
-                                                                <Typography variant='subtitle1'>
-                                                                    1987-06-11
-                                            </Typography>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </ListItem>
-                                                    <Divider />
-
-                                                    <ListItem>
-                                                        <Grid container>
-                                                            <Grid item xs={3}>
-                                                                <Typography variant='subtitle1' color="textSecondary">
-                                                                    Job position
-                                         </Typography>
-                                                            </Grid>
-
-                                                            <Grid item xs={9}>
-                                                                <Typography variant='subtitle1'>
-                                                                    {emp.jobDetails.job_category_field}
-                                                                </Typography>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </ListItem>
-                                                    <Divider />
-
-                                                    <ListItem>
-                                                        <Grid container>
-                                                            <Grid item xs={3}>
-                                                                <Typography variant='subtitle1' color="textSecondary">
-                                                                    Start date
-                                         </Typography>
-                                                            </Grid>
-
-                                                            <Grid item xs={9}>
-                                                                <Typography variant='subtitle1'>
-                                                                    {emp.jobDetails.startDate}
-                                                                </Typography>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </ListItem>
-                                                    <Divider />
-
-                                                    <ListItem>
-                                                        <Grid container>
-                                                            <Grid item xs={3}>
-                                                                <Typography variant='subtitle1' color="textSecondary">
-                                                                    End date
-                                         </Typography>
-                                                            </Grid>
-
-                                                            <Grid item xs={9}>
-                                                                <Typography variant='subtitle1'>
-                                                                    {emp.jobDetails.endDate === null ? ('NA') : (emp.jobDetails.endDate)}
-                                                                </Typography>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </ListItem>
-                                                    <Divider />
-
-                                                    <ListItem>
-                                                        <Grid container>
-                                                            <Grid item xs={3}>
-                                                                <Typography variant='subtitle1' color="textSecondary">
-                                                                    Job description
-                                         </Typography>
-                                                            </Grid>
-
-                                                            <Grid item xs={9}>
-                                                                <Typography variant='subtitle1'>
-                                                                    {emp.jobDetails.jobDescription}
-                                                                </Typography>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </ListItem>
-                                                    <Divider />
-
-                                                    <Grid container spacing={2} justify='flex-end' style={{ marginTop: 20 }}>
-                                                        <Grid item>
-                                                            {emp.showTerminate ? (
-                                                                <Button
-                                                                    variant='outlined'
-                                                                    color='secondary'
-                                                                    style={{ minWidth: 100 }}
-                                                                    onClick={() => this.setState({ terminateDialogOpen: true })}
+                        {!this.state.currentEmployeesCheck ?
+                            (
+                                <Grid container justify='flex-start' alignItems='center' spacing={2} style={{ marginTop: 20 }}>
+                                    {this.state.allEmployees.map((emp) => (
+                                        <Grid item xs={12}>
+                                            <ExpansionPanel>
+                                                <ExpansionPanelSummary
+                                                    expandIcon={<ExpandMoreIcon />}
+                                                    aria-controls="panel1a-content"
+                                                    id="panel1a-header"
+                                                >
+                                                    <Grid container spacing={3} alignItems='center'>
+                                                        <Grid item xs={1}>
+                                                            <ListItemAvatar>
+                                                                <Avatar
+                                                                    // src={this.state.result[0].picture}
+                                                                    style={{ height: "6rem", width: "6rem" }}
                                                                 >
-                                                                    Terminate
-                                                                </Button>
-                                                            ) : <div />}
-
-                                                            {emp.showConfirmTermination ? (
-                                                                <Button
-                                                                    variant='outlined'
-                                                                    color='secondary'
-                                                                    style={{ minWidth: 100 }}
-                                                                    onClick={() => this.setState({ employeeId: emp.employee.id, viewTerminationDetails: emp.offboard, viewterminateDialogOpen: true })}
-                                                                >
-                                                                    Termination Details
-                                                                </Button>
-                                                            ) : <div />}
-
+                                                                    <img src={emp.employee.picture_url} width="93" height="93" alt="" />
+                                                                </Avatar>
+                                                            </ListItemAvatar>
                                                         </Grid>
 
-                                                        <Grid item>
-                                                            {emp.showUpdate ? (
-                                                                <Button
-                                                                    variant='outlined'
-                                                                    color='primary'
-                                                                    style={{ minWidth: 100 }}
-                                                                    onClick={() => this.setState({ updateDialogOpen: true, jobId: emp.jobDetails.id })}
-                                                                >
-                                                                    Update
-                                                                </Button>
-                                                            ) : <div />}
-
-                                                            {emp.showConfirmRejectUpdates ? (
-                                                                <Button
-                                                                    variant='outlined'
-                                                                    color='primary'
-                                                                    style={{ minWidth: 100 }}
-                                                                    onClick={() => this.setState({ viewUpdationDetails: emp.empUpdate, viewupdateDialogOpen: true, jobId: emp.jobDetails.id })}
-                                                                >
-                                                                    Update Details
-                                                                </Button>
-                                                            ) : <div />}
-
+                                                        <Grid item xs={7} style={{ marginLeft: 15 }}>
+                                                            {/* <ListItemText primary="Vacation" secondary="July 20, 2014" /> */}
+                                                            <Typography variant='subtitle1'>{emp.employee.firstname} {emp.employee.middlename} {emp.employee.surname}</Typography>
+                                                            <Typography variant='subtitle2' color="textSecondary">
+                                                                {emp.jobDetails.jobTitle}
+                                                            </Typography>
+                                                            <Typography variant='subtitle1' color="textSecondary">
+                                                                {emp.employee.email}
+                                                            </Typography>
                                                         </Grid>
 
-                                                        <Grid item>
-
-                                                            {emp.showComment ? (
-                                                                <Button
-                                                                    variant='outlined'
-                                                                    color='default'
-                                                                    style={{ minWidth: 100 }}
-                                                                    onClick={() => this.setState({ commentDialogOpen: true, employeeId: emp.employee.id }, () => this.fetchCommentbyEmployee(emp.employee.id))}
-
-                                                                >
-                                                                    Comment
-                                                                </Button>
-                                                            ) : <div />}
-
+                                                        <Grid item xs={3}>
+                                                            <Typography variant='subtitle1' color="textSecondary">
+                                                                {emp.jobDetails.ontrac_id}
+                                                            </Typography>
                                                         </Grid>
-
                                                     </Grid>
 
-                                                </List>
-                                            </Grid>
-                                        </ExpansionPanelDetails>
-                                    </ExpansionPanel>
-                                </Grid>
-                            ))}
-                        </Grid>
-                    )
-                    :
-                    (
-                        <Grid container justify='flex-start' alignItems='center' spacing={2} style={{ marginTop: 20 }}>
-                            {this.state.currentEmployees.map((emp) => (
-                                <Grid item xs={12}>
-                                    <ExpansionPanel>
-                                        <ExpansionPanelSummary
-                                            expandIcon={<ExpandMoreIcon />}
-                                            aria-controls="panel1a-content"
-                                            id="panel1a-header"
-                                        >
-                                            <Grid container spacing={3} alignItems='center'>
-                                                <Grid item xs={1}>
-                                                    <ListItemAvatar>
-                                                        <Avatar
-                                                            // src={this.state.result[0].picture}
-                                                            style={{ height: "6rem", width: "6rem" }}
-                                                        >
-                                                            <img src={emp.employee.picture_url} width="93" height="93" alt="" />
-                                                        </Avatar>
-                                                    </ListItemAvatar>
-                                                </Grid>
-
-                                                <Grid item xs={7} style={{ marginLeft: 15 }}>
-                                                    {/* <ListItemText primary="Vacation" secondary="July 20, 2014" /> */}
-                                                    <Typography variant='h5'>{emp.employee.firstname} {emp.employee.middlename} {emp.employee.surname}</Typography>
-                                                    <Typography variant='h6' color="textSecondary">
-                                                        {emp.jobDetails.jobTitle}
-                                                    </Typography>
-                                                    <Typography variant='subtitle1' color="textSecondary">
-                                                        {emp.employee.email}
-                                                    </Typography>
-                                                </Grid>
-
-                                                <Grid item xs={3}>
-                                                    <Typography variant='subtitle1' color="textSecondary">
-                                                        {emp.jobDetails.ontrac_id}
-                                                    </Typography>
-                                                </Grid>
-                                            </Grid>
-
-                                        </ExpansionPanelSummary>
-                                        <ExpansionPanelDetails>
-                                            <Grid item xs={12}>
-                                                <List component="nav" aria-label="mailbox folders">
-                                                    <ListItem>
-                                                        <Grid container>
-                                                            <Grid item xs={3}>
-                                                                <Typography variant='subtitle1' color="textSecondary">
-                                                                    Date of birth
+                                                </ExpansionPanelSummary>
+                                                <ExpansionPanelDetails>
+                                                    <Grid item xs={12}>
+                                                        <List component="nav" aria-label="mailbox folders">
+                                                            <ListItem>
+                                                                <Grid container>
+                                                                    <Grid item xs={3}>
+                                                                        <Typography variant='subtitle1' color="textSecondary">
+                                                                            Date of birth
                                          </Typography>
-                                                            </Grid>
+                                                                    </Grid>
 
-                                                            <Grid item xs={9}>
-                                                                <Typography variant='subtitle1'>
-                                                                    1987-06-11
+                                                                    <Grid item xs={9}>
+                                                                        <Typography variant='subtitle1'>
+                                                                            1987-06-11
                                             </Typography>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </ListItem>
-                                                    <Divider />
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </ListItem>
+                                                            <Divider />
 
-                                                    <ListItem>
-                                                        <Grid container>
-                                                            <Grid item xs={3}>
-                                                                <Typography variant='subtitle1' color="textSecondary">
-                                                                    Job position
+                                                            <ListItem>
+                                                                <Grid container>
+                                                                    <Grid item xs={3}>
+                                                                        <Typography variant='subtitle1' color="textSecondary">
+                                                                            Job position
                                          </Typography>
-                                                            </Grid>
+                                                                    </Grid>
 
-                                                            <Grid item xs={9}>
-                                                                <Typography variant='subtitle1'>
-                                                                    {emp.jobDetails.job_category_field}
-                                                                </Typography>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </ListItem>
-                                                    <Divider />
+                                                                    <Grid item xs={9}>
+                                                                        <Typography variant='subtitle1'>
+                                                                            {emp.jobDetails.job_category_field}
+                                                                        </Typography>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </ListItem>
+                                                            <Divider />
 
-                                                    <ListItem>
-                                                        <Grid container>
-                                                            <Grid item xs={3}>
-                                                                <Typography variant='subtitle1' color="textSecondary">
-                                                                    Start date
+                                                            <ListItem>
+                                                                <Grid container>
+                                                                    <Grid item xs={3}>
+                                                                        <Typography variant='subtitle1' color="textSecondary">
+                                                                            Start date
                                          </Typography>
-                                                            </Grid>
+                                                                    </Grid>
 
-                                                            <Grid item xs={9}>
-                                                                <Typography variant='subtitle1'>
-                                                                    {emp.jobDetails.startDate}
-                                                                </Typography>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </ListItem>
-                                                    <Divider />
+                                                                    <Grid item xs={9}>
+                                                                        <Typography variant='subtitle1'>
+                                                                            {emp.jobDetails.startDate}
+                                                                        </Typography>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </ListItem>
+                                                            <Divider />
 
-                                                    <ListItem>
-                                                        <Grid container>
-                                                            <Grid item xs={3}>
-                                                                <Typography variant='subtitle1' color="textSecondary">
-                                                                    End date
+                                                            <ListItem>
+                                                                <Grid container>
+                                                                    <Grid item xs={3}>
+                                                                        <Typography variant='subtitle1' color="textSecondary">
+                                                                            End date
                                          </Typography>
-                                                            </Grid>
+                                                                    </Grid>
 
-                                                            <Grid item xs={9}>
-                                                                <Typography variant='subtitle1'>
-                                                                    {emp.jobDetails.endDate === null ? ('NA') : (emp.jobDetails.endDate)}
-                                                                </Typography>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </ListItem>
-                                                    <Divider />
+                                                                    <Grid item xs={9}>
+                                                                        <Typography variant='subtitle1'>
+                                                                            {emp.jobDetails.endDate === null ? ('NA') : (emp.jobDetails.endDate)}
+                                                                        </Typography>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </ListItem>
+                                                            <Divider />
 
-                                                    <ListItem>
-                                                        <Grid container>
-                                                            <Grid item xs={3}>
-                                                                <Typography variant='subtitle1' color="textSecondary">
-                                                                    Job description
+                                                            <ListItem>
+                                                                <Grid container>
+                                                                    <Grid item xs={3}>
+                                                                        <Typography variant='subtitle1' color="textSecondary">
+                                                                            Job description
                                          </Typography>
+                                                                    </Grid>
+
+                                                                    <Grid item xs={9}>
+                                                                        <Typography variant='subtitle1'>
+                                                                            {emp.jobDetails.jobDescription}
+                                                                        </Typography>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </ListItem>
+                                                            <Divider />
+
+                                                            <Grid container spacing={2} justify='flex-end' style={{ marginTop: 20 }}>
+                                                                <Grid item>
+                                                                    {emp.showTerminate ? (
+                                                                        <Button
+                                                                            variant='outlined'
+                                                                            color='secondary'
+                                                                            style={{ minWidth: 100 }}
+                                                                            onClick={() => this.setState({ jobId: emp.jobDetails.id, terminateDialogOpen: true })}
+                                                                        >
+                                                                            Terminate
+                                                                        </Button>
+                                                                    ) : <div />}
+
+                                                                    {emp.showConfirmTermination ? (
+                                                                        <Button
+                                                                            variant='outlined'
+                                                                            color='secondary'
+                                                                            style={{ minWidth: 100 }}
+                                                                            onClick={() => this.setState({ ofBoardId: emp.offboard.id, viewTerminationDetails: emp.offboard, viewterminateDialogOpen: true })}
+                                                                        >
+                                                                            Termination Details
+                                                                        </Button>
+                                                                    ) : <div />}
+
+                                                                </Grid>
+
+                                                                <Grid item>
+                                                                    {emp.showUpdate ? (
+                                                                        <Button
+                                                                            variant='outlined'
+                                                                            color='primary'
+                                                                            style={{ minWidth: 100 }}
+                                                                            onClick={() => this.setState({ updateDialogOpen: true, jobId: emp.jobDetails.id })}
+                                                                        >
+                                                                            Update
+                                                                        </Button>
+                                                                    ) : <div />}
+
+                                                                    {emp.showConfirmRejectUpdates ? (
+                                                                        <Button
+                                                                            variant='outlined'
+                                                                            color='primary'
+                                                                            style={{ minWidth: 100 }}
+                                                                            onClick={() => this.setState({ viewUpdationDetails: emp.empUpdate, viewupdateDialogOpen: true, updateId: emp.empUpdate.id })}
+                                                                        >
+                                                                            Update Details
+                                                                        </Button>
+                                                                    ) : <div />}
+
+                                                                </Grid>
+
+                                                                <Grid item>
+
+                                                                    {emp.showComment ? (
+                                                                        <Button
+                                                                            variant='outlined'
+                                                                            color='default'
+                                                                            style={{ minWidth: 100 }}
+                                                                            onClick={() => this.setState({ commentDialogOpen: true, employeeId: emp.employee.id }, () => this.fetchCommentbyEmployee(emp.employee.id))}
+
+                                                                        >
+                                                                            Comment
+                                                                        </Button>
+                                                                    ) : <div />}
+
+                                                                </Grid>
+
                                                             </Grid>
 
-                                                            <Grid item xs={9}>
-                                                                <Typography variant='subtitle1'>
-                                                                    {emp.jobDetails.jobDescription}
-                                                                </Typography>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </ListItem>
-                                                    <Divider />
-
-                                                    <Grid container spacing={2} justify='flex-end' style={{ marginTop: 20 }}>
-                                                        <Grid item>
-                                                            {emp.showTerminate ? (
-                                                                <Button
-                                                                    variant='outlined'
-                                                                    color='secondary'
-                                                                    style={{ minWidth: 100 }}
-                                                                    onClick={() => this.setState({ terminateDialogOpen: true })}
+                                                        </List>
+                                                    </Grid>
+                                                </ExpansionPanelDetails>
+                                            </ExpansionPanel>
+                                        </Grid>
+                                    ))}
+                                </Grid>
+                            )
+                            :
+                            (
+                                <Grid container justify='flex-start' alignItems='center' spacing={2} style={{ marginTop: 20 }}>
+                                    {this.state.currentEmployees.map((emp) => (
+                                        <Grid item xs={12}>
+                                            <ExpansionPanel>
+                                                <ExpansionPanelSummary
+                                                    expandIcon={<ExpandMoreIcon />}
+                                                    aria-controls="panel1a-content"
+                                                    id="panel1a-header"
+                                                >
+                                                    <Grid container spacing={3} alignItems='center'>
+                                                        <Grid item xs={1}>
+                                                            <ListItemAvatar>
+                                                                <Avatar
+                                                                    // src={this.state.result[0].picture}
+                                                                    style={{ height: "6rem", width: "6rem" }}
                                                                 >
-                                                                    Terminate
-                                                                </Button>
-                                                            ) : <div />}
-
-                                                            {emp.showConfirmTermination ? (
-                                                                <Button
-                                                                    variant='outlined'
-                                                                    color='secondary'
-                                                                    style={{ minWidth: 100 }}
-                                                                    onClick={() => this.setState({ employeeId: emp.employee.id, viewTerminationDetails: emp.offboard, viewterminateDialogOpen: true })}
-                                                                >
-                                                                    Termination Details
-                                                                </Button>
-                                                            ) : <div />}
-
+                                                                    <img src={emp.employee.picture_url} width="93" height="93" alt="" />
+                                                                </Avatar>
+                                                            </ListItemAvatar>
                                                         </Grid>
 
-                                                        <Grid item>
-                                                            {emp.showUpdate ? (
-                                                                <Button
-                                                                    variant='outlined'
-                                                                    color='primary'
-                                                                    style={{ minWidth: 100 }}
-                                                                    onClick={() => this.setState({ updateDialogOpen: true, jobId: emp.jobDetails.id })}
-                                                                >
-                                                                    Update
-                                                                </Button>
-                                                            ) : <div />}
-
-                                                            {emp.showConfirmRejectUpdates ? (
-                                                                <Button
-                                                                    variant='outlined'
-                                                                    color='primary'
-                                                                    style={{ minWidth: 100 }}
-                                                                    onClick={() => this.setState({ viewUpdationDetails: emp.empUpdate, viewupdateDialogOpen: true, jobId: emp.jobDetails.id })}
-                                                                >
-                                                                    Update Details
-                                                                </Button>
-                                                            ) : <div />}
-
+                                                        <Grid item xs={7} style={{ marginLeft: 15 }}>
+                                                            {/* <ListItemText primary="Vacation" secondary="July 20, 2014" /> */}
+                                                            <Typography variant='subtitle1'>{emp.employee.firstname} {emp.employee.middlename} {emp.employee.surname}</Typography>
+                                                            <Typography variant='subtitle2' color="textSecondary">
+                                                                {emp.jobDetails.jobTitle}
+                                                            </Typography>
+                                                            <Typography variant='subtitle1' color="textSecondary">
+                                                                {emp.employee.email}
+                                                            </Typography>
                                                         </Grid>
 
-                                                        <Grid item>
-
-                                                            {emp.showComment ? (
-                                                                <Button
-                                                                    variant='outlined'
-                                                                    color='default'
-                                                                    style={{ minWidth: 100 }}
-                                                                    onClick={() => this.setState({ commentDialogOpen: true, employeeId: emp.employee.id }, () => this.fetchCommentbyEmployee(emp.employee.id))}
-
-                                                                >
-                                                                    Comment
-                                                                </Button>
-                                                            ) : <div />}
-
+                                                        <Grid item xs={3}>
+                                                            <Typography variant='subtitle1' color="textSecondary">
+                                                                {emp.jobDetails.ontrac_id}
+                                                            </Typography>
                                                         </Grid>
-
                                                     </Grid>
 
-                                                </List>
-                                            </Grid>
-                                        </ExpansionPanelDetails>
-                                    </ExpansionPanel>
+                                                </ExpansionPanelSummary>
+                                                <ExpansionPanelDetails>
+                                                    <Grid item xs={12}>
+                                                        <List component="nav" aria-label="mailbox folders">
+                                                            <ListItem>
+                                                                <Grid container>
+                                                                    <Grid item xs={3}>
+                                                                        <Typography variant='subtitle1' color="textSecondary">
+                                                                            Date of birth
+                                         </Typography>
+                                                                    </Grid>
+
+                                                                    <Grid item xs={9}>
+                                                                        <Typography variant='subtitle1'>
+                                                                            1987-06-11
+                                            </Typography>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </ListItem>
+                                                            <Divider />
+
+                                                            <ListItem>
+                                                                <Grid container>
+                                                                    <Grid item xs={3}>
+                                                                        <Typography variant='subtitle1' color="textSecondary">
+                                                                            Job position
+                                         </Typography>
+                                                                    </Grid>
+
+                                                                    <Grid item xs={9}>
+                                                                        <Typography variant='subtitle1'>
+                                                                            {emp.jobDetails.job_category_field}
+                                                                        </Typography>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </ListItem>
+                                                            <Divider />
+
+                                                            <ListItem>
+                                                                <Grid container>
+                                                                    <Grid item xs={3}>
+                                                                        <Typography variant='subtitle1' color="textSecondary">
+                                                                            Start date
+                                         </Typography>
+                                                                    </Grid>
+
+                                                                    <Grid item xs={9}>
+                                                                        <Typography variant='subtitle1'>
+                                                                            {emp.jobDetails.startDate}
+                                                                        </Typography>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </ListItem>
+                                                            <Divider />
+
+                                                            <ListItem>
+                                                                <Grid container>
+                                                                    <Grid item xs={3}>
+                                                                        <Typography variant='subtitle1' color="textSecondary">
+                                                                            End date
+                                         </Typography>
+                                                                    </Grid>
+
+                                                                    <Grid item xs={9}>
+                                                                        <Typography variant='subtitle1'>
+                                                                            {emp.jobDetails.endDate === null ? ('NA') : (emp.jobDetails.endDate)}
+                                                                        </Typography>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </ListItem>
+                                                            <Divider />
+
+                                                            <ListItem>
+                                                                <Grid container>
+                                                                    <Grid item xs={3}>
+                                                                        <Typography variant='subtitle1' color="textSecondary">
+                                                                            Job description
+                                         </Typography>
+                                                                    </Grid>
+
+                                                                    <Grid item xs={9}>
+                                                                        <Typography variant='subtitle1'>
+                                                                            {emp.jobDetails.jobDescription}
+                                                                        </Typography>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </ListItem>
+                                                            <Divider />
+
+                                                            <Grid container spacing={2} justify='flex-end' style={{ marginTop: 20 }}>
+                                                                <Grid item>
+                                                                    {emp.showTerminate ? (
+                                                                        <Button
+                                                                            variant='outlined'
+                                                                            color='secondary'
+                                                                            style={{ minWidth: 100 }}
+                                                                            onClick={() => this.setState({ jobId: emp.jobDetails.id, terminateDialogOpen: true })}
+                                                                        >
+                                                                            Terminate
+                                                                        </Button>
+                                                                    ) : <div />}
+
+                                                                    {emp.showConfirmTermination ? (
+                                                                        <Button
+                                                                            variant='outlined'
+                                                                            color='secondary'
+                                                                            style={{ minWidth: 100 }}
+                                                                            onClick={() => this.setState({ employeeId: emp.employee.id, viewTerminationDetails: emp.offboard, viewterminateDialogOpen: true })}
+                                                                        >
+                                                                            Termination Details
+                                                                        </Button>
+                                                                    ) : <div />}
+
+                                                                </Grid>
+
+                                                                <Grid item>
+                                                                    {emp.showUpdate ? (
+                                                                        <Button
+                                                                            variant='outlined'
+                                                                            color='primary'
+                                                                            style={{ minWidth: 100 }}
+                                                                            onClick={() => this.setState({ updateDialogOpen: true, jobId: emp.jobDetails.id })}
+                                                                        >
+                                                                            Update
+                                                                        </Button>
+                                                                    ) : <div />}
+
+                                                                    {emp.showConfirmRejectUpdates ? (
+                                                                        <Button
+                                                                            variant='outlined'
+                                                                            color='primary'
+                                                                            style={{ minWidth: 100 }}
+                                                                            onClick={() => this.setState({ viewUpdationDetails: emp.empUpdate, viewupdateDialogOpen: true, jobId: emp.jobDetails.id })}
+                                                                        >
+                                                                            Update Details
+                                                                        </Button>
+                                                                    ) : <div />}
+
+                                                                </Grid>
+
+                                                                <Grid item>
+
+                                                                    {emp.showComment ? (
+                                                                        <Button
+                                                                            variant='outlined'
+                                                                            color='default'
+                                                                            style={{ minWidth: 100 }}
+                                                                            onClick={() => this.setState({ commentDialogOpen: true, employeeId: emp.employee.id }, () => this.fetchCommentbyEmployee(emp.employee.id))}
+
+                                                                        >
+                                                                            Comment
+                                                                        </Button>
+                                                                    ) : <div />}
+
+                                                                </Grid>
+
+                                                            </Grid>
+
+                                                        </List>
+                                                    </Grid>
+                                                </ExpansionPanelDetails>
+                                            </ExpansionPanel>
+                                        </Grid>
+                                    ))}
                                 </Grid>
-                            ))}
-                        </Grid>
-                    )}
+                            )}
 
-                {this.terminateDialog()}
-                {this.updateDialog()}
-                {this.commentDialog()}
-                {this.terminateConfirmationDialog()}
-                {this.secondaryTerminateConfirmationDialog()}
-                {this.viewTerminationDetailsDialog()}
-                {this.viewUpdationDetailsDialog()}
-            </div>
-
+                        {this.terminateDialog()}
+                        {this.updateDialog()}
+                        {this.commentDialog()}
+                        {this.terminateConfirmationDialog()}
+                        {this.secondaryTerminateConfirmationDialog()}
+                        {this.viewTerminationDetailsDialog()}
+                        {this.viewUpdationDetailsDialog()}
+                    </div>
+                </>
+            )
         );
     }
 
@@ -846,43 +854,37 @@ class index extends Component {
 
                                         <FormControl component="fieldset">
                                             <FormLabel component="legend">{question.question}</FormLabel>
-                                            {/* <Typography>Do you want to provide feedback for this employee?</Typography> */}
                                             <RadioGroup
-                                                // name="searchCategory"
-                                                // value={this.state.employeeByRadio}
-                                                // onChange={(event) => {
-                                                //     this.setState({ employeeByRadio: event.target.value });
-                                                //     // console.log('Radio:', this.state.employeeByRadio);
-                                                // }}
                                                 name={question.id.toString()}
                                                 value={this.state.choiceSurvey[question.id]}
-                                                onChange={(event) => this.setState({ choiceSurvey: { ...this.state.choiceSurvey, [event.currentTarget.name.toString()]: event.target.value.toString() } }, () => console.log('survey:', this.state.choiceSurvey))
-                                                    // question.id.toString() + ':' + event.target.value
+                                                onChange={(event) => this.setState({
+                                                    choiceSurvey: { ...this.state.choiceSurvey, [event.currentTarget.name.toString()]: event.target.value.toString() }
+                                                },
+                                                    () => console.log('survey:', this.state.choiceSurvey))
                                                 }
-                                                // onChange={(event)=> this.setState({ choiceSurvey: [...this.state.choiceSurvey, [event.currentTarget.name.toString()] : event.target.value ]}, (event)=>console.log('choices:', this.state.choiceSurvey))}
                                                 aria-label="position"
                                                 defaultValue="top"
                                             >
                                                 <Grid container direction="column" style={{ marginTop: 10 }}>
                                                     <FormControlLabel
-                                                        value="yes"
+                                                        value="Yes"
                                                         control={<Radio />}
                                                         label="Yes"
                                                     />
                                                     <FormControlLabel
-                                                        value="no"
+                                                        value="No"
                                                         control={<Radio />}
                                                         label="No"
 
                                                     />
                                                     <FormControlLabel
-                                                        value="maybe"
+                                                        value="Maybe"
                                                         control={<Radio />}
                                                         label="Maybe"
 
                                                     />
                                                     <FormControlLabel
-                                                        value="notApplicable"
+                                                        value="NotApplicable"
                                                         control={<Radio />}
                                                         label="Not applicable"
 
@@ -908,9 +910,15 @@ class index extends Component {
 
                                         <Grid item xs={6} >
                                             <Rating
-                                                name="simple-controlled"
-                                                // value={this.state.addJobDialogRating}
-                                                // onChange={(event, newValue) => this.setState({ addJobDialogRating: newValue })}
+                                                name={question.id}
+                                                value={this.state.ratingSurvey[question.id]}
+                                                onChange={(event, newValue) => {
+                                                    console.log("event", event);
+                                                    console.log("newvalue", newValue);
+                                                    // console.log("question.id",{question.id)
+                                                    console.log("typeof", typeof question.id);
+                                                    this.setState({ ratingSurvey: { ...this.state.ratingSurvey, [event.currentTarget.name]: newValue } }, () => console.log('surveyRating:', this.state.ratingSurvey, typeof (event.currentTarget.name.toString())));
+                                                }}
                                                 max={10}
                                             />
                                         </Grid>
@@ -948,7 +956,7 @@ class index extends Component {
 
                 <DialogActions style={{ padding: 15 }}>
                     <Button color="primary" variant="contained" style={{ minWidth: 100 }}
-                    // onClick={}
+                        onClick={() => this.postTerminate()}
                     >
                         Yes
                         </Button>
@@ -998,7 +1006,7 @@ class index extends Component {
                                 <TextField
                                     id="offboardingType"
                                     label="Offboarding Type"
-                                    // defaultValue={this.state.viewTerminationDetails['email']}
+                                    defaultValue={this.state.viewTerminationDetails['offboardType_name_field']}
                                     type="text"
                                     InputProps={{
                                         readOnly: true,
@@ -1013,7 +1021,7 @@ class index extends Component {
                                 <TextField
                                     id="leavingReason"
                                     label="Leaving Reason"
-                                    // defaultValue={this.state.viewTerminationDetails['surname']}
+                                    defaultValue={this.state.viewTerminationDetails['leavingReason_name_field']}
                                     type="text"
                                     InputProps={{
                                         readOnly: true,
@@ -1028,7 +1036,7 @@ class index extends Component {
                                 <TextField
                                     id="lastDate"
                                     label="Last Date"
-                                    // defaultValue={this.state.viewTerminationDetails['surname']}
+                                    defaultValue={this.state.viewTerminationDetails['endDate']}
                                     type="text"
                                     InputProps={{
                                         readOnly: true,
@@ -1043,7 +1051,7 @@ class index extends Component {
                                 <TextField
                                     id="terminationDescription"
                                     label="Termination Description"
-                                    // defaultValue={this.state.viewTerminationDetails['surname']}
+                                    defaultValue={this.state.viewTerminationDetails['description']}
                                     type="text"
                                     fullWidth
                                     size='small'
@@ -1094,41 +1102,36 @@ class index extends Component {
                                             <FormLabel component="legend">{question.question}</FormLabel>
                                             {/* <Typography>Do you want to provide feedback for this employee?</Typography> */}
                                             <RadioGroup
-                                                // name="searchCategory"
-                                                // value={this.state.employeeByRadio}
-                                                // onChange={(event) => {
-                                                //     this.setState({ employeeByRadio: event.target.value });
-                                                //     // console.log('Radio:', this.state.employeeByRadio);
-                                                // }}
                                                 name={question.id.toString()}
                                                 value={this.state.choiceSurvey[question.id]}
-                                                onChange={(event) => this.setState({ choiceSurvey: { ...this.state.choiceSurvey, [event.currentTarget.name.toString()]: event.target.value.toString() } }, () => console.log('survey:', this.state.choiceSurvey, typeof (event.currentTarget.name.toString())))
-                                                    // question.id.toString() + ':' + event.target.value
+                                                onChange={(event) => this.setState({
+                                                    choiceSurvey: { ...this.state.choiceSurvey, [event.currentTarget.name.toString()]: event.target.value.toString() }
+                                                },
+                                                    () => console.log('survey:', this.state.choiceSurvey))
                                                 }
-                                                // onChange={(event)=> this.setState({ choiceSurvey: [...this.state.choiceSurvey, [event.currentTarget.name.toString()] : event.target.value ]}, (event)=>console.log('choices:', this.state.choiceSurvey))}
                                                 aria-label="position"
                                                 defaultValue="top"
                                             >
                                                 <Grid container direction="column" style={{ marginTop: 10 }}>
                                                     <FormControlLabel
-                                                        value="yes"
+                                                        value="Yes"
                                                         control={<Radio />}
                                                         label="Yes"
                                                     />
                                                     <FormControlLabel
-                                                        value="no"
+                                                        value="No"
                                                         control={<Radio />}
                                                         label="No"
 
                                                     />
                                                     <FormControlLabel
-                                                        value="maybe"
+                                                        value="Maybe"
                                                         control={<Radio />}
                                                         label="Maybe"
 
                                                     />
                                                     <FormControlLabel
-                                                        value="notApplicable"
+                                                        value="NotApplicable"
                                                         control={<Radio />}
                                                         label="Not applicable"
 
@@ -1154,11 +1157,6 @@ class index extends Component {
 
                                         <Grid item xs={6} >
                                             <Rating
-                                                // name={question.id.toString()}
-                                                // value={this.state.ratingSurvey[question.id]}
-                                                // onChange={(event, newValue) => this.setState({ addJobDialogRating: newValue })}
-                                                // onChange={(event, newValue) => this.setState({ ratingSurvey: {...this.state.ratingSurvey,[event.currentTarget.name.toString()]: newValue}}, ()=> console.log('surveyRating:', this.state.ratingSurvey, typeof(event.currentTarget.name.toString())))}
-                                                max={10}
                                                 name={question.id}
                                                 value={this.state.ratingSurvey[question.id]}
                                                 onChange={(event, newValue) => {
@@ -1166,8 +1164,9 @@ class index extends Component {
                                                     console.log("newvalue", newValue);
                                                     // console.log("question.id",{question.id)
                                                     console.log("typeof", typeof question.id);
-                                                    this.setState({ratingSurvey: {...this.state.ratingSurvey,[event.currentTarget.name]: newValue}}, ()=> console.log('surveyRating:', this.state.ratingSurvey, typeof(event.currentTarget.name.toString())));
+                                                    this.setState({ ratingSurvey: { ...this.state.ratingSurvey, [event.currentTarget.name]: newValue } }, () => console.log('surveyRating:', this.state.ratingSurvey, typeof (event.currentTarget.name.toString())));
                                                 }}
+                                                max={10}
                                             />
                                         </Grid>
                                     </>
@@ -1227,7 +1226,7 @@ class index extends Component {
                                 <TextField
                                     id="jobCategory"
                                     label="Job Category"
-                                    // defaultValue={this.state.viewUpdationDetails['email']}
+                                    defaultValue={this.state.viewUpdationDetails['jobCategory_name_field']}
                                     type="text"
                                     InputProps={{
                                         readOnly: true,
@@ -1242,7 +1241,7 @@ class index extends Component {
                                 <TextField
                                     id="jobTitle"
                                     label="Job Title"
-                                    // defaultValue={this.state.viewUpdationDetails['email']}
+                                    defaultValue={this.state.viewUpdationDetails['jobTitle']}
                                     type="text"
                                     InputProps={{
                                         readOnly: true,
@@ -1257,7 +1256,7 @@ class index extends Component {
                                 <TextField
                                     id="jobDescription"
                                     label="Job Description"
-                                    // defaultValue={this.state.viewUpdationDetails['email']}
+                                    defaultValue={this.state.viewUpdationDetails['jobDescription']}
                                     type="text"
                                     InputProps={{
                                         readOnly: true,
@@ -1568,25 +1567,80 @@ class index extends Component {
         }
     }
 
-    async confirmTermination() {
+    async postTerminate() {
+
+        let bodyData = {
+            "offboard": {
+                "jobProfile": this.state.jobId,
+                "offboardType": this.state.selectedOffboardType,
+                "leavingReason": this.state.selectedLeavingReason,
+                "description": this.state.terminationDescription,
+                "endDate": this.state.lastDate
+            },
+            "ratingSurvey": this.state.ratingSurvey,
+            "choiceSurvey": this.state.choiceSurvey
+
+        }
+
+        console.log('Body data:', bodyData)
 
         try {
-            let response = await fetch(api + '/api/v1/employers/confirmTermination/' + this.state.employeeId,
+            let response = await fetch(api + '/api/v1/employers/newoffboard',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bodyData)
+                }
+            );
+            response = await response.json();
+            console.log('terminationSuccess:', response);
+
+            this.fetchAllEmployees();
+            this.fetchCurrentEmployees();
+
+            this.setState({
+                terminateConfirmationOpen: false,
+                terminateDialogOpen: false,
+            })
+
+        } catch (error) {
+            console.log("[!ON_REGISTER] " + error);
+        }
+    }
+
+    async confirmTermination() {
+
+        let bodyData = {
+            "ratingSurvey": this.state.ratingSurvey,
+            "choiceSurvey": this.state.choiceSurvey
+        }
+        console.log('bodyData:', bodyData)
+
+        try {
+            let response = await fetch(api + '/api/v1/employers/confirmTermination/' + this.state.ofBoardId,
                 {
                     method: 'PUT',
                     headers: {
                         'Authorization': token,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify("")
+                    body: JSON.stringify(bodyData)
                 }
             );
             response = await response.json();
             console.log('confirmTerminaton:', response);
 
-            // this.setState({ cancelOfferButton: false, cancelOfferButton: false })
-            // this.fetchOnboardOffers();
-
+            this.fetchAllEmployees();
+            this.fetchCurrentEmployees();
+            this.setState({
+                ratingSurvey: "",
+                choiceSurvey: "",
+                secondaryTerminateConfirmationOpen: false,
+                viewterminateDialogOpen: false
+            })
 
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
@@ -1596,7 +1650,7 @@ class index extends Component {
     async confirmUpdation() {
 
         try {
-            let response = await fetch(api + '/api/v1/employers/confirmEmpUpdate/' + this.state.jobId,
+            let response = await fetch(api + '/api/v1/employers/confirmEmpUpdate/' + this.state.updateId,
                 {
                     method: 'PUT',
                     headers: {
@@ -1610,7 +1664,8 @@ class index extends Component {
             console.log('confirmUpdationApprove:', response);
 
             // this.setState({ cancelOfferButton: false, cancelOfferButton: false })
-            // this.fetchOnboardOffers();
+            this.fetchAllEmployees();
+            this.fetchCurrentEmployees();
 
 
         } catch (error) {
@@ -1621,7 +1676,7 @@ class index extends Component {
     async rejectUpdation() {
 
         try {
-            let response = await fetch(api + '/api/v1/employers/rejectEmpUpdate/' + this.state.jobId,
+            let response = await fetch(api + '/api/v1/employers/rejectEmpUpdate/' + this.state.updateId,
                 {
                     method: 'PUT',
                     headers: {
@@ -1634,8 +1689,9 @@ class index extends Component {
             response = await response.json();
             console.log('confirmUpdationReject:', response);
 
-            // this.setState({ cancelOfferButton: false, cancelOfferButton: false })
-            // this.fetchOnboardOffers();
+            this.setState({ viewupdateDialogOpen: false })
+            this.fetchAllEmployees();
+            this.fetchCurrentEmployees();
 
 
         } catch (error) {

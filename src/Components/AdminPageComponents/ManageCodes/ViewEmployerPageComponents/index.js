@@ -37,9 +37,9 @@ function getSteps() {
 function getStepContent(step, user, approval) {
     switch (step) {
         case 0:
-            return <Location user={user} approval={approval} />;
-        case 1:
             return <Profile user={user} approval={approval} />;
+        case 1:
+            return <Location  user={user} approval={approval} />;
         default:
             return 'Unknown step';
     }
@@ -50,7 +50,7 @@ export default function VerticalLinearStepper(props) {
     const approval = props.approval;
     const viewId = props.viewId;
 
-    console.log('user:', user, approval)
+    console.log('userViewPageTabs:', user, approval)
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
