@@ -244,6 +244,7 @@ async getidentites(){
     let bodyFormData = new FormData();
     bodyFormData.append("idSource", idsource);
     bodyFormData.append("idNumber", this.state.updateidnumber);
+    bodyFormData.append("idSource", this.state.updateidSource);
     bodyFormData.append("fullname", this.state.updateFullName);
     bodyFormData.append("sex", this.state.updatesex);
     bodyFormData.append("dob", this.state.updatedob);
@@ -606,6 +607,8 @@ async getidentites(){
                     "Full Name",
                     "Date of birth",
                     "Sex",
+                    "Identity Source",
+                    "Identity Number",
                     "Source",
                     "Picture",
                     "Verified by",
@@ -630,6 +633,9 @@ async getidentites(){
                     <TableCell align="center">{row.fullname}</TableCell>
                     <TableCell align="center">{row.dob}</TableCell>
                     <TableCell align="center">{row.sex}</TableCell>
+                    <TableCell align="center">{row.idSource_name_field}</TableCell>
+                    <TableCell align="center">{row.idNumber}</TableCell>
+
                     <TableCell align="center">{row.idSource_name_field}</TableCell>
                     <TableCell align="center">
                       <Grid
