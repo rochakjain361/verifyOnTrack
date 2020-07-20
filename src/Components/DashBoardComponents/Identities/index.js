@@ -242,9 +242,8 @@ async getidentites(){
       },
     };
     let bodyFormData = new FormData();
-    bodyFormData.append("idSource", idsource);
-    bodyFormData.append("idNumber", this.state.updateidnumber);
     bodyFormData.append("idSource", this.state.updateidSource);
+    bodyFormData.append("idNumber", this.state.updateidnumber);
     bodyFormData.append("fullname", this.state.updateFullName);
     bodyFormData.append("sex", this.state.updatesex);
     bodyFormData.append("dob", this.state.updatedob);
@@ -791,7 +790,7 @@ async getidentites(){
                       </FormControl>
                     </Grid>
 
-                    <Grid item fullWidth xs={12}>
+                    {/* <Grid item fullWidth xs={12}>
                       <Select
                         id="idSource"
                         label="Id Source"
@@ -807,7 +806,7 @@ async getidentites(){
                           {source.idSource}
                         </MenuItem>
                       ))}</Select>
-                    </Grid>
+                    </Grid> */}
 
                     <Grid item fullWidth xs={12}>
                       <TextField
