@@ -65,6 +65,7 @@ class Identities extends Component {
       updatedob: "",
       updatesex: "",
       updateidnumber: "",
+      updateidSource:"",
       updatereason: "",
       historyloading: true,
       historyDialogeOpen: false,
@@ -682,7 +683,8 @@ async getidentites(){
                             updateFullName: this.state.result[index].fullname,
                             updatedob: this.state.result[index].dob,
                             updatesex: this.state.result[index].sex,
-                            updateidnumber: this.state.result[index].idSource,
+                            updateidnumber: this.state.result[index].idNumber,
+                            updateidSource:this.state.result[index].idSource
                           })
                         }
                       >
@@ -738,6 +740,18 @@ async getidentites(){
                         fullWidth
                       />
                     </Grid>
+                    <Grid item fullWidth xs={12}>
+                      <TextField
+                        id="fullName"
+                        label="IdNumber"
+                        defaultValue={this.state.updateidnumber}
+                        onChange={(event) => {
+                          this.setState({ updateidnumber: event.target.value });
+                        }}
+                        type="text"
+                        fullWidth
+                      />
+                    </Grid>
 
                     <Grid item fullWidth xs={12}>
                     {/* <InputLabel id="dob">Date of birth</InputLabel> */}
@@ -775,9 +789,9 @@ async getidentites(){
                       <Select
                         id="idSource"
                         label="Id Source"
-                        defaultValue={this.state.updateidnumber}
+                        defaultValue={this.state.updateidSource}
                         onChange={(event) => {
-                          this.setState({ updateidnumber: event.target.value });
+                          this.setState({ updateidSource: event.target.value });
                         }}
                         type="text"
                         fullWidth
