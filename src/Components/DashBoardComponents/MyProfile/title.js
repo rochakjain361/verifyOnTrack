@@ -3,6 +3,9 @@ import { CircularProgress, Typography,Box } from "@material-ui/core";
 import Index from "./index"
 
 export default class profiletitle extends Component {
+    componentDidMount(){
+        
+    }
     render() {
         return (
             <div>
@@ -12,7 +15,7 @@ export default class profiletitle extends Component {
                My Profile
               </Typography>
                 </Box>
-              <Index/>
+              <Index data={this.props}/>
                 
             </div>
         )
