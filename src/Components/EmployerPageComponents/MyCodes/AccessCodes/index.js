@@ -1090,7 +1090,7 @@ class index extends Component {
             this.setState({ codeIdentities: false })
             this.setState({ codeRatings: false })
             this.setState({ codeAcademics: false })
-            this.setState({ employeeVotId: "" })
+            this.setState({ employeeVotId: "", generateButton: true })
 
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
