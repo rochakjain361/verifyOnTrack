@@ -43,6 +43,7 @@ export default class forgotpassword extends Component {
         res.status === 200 ? this.setState({ sucess: true }) : ""
       )
       .catch((err) => {
+        console.log("err")
         this.setState({
           response: err.response.status,
           addsnackbar: true,
