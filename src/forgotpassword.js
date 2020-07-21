@@ -22,7 +22,6 @@ function Alert(props) {
 export default class forgotpassword extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       email: "",
       response: "",
@@ -43,6 +42,7 @@ export default class forgotpassword extends Component {
         res.status === 200 ? this.setState({ sucess: true }) : ""
       )
       .catch((err) => {
+        console.log("err");
         this.setState({
           response: err.response.status,
           addsnackbar: true,
