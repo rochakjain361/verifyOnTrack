@@ -107,32 +107,23 @@ class signIn extends Component {
     const { classes } = this.props;
    
     return (
-      <Grid container
-        direction="row"
-        className={classes.root}
-        justify="center">
-        <Grid
-          container
-          align="center"
-          direction="row"
-          justify="center">
+      <Grid container direction="row" className={classes.root} justify="center">
+        <Grid container align="center" direction="row" justify="center">
           <CssBaseline />
 
-          <Grid container
+          <Grid
+            container
             xs={6}
             direction="column"
             justify="center"
-            align="center" >
-            <Grid
-              item >
-
+            align="center"
+          >
+            <Grid item>
               <img src="/images/VERIFY.png" width="385" height="385" alt="" />
             </Grid>
             <Grid item>
-
               {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Suspendisse faucibus interdum posuere lorem ipsum dolor sit. Sapien et ligula ullamcorper malesuada proin libero. Sed felis eget velit aliquet sagittis. Odio tempor orci dapibus ultrices in iaculis nunc. Et sollicitudin ac orci phasellus. Lectus arcu bibendum at varius vel pharetra vel turpis. Quis lectus nulla at volutpat diam ut. Quis ipsum suspendisse ultrices gravida dictum fusce ut. Lacus sed turpis tincidunt id aliquet risus feugiat. Viverra adipiscing at in tellus integer feugiat scelerisque. Vitae suscipit tellus mauris a diam maecenas sed enim ut. Odio ut sem nulla pharetra diam sit. At imperdiet dui accumsan sit amet nulla facilisi. At in tellus integer feugiat scelerisque varius morbi. Viverra vitae congue eu consequat ac. Lacus vel facilisis */}
             </Grid>
-
           </Grid>
           <Grid
             container
@@ -144,41 +135,36 @@ class signIn extends Component {
             className={classes.mainImage}
             direction="row"
             justify="center"
-
           >
-            <Grid container xs={6}
+            <Grid
+              container
+              xs={6}
               sm={6}
               md={8}
               direction="column"
               align="center"
               justify="center"
             >
-              <Card
-                style={{ padding: 50, }}
-
-
-                spacing={3}
-
-                raised={true}
-              >
-                <Grid spacing={2} justify="center" direction="row" align="center">
+              <Card style={{ padding: 50 }} spacing={3} raised={true}>
+                <Grid
+                  spacing={2}
+                  justify="center"
+                  direction="row"
+                  align="center"
+                >
                   {this.state.warning ? (
                     <Alert severity="error">Wrong username or password</Alert>
                   ) : null}
 
                   <Grid item xs={12} md={12}>
-
                     <Typography
-                       style={{ fontWeight: "bold", }}
+                      style={{ fontWeight: "bold" }}
                       variant="h4"
                       gutterBottom
                       color="primary"
-
-
                     >
                       Sign In
-                  </Typography>
-
+                    </Typography>
                   </Grid>
 
                   <Grid item xs={12} md={10}>
@@ -197,12 +183,12 @@ class signIn extends Component {
                       autoFocus
                       fullWidth
                       size="medium"
-                      helperText={this.state.usernamevalid ? "please enter your username" : ""}
-                      onChange={(event) =>
-                        this.usernamecheck(event)
-
-
+                      helperText={
+                        this.state.usernamevalid
+                          ? "please enter your username"
+                          : ""
                       }
+                      onChange={(event) => this.usernamecheck(event)}
                     />
                   </Grid>
 
@@ -221,34 +207,35 @@ class signIn extends Component {
                       autoComplete="current-password"
                       fullWidth
                       size="small"
-                      helperText={this.state.passwordvalid ? "please enter your password" : ""}
+                      helperText={
+                        this.state.passwordvalid
+                          ? "please enter your password"
+                          : ""
+                      }
                       onChange={(event) =>
                         this.setState(
-                          { password: event.target.value }, this.passwordcheck(event)
-
+                          { password: event.target.value },
+                          this.passwordcheck(event)
                         )
                       }
                     />
                   </Grid>
                   <Grid item xs={12} md={12}>
-                  <ValidationMessage
+                    <ValidationMessage
                       valid={!this.state.capthavalid}
                       // message={"please check this box"}
                     />
                     <Box p={2}>
-
                       <ReCAPTCHA
                         style={{ display: "inline-block" }}
                         theme="light"
                         // ref={this._reCaptchaRef}
                         sitekey={"6LdDrqsZAAAAABrsnwXy1KB8r1dhblamd3rFz7wd"}
                         onChange={this.handleChange}
-                      // asyncScriptOnLoad={this.asyncScriptOnLoad}
+                        // asyncScriptOnLoad={this.asyncScriptOnLoad}
                       />
                     </Box>
                   </Grid>
-
-
 
                   <Grid container spacing={1} sm={12} md={10}>
                     <Grid item xs={12}>
@@ -264,29 +251,34 @@ class signIn extends Component {
                           // fontWeight: "bold",
                           // fontSize: "18",
                           // color:"white"
-
                         }}
                         fullWidth
                       />
                     </Grid>
 
                     <Grid container xs={12} justify="center">
-
-                      <Link title="Don't have an account? Sign Up" href="/signup" >
+                      <Link
+                        title="Don't have an account? Sign Up"
+                        href="/signup"
+                      >
                         Don't have an account?SignUp
-                     </Link>
+                      </Link>
+                    </Grid>
+
+                    <Grid container xs={12} justify="center">
+                      <Box p={2}>
+                        <Link title="Forgot Password" href="/forgotpassword">
+                          Forgot Password
+                        </Link>
+                      </Box>
                     </Grid>
                   </Grid>
-
                 </Grid>
               </Card>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-
-
-
     );
   }
 
@@ -338,10 +330,11 @@ console.log("///////",window.$IP)
 
         }
         } else {
-          if (data.user.accountStatus == "Approved") {
+          if (data.user.accountStatus === "Approved") {
             console.log("accountStatus", data.user.accountStatus)
             this.props.history.push({
               pathname: "/dashboard",
+              // state: { detail: data },
             });
           } else {
             console.log("accountStatus", data.user.accountStatus)

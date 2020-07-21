@@ -13,7 +13,7 @@ export const get=async(url,token, params)=>{
     // const { classes } = this.props;
       await Axios.get(url, {
       headers: {
-        Authorization: token,
+        Authorization: "Token "+token,
       },
     }).then(response => {
         res=response;
