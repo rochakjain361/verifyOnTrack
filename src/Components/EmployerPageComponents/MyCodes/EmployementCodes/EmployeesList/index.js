@@ -421,6 +421,23 @@ class index extends Component {
                                                             </ListItem>
                                                             <Divider />
 
+                                                            <ListItem>
+                                                                <Grid container>
+                                                                    <Grid item xs={3}>
+                                                                        <Typography variant='subtitle1' color="textSecondary">
+                                                                            Status
+                                         </Typography>
+                                                                    </Grid>
+
+                                                                    <Grid item xs={9}>
+                                                                        <Typography variant='subtitle1'>
+                                                                            {emp.status}
+                                                                        </Typography>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </ListItem>
+                                                            <Divider />
+
                                                             <Grid container spacing={2} justify='flex-end' style={{ marginTop: 20 }}>
                                                                 <Grid item>
                                                                     {emp.showTerminate ? (
