@@ -65,6 +65,7 @@ class Identities extends Component {
       updatedob: "",
       updatesex: "",
       updateidnumber: "",
+      updateidSource:"",
       updatereason: "",
       historyloading: true,
       historyDialogeOpen: false,
@@ -241,7 +242,7 @@ async getidentites(){
       },
     };
     let bodyFormData = new FormData();
-    bodyFormData.append("idSource", idsource);
+    bodyFormData.append("idSource", this.state.updateidSource);
     bodyFormData.append("idNumber", this.state.updateidnumber);
     bodyFormData.append("fullname", this.state.updateFullName);
     bodyFormData.append("sex", this.state.updatesex);
@@ -605,6 +606,8 @@ async getidentites(){
                     "Full Name",
                     "Date of birth",
                     "Sex",
+                    "Identity Source",
+                    "Identity Number",
                     "Source",
                     "Picture",
                     "Verified by",
@@ -629,6 +632,9 @@ async getidentites(){
                     <TableCell align="center">{row.fullname}</TableCell>
                     <TableCell align="center">{row.dob}</TableCell>
                     <TableCell align="center">{row.sex}</TableCell>
+                    <TableCell align="center">{row.idSource_name_field}</TableCell>
+                    <TableCell align="center">{row.idNumber}</TableCell>
+
                     <TableCell align="center">{row.idSource_name_field}</TableCell>
                     <TableCell align="center">
                       <Grid
@@ -682,7 +688,8 @@ async getidentites(){
                             updateFullName: this.state.result[index].fullname,
                             updatedob: this.state.result[index].dob,
                             updatesex: this.state.result[index].sex,
-                            updateidnumber: this.state.result[index].idSource,
+                            updateidnumber: this.state.result[index].idNumber,
+                            updateidSource:this.state.result[index].idSource
                           })
                         }
                       >
@@ -738,6 +745,18 @@ async getidentites(){
                         fullWidth
                       />
                     </Grid>
+                    <Grid item fullWidth xs={12}>
+                      <TextField
+                        id="fullName"
+                        label="IdNumber"
+                        defaultValue={this.state.updateidnumber}
+                        onChange={(event) => {
+                          this.setState({ updateidnumber: event.target.value });
+                        }}
+                        type="text"
+                        fullWidth
+                      />
+                    </Grid>
 
                     <Grid item fullWidth xs={12}>
                     {/* <InputLabel id="dob">Date of birth</InputLabel> */}
@@ -771,13 +790,13 @@ async getidentites(){
                       </FormControl>
                     </Grid>
 
-                    <Grid item fullWidth xs={12}>
+                    {/* <Grid item fullWidth xs={12}>
                       <Select
                         id="idSource"
                         label="Id Source"
-                        defaultValue={this.state.updateidnumber}
+                        defaultValue={this.state.updateidSource}
                         onChange={(event) => {
-                          this.setState({ updateidnumber: event.target.value });
+                          this.setState({ updateidSource: event.target.value });
                         }}
                         type="text"
                         fullWidth
@@ -787,7 +806,7 @@ async getidentites(){
                           {source.idSource}
                         </MenuItem>
                       ))}</Select>
-                    </Grid>
+                    </Grid> */}
 
                     <Grid item fullWidth xs={12}>
                       <TextField
