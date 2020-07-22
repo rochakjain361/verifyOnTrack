@@ -108,9 +108,10 @@ const StyledTab = withStyles((theme) => ({
     },
   },
 }))((props) => <Tab disableRipple {...props} />);
-export default function Index()  {
+export default function Index(props)  {
   const [messages,setmessages]=React.useState(null);
   useEffect(() => {
+      //  console.log(" this.props.location.state.detail", props.location);
     
    
       // setmessages(<Messages/>)

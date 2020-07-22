@@ -82,6 +82,7 @@ class MyProfile extends Component {
       });
   }
   async componentDidMount() {
+    // console.log("props",this.props)
     this.setState({ isloading: true })
    
     token = localStorage.getItem("Token");

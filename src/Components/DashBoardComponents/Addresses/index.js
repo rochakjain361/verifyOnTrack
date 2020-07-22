@@ -831,8 +831,6 @@ class Addresses extends PureComponent {
                     color="primary"
                     variant="contained"
                     disabled={this.state.buttondisabled}
-                    disabled={this.state.buttondisabled}
-                    color="primary"
                     onClick={() => {
                       this.updatedetails(
                         this.state.result[this.state.selectedIndex].id
