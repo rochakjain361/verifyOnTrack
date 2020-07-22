@@ -68,7 +68,7 @@ export default function Indexemployment() {
     })
   }
   const getcoments=async()=>{
-await get("http://3.22.17.212:8000/api/v1/employees/"+id+"/comments",Token,"").then((response)=>{
+await get("http://3.22.17.212:8000/api/v1/employees/"+id+"/comments",Token).then((response)=>{
 console.log("response for comments",response);  
 setcomments(response.data)
 setLoading(false);

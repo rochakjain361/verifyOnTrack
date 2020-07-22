@@ -425,7 +425,7 @@ class Addresses extends PureComponent {
                       <TableCell align="center" size="small">
                         <a
                           href={`http://www.google.com/maps/place/${row.google_coordinate1}+,+${row.google_coordinate2}`}
-                          target=""
+                          target="_blank"
                         >
                           Location
                         </a>
