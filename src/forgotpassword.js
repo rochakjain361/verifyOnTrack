@@ -67,7 +67,7 @@ export default class forgotpassword extends Component {
           }}
           severity="error"
         >
-            <CheckCircleIcon/>
+            
           This Email Id is not registered please enter a valid Email Id
         </Alert>
       </Snackbar>
@@ -110,6 +110,7 @@ export default class forgotpassword extends Component {
                       align="center"
                       justify="center"
                     >
+                      {/* <CheckCircleIcon/> */}
                       You will receive an email with further instructions on how
                       to reset your password.
                     </Typography>
