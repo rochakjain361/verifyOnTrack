@@ -15,6 +15,7 @@ import Address from '../Pages/Address'
 import Identity from '../Pages/Identity'
 import Phone from '../Pages/Phone'
 import Job from '../Pages/Job'
+import Academics from '../Pages/Academics'
 import ApproveAndRejectButtons from '../ApproveAndRejectButtons'
 
 const useStyles = makeStyles((theme) => ({
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function getSteps() {
-    return ['Profile', 'Addresses', 'Identities', 'Phones', 'Jobs'];
+    return ['Profile', 'Addresses', 'Identities', 'Phones', 'Jobs', 'Academics'];
 }
 
 function getStepContent(step, user, approval) {
@@ -49,6 +50,8 @@ function getStepContent(step, user, approval) {
             return <Phone user={user} approval={approval} />;
         case 4:
             return <Job user={user} approval={approval} />;
+        case 5:
+            return <Academics user={user} approval={approval} />;
         default:
             return 'Unknown step';
     }

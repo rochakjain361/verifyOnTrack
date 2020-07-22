@@ -39,6 +39,7 @@ import Identity from '../Pages/Identity'
 import Phone from '../Pages/Phone'
 import Job from '../Pages/Job'
 import Ratings from '../Pages/Ratings';
+import Academics from '../Pages/Academics';
 
 import axios from 'axios'
 
@@ -640,6 +641,13 @@ class index extends Component {
                                                         name="jobHistory" />}
                                                 label="Job History"
                                             />
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={this.state.codeDetails['canAccessAcademics']}
+                                                        name="academics" />}
+                                                label="Academics"
+                                            />
                                         </FormGroup>
                                     </FormControl>
                                 </Grid>
@@ -808,6 +816,23 @@ class index extends Component {
                                         <Ratings userId={this.state.employeeDetailsData['employee']} code={this.state.employeeDetailsData['codeString']} />
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
+
+                                <ExpansionPanel disabled={!this.state.employeeDetailsData['canAccessAcademics']}>
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                    >
+                                        <ListItemIcon>
+                                            <StarsIcon />
+                                        </ListItemIcon>
+                                        <Typography variant='subtitle2'>Academics</Typography>
+                                    </ExpansionPanelSummary>
+                                    <ExpansionPanelDetails>
+                                        <Academics userId={this.state.employeeDetailsData['employee']} code={this.state.employeeDetailsData['codeString']} />
+                                    </ExpansionPanelDetails>
+                                </ExpansionPanel>
+
 
                             </Grid>
 
@@ -1090,7 +1115,7 @@ class index extends Component {
             this.setState({ codeIdentities: false })
             this.setState({ codeRatings: false })
             this.setState({ codeAcademics: false })
-            this.setState({ employeeVotId: "" })
+            this.setState({ employeeVotId: "", generateButton: true })
 
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
