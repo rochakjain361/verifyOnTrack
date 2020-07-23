@@ -91,7 +91,7 @@ class signIn extends Component {
     }else{
       this.setState({capthavalid:true})
     }
-    if (!this.state.usernamevalid && !this.state.passwordvalid&&this.state.capthavalid) {
+    if (!this.state.usernamevalid && !this.state.passwordvalid&&this.state.capthavalid){
       this.onSignInButtonPress()
     }
   };
