@@ -13,7 +13,7 @@ export const get=async(url,token, params)=>{
     // const { classes } = this.props;
       await Axios.get(url, {
       headers: {
-        Authorization: "Token "+token,
+        Authorization:token,
       },
     }).then(response => {
         res=response;
@@ -81,6 +81,27 @@ export const put=async(url,token,formdata)=>{
     },
   };
  return await Axios.put(url,formdata,headers ).then((response) => {
+     res=response;
+      // ShowSuccessSnackbar("Added succesfully")
+    }).catch((error)=>{
+      
+      res=error
+      // console.log(error.response.status)
+      // if(error.response.status===401){
+        
+        // }
+      })
+      return res
+
+}
+export const del =async(url,token)=>{
+  let headers = {
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+  };
+ return await Axios.delete(url,headers ).then((response) => {
      res=response;
       // ShowSuccessSnackbar("Added succesfully")
     }).catch((error)=>{

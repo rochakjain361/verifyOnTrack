@@ -128,7 +128,7 @@ export class index extends Component {
               <SupervisorAccountIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Admin Resgistration
+              Admin Registration
                    </Typography>
 
             <TextField

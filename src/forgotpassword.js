@@ -22,7 +22,6 @@ function Alert(props) {
 export default class forgotpassword extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       email: "",
       response: "",
@@ -69,7 +68,7 @@ export default class forgotpassword extends Component {
           }}
           severity="error"
         >
-            <CheckCircleIcon/>
+            
           This Email Id is not registered please enter a valid Email Id
         </Alert>
       </Snackbar>
@@ -112,6 +111,7 @@ export default class forgotpassword extends Component {
                       align="center"
                       justify="center"
                     >
+                      {/* <CheckCircleIcon/> */}
                       You will receive an email with further instructions on how
                       to reset your password.
                     </Typography>
@@ -220,7 +220,7 @@ export default class forgotpassword extends Component {
                             this.reset();
                           }}
                         >
-                          Reset Password
+                          Change Password
                         </Button>
                       </Grid>
                       <Grid item xs={12}>
