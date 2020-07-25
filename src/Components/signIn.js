@@ -283,7 +283,7 @@ class signIn extends Component {
   }
 
   async onSignInButtonPress() {
-console.log("///////",window.$IP)
+
  
     try {
        let apiEndpoint = "http://"+window.$IP+":8000/api/v1/accounts/auth/login";

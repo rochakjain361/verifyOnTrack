@@ -94,6 +94,27 @@ export const put=async(url,token,formdata)=>{
       return res
 
 }
+export const del =async(url,token)=>{
+  let headers = {
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+  };
+ return await Axios.delete(url,headers ).then((response) => {
+     res=response;
+      // ShowSuccessSnackbar("Added succesfully")
+    }).catch((error)=>{
+      
+      res=error
+      // console.log(error.response.status)
+      // if(error.response.status===401){
+        
+        // }
+      })
+      return res
+
+}
 
   
 

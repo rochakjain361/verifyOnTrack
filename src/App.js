@@ -1,42 +1,38 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { ThemeProvider } from '@material-ui/core/styles';
-import signUp from './Components/signUp'
-import signIn from './Components/signIn'
-import LandingPage from './Components/LandingPage'
-import Addresses from './Components/DashBoardComponents/Addresses'
-import Identities from './Components/DashBoardComponents/Identities'
-import Phones from './Components/DashBoardComponents/Phones'
-import MyJobProfile from './Components/DashBoardComponents/MyJobProfile'
-import Dashboard from './Components/DashBoardComponents/Dashboard'
-import PreRegistration from './Components/PreRegistration'
-import AdminLandingPage from './Components/AdminLandingPage'
-import EmployerLandingPage from './Components/EmployerLandingPage'
-import AdminRegistration from './Components/AdminRegistration'
-import theme from './theme';
-import dash from './dash'
-import Stepper from './Components/WorkFlow/Stepper'
-import ApprovalCodes from './Components/AdminPageComponents/ManageCodes/ApprovalCodes';
-import Job from './Components/AdminPageComponents/ManageCodes/Pages/Job';
-import AdminDash from './AdminDash'
-import EmployerDash from './EmployerDash'
-import EmloymentTabs from './Components/EmployerPageComponents/MyCodes/EmployementCodes/EmploymentTabs'
-import Academics from './Components/DashBoardComponents/Academics'
-import {CustomizedSnackbars} from './Snackbarpage'
-import { SnackbarProvider } from 'notistack';
-import SuccessSnackbar from './sucesssnackbar';
-import {createStore} from 'redux';
-import reducer from './Reducer/reducer'
-import forgotpassword from './forgotpassword'
-import resetpassword from './resetpassword'
+import React, { Component } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { ThemeProvider } from "@material-ui/core/styles";
+import signUp from "./Components/signUp";
+import signIn from "./Components/signIn";
+import LandingPage from "./Components/LandingPage";
+import Addresses from "./Components/DashBoardComponents/Addresses";
+import Identities from "./Components/DashBoardComponents/Identities";
+import Phones from "./Components/DashBoardComponents/Phones";
+import MyJobProfile from "./Components/DashBoardComponents/MyJobProfile";
+import Dashboard from "./Components/DashBoardComponents/Dashboard";
+import PreRegistration from "./Components/PreRegistration";
+import AdminLandingPage from "./Components/AdminLandingPage";
+import EmployerLandingPage from "./Components/EmployerLandingPage";
+import AdminRegistration from "./Components/AdminRegistration";
+import theme from "./theme";
+import dash from "./dash";
+import Stepper from "./Components/WorkFlow/Stepper";
+import ApprovalCodes from "./Components/AdminPageComponents/ManageCodes/ApprovalCodes";
+import Job from "./Components/AdminPageComponents/ManageCodes/Pages/Job";
+import AdminDash from "./AdminDash";
+import EmployerDash from "./EmployerDash";
+import EmloymentTabs from "./Components/EmployerPageComponents/MyCodes/EmployementCodes/EmploymentTabs";
+import Academics from "./Components/DashBoardComponents/Academics";
+import { CustomizedSnackbars } from "./Snackbarpage";
+import { SnackbarProvider } from "notistack";
+import SuccessSnackbar from "./sucesssnackbar";
+import { createStore } from "redux";
+import reducer from "./Reducer/reducer";
+import forgotpassword from "./forgotpassword";
+import resetpassword from "./resetpassword";
 // const store = createStore(reducer);
-
-import Profile from './Components/AdminPageComponents/ManageCodes/EmployerPages/Profile'
-
-import EmployerStepper from './Components/Employerworkflow/EmployerStepper'
+import Profile from "./Components/AdminPageComponents/ManageCodes/EmployerPages/Profile";
+import EmployerStepper from "./Components/Employerworkflow/EmployerStepper";
 class App extends React.PureComponent {
-  
- 
   render() {
     return (
       <ThemeProvider theme={theme}>
@@ -135,6 +131,11 @@ class App extends React.PureComponent {
                 <Route exact path="/manageCities" component={AdminDash} />
                 <Route exact path="/adminAccessCodes" component={AdminDash} />
                 <Route exact path="/addAdmin" component={AdminDash} />
+                <Route exact path="/employeeratingquestions" component ={AdminDash}/>
+                <Route exact path="/employeechoicequestions" component ={AdminDash}/>
+                <Route exact path="/employerchoicequestions" component ={AdminDash}/>
+                <Route exact path="/employerratingquestions" component ={AdminDash}/>
+
                 <Route
                   exact
                   path="/manageAddressReasons"

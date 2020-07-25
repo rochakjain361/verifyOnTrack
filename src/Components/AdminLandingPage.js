@@ -44,7 +44,6 @@ import AdminAccessCodes from './AdminPageComponents/ManageCodes/AdminAccessCodes
 import AdminEvaluationCodes from './AdminPageComponents/ManageCodes/AdminEvaluationCodes'
 import ApprovalCodes from './AdminPageComponents/ManageCodes/ApprovalCodes'
 
-
 const drawerWidth = 255;
 let token1 = "";
 let token = "" ;
@@ -360,7 +359,7 @@ id = localStorage.getItem("id");
                         <ListItem button className={classes.nested}>
                           <ListItemtext
                             className={classes.textColor}
-                            primary="Manage Categories"
+                            primary="Manage "
                           />
                         </ListItem>
                       </Link>
@@ -376,6 +375,7 @@ id = localStorage.getItem("id");
                           />
                         </ListItem>
                       </Link>
+                     
                     </List>
                   </Collapse>
                 </List>
@@ -542,6 +542,7 @@ id = localStorage.getItem("id");
                   <AdminAccessCodes />
                 </Container>
               </Route>
+              
 
               <Route exact path="/AdminEvaluationCodes">
                 <Container>
