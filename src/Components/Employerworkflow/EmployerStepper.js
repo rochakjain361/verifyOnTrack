@@ -1,24 +1,24 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
-import Check from '@material-ui/icons/Check';
-import SettingsIcon from '@material-ui/icons/Settings';
-import GroupAddIcon from '@material-ui/icons/GroupAdd';
-import VideoLabelIcon from '@material-ui/icons/VideoLabel';
-import StepConnector from '@material-ui/core/StepConnector';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import Employeelocation from '../EmployerPageComponents/Employeelocation/Employeelocation';
-import Employeedetails from '../EmployerPageComponents/Employeedetails/Employeedetails';
+import React from "react";
+import PropTypes from "prop-types";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import clsx from "clsx";
+import Stepper from "@material-ui/core/Stepper";
+import Step from "@material-ui/core/Step";
+import StepLabel from "@material-ui/core/StepLabel";
+import Check from "@material-ui/icons/Check";
+import SettingsIcon from "@material-ui/icons/Settings";
+import GroupAddIcon from "@material-ui/icons/GroupAdd";
+import VideoLabelIcon from "@material-ui/icons/VideoLabel";
+import StepConnector from "@material-ui/core/StepConnector";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import LocationOnIcon from "@material-ui/icons/LocationOn";
+import Employeelocation from "../EmployerPageComponents/Employeelocation/Employeelocation";
+import Employeedetails from "../EmployerPageComponents/Employeedetails/Employeedetails";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import axios from 'axios'
+import axios from "axios";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import Box from "@material-ui/core/Box";
@@ -54,16 +54,16 @@ const useQontoStepIconStyles = makeStyles({
   //   width:"100%"
   // },
   active: {
-    color: '#784af4',
+    color: "#784af4",
   },
   circle: {
     width: 8,
     height: 8,
-    borderRadius: '50%',
-    backgroundColor: 'currentColor',
+    borderRadius: "50%",
+    backgroundColor: "currentColor",
   },
   completed: {
-    color: '#784af4',
+    color: "#784af4",
     zIndex: 1,
     fontSize: 18,
   },
@@ -82,7 +82,11 @@ function QontoStepIcon(props) {
         [classes.active]: active,
       })}
     >
-      {completed ? <Check className={classes.completed} /> : <div className={classes.circle} />}
+      {completed ? (
+        <Check className={classes.completed} />
+      ) : (
+        <div className={classes.circle} />
+      )}
     </div>
   );
 }
@@ -152,7 +156,6 @@ function ColorlibStepIcon(props) {
   const icons = {
     1: <AccountCircleIcon />,
     2: <LocationOnIcon />,
-   
   };
 
   return (
@@ -182,19 +185,18 @@ ColorlibStepIcon.propTypes = {
   icon: PropTypes.node,
 };
 
-
 function getSteps() {
-  return ['Details', 'Location'];
+  return ["Details", "Location"];
 }
 
 function getStepContent(step) {
   switch (step) {
     case 0:
-      return <Employeedetails/>;
+      return <Employeedetails />;
     case 1:
-      return  <Employeelocation/>;
+      return <Employeelocation />;
     default:
-      return 'Unknown step';
+      return "Unknown step";
   }
 }
 
@@ -206,16 +208,14 @@ export default function EmployerStepper(props) {
   const steps = getSteps();
   const [Approval, setApproval] = React.useState(false);
 
-useEffect(() => {
-  if (
-    props.location.state.detail.user.accountStatus ===
-    "Approval In Progress"
-  ) {
-    setApproval(true);
-    setActiveStep(2);
-  }
- 
-}, [])
+  useEffect(() => {
+    if (
+      props.location.state.detail.user.accountStatus === "Approval In Progress"
+    ) {
+      setApproval(true);
+      setActiveStep(2);
+    }
+  }, []);
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -259,14 +259,14 @@ useEffect(() => {
       .post(
         "http://3.22.17.212:8000/api/v1/accounts/auth/logout",
         {},
-  
+
         headers
       )
       .then((response) => {
         localStorage.clear();
         console.log(response);
       });
-  
+
     console.log("////////////////////////////////////////");
     props.history.push("/signin");
   };
@@ -287,89 +287,102 @@ useEffect(() => {
           </Button>
         </Toolbar>
       </AppBar>
-     
-     
+
       <div>
         {activeStep === steps.length ? (
-           <Box m={3} p={2}>
-              {Approval === false ? (
-          <Grid spacing={3} container direction="column">
-          <Grid item xs={12}>
-            <Grid
-              container
-              direction="row"
-              justify="space-between"
-              alignItems="center"
-            >
-              <Grid item>
-                <Button
-                  size="medium"
-                  variant="contained"
-                  color="primary"
-                  disabled={activeStep === 0}
-                  onClick={handleBack}
-                  className={classes.button}
-                >
-                  <>
-                    <ArrowBackIcon />
-                    Previous
-                  </>
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  size="medium"
-                  onClick={handleReset}
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                >
-                  <SettingsBackupRestoreIcon />
-                  Reset
-                </Button>{" "}
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            spacing={3}
-            direction="column"
-            justify="center"
-            align="center"
-          >
-            <Grid item xs={12}>
-              <Paper elevation={3} direction="column">
-                <Box
-                  p={3}
-                  display="flex"
-                  flexDirection="column"
-                  justifyContent="center"
-                  alignItems="center"
-                  style={{ height: "50vh" }}
-                >
-                  <Grid container spacing={2} direction="column">
-                    <Typography justify="center" align="center">
-                      By submitting for approval you acknowlege that all
-                      the information provided by you is authentic and
-                      can be verified by our team.
-                    </Typography>
-                    <br />
-                    <Button
-                      // disabled={allData}
-                      variant="contained"
-                      color="primary"
-                      onClick={() => {
-                        requestconfirmation();
-                      }}
-                    >
-                      Submit for approval
-                    </Button>
+          <Box m={3} p={2}>
+            {Approval === false ? (
+              <Grid spacing={3} container direction="column">
+                <Grid item xs={12}>
+                  <Grid
+                    container
+                    direction="row"
+                    justify="space-between"
+                    alignItems="center"
+                  >
+                    <Grid item>
+                      <Button
+                        size="medium"
+                        variant="contained"
+                        color="primary"
+                        disabled={activeStep === 0}
+                        onClick={handleBack}
+                        className={classes.button}
+                      >
+                        <>
+                          <ArrowBackIcon />
+                          Previous
+                        </>
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        size="medium"
+                        onClick={handleReset}
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                      >
+                        <SettingsBackupRestoreIcon />
+                        Reset
+                      </Button>{" "}
+                    </Grid>
                   </Grid>
-                </Box>
-              </Paper>
-            </Grid>
-          </Grid>
-        </Grid>):( <Grid
+                </Grid>
+                <Grid
+                  container
+                  spacing={3}
+                  direction="column"
+                  justify="center"
+                  align="center"
+                >
+                  <Grid item xs={12}>
+                    <Paper elevation={3} direction="column">
+                      <Box
+                        p={3}
+                        display="flex"
+                        flexDirection="column"
+                        justifyContent="center"
+                        alignItems="center"
+                        style={{ height: "50vh" }}
+                      >
+                        <Grid container spacing={2} direction="column">
+                          <Grid item xs={12}>
+                            <Typography justify="center" align="center">
+                              By submitting for approval you acknowlege that all
+                              the information provided by you is authentic and
+                              can be verified by our team.
+                            </Typography>
+                          </Grid>
+                          <br />
+                          <Grid xs={12}>
+                            <Grid
+                              container
+                              justify="center"
+                              alignItems="center"
+                            >
+                              <Button
+                                // disabled={allData}
+                                size="small"
+                                variant="contained"
+                                color="primary"
+                                fullWidth={false}
+                                onClick={() => {
+                                  requestconfirmation();
+                                }}
+                              >
+                                Submit for approval
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Box>
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </Grid>
+            ) : (
+              <Grid
                 container
                 spacing={3}
                 direction="column"
@@ -397,59 +410,69 @@ useEffect(() => {
                     </Box>
                   </Paper>
                 </Grid>
-              </Grid>)}</Box>
+              </Grid>
+            )}
+          </Box>
         ) : (
           <div>
-          
             <div>
-            <Box m={3} p={2}>
-              <Grid container justify="space-between" alignItems="center">
-                <Button
-                  style={{ minWidth: 200 }}
-                  size="medium"
-                  variant="contained"
-                  color="primary"
-                  disabled={activeStep === 0}
-                  onClick={handleBack}
-                  className={classes.button}
-                >
-                  <>
-                    <ArrowBackIcon />
-                    Previous
-                  </>
-                </Button>
-
-                <Typography variant="h3" gutterBottom align="center">
-                  {steps[activeStep]}
-                </Typography>
-                <Button
-                  style={{ minWidth: 200 }}
-                  variant="contained"
-                  color="primary"
-                  onClick={handleNext}
-                  className={classes.button}
-                  size="medium"
-                >
-                  {activeStep === steps.length - 1 ? (
-                    "Finish"
-                  ) : (
+              <Box m={3} p={2}>
+                <Grid container justify="space-between" alignItems="center">
+                  <Grid item xs={12}></Grid>
+                  <Button
+                    style={{ minWidth: 200 }}
+                    size="medium"
+                    variant="contained"
+                    color="primary"
+                    disabled={activeStep === 0}
+                    onClick={handleBack}
+                    className={classes.button}
+                  >
                     <>
-                      Next
-                      <ArrowForwardIcon />
+                      <ArrowBackIcon />
+                      Previous
                     </>
-                  )}
-                </Button>
-              </Grid>
-            </Box>
+                  </Button>
+
+                  <Typography variant="h3" gutterBottom align="center">
+                    {steps[activeStep]}
+                  </Typography>
+                  <Button
+                    style={{ minWidth: 200 }}
+                    variant="contained"
+                    color="primary"
+                    onClick={handleNext}
+                    className={classes.button}
+                    size="medium"
+                  >
+                    {activeStep === steps.length - 1 ? (
+                      "Finish"
+                    ) : (
+                      <>
+                        Next
+                        <ArrowForwardIcon />
+                      </>
+                    )}
+                  </Button>
+                </Grid>
+              </Box>
             </div>
-            <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
-        {steps.map((label) => (
-          <Step key={label}>
-            <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-      <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+            <Stepper
+              alternativeLabel
+              activeStep={activeStep}
+              connector={<ColorlibConnector />}
+            >
+              {steps.map((label) => (
+                <Step key={label}>
+                  <StepLabel StepIconComponent={ColorlibStepIcon}>
+                    {label}
+                  </StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+            <Typography className={classes.instructions}>
+              {getStepContent(activeStep)}
+            </Typography>
           </div>
         )}
       </div>
