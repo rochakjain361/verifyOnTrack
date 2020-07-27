@@ -98,6 +98,10 @@ class App extends React.PureComponent {
               <Route exact path='/manageJobCategories' component={AdminDash} />
               <Route exact path='/manageJobLeavingReasons' component={AdminDash} />
               <Route exact path='/approvalCodes' component={AdminDash} />
+              <Route exact path='/adminRejectReasons' component={AdminDash} />
+              <Route exact path='/adminSecurityQuestions' component={AdminDash} />
+              <Route exact path='/adminManageIndustries' component={AdminDash} />
+              <Route exact path='/adminManageOffboardTypes' component={AdminDash} />
               <Route exact path='/approvaljobs' component={Job} />
               <Route exact path='/employerProfile' component={Profile} />
 

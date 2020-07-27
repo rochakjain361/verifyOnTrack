@@ -3,12 +3,12 @@ import {
     Grid,
     Typography,
     Paper,
-    ButtonGroup,
-    Button,
+
+    
     CircularProgress
 } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
+
 import axios from "axios";
 import MessageIcon from '@material-ui/icons/Message'
 

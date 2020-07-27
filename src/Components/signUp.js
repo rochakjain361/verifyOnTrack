@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import Card from "@material-ui/core/Card";
 import TextField from "@material-ui/core/TextField";
 import GradientButton from "./GradientButton";
-import RouterLink from "./RouterLink/index.js";
+
 import "typeface-roboto";
 import Typography from "@material-ui/core/Typography";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -14,11 +14,11 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import { Button } from "@material-ui/core";
-import Input from "@material-ui/core/Input";
+
+
 import Link from '@material-ui/core/Link';
-import axios from "axios";
-import { Box } from "@material-ui/core";
+
+
 import ReCAPTCHA from "react-google-recaptcha";
 import {Snackbar} from '@material-ui/core'
 import MuiAlert from '@material-ui/lab/Alert';
@@ -103,7 +103,7 @@ class signUp extends Component {
     }
   }
   validateUsername = (event) => {
-    const { username } = this.state;
+    // const { username } = this.state;
     console.log("username",event);
     let usernameValid = true;
     let errorMsg = { ...this.state.errorMsg };
@@ -320,7 +320,7 @@ class signUp extends Component {
                         margin="normal"
                         required
                         style={{ marginRight: 10 }}
-                        margin="dense"
+                        // margin="dense"
                         id="companyName"
                         label="Company Name"
                         value={this.state.companyName}
@@ -344,7 +344,7 @@ class signUp extends Component {
                       margin="normal"
                       required
                       style={{ marginRight: 10 }}
-                      margin="dense"
+                      // margin="dense"
                       id="firstname"
                       label="First Name"
                       value={this.state.firstname}

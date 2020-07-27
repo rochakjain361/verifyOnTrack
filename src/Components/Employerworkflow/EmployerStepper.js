@@ -6,9 +6,9 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Check from '@material-ui/icons/Check';
-import SettingsIcon from '@material-ui/icons/Settings';
-import GroupAddIcon from '@material-ui/icons/GroupAdd';
-import VideoLabelIcon from '@material-ui/icons/VideoLabel';
+
+
+
 import StepConnector from '@material-ui/core/StepConnector';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -25,7 +25,7 @@ import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import { Paper } from "@material-ui/core";
 import SettingsBackupRestoreIcon from "@material-ui/icons/SettingsBackupRestore";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -215,7 +215,7 @@ useEffect(() => {
     setActiveStep(2);
   }
  
-}, [])
+})
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };

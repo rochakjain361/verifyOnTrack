@@ -401,7 +401,21 @@ export default function MiniDrawer(props) {
 
               <Divider />
 
-        <ListItem
+              <Link to="/employeeInbox" className={classes.link}>
+                <ListItem button onClick={()=> setOpen(!open)}>
+                  <ListItemIcon>
+                    <MessageIcon style={{ color: "white" }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Messages"
+                    className={classes.textColor}
+                  />
+                </ListItem>
+              </Link>
+
+              <Divider />
+
+        {/* <ListItem
           button
           onClick={() => setOpen3(!open3), ()=> setOpen(!open)}
         >
@@ -438,8 +452,8 @@ export default function MiniDrawer(props) {
                 />
               </ListItem>
             </Link> */}
-          </List>
-        </Collapse>
+          {/* </List>
+        </Collapse> */}
 
       </Drawer>
 

@@ -2,10 +2,10 @@ import React, { PureComponent } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import RouterLink from "../../RouterLink";
-import GradientButton from "../../GradientButton";
+
+
 import { Button } from "@material-ui/core";
-import Card from "@material-ui/core/Card";
+
 import Box from "@material-ui/core/Box";
 import axios from "axios";
 import { CircularProgress } from "@material-ui/core";
@@ -16,7 +16,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import Avatar from "@material-ui/core/Avatar";
+
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -26,12 +26,12 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { Select } from "@material-ui/core";
 import { MenuItem } from "@material-ui/core";
 import { InputLabel } from "@material-ui/core";
-import ListSubheader from "@material-ui/core/ListSubheader";
+
 import FormControl from "@material-ui/core/FormControl";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+
 import { Snackbar } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
-// let result = [];
+let result = [];
 let state = [];
 let lga = [];
 let city = [];
@@ -831,8 +831,8 @@ class Addresses extends PureComponent {
                     color="primary"
                     variant="contained"
                     disabled={this.state.buttondisabled}
-                    disabled={this.state.buttondisabled}
-                    color="primary"
+          
+                    
                     onClick={() => {
                       this.updatedetails(
                         this.state.result[this.state.selectedIndex].id

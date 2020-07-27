@@ -1,18 +1,11 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import { TextField, Paper, Grid, Typography, Button } from "@material-ui/core/";
+import { TextField, Typography, Button } from "@material-ui/core/";
 import Avatar from "@material-ui/core/Avatar";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Container from "@material-ui/core/Container";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import axios from "axios";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import { tr } from "date-fns/locale";
 
 const styles = (theme) => ({
   paper: {

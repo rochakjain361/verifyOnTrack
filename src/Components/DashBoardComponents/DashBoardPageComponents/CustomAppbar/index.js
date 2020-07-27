@@ -2,16 +2,11 @@ import {
     AppBar,
     Tabs,
     Tab,
-    IconButton,
-    Toolbar,
+    
     withStyles,
-    Tooltip
+    
 } from '@material-ui/core';
-import {
-    Dashboard,
-    Description,
-    Home, MoreVert
-} from '@material-ui/icons';
+
 import React from 'react';
 
 const styles = theme => ({

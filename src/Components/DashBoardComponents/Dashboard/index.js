@@ -141,8 +141,12 @@ export default function Index()  {
           spacing={2}
           justify="flex-start"
           style={{ background: "#eeeeee" }}
+          // xs={12} sm={8} md={5}
         >
-          <Grid item xs={4}>
+          <Grid item 
+          
+          xs={4}
+          >
             <Card className={classes.profileCardHeight} elevation={2}>
               <CardContent>
                 <Typography variant="h5" display="block" align="center">

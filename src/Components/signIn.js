@@ -6,27 +6,22 @@ import PropTypes from "prop-types";
 import Card from "@material-ui/core/Card";
 import TextField from "@material-ui/core/TextField";
 import GradientButton from "./GradientButton";
-import RouterLink from "./RouterLink/index.js";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
+
+
+
 import "typeface-roboto";
 import Typography from "@material-ui/core/Typography";
 import Link from '@material-ui/core/Link';
-import LandingPage from "../Components/LandingPage/index";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect,
-} from "react-router-dom";
+
+
 import ValidationMessage from "./ValidationMessage";
 import Alert from "@material-ui/lab/Alert";
-import CardMedia from '@material-ui/core/CardMedia';
+
 import { Box } from "@material-ui/core";
 import ReCAPTCHA from "react-google-recaptcha";
 
 
-let IP=window.$IP;
+// let IP=window.$IP;
 class signIn extends Component {
   constructor(props) {
     super(props);
@@ -119,7 +114,7 @@ class signIn extends Component {
           <CssBaseline />
 
           <Grid container
-            xs={6}
+            xs={6} 
             direction="column"
             justify="center"
             align="center" >
@@ -188,7 +183,7 @@ class signIn extends Component {
                       required
                       error={this.state.usernamevalid}
                       // style={{ marginRight: 10 }}
-                      margin="dense"
+                      // margin="dense"
                       id="username"
                       label="User Name"
                       value={this.state.username}
@@ -213,7 +208,7 @@ class signIn extends Component {
                       required
                       error={this.state.passwordvalid}
                       // style={{ marginRight: 10 }}
-                      margin="dense"
+                      // margin="dense"
                       label="Password"
                       value={this.state.password}
                       type="password"

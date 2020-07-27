@@ -1489,7 +1489,7 @@ class index extends Component {
         let bodyData = {}
 
         try {
-            let response = await fetch(api + '/api/v1/employers/oboffers/' + this.state.employeeId + '/cancel',
+            let response = await fetch(api + '/api/v1/employers/oboffers/' + this.state.newOfferId + '/cancel',
                 {
                     method: 'PUT',
                     headers: {
@@ -1502,7 +1502,7 @@ class index extends Component {
             response = await response.json();
             console.log('cancelJob:', response);
 
-            this.setState({ cancelOfferButton: false, cancelOfferButton: false })
+            this.setState({ cancelOfferButton: false, cancelOfferButton: false, viewOfferButton: false, modifyOfferButton: false })
             this.fetchOnboardOffers();
 
 

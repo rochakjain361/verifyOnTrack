@@ -1,6 +1,6 @@
 import { Button, CircularProgress, Grid, Paper, Typography, } from '@material-ui/core';
 import React, { Component } from 'react'
-import GradientButton from '../../GradientButton'
+
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -24,6 +24,9 @@ import Select from '@material-ui/core/Select';
 import Rating from '@material-ui/lab/Rating';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormLabel from '@material-ui/core/FormLabel';
 
 import DateFnsUtils from '@date-io/date-fns';
 
@@ -109,6 +112,7 @@ class myJobProfile extends Component {
         addJobDialogReasonForLeaving: '',
         addJobDialogReasonForLeavingIndex: null,
         addJobDialogRating: 0,
+        employeeByRadio: 'currentEmployee',
 
         //EDIT DIALOG STATES
         editJobDialogCompany: 0,
@@ -135,45 +139,45 @@ class myJobProfile extends Component {
         isloading: true,
 
 
-        addsnackbar:false,
-        updatesnackbar:false,
+        addsnackbar: false,
+        updatesnackbar: false,
     }
 
     addsnackbar() {
         return (
-          this.state.addresponse === 200 ?
-            (<div>
-    <Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }}>
-              <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }} severity="error">
-                Something went wrong please try again
+            this.state.addresponse === 200 ?
+                (<div>
+                    <Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }}>
+                        <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }} severity="error">
+                            Something went wrong please try again
           </Alert>
-            </Snackbar>
-              
-            </div>) : (<Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ addsnackbar: false }) }>
-                <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addasnackbar }) }} severity="success">
-                Job added sucessfully
+                    </Snackbar>
+
+                </div>) : (<Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() => this.setState({ addsnackbar: false })}>
+                    <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addasnackbar }) }} severity="success">
+                        Job added sucessfully
           </Alert>
-              </Snackbar>))
-    
-      }
-      updatesnackbar() {
+                </Snackbar>))
+
+    }
+    updatesnackbar() {
         return (
-          this.state.updateresponse === 200 ?
-            (<div>
-              {console.log("//////////////////////////////////////")}
-    
-              <Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ updatesnackbar: false }) }>
-                <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="success">
-                  Job updated sucessfully
+            this.state.updateresponse === 200 ?
+                (<div>
+                    {console.log("//////////////////////////////////////")}
+
+                    <Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() => this.setState({ updatesnackbar: false })}>
+                        <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="success">
+                            Job updated sucessfully
           </Alert>
-              </Snackbar>
-            </div>) : (<Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }}>
-              <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="error">
-                Something went wrong please try again
+                    </Snackbar>
+                </div>) : (<Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }}>
+                    <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="error">
+                        Something went wrong please try again
           </Alert>
-            </Snackbar>))
-    
-      }
+                </Snackbar>))
+
+    }
 
     async getJobProfiles() {
         this.setState({ isLoading: true })
@@ -210,7 +214,7 @@ class myJobProfile extends Component {
 
         this.setState({ isLoading: true })
 
-        
+
         token = localStorage.getItem("Token");
         id = localStorage.getItem("id");
 
@@ -353,6 +357,34 @@ class myJobProfile extends Component {
 
                     <Grid container justify='flex-start' direction='row' alignItems='center' spacing={3}>
 
+                        <Grid item xs={12}>
+                            <FormControl component="fieldset">
+                                <FormLabel component="legend">Type of employee:</FormLabel>
+                                <RadioGroup
+                                    name="searchCategory"
+                                    value={this.state.employeeByRadio}
+                                    onChange={(event) => {
+                                        this.setState({ employeeByRadio: event.target.value });
+                                        // console.log('Radio:', this.state.employeeByRadio);
+                                    }}
+                                >
+                                    <Grid container direction="row" style={{ marginTop: 10 }}>
+                                        <FormControlLabel
+                                            value="currentEmployee"
+                                            control={<Radio />}
+                                            label="Current employee"
+                                        />
+                                        <FormControlLabel
+                                            value="oldEmployee"
+                                            control={<Radio />}
+                                            label="Old employee"
+
+                                        />
+                                    </Grid>
+                                </RadioGroup>
+                            </FormControl>
+                        </Grid>
+
                         <Grid item xs={9}>
                             <FormControl fullWidth size='small'>
                                 <InputLabel id="companyLabel">
@@ -412,50 +444,47 @@ class myJobProfile extends Component {
                             ) : null
                         }
 
-                        <Grid item xs={6}>
-                            {/* <input
-                                class="w3-input"
-                                type="date"
-                                onChange={(event) => {
-                                    this.setState({ addJobDialogStartDate: event.target.value });
-                                    console.log(event.target.value);
-                                }}
+                        {this.state.employeeByRadio !== 'currentEmployee' ? (
+                            <>
+                            <Grid item xs={6}>
+                                <TextField
+                                    fullWidth
+                                    type="date"
+                                    onChange={(event) => {
+                                        this.setState({ addJobDialogStartDate: event.target.value });
+                                        console.log(event.target.value);
+                                    }}
+                                    helperText="Start Date"
+                                />
+                            </Grid>
 
-                            /> */}
-                            <TextField
-                            fullWidth
-                            type="date"
-                            onChange={(event) => {
-                                this.setState({ addJobDialogStartDate: event.target.value });
-                                console.log(event.target.value);
-                            }}
-                            helperText="Start Date"
-                            />
-                        </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    fullWidth
+                                    type="date"
+                                    onChange={(event) => {
+                                        this.setState({ addJobDialogEndDate: event.target.value });
+                                        console.log(event.target.value);
+                                    }}
+                                    helperText="End Date"
+                                />
+                            </Grid>
+                            </>
+                        ) : (
+                            <Grid item xs={12}>
 
-                        <Grid item xs={6}>
-                            {/* <InputLabel id="dob">End Date</InputLabel> */}
+                                <TextField
+                                    fullWidth
+                                    type="date"
+                                    onChange={(event) => {
+                                        this.setState({ addJobDialogStartDate: event.target.value });
+                                        console.log(event.target.value);
+                                    }}
+                                    helperText="Start Date"
+                                />
 
-                            {/* <input
-                                class="w3-input"
-                                type="date"
-                                onChange={(event) => {
-                                    this.setState({ addJobDialogEndDate: event.target.value });
-                                    console.log(event.target.value);
-                                }}
-
-                            /> */}
-                            <TextField
-                            fullWidth
-                            type="date"
-                            onChange={(event) => {
-                                this.setState({ addJobDialogEndDate: event.target.value });
-                                console.log(event.target.value);
-                            }}
-                            helperText="End Date"
-                            />
-
-                        </Grid>
+                            </Grid>
+                        )}
 
                         <Grid item xs={12}>
                             <FormControl fullWidth size='small'>
@@ -504,7 +533,8 @@ class myJobProfile extends Component {
                             />
                         </Grid>
 
-                        <Grid item xs={12}>
+                        {this.state.employeeByRadio !== 'currentEmployee' ? (
+                            <Grid item xs={12}>
                             <FormControl fullWidth size='small'>
                                 <InputLabel id="reasonForLeaving">
                                     Reason for leaving
@@ -526,19 +556,20 @@ class myJobProfile extends Component {
                                 </Select>
                             </FormControl>
                         </Grid>
+                        ) : <div/>}
 
-                        <Grid item xs={6} style={{ marginTop: 15 }} >
+                        {/* <Grid item xs={6} style={{ marginTop: 15 }} >
                             <Typography >How do you rate this company?</Typography>
-                        </Grid>
+                        </Grid> */}
 
-                        <Grid item xs={6} style={{ marginTop: 15 }} >
+                        {/* <Grid item xs={6} style={{ marginTop: 15 }} >
                             <Rating
                                 name="simple-controlled"
                                 value={this.state.addJobDialogRating}
                                 onChange={(event, newValue) => this.setState({ addJobDialogRating: newValue })}
                                 max={10}
                             />
-                        </Grid>
+                        </Grid> */}
 
                     </Grid>
 
@@ -657,14 +688,14 @@ class myJobProfile extends Component {
 
                             /> */}
                             <TextField
-                            fullWidth
-                            type="date"
-                            defaultValue={this.state.updateMyJobData.startDate}
+                                fullWidth
+                                type="date"
+                                defaultValue={this.state.updateMyJobData.startDate}
                                 onChange={(event) => {
                                     this.setState({ editJobDialogStartDate: event.target.value });
                                     console.log(event.target.value);
                                 }}
-                            helperText="Start Date"
+                                helperText="Start Date"
                             />
                         </Grid>
 
@@ -681,14 +712,14 @@ class myJobProfile extends Component {
 
                             /> */}
                             <TextField
-                            fullWidth
-                            type="date"
-                            defaultValue={this.state.updateMyJobData.endDate}
+                                fullWidth
+                                type="date"
+                                defaultValue={this.state.updateMyJobData.endDate}
                                 onChange={(event) => {
                                     this.setState({ editJobDialogEndDate: event.target.value });
                                     console.log(event.target.value);
                                 }}
-                            helperText="End Date"
+                                helperText="End Date"
                             />
 
                         </Grid>
@@ -901,28 +932,28 @@ class myJobProfile extends Component {
                                     </TableCell>
                                     <TableCell>
                                         <Grid container justify='column'>
-                                            
-                                                {row.show_update_field ? (
-                                                    <Grid item>
+
+                                            {row.show_update_field ? (
+                                                <Grid item>
                                                     <Button
-                                                    style={{ minWidth: 200 }}
-                                                    variant="outlined"
-                                                    color="secondary"
-                                                    onClick={() => {
-                                                        this.setState({ updateMyJobData: this.state.myJobHistory[index], updateJobId: row.id },
-                                                            () => { console.log('updateMyJobData:', this.state.updateMyJobData, this.state.updateJobId) })
-                                                        this.updateMyJob(index)
-                                                    }}
-                                                >
-                                                    Update
+                                                        style={{ minWidth: 200 }}
+                                                        variant="outlined"
+                                                        color="secondary"
+                                                        onClick={() => {
+                                                            this.setState({ updateMyJobData: this.state.myJobHistory[index], updateJobId: row.id },
+                                                                () => { console.log('updateMyJobData:', this.state.updateMyJobData, this.state.updateJobId) })
+                                                            this.updateMyJob(index)
+                                                        }}
+                                                    >
+                                                        Update
                                                 </Button>
                                                 </Grid>
-                                                ) : ('NA')}
-                                                
-                                            
+                                            ) : ('NA')}
+
+
 
                                             <Grid item>
-                                                {row.show_employer_ver_field == "True" ? (
+                                                {row.show_employer_ver_field === true ? (
                                                     <Button
                                                         style={{ marginTop: 5, minWidth: 200 }}
                                                         variant="outlined"
@@ -935,10 +966,10 @@ class myJobProfile extends Component {
                                                                 verificationData: this.state.myJobHistory[index]
                                                             },
                                                                 () => {
-                                                                    console.log('verificationData:', this.state.verificationData, 
-                                                                                'emloyeeId:',this.state.verificationEmployeeID)
+                                                                    console.log('verificationData:', this.state.verificationData,
+                                                                        'emloyeeId:', this.state.verificationEmployeeID)
                                                                 })
-                                                            this.employerVerification(row.employee,row.employer_id_field, row.id)
+                                                            this.employerVerification(row.employee, row.employer_id_field, row.id)
                                                         }}
                                                     >
                                                         Get Employer Verification
@@ -989,7 +1020,7 @@ class myJobProfile extends Component {
             response = await response.json();
             console.log('AddJobSuccess:', response);
 
-            this.setState({addresponse:response.status,addsnackbar: true})
+            this.setState({ addresponse: response.status, addsnackbar: true })
 
             await this.getJobProfiles();
 
@@ -1040,9 +1071,9 @@ class myJobProfile extends Component {
             );
             response = await response.json();
             console.log('AddJobOtherSuccess:', response);
-            
+
             await this.getJobProfiles();
-            this.setState({addresponse:response.status,addsnackbar: true})
+            this.setState({ addresponse: response.status, addsnackbar: true })
 
             this.setState({ addDialogOpen: false })
             this.setState({ addJobDialogCompany: "" })
@@ -1057,7 +1088,7 @@ class myJobProfile extends Component {
 
         } catch (error) {
             console.log("[!ON_REGISTER] " + error);
-            this.setState({addresponse: error.response,addsnackbar: true})
+            this.setState({ addresponse: error.response, addsnackbar: true })
         }
     }
 
@@ -1093,13 +1124,13 @@ class myJobProfile extends Component {
 
         await this.getJobProfiles();
         await this.setState({ editActionsOpen: false })
-        this.setState({updateresponse:response.status, updatesnackbar: true })
+        this.setState({ updateresponse: response.status, updatesnackbar: true })
     }
 
     async employerVerification(employeeId, employerId, rowId) {
 
-        console.log('employeeID:', this.state.verificationEmployeeID, 
-                    'employerId:', this.state.verificationData['employer_id_field'])
+        console.log('employeeID:', this.state.verificationEmployeeID,
+            'employerId:', this.state.verificationData['employer_id_field'])
 
         let bodyData = {
             'ee_employer': employerId,

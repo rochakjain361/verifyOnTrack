@@ -4,7 +4,7 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
+
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
@@ -15,12 +15,13 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
-import Collapse from "@material-ui/core/Collapse";
+
+
+
 import { Container, Button } from "@material-ui/core";
 import axios from "axios";
 import MessageIcon from "@material-ui/icons/Message";
+import StarsIcon from "@material-ui/icons/Stars";
 import CodeIcon from "@material-ui/icons/Code";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { useEffect } from 'react';
@@ -28,15 +29,18 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 import Dashboard from './Components/EmployerPageComponents/Dashboard'
 import Index from './Components/EmployerPageComponents/Messages/Inbox/index'
 // import Outbox from './Components/EmployerPageComponents/Messages/Outbox'
-import AccessCodes from './Components/EmployerPageComponents/MyCodes/AccessCodes'
-import EmployementCodes from './Components/EmployerPageComponents/MyCodes/EmployementCodes/EmploymentVerification'
+
+
 import EmploymentTabs from './Components/EmployerPageComponents/MyCodes/EmployementCodes/EmploymentTabs'
-import ApprovalCodes from './Components/EmployerPageComponents/MyCodes/ApprovalCodes';
+
+import Ratings from './Components/EmployerPageComponents/Ratings'
+import Employees from './Components/EmployerPageComponents/Employees'
+import GroupIcon from '@material-ui/icons/Group';
 
 const drawerWidth = 240;
 let token1 = "";
 let token = "";
-let id = "";
+// let id = "";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -58,9 +62,9 @@ const useStyles = makeStyles((theme) => ({
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
-    menuButton: {
-        marginRight: 36,
-    },
+    // menuButton: {
+    //     marginRight: 36,
+    // },
     hide: {
         display: 'none',
     },
@@ -68,7 +72,6 @@ const useStyles = makeStyles((theme) => ({
         width: drawerWidth,
         flexShrink: 0,
         whiteSpace: 'nowrap',
-        width: "inherit",
         background: "#424242",
     },
     drawerOpen: {
@@ -137,16 +140,16 @@ export default function MiniDrawer(props) {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
-    const [auth, setAuth] = React.useState(true);
+    // const [auth, setAuth] = React.useState(true);
     const [Token, setToken] = React.useState("");
     // const [Token1, setToken1] = React.useState("");
-    const [id, setid] = React.useState("");
-    // const [anchorEl, setAnchorEl] = React.useState(false);
-    useEffect(() => {
+    // const [id, setid] = React.useState("");
+    // // const [anchorEl, setAnchorEl] = React.useState(false);
+    // useEffect(() => {
       
-        setToken(localStorage.getItem("Token"));
-        setid(localStorage.getItem("id"));
-    });
+    //     setToken(localStorage.getItem("Token"));
+    //     setid(localStorage.getItem("id"));
+    // });
 
     const [open1, setOpen1] = React.useState(false);
     const [open2, setOpen2] = React.useState(false);
@@ -257,7 +260,49 @@ export default function MiniDrawer(props) {
 
                     <Divider />
 
-                    <ListItem
+                    <Link to="/employerEmployees" className={classes.link}>
+                        <ListItem button onClick={()=> handleDrawerClose()}>
+                            <ListItemIcon>
+                                <GroupIcon style={{ color: "white" }} />
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={"Employees"}
+                                className={classes.textColor}
+                            />
+                        </ListItem>
+                    </Link>
+
+                    <Divider />
+
+                    <Link to="/employerEmployment" className={classes.link}>
+                        <ListItem button>
+                            <ListItemIcon>
+                                <CodeIcon style={{ color: "white" }} />
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={"Codes"}
+                                className={classes.textColor}
+                            />
+                        </ListItem>
+                    </Link>
+
+                    <Divider />
+
+                    <Link to="/employerInbox" className={classes.link}>
+                        <ListItem button>
+                            <ListItemIcon>
+                                <MessageIcon style={{ color: "white" }} />
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={"Messages"}
+                                className={classes.textColor}
+                            />
+                        </ListItem>
+                    </Link>
+
+                    <Divider />
+
+                    {/* <ListItem
                         button
                         onClick={() => setOpen3(!open3), ()=> setOpen(!open)}
                     >
@@ -298,9 +343,9 @@ export default function MiniDrawer(props) {
                         </List>
                     </Collapse>
 
-                    <Divider />
+                    <Divider /> */}
 
-                    <ListItem
+                    {/* <ListItem
                         button
                         onClick={() => setOpen2(!open2), ()=> setOpen(!open)}
                     >
@@ -337,8 +382,22 @@ export default function MiniDrawer(props) {
                                     />
                                 </ListItem>
                             </Link> */}
-                        </List>
-                    </Collapse>
+                        {/* </List>
+                    </Collapse> */}
+
+                    {/* <Divider /> */}
+
+                    <Link to="/employerRatings" className={classes.link}>
+                        <ListItem button onClick={()=> handleDrawerClose()}>
+                            <ListItemIcon>
+                                <StarsIcon style={{ color: "white" }} />
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={"Ratings"}
+                                className={classes.textColor}
+                            />
+                        </ListItem>
+                    </Link>
 
                     <Divider />
 
@@ -365,15 +424,27 @@ export default function MiniDrawer(props) {
                 </Container>
               </Route> */}
 
-              <Route exact path="/employerAccessCodes">
+              {/* <Route exact path="/employerAccessCodes">
                 <Container>
                   <AccessCodes />
                 </Container>
-              </Route>
+              </Route> */}
 
               <Route exact path="/employerEmployment">
                 <Container>
                   <EmploymentTabs />
+                </Container>
+              </Route>
+
+              <Route exact path="/employerRatings">
+                <Container>
+                  <Ratings />
+                </Container>
+              </Route>
+
+              <Route exact path="/employerEmployees">
+                <Container>
+                  <Employees />
                 </Container>
               </Route>
               

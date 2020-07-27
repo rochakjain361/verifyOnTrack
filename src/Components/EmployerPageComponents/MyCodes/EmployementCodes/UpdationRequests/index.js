@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles';
-import { TextField, IconButton, Avatar, CircularProgress, Paper, Grid, Typography, Button, TableContainer, FormControlLabel, Checkbox, FormControl, Select, InputLabel, MenuItem } from '@material-ui/core/';
+import { TextField, IconButton, Avatar, CircularProgress, Paper, Grid, Typography, Button, TableContainer, FormControlLabel, Checkbox } from '@material-ui/core/';
 
 import {
     Table,
@@ -12,38 +12,14 @@ import {
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CancelIcon from '@material-ui/icons/Cancel';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
-import FormGroup from '@material-ui/core/FormGroup';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-
-import axios from 'axios';
 
 let token1 = "";
 let token = "";
 let id = "";
 const api = "http://3.22.17.212:8000"
-
-const rows = [
-    {
-        "createdOn": "09/12/2020",
-        "codeString": "testCodeString1",
-        "employerCompanyField": "testEmployerCompanyField1",
-        "codeStatus": "testCodeStatu1s",
-        "statusChangeDate": "09/12/2020",
-    },
-    {
-        "createdOn": "09/12/2020",
-        "codeString": "testCodeString1",
-        "employerCompanyField": "testEmployerCompanyField1",
-        "codeStatus": "testCodeStatus2",
-        "statusChangeDate": "09/12/2020",
-    }
-];
 
 const styles = theme => ({
 
@@ -142,7 +118,7 @@ class index extends Component {
 
     render() {
 
-        const { classes } = this.props;
+        // const { classes } = this.props;
 
         return (
             <>
