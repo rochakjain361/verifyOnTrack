@@ -29,21 +29,21 @@ const styles = (theme) => ({});
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
-    // width: 500,
+    width: 500,
   },
   profileCardHeight: {
-    // minHeight: 300,
+    minHeight: 300,
     // minWidth: window.innerWidth/3
   },
   tabs: {
     flexGrow: 1,
-    // flexBasis: 'auto'
+    flexBasis: 'auto'
   },
   expansionWidth: {
-    // width: "100%",
+    width: "100%",
   },
   marginTop: {
-    // marginTop: 20,
+    marginTop: 20,
   },
   demo2: {
     backgroundColor: "#fff",
@@ -101,9 +101,9 @@ const StyledTab = withStyles((theme) => ({
     fontWeight: theme.typography.fontWeightRegular,
     fontSize: theme.typography.pxToRem(15),
     marginRight: theme.spacing(1),
-    // "&:focus": {
-    //   opacity: 1,
-    // },
+    "&:focus": {
+      opacity: 1,
+    },
   },
 }))((props) => <Tab disableRipple {...props} />);
 export default function Index(props) {
@@ -136,6 +136,8 @@ export default function Index(props) {
         style={{ background: "#eeeeee" }}
       >
         <Grid item xs={12} md={4}>
+          
+
           <Card className={classes.profileCardHeight} elevation={2}>
             <CardContent>
               <Typography variant="h5" display="block" align="center">
@@ -145,6 +147,7 @@ export default function Index(props) {
               <Profile />
             </CardContent>
           </Card>
+          
         </Grid>
         <Grid item xs={12} md={8}>
             <Card
