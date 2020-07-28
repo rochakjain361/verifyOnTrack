@@ -98,7 +98,7 @@ export class Employeelocation extends Component {
   postlocation() {
     let bodyFormData = new FormData();
     bodyFormData.append("state", this.state.addstate);
-    bodyFormData.append("lga", this.state.addcity);
+    bodyFormData.append("lga", this.state.addlga);
     // bodyFormData.append("city", this.state.addcity);
     bodyFormData.append("address", this.state.buildingno);
     bodyFormData.append("locationName", this.state.street);
