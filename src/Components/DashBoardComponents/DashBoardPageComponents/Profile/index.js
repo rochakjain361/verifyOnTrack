@@ -23,8 +23,8 @@ class index extends Component {
 
     }
   }
-
-  async componentDidMount() {
+  
+  async componentDidMount() {   
     this.setState({ loading: true });
 
     token = localStorage.getItem("Token");

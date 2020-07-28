@@ -47,10 +47,13 @@ import AccessCodes from "./Components/DashBoardComponents/MyCodes/AccessCodes";
 import HomeIcon from '@material-ui/icons/Home';
 import PaymentIcon from '@material-ui/icons/Payment';
 import PhoneIcon from '@material-ui/icons/Phone';
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Title } from '@material-ui/icons';
 import Academicstitle from './Components/DashBoardComponents/Academics/title'
 import SchoolIcon from '@material-ui/icons/School';
+
+import MyInfoTabs from './Components/DashBoardComponents/MyInfoTabs'
+
 const drawerWidth = 240;
 let token1 = "";
 
@@ -151,12 +154,12 @@ export default function MiniDrawer(props) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [auth, setAuth] = React.useState(true);
-  const [Token,setToken]=React.useState("");
-  
-  const [id,setid]=React.useState("");
+  const [Token, setToken] = React.useState("");
+
+  const [id, setid] = React.useState("");
   // const [anchorEl, setAnchorEl] = React.useState(false);
   useEffect(() => {
-  
+
     setToken(localStorage.getItem("Token"));
     setid(localStorage.getItem("id"));
   });
@@ -199,223 +202,155 @@ export default function MiniDrawer(props) {
       });
 
     console.log("////////////////////////////////////////");
-    
+
   }
 
   return (
     <Router>
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-      >
-        <Toolbar>
-        <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, {
-              [classes.hide]: open,
-            })}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            Verify OnTrac
+      <div className={classes.root}>
+        <CssBaseline />
+        <AppBar
+          position="fixed"
+          className={clsx(classes.appBar, {
+            [classes.appBarShift]: open,
+          })}
+        >
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              className={clsx(classes.menuButton, {
+                [classes.hide]: open,
+              })}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              Verify OnTrac
           </Typography>
-          <Button onClick={logout} color="inherit" variant='outlined' size='medium'>Logout</Button>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        className={clsx(classes.drawer, {
-          [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open,
-        })}
-        classes={{
-          paper: clsx({
+            <Button onClick={logout} color="inherit" variant='outlined' size='medium'>Logout</Button>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          variant="permanent"
+          className={clsx(classes.drawer, {
             [classes.drawerOpen]: open,
             [classes.drawerClose]: !open,
-          }),
-        }}
-      >
-        <div className={classes.toolbar}>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon style={{ color: "white" }} /> : <ArrowBackIcon style={{ color: "white" }} />}
-          </IconButton>
-        </div>
+          })}
+          classes={{
+            paper: clsx({
+              [classes.drawerOpen]: open,
+              [classes.drawerClose]: !open,
+            }),
+          }}
+        >
+          <div className={classes.toolbar}>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === 'rtl' ? <ChevronRightIcon style={{ color: "white" }} /> : <ArrowBackIcon style={{ color: "white" }} />}
+            </IconButton>
+          </div>
 
-        <Link to="/dashboard" className={classes.link}>
-          <ListItem button onClick={()=> setOpen(!open)}>
+          <Link to="/dashboard" className={classes.link}>
+            <ListItem button onClick={() => setOpen(!open)}>
+              <ListItemIcon>
+                <DashboardIcon style={{ color: "white" }} />
+              </ListItemIcon>
+              <ListItemText
+                primary={"Dashboard"}
+                className={classes.textColor}
+              />
+            </ListItem>
+          </Link>
+
+          <Divider />
+
+          <Link to="/myInfo" className={classes.link} onClick={() => handleDrawerClose()}>
+            <ListItem button>
+              <ListItemIcon>
+                <InfoIcon style={{ color: "white" }} />
+              </ListItemIcon>
+              <ListItemText
+                primary={"My Info"}
+                className={classes.textColor}
+              />
+            </ListItem>
+          </Link>
+
+          <Divider />
+
+          <Link to="/myjobprofile" className={classes.link}>
+            <ListItem button onClick={() => setOpen(!open)}>
+              <ListItemIcon>
+                <WorkIcon style={{ color: "white" }} />
+              </ListItemIcon>
+              <ListItemText
+                primary="My Job Profile"
+                className={classes.textColor}
+              />
+            </ListItem>
+          </Link>
+
+          <Divider />
+
+          <ListItem
+            button
+            onClick={() => setOpen2(!open2), () => setOpen(!open)}
+          >
             <ListItemIcon>
-              <DashboardIcon style={{ color: "white" }} />
+              <CodeIcon style={{ color: "white" }} />
             </ListItemIcon>
             <ListItemText
-              primary={"Dashboard"}
+              primary="My Codes"
               className={classes.textColor}
             />
+            {open2 ? (
+              <ExpandLess style={{ color: "white" }} />
+            ) : (
+                <ExpandMore style={{ color: "white" }} />
+              )}
           </ListItem>
-        </Link>
 
-        <Divider />
-        <ListItem
-          button
-          onClick={() => setOpen1(!open1), ()=> setOpen(!open)}
-        >
-          <ListItemIcon>
-            <InfoIcon style={{ color: "white" }} />
-          </ListItemIcon>
-          <ListItemText primary="My Info" className={classes.textColor} />
-          {open1 ? (
-            <ExpandLess style={{ color: "white" }} />
-          ) : (
-              <ExpandMore style={{ color: "white" }} />
-            )}
-        </ListItem>
-
-        <Collapse in={open1, open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <Link to="/profiles" className={classes.link}>
-              <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
-              <ListItemIcon>
-              <PersonOutlineIcon style={{ color: "white" }} />
-            </ListItemIcon>
-                <ListItemText
-                  primary="Profiles"
-                  className={classes.textColor}
-                />
-              </ListItem>
-            </Link>
-
-            <Link to="/addresses" className={classes.link}>
-              <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
-              <ListItemIcon>
-              <HomeIcon style={{ color: "white" }} />
-            </ListItemIcon>
-                <ListItemText
-                  primary="Addresses"
-                  className={classes.textColor}
-                />
-              </ListItem>
-            </Link>
-
-            <Link to="/identities" className={classes.link}>
-              <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
-              <ListItemIcon>
-              <PaymentIcon style={{ color: "white" }} />
-            </ListItemIcon>
-                <ListItemText
-                  primary="Identities"
-                  className={classes.textColor}
-                />
-              </ListItem>
-            </Link>
-            <Link to="/employee/academics" className={classes.link}>
-              <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
-              <ListItemIcon>
-              <SchoolIcon style={{color:"white"}}/>
-            </ListItemIcon>
-                <ListItemText
-                  primary="Academics"
-                  className={classes.textColor}
-                />
-              </ListItem>
-            </Link>
-
-            <Link to="/phones" className={classes.link}>
-              <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
-              <ListItemIcon>
-              <PhoneIcon style={{ color: "white" }} />
-            </ListItemIcon>
-                <ListItemText
-                  primary="Phones"
-                  className={classes.textColor}
-                />
-              </ListItem>
-            </Link>
-          </List>
-          
-        </Collapse>
-        
-        
-
-        <Divider />
-
-        <Link to="/myjobprofile" className={classes.link}>
-                <ListItem button onClick={()=> setOpen(!open)}>
-                  <ListItemIcon>
-                    <WorkIcon style={{ color: "white" }} />
-                  </ListItemIcon>
+          <Collapse in={open2, open} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <Link to="/employeeAccessCodes" className={classes.link}>
+                <ListItem button className={classes.nested} onClick={() => handleDrawerClose()}>
                   <ListItemText
-                    primary="My Job Profile"
+                    primary="Access Codes"
                     className={classes.textColor}
                   />
                 </ListItem>
               </Link>
 
-              <Divider />
-
-              <ListItem
-                button
-                onClick={() => setOpen2(!open2), ()=> setOpen(!open)}
-              >
-                <ListItemIcon>
-                  <CodeIcon style={{ color: "white" }} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="My Codes"
-                  className={classes.textColor}
-                />
-                {open2 ? (
-                  <ExpandLess style={{ color: "white" }} />
-                ) : (
-                  <ExpandMore style={{ color: "white" }} />
-                )}
-              </ListItem>
-
-              <Collapse in={open2, open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <Link to="/employeeAccessCodes" className={classes.link}>
-                    <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
-                      <ListItemText
-                        primary="Access Codes"
-                        className={classes.textColor}
-                      />
-                    </ListItem>
-                  </Link>
-
-                  <Link to="/employeeEmployementCodes" className={classes.link}>
-                    <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
-                      <ListItemText
-                        primary="Employement Codes"
-                        className={classes.textColor}
-                      />
-                    </ListItem>
-                  </Link>
-                </List>
-              </Collapse>
-
-              <Divider />
-
-              <Link to="/employeeInbox" className={classes.link}>
-                <ListItem button onClick={()=> setOpen(!open)}>
-                  <ListItemIcon>
-                    <MessageIcon style={{ color: "white" }} />
-                  </ListItemIcon>
+              <Link to="/employeeEmployementCodes" className={classes.link}>
+                <ListItem button className={classes.nested} onClick={() => handleDrawerClose()}>
                   <ListItemText
-                    primary="Messages"
+                    primary="Employement Codes"
                     className={classes.textColor}
                   />
                 </ListItem>
               </Link>
+            </List>
+          </Collapse>
 
-              <Divider />
+          <Divider />
 
-        {/* <ListItem
+          <Link to="/employeeInbox" className={classes.link}>
+            <ListItem button onClick={() => setOpen(!open)}>
+              <ListItemIcon>
+                <MessageIcon style={{ color: "white" }} />
+              </ListItemIcon>
+              <ListItemText
+                primary="Messages"
+                className={classes.textColor}
+              />
+            </ListItem>
+          </Link>
+
+          <Divider />
+
+          {/* <ListItem
           button
           onClick={() => setOpen3(!open3), ()=> setOpen(!open)}
         >
@@ -455,80 +390,55 @@ export default function MiniDrawer(props) {
           {/* </List>
         </Collapse> */}
 
-      </Drawer>
+        </Drawer>
 
-      <main className={classes.content}>
-            <Toolbar />
-            <Switch>
-              <Route exact path="/dashboard">
-                <Container style={{ backgroundColor: "#eeeeee " }}>
-                  <Dashboard />
-                </Container>
-              </Route>
+        <main className={classes.content}>
+          <Toolbar />
+          <Switch>
+            <Route exact path="/dashboard">
+              <Container style={{ backgroundColor: "#eeeeee " }}>
+                <Dashboard />
+              </Container>
+            </Route>
 
-              <Route exact path="/profiles">
-                <Container>
-                <Profiletitle/>
-                </Container>
-              </Route>
+            <Route exact path="/myInfo">
+              <Container style={{ backgroundColor: "#eeeeee " }}>
+                <MyInfoTabs />
+              </Container>
+            </Route>
 
-              <Route exact path="/addresses">
-                <Container>
-                  <Addresstitle />
-                </Container>
-              </Route>
+            <Route exact path="/myjobprofile">
+              <Container>
+                <MyJobProfile />
+              </Container>
+            </Route>
 
-              <Route exact path="/identities">
-                <Container>
-                  <Identitiestitle />
-                </Container>
-              </Route>
+            <Route exact path="/employeeInbox">
+              <Container>
+                <Index />
+              </Container>
+            </Route>
 
-              <Route exact path="/employee/Academics">
-                <Container>
-                  <Academicstitle />
-                </Container>
-              </Route>
-
-              <Route exact path="/Phones">
-                <Container>
-                  {/* <Phones /> */}
-                  <PhoneTitle/>
-                </Container>
-              </Route>
-
-              <Route exact path="/myjobprofile">
-                <Container>
-                  <MyJobProfile />
-                </Container>
-              </Route>
-
-              <Route exact path="/employeeInbox">
-                <Container>
-                  <Index/>
-                </Container>
-              </Route>
-
-              {/* <Route exact path="/employeeOutbox">
+            {/* <Route exact path="/employeeOutbox">
                 <Container>
                   <Outbox />
                 </Container>
               </Route> */}
 
-              <Route exact path="/employeeAccessCodes">
-                <Container>
-                  <AccessCodes />
-                </Container>
-              </Route>
+            <Route exact path="/employeeAccessCodes">
+              <Container>
+                <AccessCodes />
+              </Container>
+            </Route>
 
-              <Route exact path="/employeeEmployementCodes">
-                <Container>
-                  <Indexemployment />
-                </Container>
-              </Route>
-            </Switch>
-          </main>
-    </div>
+            <Route exact path="/employeeEmployementCodes">
+              <Container>
+                <Indexemployment />
+              </Container>
+            </Route>
+          </Switch>
+        </main>
+      </div>
     </Router>
   );
 }

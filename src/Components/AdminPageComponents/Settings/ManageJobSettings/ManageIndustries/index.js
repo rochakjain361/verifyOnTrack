@@ -252,7 +252,7 @@ export class index extends Component {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Offboard Types"
+                  label="Industries"
                   margin="normal"
                   variant="outlined"
                   size="small"
@@ -271,7 +271,7 @@ export class index extends Component {
         >
           <Grid item xs={3}>
             <TextField
-              label="Enter new offboard type"
+              label="Enter new industry"
               variant="outlined"
               size="medium"
               fullWidth

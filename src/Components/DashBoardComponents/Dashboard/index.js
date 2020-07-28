@@ -25,9 +25,7 @@ import RatingBars from "../DashBoardPageComponents/RatingBars";
 import DashButtons from "../DashBoardPageComponents/DashButtons";
 import AppBar from "@material-ui/core/AppBar";
 
-const styles = (theme) => ({
- 
-});
+const styles = (theme) => ({});
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
@@ -39,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
   tabs: {
     flexGrow: 1,
-    // flexBasis: 'auto'
+    flexBasis: 'auto'
   },
   expansionWidth: {
     width: "100%",
@@ -108,75 +106,81 @@ const StyledTab = withStyles((theme) => ({
     },
   },
 }))((props) => <Tab disableRipple {...props} />);
-export default function Index()  {
-  const [messages,setmessages]=React.useState(null);
+export default function Index(props) {
+  const [messages, setmessages] = React.useState(null);
   useEffect(() => {
-    
-   
-      // setmessages(<Messages/>)
-      // setmessages(<div><p>fhkjsdkf</p></div>)
-      
-    
-  }, [])
+    //  console.log(" this.props.location.state.detail", props.location);
+    // setmessages(<Messages/>)
+    // setmessages(<div><p>fhkjsdkf</p></div>)
+  }, []);
   const [value, setValue] = React.useState(0);
   const theme = useTheme();
-  
 
- 
-    const handleChange = (event, newValue) => {
-      setValue(newValue);
-    };
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
-    const handleChangeIndex = (index) => {
-      setValue(index);
-    };
-    // const { classes } = this.props;
-     const classes = useStyles();
+  const handleChangeIndex = (index) => {
+    setValue(index);
+  };
+  // const { classes } = this.props;
+  const classes = useStyles();
 
-    return (
-      <Box py={2}>
-        <Grid
-          container
-          direction="row"
-          spacing={2}
-          justify="flex-start"
-          style={{ background: "#eeeeee" }}
-          // xs={12} sm={8} md={5}
-        >
-          <Grid item 
+  return (
+    <Box py={2}>
+      <Grid
+        container
+        direction="row"
+        spacing={2}
+        justify="flex-start"
+        style={{ background: "#eeeeee" }}
+      >
+        <Grid item xs={12} md={4}>
           
-          xs={4}
-          >
-            <Card className={classes.profileCardHeight} elevation={2}>
-              <CardContent>
-                <Typography variant="h5" display="block" align="center">
-                  Profile
-                </Typography>
 
-                <Profile />
-              </CardContent>
-            </Card>
+          <Card className={classes.profileCardHeight} elevation={2}>
+            <CardContent>
+              <Typography variant="h5" display="block" align="center">
+                Profile
+              </Typography>
 
+              <Profile />
+            </CardContent>
+          </Card>
+          
+        </Grid>
+        <Grid item xs={12} md={8}>
             <Card
+              className={classes.profileCardHeight}
               elevation={2}
-              className={classes.marginTop}
-              style={{ minHeight: 400 }}
             >
               <CardContent>
-                <Typography variant="button" display="block" align="center">
-                  Works at
+                <Typography variant="h5" align="center">
+                  Ratings
                 </Typography>
-                <WorksAt />
+                <RatingBars />
               </CardContent>
             </Card>
           </Grid>
-
-          <Grid item xs={8}>
+          <Grid item xs={12} md={4}>
+          <Card
+            elevation={2}
+            className={classes.marginTop}
             
+          >
+            <CardContent>
+              <Typography variant="h5" display="block" align="center">
+                Works at
+              </Typography>
+              <WorksAt />
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={8}>
 
-            <Card className={classes.profileCardHeight} elevation={2}>
-              <AppBar position="static" color="default">
-                <div className={classes.demo2}>
+          <Card className={classes.profileCardHeight} elevation={2}>
+            <AppBar position="static" color="default">
+              <div className={classes.demo2}>
                 <StyledTabs
                   value={value}
                   onChange={handleChange}
@@ -188,47 +192,32 @@ export default function Index()  {
                   <StyledTab label="Messages" {...a11yProps(0)} />
                   <StyledTab label="Codes" {...a11yProps(1)} />
                   <StyledTab label="Rating" {...a11yProps(2)} />
-                </StyledTabs></div>
-              </AppBar>
-              <SwipeableViews
-                axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-                index={value}
-                onChangeIndex={handleChangeIndex}
-              >
-                <TabPanel value={value} index={0} dir={theme.direction}>
-                  <Messages/>
-                </TabPanel>
-                <TabPanel value={value} index={1} dir={theme.direction}>
-                  <Codes />
-                </TabPanel>
-                <TabPanel value={value} index={2} dir={theme.direction}>
-                  <Ratings />
-                </TabPanel>
-              </SwipeableViews>
-            </Card>
-            <Grid>
-              <Card
-                className={classes.profileCardHeight}
-                elevation={2}
-                className={classes.marginTop}
-              >
-                <CardContent>
-                  <Typography variant="h5" display="block">
-                    Ratings
-                  </Typography>
-                  <RatingBars />
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-          <Grid>
-           
-          </Grid>
-        </Grid>
-      </Box>
-    );
-  
+                </StyledTabs>
+              </div>
+            </AppBar>
+            <SwipeableViews
+              axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+              index={value}
+              onChangeIndex={handleChangeIndex}
+            >
+              <TabPanel value={value} index={0} dir={theme.direction}>
+                <Messages />
+              </TabPanel>
+              <TabPanel value={value} index={1} dir={theme.direction}>
+                <Codes />
+              </TabPanel>
+              <TabPanel value={value} index={2} dir={theme.direction}>
+                <Ratings />
+              </TabPanel>
+            </SwipeableViews>
+          </Card> </Grid>
+       
+
+        
+         
+       
+        <Grid></Grid>
+      </Grid>
+    </Box>
+  );
 }
-
-
-

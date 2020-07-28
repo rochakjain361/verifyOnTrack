@@ -122,8 +122,8 @@ class index extends Component {
     const { classes } = this.props;
 
     return (
-      <div style={{ marginTop: 10 }}>
-        <Grid container style={{ marginTop: 15 }}>
+      <div >
+        <Grid container >
           {this.state.loading ? (
             <>
               <Grid container justify="center">
@@ -161,8 +161,8 @@ class index extends Component {
                 },
               ]}
               type="bar"
-              width={"500px"}
-              height={"300px"}
+              width={"500"}
+              height={"300"}
             />
           )}
         </Grid>

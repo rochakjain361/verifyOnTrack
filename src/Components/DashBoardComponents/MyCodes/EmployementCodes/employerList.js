@@ -17,6 +17,7 @@ import {
   RadioGroup,
   Box,
   Divider,
+  FormLabel,
 } from "@material-ui/core/";
 
 import {
@@ -61,8 +62,8 @@ function EmployerList(props) {
   const [Jobcategory, setJobcategory] = React.useState([]);
   const [commentdialog, setcommentdialog] = React.useState(false);
   const [updateid, setupdateid] = React.useState();
-  const [commentbyemployer,setcommentbyemployer]=React.useState([])
-const [getcommentemployerid,setemployerid]=React.useState()
+  const [commentbyemployer, setcommentbyemployer] = React.useState([]);
+  const [getcommentemployerid, setemployerid] = React.useState();
   const [comentdata, setCommentdata] = React.useState({
     employer: "",
     comment: "",
@@ -120,47 +121,284 @@ const [getcommentemployerid,setemployerid]=React.useState()
         </DialogTitle>
         <DialogContent>
           {data[currentupdateid].empUpdate.length > 0 ? (
+            // <>
+            //   <Typography variant="body1" gutterBottom>
+            //     <Grid container direction="row">
+            //       <Box fontWeight="fontWeightBold" p={1}>
+            //         Jobtitle:
+            //       </Box>
+            //       <Box fontWeight="fontWeightRegular" p={1}>
+            //         {data[currentupdateid].empUpdate[0].jobTitle}
+            //       </Box>
+            //     </Grid>
+            //   </Typography>
+            //   <Typography variant="body1" gutterBottom>
+            //     <Grid container direction="row">
+            //       <Box fontWeight="fontWeightBold" p={1}>
+            //         JobDescription:
+            //       </Box>
+            //       <Box fontWeight="fontWeightRegular" p={1}>
+            //         {data[currentupdateid].empUpdate[0].jobDescription}
+            //       </Box>
+            //     </Grid>
+            //   </Typography>
+            //   <Typography variant="body1" gutterBottom>
+            //     <Grid container direction="row">
+            //       <Box fontWeight="fontWeightBold" p={1}>
+            //         Jobcategory:
+            //       </Box>
+            //       <Box fontWeight="fontWeightRegular" p={1}>
+            //         {data[currentupdateid].empUpdate[0].jobCategory_name_field}
+            //       </Box>
+            //     </Grid>
+            //   </Typography>
+            //   <Typography variant="body1" gutterBottom>
+            //     <Grid container direction="row">
+            //       <Box fontWeight="fontWeightBold" p={1}>
+            //         StatusReason:
+            //       </Box>
+            //       <Box fontWeight="fontWeightRegular" p={1}>
+            //         {data[currentupdateid].empUpdate[0].statusReason}
+            //       </Box>
+            //     </Grid>
+            //   </Typography>
+            // </>
             <>
-              <Typography variant="body1" gutterBottom>
-                <Grid container direction="row">
-                  <Box fontWeight="fontWeightBold" p={1}>
-                    Jobtitle:
-                  </Box>
-                  <Box fontWeight="fontWeightRegular" p={1}>
-                    {data[currentupdateid].empUpdate[0].jobTitle}
-                  </Box>
+              <Grid
+                container
+                justify="center"
+                direction="row"
+                alignItems="center"
+                spacing={1}
+                // style={{ padding: 20 }}
+              >
+                <Grid item xs={12}>
+                  <FormLabel component="legend">Employee Details:</FormLabel>
                 </Grid>
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                <Grid container direction="row">
-                  <Box fontWeight="fontWeightBold" p={1}>
-                    JobDescription:
-                  </Box>
-                  <Box fontWeight="fontWeightRegular" p={1}>
-                    {data[currentupdateid].empUpdate[0].jobDescription}
-                  </Box>
+
+                <>
+                  <>
+                    <Grid item xs={12}>
+                      <TextField
+                        id="fullName"
+                        label="Company Name"
+                        defaultValue={data[currentupdateid].company.companyName}
+                        type="text"
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        fullWidth
+                        size="small"
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        id="jobTitle"
+                        label="Job Title"
+                        defaultValue={
+                          data[currentupdateid].empUpdate[0].statusReason
+                        }
+                        type="text"
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        fullWidth
+                        size="small"
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        id="jobCategory"
+                        label="Job Category"
+                        defaultValue={
+                          data[currentupdateid].empUpdate[0].updateStatus
+                        }
+                        type="text"
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        fullWidth
+                        size="small"
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        id="endDate2"
+                        label="End Date"
+                        defaultValue={
+                          data[currentupdateid].jobDetails.endDate === null
+                            ? "NA"
+                            : data[currentupdateid].jobDetails.endDate
+                        }
+                        type="text"
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        fullWidth
+                        size="small"
+                      />
+                    </Grid>
+                  </>
+                </>
+              </Grid>
+
+              <>
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                  spacing={2}
+                >
+                  <Grid item xs={6}>
+                    <Paper variant="outlined" style={{ padding: 15 }}>
+                      <Grid
+                        container
+                        justify="flex-start"
+                        direction="row"
+                        alignItems="center"
+                        spacing={2}
+                        // style={{ padding: 20 }}
+                      >
+                        <Grid item xs={12}>
+                          <FormLabel component="legend">
+                            Original details:
+                          </FormLabel>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                          <TextField
+                            id="originaljobTitle"
+                            label="Job Title"
+                            defaultValue={
+                              data[currentupdateid].jobDetails.jobTitle
+                            }
+                            type="text"
+                            InputProps={{
+                              readOnly: true,
+                            }}
+                            fullWidth
+                            size="small"
+                          />
+                        </Grid>
+
+                        <Grid item xs={12}>
+                          <TextField
+                            id="originaljobCategory"
+                            label="Job Category"
+                            defaultValue={
+                              data[currentupdateid].jobDetails
+                                .job_category_field
+                            }
+                            type="text"
+                            InputProps={{
+                              readOnly: true,
+                            }}
+                            fullWidth
+                            size="small"
+                          />
+                        </Grid>
+
+                        <Grid item xs={12} style={{ marginTop: 5 }}>
+                          <TextField
+                            id="originaljobDescription"
+                            label="Job Description"
+                            defaultValue={
+                              data[currentupdateid].jobDetails.jobDescription
+                            }
+                            type="text"
+                            InputProps={{
+                              readOnly: true,
+                            }}
+                            fullWidth
+                            size="small"
+                            variant="outlined"
+                            multiline
+                            rows={3}
+                          />
+                        </Grid>
+                      </Grid>
+                    </Paper>
+                  </Grid>
+
+                  <Grid item xs={6}>
+                    <Paper variant="outlined" style={{ padding: 15 }}>
+                      <Grid
+                        container
+                        justify="flex-start"
+                        direction="row"
+                        alignItems="center"
+                        spacing={2}
+                        // style={{ padding: 20 }}
+                      >
+                        <Grid item xs={12}>
+                          <FormLabel component="legend">
+                            Updated details:
+                          </FormLabel>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                          <TextField
+                            id="updatedjobTitle"
+                            label="Job Title"
+                            defaultValue={
+                              data[currentupdateid].empUpdate[0]["jobTitle"]
+                            }
+                            type="text"
+                            InputProps={{
+                              readOnly: true,
+                            }}
+                            fullWidth
+                            size="small"
+                          />
+                        </Grid>
+
+                        <Grid item xs={12}>
+                          <TextField
+                            id="updatedjobCategory"
+                            label="Job Category"
+                            defaultValue={
+                              data[currentupdateid].empUpdate[0][
+                                "jobCategory_name_field"
+                              ]
+                            }
+                            type="text"
+                            InputProps={{
+                              readOnly: true,
+                            }}
+                            fullWidth
+                            size="small"
+                          />
+                        </Grid>
+
+                        <Grid item xs={12} style={{ marginTop: 5 }}>
+                          <TextField
+                            id="updatedjobDescription"
+                            label="Job Description"
+                            defaultValue={
+                              data[currentupdateid].empUpdate[0][
+                                "jobDescription"
+                              ]
+                            }
+                            type="text"
+                            InputProps={{
+                              readOnly: true,
+                            }}
+                            fullWidth
+                            size="small"
+                            variant="outlined"
+                            multiline
+                            rows={3}
+                          />
+                        </Grid>
+                      </Grid>
+                    </Paper>
+                  </Grid>
                 </Grid>
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                <Grid container direction="row">
-                  <Box fontWeight="fontWeightBold" p={1}>
-                    Jobcategory:
-                  </Box>
-                  <Box fontWeight="fontWeightRegular" p={1}>
-                    {data[currentupdateid].empUpdate[0].jobCategory_name_field}
-                  </Box>
-                </Grid>
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                <Grid container direction="row">
-                  <Box fontWeight="fontWeightBold" p={1}>
-                    StatusReason:
-                  </Box>
-                  <Box fontWeight="fontWeightRegular" p={1}>
-                    {data[currentupdateid].empUpdate[0].statusReason}
-                  </Box>
-                </Grid>
-              </Typography>
+              </>
             </>
           ) : (
             console.log(
@@ -235,8 +473,7 @@ const [getcommentemployerid,setemployerid]=React.useState()
                   size="small"
                   onClick={() => {
                     setViewrating(false);
-                    setRatingentry([])
-
+                    setRatingentry([]);
                   }}
                 >
                   No
@@ -258,8 +495,7 @@ const [getcommentemployerid,setemployerid]=React.useState()
                   size="small"
                   onClick={() => {
                     setViewsurvey(false);
-                    setChoiceentry([])
-                    
+                    setChoiceentry([]);
                   }}
                 >
                   No
@@ -626,7 +862,6 @@ const [getcommentemployerid,setemployerid]=React.useState()
             Comment
           </DialogTitle>
           <DialogContent>
-          
             <Grid
               container
               // align="center"
@@ -686,7 +921,6 @@ const [getcommentemployerid,setemployerid]=React.useState()
                             
                         </div>
                     ))} */}
-
           </DialogContent>
           <DialogActions>
             <Button
@@ -837,7 +1071,7 @@ const [getcommentemployerid,setemployerid]=React.useState()
                       size="small"
                       onClick={() => {
                         setViewrating(false);
-                        setRatingentry([])
+                        setRatingentry([]);
                       }}
                     >
                       No
@@ -859,7 +1093,7 @@ const [getcommentemployerid,setemployerid]=React.useState()
                       size="small"
                       onClick={() => {
                         setViewsurvey(false);
-                        setChoiceentry([])
+                        setChoiceentry([]);
                       }}
                     >
                       No
@@ -957,7 +1191,7 @@ const [getcommentemployerid,setemployerid]=React.useState()
                             });
                           }}
                         >
-                          Terminate 
+                          Terminate
                         </Button>
                       ) : null}
                       {row.showConfirmTermination ? (
@@ -1017,14 +1251,11 @@ const [getcommentemployerid,setemployerid]=React.useState()
                         color="primary"
                         variant="outlined"
                         onClick={() => {
-                          
                           // getcommentbyemployer(row.company.employer)
                           setcommentdialog(true);
                           setCommentdata({
                             ...comentdata,
                             employer: row.company.employer,
-
-                           
                           });
                         }}
                       >
