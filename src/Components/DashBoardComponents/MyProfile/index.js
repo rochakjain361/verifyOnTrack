@@ -542,9 +542,6 @@ class MyProfile extends Component {
        "verType":"Profile",
        "objId": id
      }
-
-    //  bodyFormData.append("verType","Profile");
-    //  bodyFormData.append("objId", id);
     await axios
       .post(
         "http://3.22.17.212:8000/api/v1/codes/evaluation/new-code",

@@ -76,7 +76,7 @@ export class index extends Component {
            addnewdialog: false,
            types: [],
            pictureloading: true,
-           uploadpictures:"",
+           uploadpictures: "",
          };
          async componentDidMount() {
            this.setState({ loading: true });
@@ -127,14 +127,14 @@ export class index extends Component {
              token,
              ""
            ).then((res) => {
-              pictures = res.data;
+             pictures = res.data;
              console.log("pictures", pictures);
              this.setState({ pictureloading: false });
            });
          }
          async postpictures(id) {
            this.setState({ uploadDialougeOpen: false });
-           
+
            let bodyFormData = new FormData();
            bodyFormData.append("empEdu", id);
            bodyFormData.append("picture", this.state.uploadpictures);
@@ -146,7 +146,6 @@ export class index extends Component {
            ).then((response) => {
              console.log(response);
            });
-         
          }
          async fetchhistory(index) {
            this.setState({ historyDialogeOpen: true, historyloading: true });
@@ -185,6 +184,21 @@ export class index extends Component {
              console.log(response);
            });
            this.getAcademics();
+         }
+         async verification(id) {
+          
+           let bodyFormData = {
+             verType: "Academic",
+             objId: id,
+           };
+           await post(
+               "http://3.22.17.212:8000/api/v1/codes/evaluation/new-code",
+               token,
+               bodyFormData,
+             )
+             .then((res) => {
+               this.getAcademics();
+             });
          }
          gettable() {
            return (
@@ -259,6 +273,7 @@ export class index extends Component {
                              "Pictures",
                              "Update",
                              "History",
+                             "Verification",
                            ].map((text, index) => (
                              <TableCell
                                style={{ fontWeight: "bolder" }}
@@ -332,6 +347,7 @@ export class index extends Component {
                              </TableCell>
                              <TableCell align="center">
                                <Button
+                                 disabled={row.status === "Audit In Progress"}
                                  color="primary"
                                  variant="outlined"
                                  onClick={() =>
@@ -354,6 +370,19 @@ export class index extends Component {
                                  History
                                </Button>
                              </TableCell>
+                             {row.showVerifyOnTrac_btn === true ? (
+                               <TableCell align="center">
+                                 <Button
+                                   variant="outlined"
+                                   color="default"
+                                   onClick={() => {
+                                     this.verification(row.id);
+                                   }}
+                                 >
+                                   Request for verification
+                                 </Button>
+                               </TableCell>
+                             ) : null}
                            </TableRow>
                          ))}
                        </TableBody>
