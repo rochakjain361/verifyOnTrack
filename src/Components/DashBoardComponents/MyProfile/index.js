@@ -531,6 +531,28 @@ class MyProfile extends Component {
         this.setState({ historyloading: false });
       });
   }
+  async verification(id){
+     let headers = {
+       headers: {
+         Authorization: token
+        
+       },
+     };
+     let bodyFormData = {
+       "verType":"Profile",
+       "objId": id
+     }
+
+    //  bodyFormData.append("verType","Profile");
+    //  bodyFormData.append("objId", id);
+    await axios
+      .post(
+        "http://3.22.17.212:8000/api/v1/codes/evaluation/new-code",
+        bodyFormData,
+        headers
+      )
+      .then((res) => {this.getprofiledata()});
+  }
 
 
   getTableOfEmployees() {
@@ -550,11 +572,9 @@ class MyProfile extends Component {
                   "Created On",
                   "Update",
                   "History",
+                  "Verification",
                 ].map((text, index) => (
-                  <TableCell
-                    style={{ fontWeight: "bolder", }}
-                    align="center"
-                  >
+                  <TableCell style={{ fontWeight: "bolder" }} align="center">
                     {text}
                   </TableCell>
                 ))}
@@ -574,7 +594,13 @@ class MyProfile extends Component {
                       /> */}
                     </Avatar>
                   </TableCell>
-                  <TableCell align="center" style={{textTransform: 'capitalize'}}> {row.firstname} {row.middlename} {row.surname}</TableCell>
+                  <TableCell
+                    align="center"
+                    style={{ textTransform: "capitalize" }}
+                  >
+                    {" "}
+                    {row.firstname} {row.middlename} {row.surname}
+                  </TableCell>
                   <TableCell align="center">{row.sex}</TableCell>
                   <TableCell align="center">{row.dob}</TableCell>
                   <TableCell align="center">{row.source_name_field}</TableCell>
@@ -582,29 +608,31 @@ class MyProfile extends Component {
                   <TableCell component="th" align="center">
                     {new Date(row.created_on).toDateString()}
                   </TableCell>
-                  <TableCell align="center">
-                    <Button
-                      color="primary"
-                      variant="outlined"
-                      onClick={() =>
-                        this.setState({
-                          updateDialogOpen: true,
-                          selectedIndex: index,
-                          updatedlastname: result[index].surname,
-                          updatedfirstname: result[index].firstname,
-                          updatedMiddlename: result[index].middlename,
-                          updatedDob: result[index].dob,
-                          updateresponse:"",
-                          file:""
-                          
+                 
+                    <TableCell align="center">
+                      <Button
+                        color="primary"
+                        variant="outlined"
+                        disabled={row.status === "Audit In Progress"}
+                        onClick={() =>
+                          this.setState({
+                            updateDialogOpen: true,
+                            selectedIndex: index,
+                            updatedlastname: result[index].surname,
+                            updatedfirstname: result[index].firstname,
+                            updatedMiddlename: result[index].middlename,
+                            updatedDob: result[index].dob,
+                            updateresponse: "",
+                            file: "",
 
-                          // add the updatedstate elements here after passing the token and adding data
-                        })
-                      }
-                    >
-                      Update
-                    </Button>
-                  </TableCell>
+                            // add the updatedstate elements here after passing the token and adding data
+                          })
+                        }
+                      >
+                        Update
+                      </Button>
+                    </TableCell>
+                  
                   <TableCell align="center">
                     <Button
                       variant="outlined"
@@ -619,6 +647,19 @@ class MyProfile extends Component {
                       History
                     </Button>
                   </TableCell>
+                  {row.showVerifyOnTrac_btn === true ? (
+                    <TableCell align="center">
+                      <Button
+                        variant="outlined"
+                        color="default"
+                        onClick={() => {
+                          this.verification(row.id);
+                        }}
+                      >
+                        Request for verification
+                      </Button>
+                    </TableCell>
+                  ) : null}
                 </TableRow>
               ))}
             </TableBody>
@@ -626,147 +667,151 @@ class MyProfile extends Component {
           {this.state.selectedIndex === -1 ? (
             <div />
           ) : (
-              <Dialog
-                open={this.state.updateDialogOpen}
-                onClose={() => this.setState({ updateDialogOpen: false,buttondisabled: "disabled" })}
-                aria-labelledby="form-dialog-title"
-              >
-                <DialogTitle id="form-dialog-title" align="center">Update Profile</DialogTitle>
-                <DialogContent>
-                  <DialogContentText align="center">
-                    Enter the details of your profile to be updated
+            <Dialog
+              open={this.state.updateDialogOpen}
+              onClose={() =>
+                this.setState({
+                  updateDialogOpen: false,
+                  buttondisabled: "disabled",
+                })
+              }
+              aria-labelledby="form-dialog-title"
+            >
+              <DialogTitle id="form-dialog-title" align="center">
+                Update Profile
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText align="center">
+                  Enter the details of your profile to be updated
                 </DialogContentText>
 
-                  <Grid
-                    container
-                    justify="flex-start"
-                    direction="row"
-                    alignItems="center"
-                    spacing={3}
-                  >
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="firstName"
-                        label="First Name"
-                        defaultValue={this.state.updatedfirstname}
-                        onChange={(event) =>
-                          this.setState({ updatedfirstname: event.target.value })
-                        }
-                        type="text"
-                        fullWidth
-                      />
-                    </Grid>
-
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="middleName"
-                        label="Middle Name"
-                        defaultValue={this.state.updatedMiddlename}
-                        onChange={(event) =>
-                          this.setState({ updatedMiddlename: event.target.value })
-                        }
-                        type="text"
-                        fullWidth
-                      />
-                    </Grid>
-
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="surname"
-                        label="Surname"
-                        defaultValue={this.state.updatedlastname}
-                        onChange={(event) => {
-                          this.setState({ updatedlastname: event.target.value });
-                        }}
-                        type="text"
-                        fullWidth
-                      />
-                    </Grid>
-
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="dob"
-                        label="Date of birth"
-                        defaultValue={this.state.updatedDob}
-                        onChange={(event) => {
-                          this.setState({ updatedDob: event.target.value });
-                          console.log(event.target.value);
-                        }}
-                        type="date"
-                        fullWidth
-                      />
-                    </Grid>
-
-
-
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="chooseFile"
-                        label="Choose File"
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <CloudUploadIcon />
-                            </InputAdornment>
-                          ),
-                        }}
-                        onChange={(event) => {
-                          this.setState({ file: event.target.files[0] });
-                          console.log(event.target.files[0]);
-                        }}
-                        type="file"
-                        fullWidth
-                      />
-                    </Grid>
-
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="reasonForUpdating"
-                        label="Reason for updating:"
-                        helperText="update reason can be less than 250 characters"
-                        onChange={(event) =>
-                          this.setState(
-                            {
-                              updatedReasonforupdating: event.target.value,
-                            },
-                            this.reasonforupdatevalidcheck(event)
-                          )
-                        }
-                        type="text"
-                        fullWidth
-                      />
-                    </Grid>
+                <Grid
+                  container
+                  justify="flex-start"
+                  direction="row"
+                  alignItems="center"
+                  spacing={3}
+                >
+                  <Grid item fullWidth xs={12}>
+                    <TextField
+                      id="firstName"
+                      label="First Name"
+                      defaultValue={this.state.updatedfirstname}
+                      onChange={(event) =>
+                        this.setState({ updatedfirstname: event.target.value })
+                      }
+                      type="text"
+                      fullWidth
+                    />
                   </Grid>
-                </DialogContent>
-                <DialogActions style={{ padding: 10 }}>
-                  <Button
-                    disabled={this.state.buttondisabled}
-                    color="primary"
-                    variant="contained"
-                    onClick={() => {
-                      this.updatedetails();
-                    }}
-                  >
-                    Update
-                </Button>
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    onClick={() =>
-                      this.setState({
-                        updateDialogOpen: false,
-                        selectedIndex: -1,
-                        buttondisabled: "disabled"
 
-                      })
-                    }
-                  >
-                    Cancel
+                  <Grid item fullWidth xs={12}>
+                    <TextField
+                      id="middleName"
+                      label="Middle Name"
+                      defaultValue={this.state.updatedMiddlename}
+                      onChange={(event) =>
+                        this.setState({ updatedMiddlename: event.target.value })
+                      }
+                      type="text"
+                      fullWidth
+                    />
+                  </Grid>
+
+                  <Grid item fullWidth xs={12}>
+                    <TextField
+                      id="surname"
+                      label="Surname"
+                      defaultValue={this.state.updatedlastname}
+                      onChange={(event) => {
+                        this.setState({ updatedlastname: event.target.value });
+                      }}
+                      type="text"
+                      fullWidth
+                    />
+                  </Grid>
+
+                  <Grid item fullWidth xs={12}>
+                    <TextField
+                      id="dob"
+                      label="Date of birth"
+                      defaultValue={this.state.updatedDob}
+                      onChange={(event) => {
+                        this.setState({ updatedDob: event.target.value });
+                        console.log(event.target.value);
+                      }}
+                      type="date"
+                      fullWidth
+                    />
+                  </Grid>
+
+                  <Grid item fullWidth xs={12}>
+                    <TextField
+                      id="chooseFile"
+                      label="Choose File"
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <CloudUploadIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                      onChange={(event) => {
+                        this.setState({ file: event.target.files[0] });
+                        console.log(event.target.files[0]);
+                      }}
+                      type="file"
+                      fullWidth
+                    />
+                  </Grid>
+
+                  <Grid item fullWidth xs={12}>
+                    <TextField
+                      id="reasonForUpdating"
+                      label="Reason for updating:"
+                      helperText="update reason can be less than 250 characters"
+                      onChange={(event) =>
+                        this.setState(
+                          {
+                            updatedReasonforupdating: event.target.value,
+                          },
+                          this.reasonforupdatevalidcheck(event)
+                        )
+                      }
+                      type="text"
+                      fullWidth
+                    />
+                  </Grid>
+                </Grid>
+              </DialogContent>
+              <DialogActions style={{ padding: 10 }}>
+                <Button
+                  disabled={this.state.buttondisabled}
+                  color="primary"
+                  variant="contained"
+                  onClick={() => {
+                    this.updatedetails();
+                  }}
+                >
+                  Update
                 </Button>
-                </DialogActions>
-              </Dialog>
-            )}
-             {this.updatesnackbar()}
+                <Button
+                  color="secondary"
+                  variant="contained"
+                  onClick={() =>
+                    this.setState({
+                      updateDialogOpen: false,
+                      selectedIndex: -1,
+                      buttondisabled: "disabled",
+                    })
+                  }
+                >
+                  Cancel
+                </Button>
+              </DialogActions>
+            </Dialog>
+          )}
+          {this.updatesnackbar()}
         </TableContainer>
 
         <Dialog
@@ -776,7 +821,9 @@ class MyProfile extends Component {
           onClose={() => this.setState({ historyDialogeOpen: false })}
           aria-labelledby="responsive-dialog-title"
         >
-          <DialogTitle id="form-dialog-title" align="center">Profile History</DialogTitle>
+          <DialogTitle id="form-dialog-title" align="center">
+            Profile History
+          </DialogTitle>
           {/* <DialogContent> */}
           <TableContainer p={3}>
             <Table stickyHeader>
@@ -792,10 +839,7 @@ class MyProfile extends Component {
                     "Records updated date",
                     "Updated reason",
                   ].map((text, index) => (
-                    <TableCell
-                      style={{ fontWeight: "bolder", }}
-                      align="left"
-                    >
+                    <TableCell style={{ fontWeight: "bolder" }} align="left">
                       {text}
                     </TableCell>
                   ))}
@@ -805,29 +849,28 @@ class MyProfile extends Component {
               {this.state.historyloading ? (
                 this.isloading()
               ) : (
-                  <TableBody>
-                    {history.map((row, index) => (
-                      <TableRow key={row.id}>
-                        <TableCell align="left">
-                          <Avatar src={row.picture}>Picture</Avatar>
-                        </TableCell>
-                        <TableCell align="left">{row.firstname}</TableCell>
-                        <TableCell align="left">{row.middlename}</TableCell>
-                        <TableCell align="left">{row.surname}</TableCell>
-                        <TableCell align="left">
-                          {new Date(row.dob).toDateString()}
-                        </TableCell>
-
-                        {/* <TableCell align="center">{row.source_name_field}</TableCell> */}
-                        <TableCell align="left">{row.sex}</TableCell>{" "}
-                        <TableCell component="th" align="left">
-                          {new Date(row.created_on).toDateString()}
-                        </TableCell>
-                        <TableCell align="left">{row.update_reason}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                )}
+                <TableBody>
+                  {history.map((row, index) => (
+                    <TableRow key={row.id}>
+                      <TableCell align="left">
+                        <Avatar src={row.picture}>Picture</Avatar>
+                      </TableCell>
+                      <TableCell align="left">{row.firstname}</TableCell>
+                      <TableCell align="left">{row.middlename}</TableCell>
+                      <TableCell align="left">{row.surname}</TableCell>
+                      <TableCell align="left">
+                        {new Date(row.dob).toDateString()}
+                      </TableCell>
+                      {/* <TableCell align="center">{row.source_name_field}</TableCell> */}
+                      <TableCell align="left">{row.sex}</TableCell>{" "}
+                      <TableCell component="th" align="left">
+                        {new Date(row.created_on).toDateString()}
+                      </TableCell>
+                      <TableCell align="left">{row.update_reason}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              )}
             </Table>
           </TableContainer>
           {/* </DialogContent> */}

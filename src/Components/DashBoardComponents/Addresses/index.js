@@ -151,6 +151,30 @@ class Addresses extends PureComponent {
         console.table("addresses", this.state.result);
       });
   }
+  async verification(id) {
+    let headers = {
+      headers: {
+        Authorization: token,
+      },
+    };
+    let bodyFormData = {
+      verType: "Address",
+      objId: id,
+    };
+
+    //  bodyFormData.append("verType","Profile");
+    //  bodyFormData.append("objId", id);
+    await axios
+      .post(
+        "http://3.22.17.212:8000/api/v1/codes/evaluation/new-code",
+        bodyFormData,
+        headers
+      )
+      .then((res) => {
+        this.getaddressdata();
+      });
+  }
+
   async componentDidMount() {
     token = localStorage.getItem("Token");
     id = localStorage.getItem("id");
@@ -399,6 +423,7 @@ class Addresses extends PureComponent {
                       "Verifier",
                       "Update",
                       "History",
+                      "Verification",
                     ].map((text, index) => (
                       <TableCell
                         style={{ fontWeight: "bolder" }}
@@ -444,6 +469,7 @@ class Addresses extends PureComponent {
                       </TableCell>
                       <TableCell align="center" size="small" padding="none">
                         <Button
+                          disabled={row.status === "Audit In Progress"}
                           size="small"
                           color="primary"
                           variant="outlined"
@@ -511,6 +537,20 @@ class Addresses extends PureComponent {
                           History
                         </Button>
                       </TableCell>
+                      {row.showVerifyOnTrac_btn === true ? (
+                        <TableCell align="center">
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            color="default"
+                            onClick={() => {
+                              this.verification(row.id);
+                            }}
+                          >
+                            Request for verification
+                          </Button>
+                        </TableCell>
+                      ) : null}
                     </TableRow>
                   ))}
                 </TableBody>
@@ -531,12 +571,10 @@ class Addresses extends PureComponent {
                   Update address
                 </DialogTitle>
                 <DialogContent>
-               
-
                   <Box display="flex" flexDirection="row" width={1}>
                     {/* <Box p={2} width={1 / 2} xs={12}> */}
-                   
-                    <Grid container style={{position:"relative"}}>
+
+                    <Grid container style={{ position: "relative" }}>
                       <Grid item xs={12} sm={6}>
                         <DialogContentText align="center">
                           Enter the details of your address
@@ -807,72 +845,78 @@ class Addresses extends PureComponent {
                       </Grid>
                       {/* </Box> */}
 
-                      <Box p={1}  display={{ xs: 'none', sm: 'block' }}>
-                      <Grid item xs={12} sm={6}>
-                        <Map
-                          google={this.props.google}
-                          zoom={6}
-                          onClick={this.onMarkerClick}
-                          initialCenter={{
-                            lat: this.state.location.latitude,
-                            lng: this.state.location.longtitude,
-                          }}
-                          style={{ height: "75%", width: "40%" ,  position: 'relative',  
-                        }}
-                          fullscreenControl={true}
-                        >
-                          <Marker
-                            // initial={{
-                            //   lat: this.state.updatedlatitude,
-                            //   lng: this.state.updatedlongititude,
-                            // }}
-
-                            position={{
+                      <Box p={1} display={{ xs: "none", sm: "block" }}>
+                        <Grid item xs={12} sm={6}>
+                          <Map
+                            google={this.props.google}
+                            zoom={6}
+                            onClick={this.onMarkerClick}
+                            initialCenter={{
                               lat: this.state.location.latitude,
                               lng: this.state.location.longtitude,
                             }}
-                          />
-                          <InfoWindow
-                            onClose={this.onInfoWindowClose}
-                          ></InfoWindow>
-                        </Map>
-                      </Grid>
-                    </Box>
-                      <Grid item xs={12} sm={6}>
-                      <Box  display={{ xs: 'block', sm: 'none',  }}>
-                        <Map
-                          google={this.props.google}
-                          zoom={6}
-                          onClick={this.onMarkerClick}
-                          initialCenter={{
-                            lat: this.state.location.latitude,
-                            lng: this.state.location.longtitude,
-                          }}
-                          style={{ height: "55%", width: "90%" ,position:"absolute"  
-                        }}
-                          fullscreenControl={true}
-                        >
-                          <Marker
-                            // initial={{
-                            //   lat: this.state.updatedlatitude,
-                            //   lng: this.state.updatedlongititude,
-                            // }}
+                            style={{
+                              height: "75%",
+                              width: "40%",
+                              position: "relative",
+                            }}
+                            fullscreenControl={true}
+                          >
+                            <Marker
+                              // initial={{
+                              //   lat: this.state.updatedlatitude,
+                              //   lng: this.state.updatedlongititude,
+                              // }}
 
-                            position={{
+                              position={{
+                                lat: this.state.location.latitude,
+                                lng: this.state.location.longtitude,
+                              }}
+                            />
+                            <InfoWindow
+                              onClose={this.onInfoWindowClose}
+                            ></InfoWindow>
+                          </Map>
+                        </Grid>
+                      </Box>
+                      <Grid item xs={12} sm={6}>
+                        <Box display={{ xs: "block", sm: "none" }}>
+                          <Map
+                            google={this.props.google}
+                            zoom={6}
+                            onClick={this.onMarkerClick}
+                            initialCenter={{
                               lat: this.state.location.latitude,
                               lng: this.state.location.longtitude,
                             }}
-                          />
-                          <InfoWindow
-                            onClose={this.onInfoWindowClose}
-                          ></InfoWindow>
-                        </Map>
-                    </Box>
+                            style={{
+                              height: "55%",
+                              width: "90%",
+                              position: "absolute",
+                            }}
+                            fullscreenControl={true}
+                          >
+                            <Marker
+                              // initial={{
+                              //   lat: this.state.updatedlatitude,
+                              //   lng: this.state.updatedlongititude,
+                              // }}
+
+                              position={{
+                                lat: this.state.location.latitude,
+                                lng: this.state.location.longtitude,
+                              }}
+                            />
+                            <InfoWindow
+                              onClose={this.onInfoWindowClose}
+                            ></InfoWindow>
+                          </Map>
+                        </Box>
                       </Grid>
                     </Grid>
                   </Box>
                 </DialogContent>
-                <DialogActions >
+                <DialogActions>
                   <Button
                     color="primary"
                     variant="contained"
