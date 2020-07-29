@@ -43,6 +43,8 @@ export class Employeedetails extends Component {
       fax: "",
       logo: null,
       category: "",
+      regnumber:"",
+      regDate:"",
      
 
       updateDialogOpen: false,
@@ -58,6 +60,8 @@ export class Employeedetails extends Component {
     }
     bodyFormData.append("fax", this.state.fax);
     bodyFormData.append("category", this.state.category);
+    bodyFormData.append("regNum",this.state.regnumber);
+    bodyFormData.append("regDate", this.state.regDate);
 
     put(
       "http://3.22.17.212:8000/api/v1/employers/postdetails",
@@ -143,9 +147,8 @@ export class Employeedetails extends Component {
 
             <Grid item fullWidth xs={12}>
               <TextField
-                id="surname"
+                id="Fax"
                 label="Fax"
-                value={this.state.lastname}
                 // defaultValue={result[this.state.selectedIndex].surname}
                 onChange={(event) => {
                   // this.capitalizelastname(event.target.value)
@@ -153,6 +156,40 @@ export class Employeedetails extends Component {
                   // console.log(this.state.lastname);
                 }}
                 type="text"
+                fullWidth
+              />
+            </Grid>
+            <Grid item fullWidth xs={12}>
+              <TextField
+                id="Registration Number"
+                label="Registration Number"
+                // defaultValue={result[this.state.selectedIndex].surname}
+                onChange={(event) => {
+                  // this.capitalizelastname(event.target.value)
+                  this.setState({ regnumber: event.target.value });
+                  // console.log(this.state.lastname);
+                }}
+                type="text"
+                fullWidth
+              />
+            </Grid>
+            <Grid item fullWidth xs={12}>
+              <TextField
+                id="registration date"
+                size="small"
+                // variant="outlined"
+                label="Registration Date"
+                format={false}
+                margin="dense"
+                InputLabelProps={{ shrink: true, required: true }}
+                // defaultValue={result[this.state.selectedIndex].dob}
+                onChange={(event) => {
+                  this.setState(
+                    { regDate: event.target.value },
+                  
+                  );
+                }}
+                type="date"
                 fullWidth
               />
             </Grid>
@@ -314,12 +351,42 @@ export class Employeedetails extends Component {
                 fullWidth
               />
             </Grid>
-
+            <Grid item fullWidth xs={12}>
+              <TextField
+                id="Registration Number"
+                label="Registration Number"
+                 defaultValue={this.state.regnumber}
+                onChange={(event) => {
+                  // this.capitalizelastname(event.target.value)
+                  this.setState({ regnumber: event.target.value });
+                  // console.log(this.state.lastname);
+                }}
+                type="text"
+                fullWidth
+              />
+            </Grid>
+            <Grid item fullWidth xs={12}>
+              <TextField
+                id="registration date"
+                size="small"
+                // variant="outlined"
+                label="Registration Date"
+                format={false}
+                margin="dense"
+                InputLabelProps={{ shrink: true, required: true }}
+                 defaultValue={this.state.regDate}
+                onChange={(event) => {
+                  this.setState({ regDate: event.target.value });
+                }}
+                type="date"
+                fullWidth
+              />
+            </Grid>
             <Grid item fullWidth xs={12}>
               <FormControl fullWidth>
                 <InputLabel id="gender">Cateogry</InputLabel>
                 <Select
-                  label="gender"
+                  // label="gender"
                   id="gender"
                   // value={age}
                   defaultValue={this.state.result.category}
@@ -483,9 +550,7 @@ export class Employeedetails extends Component {
                   >
                     {this.state.result.email}
                   </Typography>
-                  <Typography variant="h5">
-                    {this.state.result.fax}
-                  </Typography>
+                  <Typography variant="h5">{this.state.result.fax}</Typography>
                   <Typography variant="h5">
                     {this.state.result.phone}
                   </Typography>
@@ -503,6 +568,8 @@ export class Employeedetails extends Component {
                       "Email",
                       "Fax",
                       "Phone",
+                      "Registration Number",
+                      "Registration Date",
                       "Actions",
                     ].map((text, index) => (
                       <TableCell
@@ -519,8 +586,7 @@ export class Employeedetails extends Component {
                   <TableRow>
                     <TableCell align="center">
                       <Grid container justify="center">
-
-                      <Avatar src={this.state.result.logo}></Avatar>
+                        <Avatar src={this.state.result.logo}></Avatar>
                       </Grid>
                     </TableCell>
                     <TableCell align="center">
@@ -539,9 +605,14 @@ export class Employeedetails extends Component {
                     <TableCell align="center">
                       {this.state.result.phone}
                     </TableCell>
-                    {/* <TableCell component="th" align="center">
-                    {new Date(row.created_on).toDateString()}
-                  </TableCell> */}
+                    <TableCell align="center">
+                      {this.state.result.regNum}
+                    </TableCell>
+                    
+
+                    <TableCell  align="center">
+                    {new Date(this.state.result.regDate).toDateString()}
+                  </TableCell>
                     <TableCell align="center">
                       <Button
                         color="primary"
@@ -549,11 +620,12 @@ export class Employeedetails extends Component {
                         onClick={() =>
                           this.setState({
                             updateDialogOpen: true,
-                           phone:this.state.result.phone,
-                           email:this.state.result.email,
-                           fax:this.state.result.fax,
-                           category:this.state.result.category,
-                          
+                            phone: this.state.result.phone,
+                            email: this.state.result.email,
+                            fax: this.state.result.fax,
+                            category: this.state.result.category,
+                            regnumber: this.state.result.regnumber,
+                            regDate: this.state.result.regDate,
 
                             // add the updatedstate elements here after passing the token and adding data
                           })

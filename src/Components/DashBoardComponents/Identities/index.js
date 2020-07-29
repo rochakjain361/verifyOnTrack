@@ -65,18 +65,18 @@ class Identities extends Component {
       updatedob: "",
       updatesex: "",
       updateidnumber: "",
-      updateidSource:"",
+      updateidSource: "",
       updatereason: "",
       historyloading: true,
       historyDialogeOpen: false,
       uploadpictures: "",
       pictureloading: "false",
-      result:[],
+      result: [],
       buttondisabled: "disabled",
-      addsnackbar:false,
-      addresponse:"",
-      updateresponse:"",
-      updatesnackbar:false,
+      addsnackbar: false,
+      addresponse: "",
+      updateresponse: "",
+      updatesnackbar: false,
     };
     // this.updateidentites= this.updateidentites.bind();
   }
@@ -84,68 +84,108 @@ class Identities extends Component {
     if (event.target.value.length > 0) {
       //  console.log(event.target.value);
       this.setState({ buttondisabled: "" });
-    }else if(event.target.value>250){
+    } else if (event.target.value > 250) {
       this.setState({ buttondisabled: "disabled" });
-    } 
-    else {
+    } else {
       this.setState({ buttondisabled: "disabled" });
     }
-
-
   };
   addsnackbar() {
-    return (
-      this.state.addresponse === 200 ?
-        (<div>
-
-          <Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ addsnackbar: false }) }>
-            <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addasnackbar }) }} severity="success">
+    return this.state.addresponse === 200 ? (
+      <div>
+        <Snackbar
+          open={this.state.addsnackbar}
+          autoHideDuration={3000}
+          onClick={() => this.setState({ addsnackbar: false })}
+        >
+          <Alert
+            onClose={() => {
+              this.setState({ addsnackbar: !this.state.addasnackbar });
+            }}
+            severity="success"
+          >
             Identites added sucessfully
-      </Alert>
-          </Snackbar>
-        </div>) : (<Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }}>
-          <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }} severity="error">
-            Something went wrong please try again
-      </Alert>
-        </Snackbar>))
-
+          </Alert>
+        </Snackbar>
+      </div>
+    ) : (
+      <Snackbar
+        open={this.state.addsnackbar}
+        autoHideDuration={3000}
+        onClick={() => {
+          this.setState({ addsnackbar: !this.state.addsnackbar });
+        }}
+      >
+        <Alert
+          onClose={() => {
+            this.setState({ addsnackbar: !this.state.addsnackbar });
+          }}
+          severity="error"
+        >
+          Something went wrong please try again
+        </Alert>
+      </Snackbar>
+    );
   }
   updatesnackbar() {
-    return (
-      this.state.updateresponse === 200 ?
-        (<div>
-          {console.log("//////////////////////////////////////")}
+    return this.state.updateresponse === 200 ? (
+      <div>
+        {console.log("//////////////////////////////////////")}
 
-          <Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ updatesnackbar: false }) }>
-            <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="success">
-              Identites updated sucessfully
-      </Alert>
-          </Snackbar>
-        </div>) : (<Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }}>
-          <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="error">
-            Something went wrong please try again
-      </Alert>
-        </Snackbar>))
-
+        <Snackbar
+          open={this.state.updatesnackbar}
+          autoHideDuration={3000}
+          onClick={() => this.setState({ updatesnackbar: false })}
+        >
+          <Alert
+            onClose={() => {
+              this.setState({ updatesnackbar: !this.state.updatesnackbar });
+            }}
+            severity="success"
+          >
+            Identites updated sucessfully
+          </Alert>
+        </Snackbar>
+      </div>
+    ) : (
+      <Snackbar
+        open={this.state.updatesnackbar}
+        autoHideDuration={3000}
+        onClick={() => {
+          this.setState({ updatesnackbar: !this.state.updatesnackbar });
+        }}
+      >
+        <Alert
+          onClose={() => {
+            this.setState({ updatesnackbar: !this.state.updatesnackbar });
+          }}
+          severity="error"
+        >
+          Something went wrong please try again
+        </Alert>
+      </Snackbar>
+    );
   }
-async getidentites(){
-  await axios
-    .get(
-      "http://3.22.17.212:8000/api/v1/employees/" + id + "/identities-by/" + id,
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    )
-    .then((res) => {
-      //result = res.data;
-      this.setState({result:res.data});
-      console.table("identites", this.state.result);
-    });
-}
+  async getidentites() {
+    await axios
+      .get(
+        "http://3.22.17.212:8000/api/v1/employees/" +
+          id +
+          "/identities-by/" +
+          id,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        //result = res.data;
+        this.setState({ result: res.data });
+        console.table("identites", this.state.result);
+      });
+  }
   async componentDidMount() {
-  
     token = localStorage.getItem("Token");
     id = localStorage.getItem("id");
     await this.getidentites();
@@ -186,12 +226,12 @@ async getidentites(){
     await axios
       .get(
         "http://3.22.17.212:8000/api/v1/employees/" +
-        id +
-        "/identities-by/" +
-        id +
-        "/idSources/" +
-        index +
-        "/history",
+          id +
+          "/identities-by/" +
+          id +
+          "/idSources/" +
+          index +
+          "/history",
         {
           headers: {
             Authorization: token,
@@ -227,9 +267,9 @@ async getidentites(){
       )
       .then((response) => {
         console.log(response);
-        this.setState({addresponse:response.status,addsnackbar: true})
+        this.setState({ addresponse: response.status, addsnackbar: true });
       });
-      await this.getidentites();
+    await this.getidentites();
   }
   async updateidentites(idsource) {
     this.setState({
@@ -257,14 +297,16 @@ async getidentites(){
       )
       .then((response) => {
         console.log(response);
-        this.setState({updateresponse:response.status, updatesnackbar: true })
+        this.setState({
+          updateresponse: response.status,
+          updatesnackbar: true,
+        });
       });
-      await this.getidentites();
+    await this.getidentites();
   }
   render() {
     return (
       <div>
-        
         {this.state.loading ? this.isloading() : this.getTableOfEmployees()}
 
         <Dialog
@@ -275,9 +317,9 @@ async getidentites(){
           aria-labelledby="responsive-dialog-title"
         >
           <DialogTitle id="form-dialog-title">
-          <Typography variant="subtitle1" gutterBottom align="center">
-          View pictures
-              </Typography>
+            <Typography variant="subtitle1" gutterBottom align="center">
+              View pictures
+            </Typography>
           </DialogTitle>
           <DialogContent>
             <Grid
@@ -286,22 +328,26 @@ async getidentites(){
               justify="space-evenly"
               alignItems="center"
             >
-                    <GridList cellHeight={160} style={{height:500,width:500}} cols={3}>
-              {this.state.pictureloading
-                ? this.isloading()
-                : pictures.map((pic, index) => (
-                  <GridListTile key={pic.id} cols={1}>
-                  <img src={pic.picture}  />
-                </GridListTile>
-                
+              <GridList
+                cellHeight={160}
+                style={{ height: 500, width: 500 }}
+                cols={3}
+              >
+                {this.state.pictureloading
+                  ? this.isloading()
+                  : pictures.map((pic, index) => (
+                      <GridListTile key={pic.id} cols={1}>
+                        <img src={pic.picture} />
+                      </GridListTile>
 
-                  // <Grid container>
-                  //     <Grid item xs={12}>
-                  // <image src={pic.picture}/>
-                  //       {/* {pic.picture} */}
-                  //     </Grid>
-                  //   </Grid>
-                  ))} </GridList>
+                      // <Grid container>
+                      //     <Grid item xs={12}>
+                      // <image src={pic.picture}/>
+                      //       {/* {pic.picture} */}
+                      //     </Grid>
+                      //   </Grid>
+                    ))}{" "}
+              </GridList>
             </Grid>
           </DialogContent>
           <DialogActions style={{ padding: 15 }}>
@@ -332,25 +378,18 @@ async getidentites(){
               ></TextField>
             </Grid>
             <Box p={1}>
-
-            <Grid
-           
-           container
-           direction="column-reverse"
-           
-           alignItems="flex-end"
-           >
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={() => {
-                  this.postpictures(this.state.pictureid);
-                }}
+              <Grid container direction="column-reverse" alignItems="flex-end">
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={() => {
+                    this.postpictures(this.state.pictureid);
+                  }}
                 >
-                upload
-              </Button>
-            </Grid>
-                </Box>
+                  upload
+                </Button>
+              </Grid>
+            </Box>
           </DialogContent>
         </Dialog>
         {this.updatesnackbar()}
@@ -361,11 +400,11 @@ async getidentites(){
             onClose={() => this.setState({ addDialogOpen: false })}
             aria-labelledby="form-dialog-title"
           >
-            <DialogTitle id="form-dialog-title" align='center' justify="center">
+            <DialogTitle id="form-dialog-title" align="center" justify="center">
               Add Identity
             </DialogTitle>
             <DialogContent>
-              <DialogContentText align='center'>
+              <DialogContentText align="center">
                 Enter the details of your identity
               </DialogContentText>
 
@@ -387,8 +426,6 @@ async getidentites(){
                     fullWidth
                   />
                 </Grid>
-
-                
 
                 <Grid item fullWidth xs={12}>
                   <FormControl fullWidth>
@@ -421,7 +458,7 @@ async getidentites(){
                 </Grid>
 
                 <Grid item fullWidth xs={12}>
-                  <FormControl fullWidth >
+                  <FormControl fullWidth>
                     <InputLabel id="idSource">Id Source</InputLabel>
                     <Select
                       labelId="idSource"
@@ -440,7 +477,7 @@ async getidentites(){
                   </FormControl>
                 </Grid>
                 <Grid item fullWidth xs={12}>
-                <InputLabel id="dob">Date of birth</InputLabel>
+                  <InputLabel id="dob">Date of birth</InputLabel>
                   <TextField
                     id="dob"
                     // variant="outlined"
@@ -486,7 +523,6 @@ async getidentites(){
           </Dialog>
         }
         {this.addsnackbar()}
-
       </div>
     );
   }
@@ -494,34 +530,38 @@ async getidentites(){
   adddata() {
     return (
       <>
-       <Grid item xs={12}>
-     
-       </Grid>
-      
+        <Grid item xs={12}></Grid>
+
         <Grid item xs={12}>
-            <Paper style={{ padding: 20 }} elevation={3}>
-            <Box p={8}   display="flex" flexDirection="column"  justifyContent='center' alignItems="center" style={{height: '50vh',}} >
+          <Paper style={{ padding: 20 }} elevation={3}>
+            <Box
+              p={8}
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+              style={{ height: "50vh" }}
+            >
               <Typography variant="h5" gutterBottom align="center">
                 Add Identites to improve ratings.
               </Typography>
 
               <Grid container justify="center" style={{ marginTop: 50 }}>
-              <Grid item>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => {
-                this.setState({ addDialogOpen: true });
-              }}
-            >
-              Add Identity
-            </Button>
-          
-        </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      this.setState({ addDialogOpen: true });
+                    }}
+                  >
+                    Add Identity
+                  </Button>
+                </Grid>
               </Grid>
-              </Box>
-            </Paper>
-          </Grid>
+            </Box>
+          </Paper>
+        </Grid>
       </>
     );
   }
@@ -531,10 +571,10 @@ async getidentites(){
     await axios
       .get(
         "http://3.22.17.212:8000/api/v1/employees/" +
-        id +
-        "/idSources/" +
-        idsource +
-        "/pics",
+          id +
+          "/idSources/" +
+          idsource +
+          "/pics",
         {
           headers: {
             Authorization: token,
@@ -548,7 +588,6 @@ async getidentites(){
       });
   }
   async postpictures(id) {
-
     this.setState({ uploadDialougeOpen: false });
     let headers = {
       headers: {
@@ -571,6 +610,26 @@ async getidentites(){
       });
     await this.getidentites();
   }
+  async verification(id) {
+    let headers = {
+      headers: {
+        Authorization: token,
+      },
+    };
+    let bodyFormData = {
+      verType: "Identity",
+      objId: id,
+    };
+    await axios
+      .post(
+        "http://3.22.17.212:8000/api/v1/codes/evaluation/new-code",
+        bodyFormData,
+        headers
+      )
+      .then((res) => {
+        this.getidentites();
+      });
+  }
 
   getTableOfEmployees() {
     return (
@@ -579,218 +638,250 @@ async getidentites(){
           this.adddata()
         ) : (
           <>
-          <Grid container direction="column" justify="center" alignItems="flex-end">
-            <Box p={2}>
-
-         
-
-          <Grid item>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => {
-                this.setState({ addDialogOpen: true });
-              }}
-              >
-              Add Identity
-            </Button>
-          </Grid>
-              </Box>
-        </Grid>
-          <TableContainer component={Paper} elevation={16}>
-            <Table stickyHeader>
-              <TableHead>
-                <TableRow style={{ backgroundColor: "black" }}>
-                  {[
-                    " Created Date",
-                    "Full Name",
-                    "Date of birth",
-                    "Sex",
-                    "Identity Source",
-                    "Identity Number",
-                    "Source",
-                    "Picture",
-                    "Verified by",
-                    "Update",
-                    "History",
-                  ].map((text, index) => (
-                    <TableCell
-                      style={{ fontWeight: "bolder",  }}
-                      align="center"
-                    >
-                      {text}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {this.state.result.map((row, index) => (
-                  <TableRow key={row.id}>
-                    <TableCell align="center">
-                      {new Date(row.created_on).toDateString()}
-                    </TableCell>
-                    <TableCell align="center">{row.fullname}</TableCell>
-                    <TableCell align="center">{row.dob}</TableCell>
-                    <TableCell align="center">{row.sex}</TableCell>
-                    <TableCell align="center">{row.idSource_name_field}</TableCell>
-                    <TableCell align="center">{row.idNumber}</TableCell>
-
-                    <TableCell align="center">{row.idSource_name_field}</TableCell>
-                    <TableCell align="center">
-                      <Grid
-                        container
-                        display="flex"
-                        direction="row"
-                        alignItems="center"
-                        justify="center"
-                        spacing={1}
-                      >
-                        <Grid item>
-                          <Button
-                            size="small"
-                            color="primary"
-                            variant="outlined"
-                            onClick={() => this.getpictures(row.idSource)}
-                          >
-                            View
-                          </Button>
-                        </Grid>
-                        <Grid item>
-                          <Button
-                            size="small"
-                            color="secondary"
-                            variant="outlined"
-                            onClick={() =>
-                              this.setState(
-                                {
-                                  uploadDialougeOpen: true,
-                                  pictureid: row.id,
-                                },
-                                console.log("picturedid", this.state.pictureid)
-                              )
-                            }
-                          >
-                            upload
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </TableCell>
-                    <TableCell align="center">{row.owner_name_field}</TableCell>
-
-                    <TableCell align="center">
-                      <Button
-                        color="primary"
-                        variant="outlined"
-                        onClick={() =>
-                          this.setState({
-                            updateDialogOpen: true,
-                            selectedIndex: index,
-                            updateFullName: this.state.result[index].fullname,
-                            updatedob: this.state.result[index].dob,
-                            updatesex: this.state.result[index].sex,
-                            updateidnumber: this.state.result[index].idNumber,
-                            updateidSource:this.state.result[index].idSource
-                          })
-                        }
-                      >
-                        Update
-                      </Button>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Button
-                        size="small"
-                        color="secondary"
-                        variant="outlined"
-                        onClick={() => this.getHistory(row.idSource)}
-                      >
-                        history
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            {this.state.selectedIndex === -1 ? (
-              <div />
-            ) : (
-              <Dialog
-                open={this.state.updateDialogOpen}
-                onClose={() => this.setState({ updateDialogOpen: false })}
-                aria-labelledby="form-dialog-title"
-              >
-                <DialogTitle id="form-dialog-title" align='center'>
-                  Update Identity
-                </DialogTitle>
-                <DialogContent>
-                  <DialogContentText align='center'>
-                    Type in details to update
-                  </DialogContentText>
-
-                  <Grid
-                    container
-                    justify="flex-start"
-                    direction="row"
-                    alignItems="center"
-                    spacing={3}
+            <Grid
+              container
+              direction="column"
+              justify="center"
+              alignItems="flex-end"
+            >
+              <Box p={2}>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      this.setState({ addDialogOpen: true });
+                    }}
                   >
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="fullName"
-                        label="Full name"
-                        defaultValue={this.state.updateFullName}
-                        onChange={(event) => {
-                          this.setState({ updateFullName: event.target.value });
-                        }}
-                        type="text"
-                        fullWidth
-                      />
-                    </Grid>
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="fullName"
-                        label="IdNumber"
-                        defaultValue={this.state.updateidnumber}
-                        onChange={(event) => {
-                          this.setState({ updateidnumber: event.target.value });
-                        }}
-                        type="text"
-                        fullWidth
-                      />
-                    </Grid>
+                    Add Identity
+                  </Button>
+                </Grid>
+              </Box>
+            </Grid>
+            <TableContainer component={Paper} elevation={16}>
+              <Table stickyHeader>
+                <TableHead>
+                  <TableRow style={{ backgroundColor: "black" }}>
+                    {[
+                      " Created Date",
+                      "Full Name",
+                      "Date of birth",
+                      "Sex",
+                      "Identity Source",
+                      "Identity Number",
+                      "Source",
+                      "Picture",
+                      "Verified by",
+                      "Update",
+                      "History",
+                      "Varification",
+                    ].map((text, index) => (
+                      <TableCell
+                        style={{ fontWeight: "bolder" }}
+                        align="center"
+                      >
+                        {text}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {this.state.result.map((row, index) => (
+                    <TableRow key={row.id}>
+                      <TableCell align="center">
+                        {new Date(row.created_on).toDateString()}
+                      </TableCell>
+                      <TableCell align="center">{row.fullname}</TableCell>
+                      <TableCell align="center">{row.dob}</TableCell>
+                      <TableCell align="center">{row.sex}</TableCell>
+                      <TableCell align="center">
+                        {row.idSource_name_field}
+                      </TableCell>
+                      <TableCell align="center">{row.idNumber}</TableCell>
 
-                    <Grid item fullWidth xs={12}>
-                    {/* <InputLabel id="dob">Date of birth</InputLabel> */}
-                      <TextField
-                        id="dob"
-                        label="Date of birth"
-                        defaultValue={this.state.updatedob}
-                        onChange={(event) => {
-                          this.setState({ updatedob: event.target.value });
-                        }}
-                        type="date"
-                        fullWidth
-                      />
-                    </Grid>
-
-                    <Grid item fullWidth xs={12}>
-                      <FormControl fullWidth>
-                        <InputLabel id="gender">Gender</InputLabel>
-                        <Select
-                          labelId="gender"
-                          id="gender"
-                          // value={age}
-                          defaultValue={this.state.updatesex}
-                          onChange={(event) => {
-                            this.setState({ updatesex: event.target.value });
-                          }}
+                      <TableCell align="center">
+                        {row.idSource_name_field}
+                      </TableCell>
+                      <TableCell align="center">
+                        <Grid
+                          container
+                          display="flex"
+                          direction="row"
+                          alignItems="center"
+                          justify="center"
+                          spacing={1}
                         >
-                          <MenuItem value={"Male"}>Male</MenuItem>
-                          <MenuItem value={"Female"}>Female</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
+                          <Grid item>
+                            <Button
+                              size="small"
+                              color="primary"
+                              variant="outlined"
+                              onClick={() => this.getpictures(row.idSource)}
+                            >
+                              View
+                            </Button>
+                          </Grid>
+                          <Grid item>
+                            <Button
+                              size="small"
+                              color="secondary"
+                              variant="outlined"
+                              onClick={() =>
+                                this.setState(
+                                  {
+                                    uploadDialougeOpen: true,
+                                    pictureid: row.id,
+                                  },
+                                  console.log(
+                                    "picturedid",
+                                    this.state.pictureid
+                                  )
+                                )
+                              }
+                            >
+                              upload
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      </TableCell>
+                      <TableCell align="center">
+                        {row.owner_name_field}
+                      </TableCell>
 
-                    {/* <Grid item fullWidth xs={12}>
+                      <TableCell align="center">
+                        <Button
+                        size="small"
+                          disabled={row.status === "Audit In Progress"}
+                          color="primary"
+                          variant="outlined"
+                          onClick={() =>
+                            this.setState({
+                              updateDialogOpen: true,
+                              selectedIndex: index,
+                              updateFullName: this.state.result[index].fullname,
+                              updatedob: this.state.result[index].dob,
+                              updatesex: this.state.result[index].sex,
+                              updateidnumber: this.state.result[index].idNumber,
+                              updateidSource: this.state.result[index].idSource,
+                            })
+                          }
+                        >
+                          Update
+                        </Button>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Button
+                          size="small"
+                          color="secondary"
+                          variant="outlined"
+                          onClick={() => this.getHistory(row.idSource)}
+                        >
+                          history
+                        </Button>
+                      </TableCell>
+                      {row.showVerifyOnTrac_btn === true ? (
+                        <TableCell align="center">
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            color="default"
+                            onClick={() => {
+                              this.verification(row.id);
+                            }}
+                          >
+                            Request for verification
+                          </Button>
+                        </TableCell>
+                      ) : null}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              {this.state.selectedIndex === -1 ? (
+                <div />
+              ) : (
+                <Dialog
+                  open={this.state.updateDialogOpen}
+                  onClose={() => this.setState({ updateDialogOpen: false })}
+                  aria-labelledby="form-dialog-title"
+                >
+                  <DialogTitle id="form-dialog-title" align="center">
+                    Update Identity
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText align="center">
+                      Type in details to update
+                    </DialogContentText>
+
+                    <Grid
+                      container
+                      justify="flex-start"
+                      direction="row"
+                      alignItems="center"
+                      spacing={3}
+                    >
+                      <Grid item fullWidth xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Full name"
+                          defaultValue={this.state.updateFullName}
+                          onChange={(event) => {
+                            this.setState({
+                              updateFullName: event.target.value,
+                            });
+                          }}
+                          type="text"
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item fullWidth xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="IdNumber"
+                          defaultValue={this.state.updateidnumber}
+                          onChange={(event) => {
+                            this.setState({
+                              updateidnumber: event.target.value,
+                            });
+                          }}
+                          type="text"
+                          fullWidth
+                        />
+                      </Grid>
+
+                      <Grid item fullWidth xs={12}>
+                        {/* <InputLabel id="dob">Date of birth</InputLabel> */}
+                        <TextField
+                          id="dob"
+                          label="Date of birth"
+                          defaultValue={this.state.updatedob}
+                          onChange={(event) => {
+                            this.setState({ updatedob: event.target.value });
+                          }}
+                          type="date"
+                          fullWidth
+                        />
+                      </Grid>
+
+                      <Grid item fullWidth xs={12}>
+                        <FormControl fullWidth>
+                          <InputLabel id="gender">Gender</InputLabel>
+                          <Select
+                            labelId="gender"
+                            id="gender"
+                            // value={age}
+                            defaultValue={this.state.updatesex}
+                            onChange={(event) => {
+                              this.setState({ updatesex: event.target.value });
+                            }}
+                          >
+                            <MenuItem value={"Male"}>Male</MenuItem>
+                            <MenuItem value={"Female"}>Female</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+
+                      {/* <Grid item fullWidth xs={12}>
                       <Select
                         id="idSource"
                         label="Id Source"
@@ -808,52 +899,55 @@ async getidentites(){
                       ))}</Select>
                     </Grid> */}
 
-                    <Grid item fullWidth xs={12}>
-                      <TextField
-                        id="updatereason"
-                        label="Update Reason"
-                        helperText="update reason should be less than 250 characters"
-                        // defaultValue={this.state.result[this.state.selectedIndex].idSource}
-                        onChange={(event) => {
-                          this.setState({ updatereason: event.target.value },this.reasonforupdatevalidcheck(event));
-                        }}
-                        type="text"
-                        fullWidth
-                      />
+                      <Grid item fullWidth xs={12}>
+                        <TextField
+                          id="updatereason"
+                          label="Update Reason"
+                          helperText="update reason should be less than 250 characters"
+                          // defaultValue={this.state.result[this.state.selectedIndex].idSource}
+                          onChange={(event) => {
+                            this.setState(
+                              { updatereason: event.target.value },
+                              this.reasonforupdatevalidcheck(event)
+                            );
+                          }}
+                          type="text"
+                          fullWidth
+                        />
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </DialogContent>
+                  </DialogContent>
 
-                <DialogActions style={{ padding: 15 }}>
-                  <Button
-                    disabled={this.state.buttondisabled}
-                    color="primary"
-                    variant="contained"
-                    disabled={this.state.buttondisabled}
-                    onClick={() => {
-                      this.updateidentites(
-                        this.state.result[this.state.selectedIndex].idSource
-                      );
-                    }}
-                  >
-                    Update
-                  </Button>
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    onClick={() =>
-                      this.setState({
-                        updateDialogOpen: false,
-                        selectedIndex: -1,
-                      })
-                    }
-                  >
-                    Cancel
-                  </Button>
-                </DialogActions>
-              </Dialog>
-            )}
-          </TableContainer>
+                  <DialogActions style={{ padding: 15 }}>
+                    <Button
+                      disabled={this.state.buttondisabled}
+                      color="primary"
+                      variant="contained"
+                      disabled={this.state.buttondisabled}
+                      onClick={() => {
+                        this.updateidentites(
+                          this.state.result[this.state.selectedIndex].idSource
+                        );
+                      }}
+                    >
+                      Update
+                    </Button>
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      onClick={() =>
+                        this.setState({
+                          updateDialogOpen: false,
+                          selectedIndex: -1,
+                        })
+                      }
+                    >
+                      Cancel
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              )}
+            </TableContainer>
           </>
         )}
 
@@ -864,7 +958,9 @@ async getidentites(){
           onClose={() => this.setState({ historyDialogeOpen: false })}
           aria-labelledby="responsive-dialog-title"
         >
-          <DialogTitle id="form-dialog-title" align='center'>Identities History</DialogTitle>
+          <DialogTitle id="form-dialog-title" align="center">
+            Identities History
+          </DialogTitle>
           {/* <DialogContent> */}
           <TableContainer p={3}>
             <Table stickyHeader>
@@ -879,10 +975,7 @@ async getidentites(){
                     "Records Updated Date",
                     "Update Reason",
                   ].map((text, index) => (
-                    <TableCell
-                      style={{ fontWeight: "bolder",  }}
-                      align="center"
-                    >
+                    <TableCell style={{ fontWeight: "bolder" }} align="center">
                       {text}
                     </TableCell>
                   ))}
@@ -898,7 +991,9 @@ async getidentites(){
                       <TableCell align="center">{row.fullname}</TableCell>
                       <TableCell align="center">{row.dob}</TableCell>
                       <TableCell align="center">{row.sex}</TableCell>
-                      <TableCell align="center">{row.idSource_name_field}</TableCell>
+                      <TableCell align="center">
+                        {row.idSource_name_field}
+                      </TableCell>
                       <TableCell align="center">{row.idNumber}</TableCell>{" "}
                       <TableCell component="th" align="center">
                         {new Date(row.created_on).toDateString()}

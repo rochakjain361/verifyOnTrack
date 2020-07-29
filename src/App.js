@@ -160,7 +160,31 @@ class App extends React.PureComponent {
                 <Route exact path="/manageCities" component={AdminDash} />
                 <Route exact path="/adminAccessCodes" component={AdminDash} />
                 <Route exact path="/addAdmin" component={AdminDash} />
-                
+                <Route
+                  exact
+                  path="/employeeratingquestions"
+                  component={AdminDash}
+                />
+                <Route
+                  exact
+                  path="/employeechoicequestions"
+                  component={AdminDash}
+                />
+                <Route
+                  exact
+                  path="/employerchoicequestions"
+                  component={AdminDash}
+                />
+                <Route
+                  exact
+                  path="/employerratingquestions"
+                  component={AdminDash}
+                />
+                <Route
+                  exact
+                  path="/adminEvaluationCodes"
+                  component={AdminDash}
+                />
 
                 <Route
                   exact
