@@ -36,6 +36,7 @@ import PinDropIcon from "@material-ui/icons/PinDrop";
 import SettingsIcon from "@material-ui/icons/Settings";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import StarsIcon from '@material-ui/icons/Stars';
+import SchoolIcon from '@material-ui/icons/School';
 
 import ManageIdSources from "./Components/AdminPageComponents/Settings/ManageIdSources";
 
@@ -46,6 +47,7 @@ import PhoneTabs from './Components/AdminPageComponents/Settings/Phone Settings/
 import JobTabs from './Components/AdminPageComponents/Settings/ManageJobSettings/JobTabs'
 import RatingsTabs from './Components/AdminPageComponents/Settings/RatingAndSurveySettings/RatingsTabs'
 import CodeTabs from './Components/AdminPageComponents/ManageCodes/CodeTabs'
+import AcademicSettings from "./Components/AdminPageComponents/Settings/AcademicSettings";
 
 const drawerWidth = 330;
 let token1 = "";
@@ -327,6 +329,19 @@ export default function MiniDrawer(props) {
               </Link>
               {/* <Divider /> */}
 
+              <Link to="/academicSettings" className={classes.link} onClick={() => handleDrawerClose()}>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <SchoolIcon style={{ color: "white" }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={"Academic Settings"}
+                    className={classes.textColor}
+                  />
+                </ListItem>
+              </Link>
+              {/* <Divider /> */}
+
               <Link to="/jobSettings" className={classes.link} onClick={() => handleDrawerClose()}>
                 <ListItem button className={classes.nested}>
                   <ListItemIcon>
@@ -429,6 +444,12 @@ export default function MiniDrawer(props) {
             <Route exact path="/manageIdSources">
               <Container>
                 <ManageIdSources />
+              </Container>
+            </Route>
+
+            <Route exact path="/academicSettings">
+              <Container>
+                <AcademicSettings />
               </Container>
             </Route>
 

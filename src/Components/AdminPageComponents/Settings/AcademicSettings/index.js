@@ -80,7 +80,7 @@ export class index extends Component {
   async getstates() {
 
     await axios
-      .get("http://3.22.17.212:8000/api/v1/resManager/account/security-questions/", {
+      .get("http://3.22.17.212:8000/api/v1/resManager/academic/types/", {
         headers: {
           Authorization: token,
         },
@@ -111,11 +111,11 @@ export class index extends Component {
       },
     };
     let bodyFormData = new FormData();
-    bodyFormData.append("reason", this.state.stateName);
+    bodyFormData.append("academicType", this.state.stateName);
 
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/resManager/account/security-questions/",
+        "http://3.22.17.212:8000/api/v1/resManager/academic/types/",
         bodyFormData,
         headers
       )
@@ -198,7 +198,7 @@ export class index extends Component {
 
     // console.log("......",id)
      axios.delete(
-      "http://3.22.17.212:8000/api/v1/resManager/account/security-question/" + id + "/",
+      "http://3.22.17.212:8000/api/v1/resManager/academic/types/" + id + "/",
       {
         headers: {
           Authorization: token,
@@ -229,13 +229,13 @@ export class index extends Component {
       <>
         <Grid container justify="space-between" alignItems="center" spacing={4}>
           <Grid item>
-            <Typography variant="h4">States</Typography>
+            <Typography variant="h4">Academic Types</Typography>
           </Grid>
 
           <Grid item xs={6}>
             <Autocomplete
               options={result}
-              getOptionLabel={(option) => option.reason}
+              getOptionLabel={(option) => option.academicType}
               size="small"
               id="states"
               Username
@@ -252,7 +252,7 @@ export class index extends Component {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Security Questions"
+                  label="Academic Types"
                   margin="normal"
                   variant="outlined"
                   size="small"
@@ -271,7 +271,7 @@ export class index extends Component {
         >
           <Grid item xs={3}>
             <TextField
-              label="Enter new security question"
+              label="Enter new academic type"
               variant="outlined"
               size="medium"
               fullWidth
@@ -305,8 +305,8 @@ export class index extends Component {
             <Table stickyHeader>
               <TableHead>
                 <TableRow style={{ backgroundColor: "black" }}>
-                  <TableCell align="left">Question Id</TableCell>
-                  <TableCell align="center">Security Question</TableCell>
+                  <TableCell align="left">Id</TableCell>
+                  <TableCell align="center">Type</TableCell>
                   <TableCell align="right"></TableCell>
                 </TableRow>
               </TableHead>
@@ -315,7 +315,7 @@ export class index extends Component {
                   <TableRow key={row.id}>
 
                     <TableCell align="left">{row.id}</TableCell>
-                    <TableCell align="center">{row.reason}</TableCell>
+                    <TableCell align="center">{row.academicType}</TableCell>
                     <TableCell align="right">
                       <Button
                         color="primary"

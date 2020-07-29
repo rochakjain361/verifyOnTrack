@@ -92,6 +92,20 @@ class index extends React.Component {
 
                         <Grid item fullWidth xs={12}>
                             <TextField
+                                id="school"
+                                label="Academic Type"
+                                defaultValue={id.academicType_name_field}
+                                type="text"
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                fullWidth
+                                size='small'
+                            />
+                        </Grid>
+
+                        <Grid item fullWidth xs={12}>
+                            <TextField
                                 id="startDate"
                                 label="Start Date"
                                 defaultValue={id.startDate}
