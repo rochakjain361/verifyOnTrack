@@ -67,9 +67,9 @@ class index extends React.Component {
 
                         <Grid item fullWidth xs={12}>
                             <TextField
-                                id="suite"
-                                label="Suite"
-                                defaultValue={id.suite}
+                                id="location"
+                                label="Location Name"
+                                defaultValue={id.locationName}
                                 type="text"
                                 InputProps={{
                                     readOnly: true,
@@ -81,9 +81,9 @@ class index extends React.Component {
 
                         <Grid item fullWidth xs={12}>
                             <TextField
-                                id="street"
-                                label="Street"
-                                defaultValue={id.street}
+                                id="address"
+                                label="Address"
+                                defaultValue={id.address}
                                 type="text"
                                 InputProps={{
                                     readOnly: true,
@@ -92,36 +92,6 @@ class index extends React.Component {
                                 size='small'
                             />
                         </Grid>
-
-                        <Grid item fullWidth xs={12}>
-                            <TextField
-                                id="city"
-                                label="City"
-                                defaultValue={id.city_name_field}
-                                type="text"
-                                InputProps={{
-                                    readOnly: true,
-                                }}
-                                fullWidth
-                                size='small'
-                            />
-                        </Grid>
-
-                        {id.city_other !== null ? (
-                            <Grid item fullWidth xs={12}>
-                            <TextField
-                                id="cityOther"
-                                label="City other"
-                                defaultValue={id.city_other}
-                                type="text"
-                                InputProps={{
-                                    readOnly: true,
-                                }}
-                                fullWidth
-                                size='small'
-                            />
-                        </Grid>
-                        ) : <div/>}
 
                         <Grid item fullWidth xs={12}>
                             <TextField
@@ -142,35 +112,6 @@ class index extends React.Component {
                                 id="state"
                                 label="State"
                                 defaultValue={id.state_name_field}
-                                type="text"
-                                InputProps={{
-                                    readOnly: true,
-                                }}
-                                fullWidth
-                                size='small'
-                            />
-                        </Grid>
-
-
-                        <Grid item fullWidth xs={12}>
-                            <TextField
-                                id="googleCoordinate1"
-                                label="Google Coordinate 1"
-                                defaultValue={id.google_coordinate1}
-                                type="text"
-                                InputProps={{
-                                    readOnly: true,
-                                }}
-                                fullWidth
-                                size='small'
-                            />
-                        </Grid>
-
-                        <Grid item fullWidth xs={12}>
-                            <TextField
-                                id="googleCoordinate2"
-                                label="Google Coordinate 2"
-                                defaultValue={id.google_coordinate2}
                                 type="text"
                                 InputProps={{
                                     readOnly: true,

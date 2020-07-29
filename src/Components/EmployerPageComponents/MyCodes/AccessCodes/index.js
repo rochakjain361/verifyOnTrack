@@ -39,6 +39,8 @@ import PaymentIcon from '@material-ui/icons/Payment';
 import PhoneIcon from '@material-ui/icons/Phone';
 import WorkIcon from '@material-ui/icons/Work';
 import StarsIcon from '@material-ui/icons/Stars';
+import SchoolIcon from '@material-ui/icons/School';
+
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -794,6 +796,22 @@ class index extends Component {
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
+                                <ExpansionPanel disabled={!this.state.employeeDetailsData['canAccessAcademics']}>
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                    >
+                                        <ListItemIcon>
+                                            <SchoolIcon />
+                                        </ListItemIcon>
+                                        <Typography variant='subtitle2'>Academics</Typography>
+                                    </ExpansionPanelSummary>
+                                    <ExpansionPanelDetails>
+                                        <Academics userId={this.state.employeeDetailsData['employee']} code={this.state.employeeDetailsData['codeString']} />
+                                    </ExpansionPanelDetails>
+                                </ExpansionPanel>
+
                                 <ExpansionPanel disabled={!this.state.employeeDetailsData['canAccessJobHistory']}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
@@ -825,23 +843,6 @@ class index extends Component {
                                         <Ratings userId={this.state.employeeDetailsData['employee']} code={this.state.employeeDetailsData['codeString']} />
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
-
-                                <ExpansionPanel disabled={!this.state.employeeDetailsData['canAccessAcademics']}>
-                                    <ExpansionPanelSummary
-                                        expandIcon={<ExpandMoreIcon />}
-                                        aria-controls="panel1a-content"
-                                        id="panel1a-header"
-                                    >
-                                        <ListItemIcon>
-                                            <StarsIcon />
-                                        </ListItemIcon>
-                                        <Typography variant='subtitle2'>Academics</Typography>
-                                    </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails>
-                                        <Academics userId={this.state.employeeDetailsData['employee']} code={this.state.employeeDetailsData['codeString']} />
-                                    </ExpansionPanelDetails>
-                                </ExpansionPanel>
-
 
                             </Grid>
 

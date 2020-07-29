@@ -144,6 +144,34 @@ class index extends React.Component {
                                     size='small'
                                 />
                             </Grid>
+
+                            <Grid item fullWidth xs={12}>
+                                <TextField
+                                    id="regNum"
+                                    label="Registration Number"
+                                    defaultValue={id.regNum}
+                                    type="text"
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    fullWidth
+                                    size='small'
+                                />
+                            </Grid>
+
+                            <Grid item fullWidth xs={12}>
+                                <TextField
+                                    id="regDate"
+                                    label="Registration Date"
+                                    defaultValue={id.regDate}
+                                    type="text"
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    fullWidth
+                                    size='small'
+                                />
+                            </Grid>
                     
                             <Grid item fullWidth xs={12}>
                                 <TextField

@@ -163,7 +163,7 @@ class index extends React.Component {
           
           <Typography>Employer Rating:</Typography>
 
-          <Grid container>
+          {/* <Grid container>
           
             {this.state.choiceFromEmployers.map((choice)=> (
                 <Grid item>
@@ -173,7 +173,7 @@ class index extends React.Component {
                 </Grid>
             ))}
           
-        </Grid>
+        </Grid> */}
       </div>
     );
   }

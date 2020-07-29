@@ -403,7 +403,6 @@ class myJobProfile extends Component {
                                     {
                                         this.state.companies.map(company => <MenuItem key={company} value={company}>{company.companyName}</MenuItem>)
                                         // this.state.positions.map(position => <MenuItem key={position} value={position}>{position.positionCategory}</MenuItem>)
-
                                     }
                                 </Select>
                             </FormControl>
@@ -913,9 +912,13 @@ class myJobProfile extends Component {
                                     </Button>
                                     </TableCell>
                                     <TableCell>
-                                        <Grid container justify='column'>
-
-                                            {row.show_update_field ? (
+                                    <Grid
+                                                container
+                                                direction="column"
+                                                justify="flex-start"
+                                                alignItems="center"
+                                            >
+                                               {row.show_update_field ? (
                                                 <Grid item>
                                                     <Button
                                                         style={{ minWidth: 200 }}
@@ -931,10 +934,7 @@ class myJobProfile extends Component {
                                                 </Button>
                                                 </Grid>
                                             ) : ('NA')}
-
-
-
-                                            <Grid item>
+                                                <Grid item>
                                                 {row.show_employer_ver_field === true ? (
                                                     <Button
                                                         style={{ marginTop: 5, minWidth: 200 }}
@@ -958,7 +958,7 @@ class myJobProfile extends Component {
                                                     </Button>
                                                 ) : <div />}
                                             </Grid>
-                                        </Grid>
+                                            </Grid>
                                     </TableCell>
                                 </TableRow>
                             ))}
