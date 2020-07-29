@@ -98,12 +98,12 @@ export class Employeelocation extends Component {
   postlocation() {
     let bodyFormData = new FormData();
     bodyFormData.append("state", this.state.addstate);
-    bodyFormData.append("lga", this.state.addcity);
-    bodyFormData.append("city", this.state.addcity);
-    bodyFormData.append("suite", this.state.buildingno);
-    bodyFormData.append("street", this.state.street);
-    bodyFormData.append("google_coordinate1", this.state.location.latitude);
-    bodyFormData.append("google_coordinate2", this.state.location.longtitude);
+    bodyFormData.append("lga", this.state.addlga);
+    // bodyFormData.append("city", this.state.addcity);
+    bodyFormData.append("address", this.state.buildingno);
+    bodyFormData.append("locationName", this.state.street);
+    // bodyFormData.append("google_coordinate1", this.state.location.latitude);
+    // bodyFormData.append("google_coordinate2", this.state.location.longtitude);
 
     post(
       "http://3.22.17.212:8000/api/v1/employers/post-location",
@@ -117,11 +117,11 @@ export class Employeelocation extends Component {
     let bodyFormData = new FormData();
     bodyFormData.append("state", this.state.updatestate);
     bodyFormData.append("lga", this.state.updatelga);
-    bodyFormData.append("city", this.state.updatecity);
-    bodyFormData.append("suite", this.state.updatebuildingno);
-    bodyFormData.append("street", this.state.updatestreet);
-    bodyFormData.append("google_coordinate1", this.state.location.latitude);
-    bodyFormData.append("google_coordinate2", this.state.location.longtitude);
+    // bodyFormData.append("city", this.state.updatecity);
+    bodyFormData.append("address", this.state.updatebuildingno);
+    bodyFormData.append("locationName", this.state.updatestreet);
+    // bodyFormData.append("google_coordinate1", this.state.location.latitude);
+    // bodyFormData.append("google_coordinate2", this.state.location.longtitude);
 
     put(
       "http://3.22.17.212:8000/api/v1/employers/update-location/"+this.state.updateid,
@@ -167,39 +167,12 @@ export class Employeelocation extends Component {
         : this.setState({ lga: res.data });
       });
   }
-  async citynames(lgaid, val) {
-    // this.setState({ selectedLga: lgaid });
-    // await get(
-    //   "http://3.22.17.212:8000/api/v1/resManager/address/citieslgaId=" +
-    //   lgaid,
-    //   token,
-    //   ""
-    // ).then((res) => {
-    //   val === "update"
-    //     ? this.setState({ updatedcityStates: res.data })
-    //     : this.setState({ city: res.data });
-    // });
-    await axios
-    .get(
-      "http://3.22.17.212:8000/api/v1/resManager/address/cities/?lgaId=" +
-        lgaid,
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    )
-    .then((res) => {
-        val === "update"
-        ? this.setState({ updatedcityStates: res.data })
-        : this.setState({ city: res.data });
-    });
-  }
+ 
   AddLocation() {
     return (
       <Dialog
-        fullWidth={"md"}
-        maxWidth={"md"}
+        fullWidth={"sm"}
+        maxWidth={"sm"}
         open={this.state.addDialogOpen}
         onClose={() => this.setState({ addDialogOpen: false })}
         aria-labelledby="form-dialog-title"
@@ -207,8 +180,7 @@ export class Employeelocation extends Component {
         <DialogTitle id="form-dialog-title" justify="center">
           Add company location details
         </DialogTitle>
-        <Box display="flex" flexDirection="row" width={1}>
-          <Box width={1 / 2}>
+       
             <DialogContent>
               {/* <DialogContentText>
                   Enter the details of your profile to be added
@@ -249,7 +221,7 @@ export class Employeelocation extends Component {
                       // value={age}
                       onChange={(event) => {
                         this.setState({ addlga: event.target.value });
-                        this.citynames(event.target.value, "add");
+                        // this.citynames(event.target.value, "add");
                         // console.log(this.state.gender);
                       }}
                     >
@@ -259,7 +231,7 @@ export class Employeelocation extends Component {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item fullWidth xs={12}>
+                {/* <Grid item fullWidth xs={12}>
                   <FormControl fullWidth>
                     <InputLabel id="gender">City</InputLabel>
                     <Select
@@ -277,11 +249,11 @@ export class Employeelocation extends Component {
                       ))}
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid> */}
                 <Grid item fullWidth xs={12}>
                   <TextField
                     id="firstName"
-                    label="Buildingno"
+                    label="Address"
                     value={this.state.buildingno}
                     // defaultValue={result[this.state.selectedIndex].firstname}
                     onChange={(event) => {
@@ -298,7 +270,7 @@ export class Employeelocation extends Component {
                 <Grid item fullWidth xs={12}>
                   <TextField
                     id="middleName"
-                    label="Street"
+                    label="Location Name"
                     value={this.state.street}
                     // defaultValue={result[this.state.selectedIndex].middlename}
                     onChange={(event) => {
@@ -312,32 +284,7 @@ export class Employeelocation extends Component {
                 </Grid>
               </Grid>
             </DialogContent>
-          </Box>
-          <Box width={1 / 2}>
-            <Map
-              initialCenter={{
-                lat: 9.0765,
-                lng: 7.3986,
-              }}
-              google={this.props.google}
-              zoom={12}
-              onClick={this.onMarkerClick}
-              style={{
-                width: "40%",
-                height: "75%",
-              }}
-              fullscreenControl={true}
-            >
-              <Marker
-                position={{
-                  lat: this.state.location.latitude,
-                  lng: this.state.location.longtitude,
-                }}
-              />
-              <InfoWindow onClose={this.onInfoWindowClose}></InfoWindow>
-            </Map>
-          </Box>
-        </Box>
+          
 
         <DialogActions>
           <Button
@@ -372,8 +319,8 @@ export class Employeelocation extends Component {
   updatelocation() {
     return (
       <Dialog
-        fullWidth={"md"}
-        maxWidth={"md"}
+        fullWidth={"sm"}
+        maxWidth={"sm"}
         open={this.state.updateDialogOpen}
         onClose={() => this.setState({ updateDialogOpen: false })}
         aria-labelledby="form-dialog-title"
@@ -381,8 +328,7 @@ export class Employeelocation extends Component {
         <DialogTitle id="form-dialog-title" justify="center">
           update company location details
         </DialogTitle>
-        <Box display="flex" flexDirection="row" width={1}>
-          <Box width={1 / 2}>
+       
             <DialogContent>
               {/* <DialogContentText>
                   Enter the details of your profile to be added
@@ -425,7 +371,7 @@ export class Employeelocation extends Component {
                       defaultValue={this.state.updatelga}
                       onChange={(event) => {
                         this.setState({ updatelga: event.target.value });
-                        this.citynames(event.target.value, "update");
+                        // this.citynames(event.target.value, "update");
                         // console.log(this.state.gender);
                       }}
                     >
@@ -435,7 +381,7 @@ export class Employeelocation extends Component {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item fullWidth xs={12}>
+                {/* <Grid item fullWidth xs={12}>
                   <FormControl fullWidth>
                     <InputLabel id="gender">City</InputLabel>
                     <Select
@@ -454,11 +400,11 @@ export class Employeelocation extends Component {
                       ))}
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid> */}
                 <Grid item fullWidth xs={12}>
                   <TextField
                     id="firstName"
-                    label="Buildingno"
+                    label="Location Name"
                     defaultValue={this.state.updatebuildingno}
                     // defaultValue={result[this.state.selectedIndex].firstname}
                     onChange={(event) => {
@@ -475,7 +421,7 @@ export class Employeelocation extends Component {
                 <Grid item fullWidth xs={12}>
                   <TextField
                     id="middleName"
-                    label="Street"
+                    label="Address"
                     defaultValue={this.state.updatestreet}
                     // defaultValue={result[this.state.selectedIndex].middlename}
                     onChange={(event) => {
@@ -489,32 +435,7 @@ export class Employeelocation extends Component {
                 </Grid>
               </Grid>
             </DialogContent>
-          </Box>
-          <Box width={1 / 2}>
-            <Map
-              initialCenter={{
-                lat: 9.0765,
-                lng: 7.3986,
-              }}
-              google={this.props.google}
-              zoom={12}
-              onClick={this.onMarkerClick}
-              style={{
-                width: "40%",
-                height: "75%",
-              }}
-              fullscreenControl={true}
-            >
-              <Marker
-                position={{
-                  lat: this.state.location.latitude,
-                  lng: this.state.location.longtitude,
-                }}
-              />
-              <InfoWindow onClose={this.onInfoWindowClose}></InfoWindow>
-            </Map>
-          </Box>
-        </Box>
+         
 
         <DialogActions>
           <Button
@@ -622,7 +543,12 @@ export class Employeelocation extends Component {
             </Grid>
           </Grid>
         ) : (
-            <Grid container  direction="row" justify="space-between" alignItems="center">
+          <Grid
+            container
+            direction="row"
+            justify="space-between"
+            alignItems="center"
+          >
             <Grid
               container
               justify="center"
@@ -639,18 +565,16 @@ export class Employeelocation extends Component {
                 </Button>
               </Box>
             </Grid>
-          
+
             <TableContainer component={Paper} elevation={16} p={3}>
               <Table stickyHeader>
                 <TableHead>
                   <TableRow style={{ backgroundColor: "black" }}>
                     {[
-                      "Building Number",
-                      "Street",
+                      "Location Name",
+                      "Address",
                       "State",
                       "Lga",
-                      "City",
-                      "location",
                       "Actions",
                     ].map((text, index) => (
                       <TableCell
@@ -664,85 +588,53 @@ export class Employeelocation extends Component {
                 </TableHead>
 
                 <TableBody>
-                {this.state.result.map((row, index) => (
-                  <TableRow key={row.id}>
-                    
-                    <TableCell align="center">
-                      
-                      {row.suite}
-                    </TableCell>
-                    <TableCell align="center">
-                      
-                      {row.street}
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.state_name_field}
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.lga_name_field}
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.city_name_field}
-                    </TableCell>
-                    <TableCell align="center">
-                    <a
-                          href={`http://www.google.com/maps/place/${row.google_coordinate1}+,+${row.google_coordinate2}`}
-                          target=""
-                        >
-                          Location
-                        </a>
-                    </TableCell>
-                    {/* <TableCell component="th" align="center">
+                  {this.state.result.map((row, index) => (
+                    <TableRow key={row.id}>
+                      <TableCell align="center">{row.locationName}</TableCell>
+                      <TableCell align="center">{row.address}</TableCell>
+                      <TableCell align="center">
+                        {row.state_name_field}
+                      </TableCell>
+                      <TableCell align="center">{row.lga_name_field}</TableCell>
+                      {/* <TableCell component="th" align="center">
                     {new Date(row.created_on).toDateString()}
                   </TableCell> */}
-                    <TableCell align="center">
-                      <Button
-                        color="primary"
-                        variant="outlined"
-                        onClick={() =>{
-                          this.setState({
-                            updateDialogOpen: true,
-                            updatestate:this.state.result[index].state,
-                            updatelga:this.state.result[index].lga,
-                            updatecity:this.state.result[index].city,
-                            updatebuildingno:this.state.result[index].suite,
-                            updatestreet:this.state.result[index].street,
-                            updateid:this.state.result[index].id,
-                            location: {
-                                latitude: this.state.result[index]
-                                  .google_coordinate1,
-                                longtitude: this.state.result[index]
-                                  .google_coordinate2,
-                              },
-                              
+                      <TableCell align="center">
+                        <Button
+                          color="primary"
+                          variant="outlined"
+                          onClick={() => {
+                            this.setState({
+                              updateDialogOpen: true,
+                              updatestate: this.state.result[index].state,
+                              updatelga: this.state.result[index].lga,
 
+                              updatebuildingno: this.state.result[index]
+                                .locationName,
+                              updatestreet: this.state.result[index].address,
+                              updateid: this.state.result[index].id,
 
-                            // add the updatedstate elements here after passing the token and adding data
-                          }
-                         
-                        )
-                        this.lganames(
-                            this.state.result[index].state,
-                            "update"
-                          )
-                          this.citynames(
-                            this.state.result[index].lga,
-                            "update"
-                          )
-                        }
-                        }
-                      >
-                        Update
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                   ))}
+                              // add the updatedstate elements here after passing the token and adding data
+                            });
+                            this.lganames(
+                              this.state.result[index].state,
+                              "update"
+                            );
+                            // this.citynames(
+                            //   this.state.result[index].lga,
+                            //   "update"
+                            // )
+                          }}
+                        >
+                          Update
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </TableContainer>
-         
           </Grid>
-
         )}
         {this.AddLocation()}
         {this.updatelocation()}
