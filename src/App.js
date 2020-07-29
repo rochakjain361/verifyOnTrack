@@ -32,6 +32,7 @@ import resetpassword from "./resetpassword";
 // const store = createStore(reducer);
 import Profile from "./Components/AdminPageComponents/ManageCodes/EmployerPages/Profile";
 import EmployerStepper from "./Components/Employerworkflow/EmployerStepper";
+
 class App extends React.PureComponent {
   render() {
     return (
@@ -75,6 +76,7 @@ class App extends React.PureComponent {
 
                 {/* Employee PAGE PATHS */}
                 <Route exact path="/Homepage" component={dash} />
+                <Route exact path="/myInfo" component={dash} />
                 <Route exact path="/addresses" component={dash} />
                 <Route exact path="/Identities" component={dash} />
                 <Route exact path="/Phones" component={dash} />
@@ -123,6 +125,33 @@ class App extends React.PureComponent {
                   component={EmployerDash}
                 />
 
+              {/* ADMIN PAGE PATHS */}
+              {/* <Route exact path='/adminLanding' component={AdminDash} /> */}
+              <Route exact path='/ratingsSettings' component={AdminDash} />
+              <Route exact path='/addressSettings' component={AdminDash} />
+              <Route exact path='/phoneSettings' component={AdminDash} />
+              <Route exact path='/jobSettings' component={AdminDash} />
+              <Route exact path='/adminCodes' component={AdminDash} />
+              <Route exact path='/admin' component={AdminDash} />
+              <Route exact path='/managestates' component={AdminDash} />
+              <Route exact path='/manageLGAs' component={AdminDash} />
+              <Route exact path='/manageCities' component={AdminDash} />
+              <Route exact path='/adminAccessCodes' component={AdminDash} />
+              <Route exact path='/addAdmin' component={AdminDash} />
+              <Route exact path='/manageAddressReasons' component={AdminDash} />
+              <Route exact path='/manageAddressTypes' component={AdminDash} />
+              <Route exact path='/managePhoneTypes' component={AdminDash} />
+              <Route exact path='/managePhoneReasons' component={AdminDash} />
+              <Route exact path='/manageIdSources' component={AdminDash} />
+              <Route exact path='/manageJobCategories' component={AdminDash} />
+              <Route exact path='/manageJobLeavingReasons' component={AdminDash} />
+              <Route exact path='/approvalCodes' component={AdminDash} />
+              <Route exact path='/adminRejectReasons' component={AdminDash} />
+              <Route exact path='/adminSecurityQuestions' component={AdminDash} />
+              <Route exact path='/adminManageIndustries' component={AdminDash} />
+              <Route exact path='/adminManageOffboardTypes' component={AdminDash} />
+              <Route exact path='/approvaljobs' component={Job} />
+              <Route exact path='/employerProfile' component={Profile} />
                 {/* ADMIN PAGE PATHS */}
                 {/* <Route exact path='/adminLanding' component={AdminDash} /> */}
                 <Route exact path="/admin" component={AdminDash} />

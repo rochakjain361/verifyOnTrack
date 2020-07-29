@@ -85,7 +85,7 @@ export default function Index() {
       <Grid container justify="space-between" alignItems="center" spacing={4}>
         <Grid item xs={12}>
           <Typography variant="h4" align="center">
-            Inbox
+            Messages
           </Typography>
         </Grid>
       </Grid>

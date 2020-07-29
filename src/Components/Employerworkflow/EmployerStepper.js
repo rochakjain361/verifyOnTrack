@@ -25,7 +25,7 @@ import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import { Paper } from "@material-ui/core";
 import SettingsBackupRestoreIcon from "@material-ui/icons/SettingsBackupRestore";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {

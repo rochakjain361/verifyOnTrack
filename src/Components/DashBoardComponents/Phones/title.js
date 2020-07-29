@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Index from "./index"
-import { CircularProgress, Typography, Box } from "@material-ui/core";
+import { Typography, Box } from "@material-ui/core";
 
 export default class phonetitle extends Component {
     render() {

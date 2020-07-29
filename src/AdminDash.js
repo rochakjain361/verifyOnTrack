@@ -35,24 +35,17 @@ import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import PinDropIcon from "@material-ui/icons/PinDrop";
 import SettingsIcon from "@material-ui/icons/Settings";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
-import ManageStates from "./Components/AdminPageComponents/Settings/AddressSettings/ManageStates";
-import ManageLGAs from "./Components/AdminPageComponents/Settings/AddressSettings/ManageLGAs";
-import ManageCities from "./Components/AdminPageComponents/Settings/AddressSettings/ManageCities";
-import ManageAddressTypes from "./Components/AdminPageComponents/Settings/AddressSettings/ManageAddressTypes";
-import ManageAddressReasons from "./Components/AdminPageComponents/Settings/AddressSettings/ManageAddressReasons";
-import ManagePhoneTypes from "./Components/AdminPageComponents/Settings/Phone Settings/ManagePhoneTypes";
-import ManagePhoneReasons from "./Components/AdminPageComponents/Settings/Phone Settings/ManagePhoneReasons";
+import StarsIcon from '@material-ui/icons/Stars';
+
 import ManageIdSources from "./Components/AdminPageComponents/Settings/ManageIdSources";
-import ManageJobCategories from "./Components/AdminPageComponents/Settings/ManageJobSettings/ManageJobCategories";
-import ManageJobLeavingReasons from "./Components/AdminPageComponents/Settings/ManageJobSettings/ManageJobLeavingReasons";
+
 import AddAdminUser from "./Components/AdminPageComponents/Administration/AddAdminUser";
-import AdminAccessCodes from "./Components/AdminPageComponents/ManageCodes/AdminAccessCodes";
-import AdminEvaluationCodes from "./Components/AdminPageComponents/ManageCodes/AdminEvaluationCodes";
-import ApprovalCodes from "./Components/AdminPageComponents/ManageCodes/ApprovalCodes";
-import Employeeratingquestions from '../src/Components/AdminPageComponents/Settings/ManageJobSettings/employeesurveyquestions/ratingquestions'
-import Employeechoicequestions from '../src/Components/AdminPageComponents/Settings/ManageJobSettings/employeesurveyquestions/choicequestions'
-import Employerchoicequestions from '../src/Components/AdminPageComponents/Settings/ManageJobSettings/employersurveyquestions/choicequestions'
-import Employerratingquestions from '../src/Components/AdminPageComponents/Settings/ManageJobSettings/employersurveyquestions/ratingquestions'
+
+import AddressTabs from './Components/AdminPageComponents/Settings/AddressSettings/AddressTabs'
+import PhoneTabs from './Components/AdminPageComponents/Settings/Phone Settings/PhoneTabs'
+import JobTabs from './Components/AdminPageComponents/Settings/ManageJobSettings/JobTabs'
+import RatingsTabs from './Components/AdminPageComponents/Settings/RatingAndSurveySettings/RatingsTabs'
+import CodeTabs from './Components/AdminPageComponents/ManageCodes/CodeTabs'
 
 const drawerWidth = 330;
 let token1 = "";
@@ -129,11 +122,11 @@ const useStyles = makeStyles((theme) => ({
   },
   nested: {
     paddingLeft: 72,
-    
+
   },
   nested2: {
     paddingLeft: 75,
-    
+
   },
   collapseNested: {
     paddingLeft: 55,
@@ -273,8 +266,8 @@ export default function MiniDrawer(props) {
               {theme.direction === "rtl" ? (
                 <ChevronRightIcon style={{ color: "white" }} />
               ) : (
-                <ArrowBackIcon style={{ color: "white" }} />
-              )}
+                  <ArrowBackIcon style={{ color: "white" }} />
+                )}
             </IconButton>
           </div>
 
@@ -289,287 +282,77 @@ export default function MiniDrawer(props) {
             {open1 ? (
               <ExpandLess style={{ color: "white" }} />
             ) : (
-              <ExpandMore style={{ color: "white" }} />
-            )}
+                <ExpandMore style={{ color: "white" }} />
+              )}
           </ListItem>
 
           <Collapse in={(open1, open)} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem
-                button
-                onClick={() => setOpen4(!open4)}
-                className={classes.nested}
-              >
-                <ListItemIcon>
-                  <PinDropIcon style={{ color: "white" }} />
-                </ListItemIcon>
-                <ListItemText
-                  className={classes.textColor}
-                  primary="Address Settings"
-                />
-                {open4 ? (
-                  <ExpandLess className={classes.textColor} />
-                ) : (
-                  <ExpandMore className={classes.textColor} />
-                )}
-              </ListItem>
+              <Link to="/addressSettings" className={classes.link} onClick={() => handleDrawerClose()}>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <PinDropIcon style={{ color: "white" }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={"Address Settings"}
+                    className={classes.textColor}
+                  />
+                </ListItem>
+              </Link>
+              {/* <Divider /> */}
 
-              <Collapse
-                in={open4}
-                timeout="auto"
-                unmountOnExit
-                className={classes.collapseNested}
-              >
-                <List component="div" disablePadding>
-                  <Link to="/manageStates" className={classes.link}>
-                    <ListItem
-                      onClick={() => handleDrawerClose()}
-                      button
-                      className={classes.nested}
-                    >
-                      <ListItemText
-                        className={classes.textColor}
-                        primary="Manage States"
-                      />
-                    </ListItem>
-                  </Link>
+              <Link to="/phoneSettings" className={classes.link} onClick={() => handleDrawerClose()}>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <PhoneIcon style={{ color: "white" }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={"Phone Settings"}
+                    className={classes.textColor}
+                  />
+                </ListItem>
+              </Link>
+              {/* <Divider /> */}
 
-                  <Link to="/manageLGAs" className={classes.link}>
-                    <ListItem
-                      onClick={() => handleDrawerClose()}
-                      button
-                      className={classes.nested}
-                    >
-                      <ListItemText
-                        className={classes.textColor}
-                        primary="Manage LGAs"
-                      />
-                    </ListItem>
-                  </Link>
+              <Link to="/manageIdSources" className={classes.link} onClick={() => handleDrawerClose()}>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <PermIdentityIcon style={{ color: "white" }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={"ID Source Settings"}
+                    className={classes.textColor}
+                  />
+                </ListItem>
+              </Link>
+              {/* <Divider /> */}
 
-                  <Link to="/manageCities" className={classes.link}>
-                    <ListItem
-                      button
-                      className={classes.nested}
-                      onClick={() => handleDrawerClose()}
-                    >
-                      <ListItemText
-                        className={classes.textColor}
-                        primary="Cities"
-                      />
-                    </ListItem>
-                  </Link>
+              <Link to="/jobSettings" className={classes.link} onClick={() => handleDrawerClose()}>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <WorkIcon style={{ color: "white" }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={"Job Settings"}
+                    className={classes.textColor}
+                  />
+                </ListItem>
+              </Link>
+              {/* <Divider /> */}
 
-                  <Link to="/manageAddressTypes" className={classes.link}>
-                    <ListItem
-                      button
-                      className={classes.nested}
-                      onClick={() => handleDrawerClose()}
-                    >
-                      <ListItemText
-                        className={classes.textColor}
-                        primary="Manage Address Types"
-                      />
-                    </ListItem>
-                  </Link>
+              <Link to="/ratingsSettings" className={classes.link} onClick={() => handleDrawerClose()}>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <StarsIcon style={{ color: "white" }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={"Rating & Survey Settings"}
+                    className={classes.textColor}
+                  />
+                </ListItem>
+              </Link>
+              {/* <Divider /> */}
 
-                  <Link
-                    to="/manageAddressReasons"
-                    className={classes.link}
-                    onClick={() => handleDrawerClose()}
-                  >
-                    <ListItem button className={classes.nested}>
-                      <ListItemText
-                        className={classes.textColor}
-                        primary="Manage Address Reasons"
-                      />
-                    </ListItem>
-                  </Link>
-                </List>
-              </Collapse>
-
-              <Divider />
-
-              <ListItem
-                button
-                onClick={() => setOpen5(!open5)}
-                className={classes.nested}
-              >
-                <ListItemIcon>
-                  <PhoneIcon style={{ color: "white" }} />
-                </ListItemIcon>
-                <ListItemText
-                  className={classes.textColor}
-                  primary="Phone Settings"
-                />
-                {open5 ? (
-                  <ExpandLess className={classes.textColor} />
-                ) : (
-                  <ExpandMore className={classes.textColor} />
-                )}
-              </ListItem>
-
-              <Collapse
-                in={open5}
-                timeout="auto"
-                unmountOnExit
-                className={classes.collapseNested}
-              >
-                <List component="div" disablePadding>
-                  <Link
-                    to="/managePhoneTypes"
-                    className={classes.link}
-                    onClick={() => handleDrawerClose()}
-                  >
-                    <ListItem button className={classes.nested}>
-                      <ListItemText
-                        className={classes.textColor}
-                        primary="Manage Phone Types"
-                      />
-                    </ListItem>
-                  </Link>
-
-                  <Link
-                    to="/managePhoneReasons"
-                    className={classes.link}
-                    onClick={() => handleDrawerClose()}
-                  >
-                    <ListItem button className={classes.nested}>
-                      <ListItemText
-                        className={classes.textColor}
-                        primary="Manage Phones Reasons"
-                      />
-                    </ListItem>
-                  </Link>
-                </List>
-              </Collapse>
-
-              <Divider />
-              <List component="div" disablePadding>
-                <Link
-                  to="/manageIdSources"
-                  className={classes.link}
-                  style={{ paddingLeft: 25 }}
-                >
-                  <ListItem button className={classes.nested}>
-                    <ListItemIcon>
-                      <PermIdentityIcon style={{ color: "white" }} />
-                    </ListItemIcon>
-                    <ListItemText
-                      className={classes.textColor}
-                      primary="Manage ID sources"
-                    />
-                  </ListItem>
-                </Link>
-              </List>
-
-              <Divider />
-
-              <ListItem
-                button
-                onClick={() => setOpen6(!open6)}
-                className={classes.nested}
-              >
-                <ListItemIcon>
-                  <WorkIcon style={{ color: "white" }} />
-                </ListItemIcon>
-                <ListItemText
-                  className={classes.textColor}
-                  primary="Manage Job Settings"
-                />
-                {open6 ? (
-                  <ExpandLess className={classes.textColor} />
-                ) : (
-                  <ExpandMore className={classes.textColor} />
-                )}
-              </ListItem>
-
-              <Collapse
-                in={open6}
-                timeout="auto"
-                unmountOnExit
-                className={classes.collapseNested}
-              >
-                <List component="div" disablePadding>
-                  <Link
-                    to="/manageJobCategories"
-                    className={classes.link}
-                    onClick={() => handleDrawerClose()}
-                  >
-                    <ListItem button className={classes.nested}>
-                      <ListItemText
-                        className={classes.textColor}
-                        primary="Manage Categories"
-                      />
-                    </ListItem>
-                  </Link>
-
-                  <Link to="/manageJobLeavingReasons" className={classes.link}>
-                    <ListItem
-                      button
-                      className={classes.nested}
-                      onClick={() => handleDrawerClose()}
-                    >
-                      <ListItemText
-                        className={classes.textColor}
-                        primary="Manage Job Reasons"
-                      />
-                    </ListItem>
-                  </Link>
-                  <Link to="/employeeratingquestions" className={classes.link}>
-                    {/* <ListItem button className={classes.nested}> */}
-                    <ListItem
-                      button
-                      className={classes.nested}
-                      onClick={() => handleDrawerClose()}
-                    >
-                      <ListItemText
-                        className={classes.textColor}
-                        primary="Employee RatingQuestions"
-                      />
-                    </ListItem>
-                  </Link>
-                  <Link to="/employeechoicequestions" className={classes.link}>
-                    {/* <ListItem button className={classes.nested}> */}
-                    <ListItem
-                      button
-                      className={classes.nested}
-                      onClick={() => handleDrawerClose()}
-                    >
-                      <ListItemText
-                        className={classes.textColor}
-                        primary="Employee ChoiceQuestions"
-                      />
-                    </ListItem>
-                  </Link>
-                  <Link to="/employerratingquestions" className={classes.link}>
-                 
-                    <ListItem
-                      button
-                      className={classes.nested}
-                      onClick={() => handleDrawerClose()}
-                    >
-                      <ListItemText
-                        className={classes.textColor}
-                        primary="Employer RatingQuestions"
-                      />
-                    </ListItem>
-                  </Link>
-                  <Link to="/employerchoicequestions" className={classes.link}>
-                   
-                    <ListItem
-                      button
-                      className={classes.nested}
-                      onClick={() => handleDrawerClose()}
-                    >
-                      <ListItemText
-                        className={classes.textColor}
-                        primary="Employer ChoiceQuestions"
-                      />
-                    </ListItem>
-                  </Link>
-                </List>
-              </Collapse>
             </List>
           </Collapse>
 
@@ -589,8 +372,8 @@ export default function MiniDrawer(props) {
             {open2 ? (
               <ExpandLess style={{ color: "white" }} />
             ) : (
-              <ExpandMore style={{ color: "white" }} />
-            )}
+                <ExpandMore style={{ color: "white" }} />
+              )}
           </ListItem>
 
           <Collapse in={(open2, open)} timeout="auto" unmountOnExit>
@@ -612,108 +395,34 @@ export default function MiniDrawer(props) {
 
           <Divider />
 
-          <ListItem
-            button
-            onClick={(() => setOpen3(!open3), () => setOpen(!open))}
-          >
-            <ListItemIcon>
-              <CodeIcon style={{ color: "white" }} />
-            </ListItemIcon>
-            <ListItemText primary="My Codes" className={classes.textColor} />
-            {open3 ? (
-              <ExpandLess style={{ color: "white" }} />
-            ) : (
-              <ExpandMore style={{ color: "white" }} />
-            )}
-          </ListItem>
-
-          <Collapse in={(open3, open)} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <Link
-                to="/adminAccessCodes"
-                className={classes.link}
-                onClick={() => handleDrawerClose()}
-              >
-                <ListItem button className={classes.nested2}>
+          <Link to="/adminCodes" className={classes.link} onClick={() => handleDrawerClose()}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <CodeIcon style={{ color: "white" }} />
+                  </ListItemIcon>
                   <ListItemText
+                    primary={"My Codes"}
                     className={classes.textColor}
-                    primary="Access Codes"
                   />
                 </ListItem>
               </Link>
-
-              <Link
-                to="/adminEvaluationCodes"
-                className={classes.link}
-                onClick={() => handleDrawerClose()}
-              >
-                <ListItem button className={classes.nested2}>
-                  <ListItemText
-                    className={classes.textColor}
-                    primary="Evaluation Codes"
-                  />
-                </ListItem>
-              </Link>
-
-              <Link
-                to="/approvalCodes"
-                className={classes.link}
-                onClick={() => handleDrawerClose()}
-              >
-                <ListItem button className={classes.nested2}>
-                  <ListItemText
-                    className={classes.textColor}
-                    primary="Approval Codes"
-                  />
-                </ListItem>
-              </Link>
-            </List>
-          </Collapse>
+              {/* <Divider /> */}
 
           <Divider />
         </Drawer>
         <main className={classes.content}>
           <Toolbar />
           <Switch>
-            <Route exact path="/manageStates">
+
+            <Route exact path="/addressSettings">
               <Container>
-                <ManageStates />
+                <AddressTabs />
               </Container>
             </Route>
 
-            <Route exact path="/manageLGAs">
+            <Route exact path="/phoneSettings">
               <Container>
-                <ManageLGAs />
-              </Container>
-            </Route>
-
-            <Route exact path="/manageCities">
-              <Container>
-                <ManageCities />
-              </Container>
-            </Route>
-
-            <Route exact path="/manageAddressTypes">
-              <Container>
-                <ManageAddressTypes />
-              </Container>
-            </Route>
-
-            <Route exact path="/manageAddressReasons">
-              <Container>
-                <ManageAddressReasons />
-              </Container>
-            </Route>
-
-            <Route exact path="/managePhoneTypes">
-              <Container>
-                <ManagePhoneTypes />
-              </Container>
-            </Route>
-
-            <Route exact path="/managePhoneReasons">
-              <Container>
-                <ManagePhoneReasons />
+                <PhoneTabs />
               </Container>
             </Route>
 
@@ -723,15 +432,15 @@ export default function MiniDrawer(props) {
               </Container>
             </Route>
 
-            <Route exact path="/manageJobCategories">
+            <Route exact path="/jobSettings">
               <Container>
-                <ManageJobCategories />
+                <JobTabs />
               </Container>
             </Route>
 
-            <Route exact path="/manageJobLeavingReasons">
+            <Route exact path="/ratingsSettings">
               <Container>
-                <ManageJobLeavingReasons />
+                <RatingsTabs />
               </Container>
             </Route>
 
@@ -740,43 +449,13 @@ export default function MiniDrawer(props) {
                 <AddAdminUser />
               </Container>
             </Route>
-            <Route exact path="/employeeratingquestions">
+            
+            <Route exact path="/adminCodes">
               <Container>
-                <Employeeratingquestions/>
-              </Container>
-            </Route>
-            <Route exact path="/employeechoicequestions">
-              <Container>
-                <Employeechoicequestions/>
-              </Container>
-            </Route>
-            <Route exact path="/employerratingquestions">
-              <Container>
-                <Employerratingquestions/>
-              </Container>
-            </Route>
-            <Route exact path="/employerchoicequestions">
-              <Container>
-                <Employerchoicequestions/>
-              </Container>
-            </Route>
-            <Route exact path="/adminAccessCodes">
-              <Container>
-                <AdminAccessCodes />
+                <CodeTabs />
               </Container>
             </Route>
 
-            <Route exact path="/AdminEvaluationCodes">
-              <Container>
-                <AdminEvaluationCodes />
-              </Container>
-            </Route>
-
-            <Route exact path="/approvalCodes">
-              <Container>
-                <ApprovalCodes />
-              </Container>
-            </Route>
           </Switch>
         </main>
       </div>

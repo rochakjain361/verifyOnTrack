@@ -9,7 +9,7 @@ import {
   Typography,
   Button,
   TableContainer,
-} from "@material-ui/core/";
+} from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -29,7 +29,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import {get,post,del}from '../../../../../API'
+import {get,post,del}from '../../../../../../API'
 let token=""
 let id=""
 export default class ratingquestions extends Component {
@@ -49,7 +49,7 @@ export default class ratingquestions extends Component {
     
         await 
           post(
-            "http://3.22.17.212:8000/api/v1/resManager/job/surveyq/employer/rating/",token,
+            "http://3.22.17.212:8000/api/v1/resManager/job/surveyq/employee/rating/",token,
             bodyFormData,
             
           )
@@ -62,7 +62,7 @@ export default class ratingquestions extends Component {
       }
       async deleteid(id) {
         await del(
-          "http://3.22.17.212:8000/api/v1/resManager/job/surveyq/employer/rating/" + id + "/",
+          "http://3.22.17.212:8000/api/v1/resManager/job/surveyq/employee/rating/" + id + "/",
           token,""
         );
         this.getid();
@@ -84,7 +84,7 @@ export default class ratingquestions extends Component {
       }
       async getid() {
 
-        await get("http://3.22.17.212:8000/api/v1/resManager/job/surveyq/employer/rating/",token,"")
+        await get("http://3.22.17.212:8000/api/v1/resManager/job/surveyq/employee/rating/",token,"")
       .then((res) => {
         this.setState({ result: res.data });
         console.log(this.state.result);

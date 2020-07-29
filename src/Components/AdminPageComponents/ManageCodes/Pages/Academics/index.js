@@ -30,7 +30,7 @@ class index extends React.Component {
     async fetchAcademics() {
         const user = this.props.user;
       const approval = this.props.approval;
-        let response = await fetch(api + "/api/v1/employees/" + user + "/academics",
+        let response = await fetch(api + "/api/v1/employees/" + user + "/academics?approvalcode=" + approval,
             {
                 headers: {
                     'Authorization': token
