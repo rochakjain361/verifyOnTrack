@@ -13,6 +13,8 @@ import {
   Select,
   InputLabel,
   MenuItem,
+  CircularProgress,
+  Avatar
 } from "@material-ui/core/";
 
 import {
@@ -32,7 +34,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import { get } from "../../../../API";
+import { get,put } from "../../../../API";
 let token = "";
 class index extends Component {
   state = {
@@ -51,6 +53,8 @@ class index extends Component {
       selectedCloseBtn: "",
       selectedcode: "",
       selecteduserid: "",
+      viewdetailsdata: "",
+      viewdetailsdilog: false,
     };
   }
 
@@ -71,6 +75,7 @@ class index extends Component {
     await this.getcodes();
   }
   async viewdetailsprofile(selecteduserid, selectedcode, type) {
+    this.setState({ viewdetailsdilog: true });
     console.log(selecteduserid, selectedcode, type);
     await get(
       "http://3.22.17.212:8000/api/v1/employees/" +
@@ -83,9 +88,15 @@ class index extends Component {
         selectedcode,
       token,
       ""
-    ).then((res) => {});
+    ).then((res) => {
+      this.setState({
+        viewdetailsdata: res.data,
+      });
+      console.log(this.state.viewdetailsdata[0].firstname);
+    });
   }
   async viewdetails(selecteduserid, selectedcode, type, objId) {
+    this.setState({ viewdetailsdilog: true });
     console.log(selecteduserid, selectedcode, type, objId);
     await get(
       "http://3.22.17.212:8000/api/v1/employees/" +
@@ -98,7 +109,31 @@ class index extends Component {
         selectedcode,
       token,
       ""
-    ).then((res) => {});
+    ).then((res) => {
+      this.setState({
+        viewdetailsdata: res.data,
+      });
+    });
+  }
+  isloading() {
+    return (
+      <Grid
+        container
+        justify="flex-end"
+        alignItems="center"
+        // container
+        // spacing={0}
+        direction="column"
+        // alignItems="center"
+        // justify="center"
+        // // display="flex"
+        // style={{ minHeight: "10vh" }}
+      >
+        <Grid item xs={6} style={{ marginTop: 100 }}>
+          <CircularProgress />
+        </Grid>
+      </Grid>
+    );
   }
   render() {
     return (
@@ -194,6 +229,27 @@ class index extends Component {
                                     row.vot_employee,
                                     row.codeString,
                                     "identities",
+                                    row.objId
+                                  )
+                                : row.verType === "Academic"
+                                ? this.viewdetails(
+                                    row.vot_employee,
+                                    row.codeString,
+                                    "academics",
+                                    row.objId
+                                  )
+                                : row.verType === "Phone"
+                                ? this.viewdetails(
+                                    row.vot_employee,
+                                    row.codeString,
+                                    "phones",
+                                    row.objId
+                                  )
+                                : row.verType === "Job"
+                                ? this.viewdetails(
+                                    row.vot_employee,
+                                    row.codeString,
+                                    "jobs",
                                     row.objId
                                   )
                                 : this.setState({});
@@ -297,188 +353,840 @@ class index extends Component {
             </Table>
           </TableContainer>
         </Grid>
-        {/* </Paper> */}
-
-        {/* GENERATE NEW CODE DIALOG DATA */}
         {
           <div>
             <Dialog
-              open={this.state.generateNewEmployementCodeDialog}
-              onClose={() =>
-                this.setState({ generateNewEmployementCodeDialog: false })
-              }
+              open={this.state.viewdetailsdilog}
+              onClose={() => this.setState({ viewdetailsdilog: false })}
             >
-              <DialogTitle id="codegenerator">{"Code Generator"}</DialogTitle>
+              <DialogTitle id="codegenerator" align="center">
+                View Details
+              </DialogTitle>
               <DialogContent>
-                <Grid
-                  container
-                  justify="flex-start"
-                  direction="row"
-                  alignItems="center"
-                  spacing={2}
-                >
-                  <Grid item xs={12}>
-                    <FormControl component="fieldset">
-                      <FormLabel component="legend">
-                        Search employee by:
-                      </FormLabel>
-                      <RadioGroup
-                        name="searchCategory"
-                        // value={value}
-                        // onChange={handleChange}
-                      >
+                {this.state.selectedtype === "Profile" ? (
+                  this.state.viewdetailsdata.length === 0 ? (
+                    this.isloading()
+                  ) : (
+                    <Grid
+                      container
+                      justify="flex-start"
+                      direction="row"
+                      alignItems="center"
+                      spacing={2}
+                    >
+                      <Grid item xs={12} align="center">
+                        <Avatar style={{ height: "8rem", width: "8rem" }}>
+                          <img
+                            src={this.state.viewdetailsdata[0].picture}
+                            width="130"
+                            height="130"
+                            alt=""
+                          />
+                        </Avatar>
+                      </Grid>
+
+                      <Grid item xs={12}>
                         <Grid
                           container
-                          direction="row"
-                          style={{ marginTop: 10 }}
+                          justify="flex-start"
+                          direction="column"
+                          alignItems="center"
+                          spacing={2}
                         >
-                          <FormControlLabel
-                            value="searchByEmail"
-                            control={<Radio />}
-                            label="Email"
+                          <TextField
+                            id="fullName"
+                            label="FirstName"
+                            defaultValue={
+                              this.state.viewdetailsdata[0].firstname
+                            }
+                            type="text"
+                            InputProps={{
+                              readOnly: true,
+                            }}
+                            fullWidth
+                            size="small"
                           />
-                          <FormControlLabel
-                            value="searchByUsername"
-                            control={<Radio />}
-                            label="Username"
+                          <TextField
+                            id="fullName"
+                            label="MiddleName"
+                            defaultValue={
+                              this.state.viewdetailsdata[0].middlename
+                            }
+                            type="text"
+                            InputProps={{
+                              readOnly: true,
+                            }}
+                            fullWidth
+                            size="small"
+                          />
+                          <TextField
+                            id="fullName"
+                            label="LastName"
+                            defaultValue={this.state.viewdetailsdata[0].surname}
+                            type="text"
+                            InputProps={{
+                              readOnly: true,
+                            }}
+                            fullWidth
+                            size="small"
                           />
                         </Grid>
-                      </RadioGroup>
-                    </FormControl>
-                  </Grid>
+                      </Grid>
 
-                  {/* Display these conditionally */}
-
-                  <Grid item xs={12}>
-                    <Autocomplete
-                      size="small"
-                      id="usernam"
-                      Email
-                      renderInput={(params) => (
-                        <TextField {...params} label="Email" margin="normal" />
-                      )}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <Autocomplete
-                      size="small"
-                      id="username"
-                      Username
-                      renderInput={(params) => (
+                      <Grid item xs={12}>
                         <TextField
-                          {...params}
-                          label="Username"
-                          margin="normal"
+                          id="fullName"
+                          label="Gender"
+                          defaultValue={this.state.viewdetailsdata[0].sex}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
                         />
-                      )}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <Autocomplete
-                      size="small"
-                      id="comapny"
-                      Company
-                      renderInput={(params) => (
+                      </Grid>
+                      <Grid item xs={12}>
                         <TextField
-                          {...params}
-                          label="Company"
-                          margin="normal"
+                          id="fullName"
+                          label="Date of birth"
+                          defaultValue={this.state.viewdetailsdata[0].dob}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
                         />
-                      )}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <FormControl component="fieldset">
-                      <FormLabel component="legend">
-                        Provide access to:
-                      </FormLabel>
-                      <FormGroup>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              // checked={employeeProfile}
-                              // onChange={handleChange}
-                              name="ratings"
-                            />
+                      </Grid>
+                    </Grid>
+                  )
+                ) : this.state.selectedtype === "Address" ? (
+                  this.state.viewdetailsdata.length === 0 ? (
+                    this.isloading()
+                  ) : (
+                    <Grid
+                      container
+                      justify="flex-start"
+                      direction="row"
+                      alignItems="center"
+                      spacing={2}
+                    >
+                      <Grid item xs={12} align="center">
+                        <h3>Address</h3>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="State Name"
+                          defaultValue={
+                            this.state.viewdetailsdata.state_name_field
                           }
-                          label="Ratings"
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
                         />
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              // checked={jobProfile}
-                              // onChange={handleChange}
-                              name="address"
-                            />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Lga Name"
+                          defaultValue={
+                            this.state.viewdetailsdata.lga_name_field
                           }
-                          label="Address"
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
                         />
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              // checked={jobProfile}
-                              // onChange={handleChange}
-                              name="profile"
-                            />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="City Name"
+                          defaultValue={
+                            this.state.viewdetailsdata.city_name_field
                           }
-                          label="Profile"
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
                         />
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              // checked={jobProfile}
-                              // onChange={handleChange}
-                              name="identites"
-                            />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Address Hint1"
+                          defaultValue={
+                            this.state.viewdetailsdata.address_hint1
                           }
-                          label="Identities"
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
                         />
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              // checked={jobProfile}
-                              // onChange={handleChange}
-                              name="phones"
-                            />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Address Hint1"
+                          defaultValue={
+                            this.state.viewdetailsdata.address_hint1
                           }
-                          label="Phones"
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
                         />
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              // checked={jobProfile}
-                              // onChange={handleChange}
-                              name="jobHistory"
-                            />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <h6>Google Coordinates</h6>
+                        <a
+                          href={`http://www.google.com/maps/place/${this.state.viewdetailsdata.google_coordinate1},${this.state.viewdetailsdata.google_coordinate2}`}
+                          target="_blank"
+                        >
+                          Location
+                        </a>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Adress Type"
+                          defaultValue={
+                            this.state.viewdetailsdata.address_type_name_field
                           }
-                          label="Job History"
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
                         />
-                      </FormGroup>
-                    </FormControl>
-                  </Grid>
-                </Grid>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Created On"
+                          defaultValue={this.state.viewdetailsdata.created_on}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="House Numer"
+                          defaultValue={this.state.viewdetailsdata.house_number}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Street Name"
+                          defaultValue={this.state.viewdetailsdata.street_name}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Update Reason"
+                          defaultValue={
+                            this.state.viewdetailsdata.update_reason
+                          }
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                    </Grid>
+                  )
+                ) : this.state.selectedtype === "Identity" ? (
+                  this.state.viewdetailsdata.length === 0 ? (
+                    this.isloading()
+                  ) : (
+                    <Grid
+                      container
+                      justify="flex-start"
+                      direction="row"
+                      alignItems="center"
+                      spacing={2}
+                    >
+                      <Grid item xs={12} align="center">
+                        <h3>Identity</h3>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Created On"
+                          defaultValue={this.state.viewdetailsdata.created_on}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Full Name"
+                          defaultValue={this.state.viewdetailsdata.fullname}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Date of Birth"
+                          defaultValue={this.state.viewdetailsdata.dob}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="IdNumber"
+                          defaultValue={this.state.viewdetailsdata.idNumber}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="IdSource"
+                          defaultValue={
+                            this.state.viewdetailsdata.idSource_name_field
+                          }
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Update Reason"
+                          defaultValue={
+                            this.state.viewdetailsdata.update_reason
+                          }
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Gender"
+                          defaultValue={this.state.viewdetailsdata.sex}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                    </Grid>
+                  )
+                ) : this.state.selectedtype === "Academic" ? (
+                  this.state.viewdetailsdata.length === 0 ? (
+                    this.isloading()
+                  ) : (
+                    <Grid
+                      container
+                      justify="flex-start"
+                      direction="row"
+                      alignItems="center"
+                      spacing={2}
+                    >
+                      <Grid item xs={12} align="center">
+                        <h3>Academics</h3>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Academic Types"
+                          defaultValue={
+                            this.state.viewdetailsdata[0]
+                              .academicType_name_field
+                          }
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Degree"
+                          defaultValue={this.state.viewdetailsdata[0].degree}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="School"
+                          defaultValue={this.state.viewdetailsdata[0].school}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Start Date"
+                          defaultValue={this.state.viewdetailsdata[0].startDate}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="End Date"
+                          defaultValue={this.state.viewdetailsdata[0].endDate}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Created On"
+                          defaultValue={
+                            this.state.viewdetailsdata[0].created_on
+                          }
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                    </Grid>
+                  )
+                ) : this.state.selectedtype === "Phone" ? (
+                  this.state.viewdetailsdata.length === 0 ? (
+                    this.isloading()
+                  ) : (
+                    <Grid
+                      container
+                      justify="flex-start"
+                      direction="row"
+                      alignItems="center"
+                      spacing={2}
+                    >
+                      <Grid item xs={12} align="center">
+                        <h3>Phone</h3>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Created On"
+                          defaultValue={this.state.viewdetailsdata.created_on}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Date Obtained"
+                          defaultValue={this.state.viewdetailsdata.dateObtained}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Default Phone"
+                          defaultValue={
+                            this.state.viewdetailsdata.default_phone
+                          }
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="ImeI Number"
+                          defaultValue={this.state.viewdetailsdata.imeiNumber}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Phone Number"
+                          defaultValue={this.state.viewdetailsdata.phoneNumber}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Phone Reason"
+                          defaultValue={
+                            this.state.viewdetailsdata.phone_reason_name_field
+                          }
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Phone Type"
+                          defaultValue={
+                            this.state.viewdetailsdata.phone_type_name_field
+                          }
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Update Reason"
+                          defaultValue={
+                            this.state.viewdetailsdata.update_reason
+                          }
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                    </Grid>
+                  )
+                ) : this.state.selectedtype === "Job" ? (
+                  this.state.viewdetailsdata.length === 0 ? (
+                    this.isloading()
+                  ) : (
+                    <Grid
+                      container
+                      justify="flex-start"
+                      direction="row"
+                      alignItems="center"
+                      spacing={2}
+                    >
+                      <Grid item xs={12} align="center">
+                        <h3>Job</h3>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Company Name"
+                          defaultValue={
+                            this.state.viewdetailsdata.company_name_field
+                          }
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Created On"
+                          defaultValue={this.state.viewdetailsdata.created_on}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="End Date"
+                          defaultValue={this.state.viewdetailsdata.endDate}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Job Description"
+                          defaultValue={
+                            this.state.viewdetailsdata.jobDescription
+                          }
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Job Title"
+                          defaultValue={this.state.viewdetailsdata.jobTitle}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Job Category"
+                          defaultValue={
+                            this.state.viewdetailsdata.job_category_field
+                          }
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Leaving Reason"
+                          defaultValue={
+                            this.state.viewdetailsdata.leaving_reason_field
+                          }
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Start Date"
+                          defaultValue={this.state.viewdetailsdata.startDate}
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="fullName"
+                          label="Update Reason"
+                          defaultValue={
+                            this.state.viewdetailsdata.update_reason
+                          }
+                          type="text"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                          fullWidth
+                          size="small"
+                        />
+                      </Grid>
+                    </Grid>
+                  )
+                ) : null}
               </DialogContent>
               <DialogActions style={{ padding: 15 }}>
                 <Button
+                  disabled={this.state.selectedCloseBtn}
+                  color="primary"
+                  variant="contained"
+                  onClick={() => {
+                    this.setState({
+                      viewdetailsdilog: false,
+                      selectedIndex: -1,
+                    });
+                    this.markverifed();
+                  }}
+                >
+                  Mark Verified
+                </Button>
+                <Button
+                  disabled={this.state.selectedCloseBtn}
                   color="secondary"
                   variant="contained"
-                  onClick={() =>
+                  onClick={() => {
                     this.setState({
-                      generateNewEmployementCodeDialog: false,
-                      selectedIndex: -1,
-                    })
-                  }
+                      viewdetailsdilog: false,
+                    });
+
+                    this.markverifiedfailed();
+                  }}
                 >
-                  Generate One-time Code
+                  Mark Verified Failed
+                </Button>
+                <Button
+                  disabled={!this.state.selectedCloseBtn}
+                  color="secondary"
+                  variant="contained"
+                  onClick={() => {
+                    this.setState({
+                      viewdetailsdilog: false,
+                      selectedIndex: -1,
+                    });
+                    this.closecode();
+                  }}
+                >
+                  close
                 </Button>
               </DialogActions>
             </Dialog>
           </div>
         }
       </div>
+    );
+  }
+  async markverifed() {
+    await put(
+      "http://3.22.17.212:8000/api/v1/codes/evaluation/codes/" +
+        this.state.selectedid +
+        "/verify?pass=true",
+      token,
+      ""
+    );
+  }
+  async markverifiedfailed() {
+    await put(
+      "http://3.22.17.212:8000/api/v1/codes/evaluation/codes/" +
+        this.state.selectedid +
+        "/verify?pass=false",
+      token,
+      ""
+    );
+  }
+  async closecode() {
+    await put(
+      "http://3.22.17.212:8000/api/v1/codes/evaluation/codes/" +
+        this.state.selectedid +
+        "/close",token,
+      ""
     );
   }
 }
