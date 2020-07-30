@@ -106,7 +106,7 @@ class index extends Component {
                       {profile.employee_email_field}
                     </Typography>
                   </Grid>
-                  <DashButtons />
+                  {/* <DashButtons /> */}
                 </Grid>
               )))
         }
