@@ -14,7 +14,7 @@ import {
   InputLabel,
   MenuItem,
   CircularProgress,
-  Avatar
+  Avatar,
 } from "@material-ui/core/";
 
 import {
@@ -29,12 +29,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormLabel from "@material-ui/core/FormLabel";
-import FormGroup from "@material-ui/core/FormGroup";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import { get,put } from "../../../../API";
+import { get, put } from "../../../../API";
 let token = "";
 class index extends Component {
   state = {
@@ -55,6 +50,8 @@ class index extends Component {
       selecteduserid: "",
       viewdetailsdata: "",
       viewdetailsdilog: false,
+      historydata: [],
+      historydetailsdilog: false,
     };
   }
 
@@ -116,7 +113,7 @@ class index extends Component {
     });
   }
   async gethistory(selecteduserid, selectedcode, type, objId) {
-    // this.setState({ viewdetailsdilog: true });
+    this.setState({ historydetailsdilog: true });
     console.log(selecteduserid, selectedcode, type, objId);
     await get(
       "http://3.22.17.212:8000/api/v1/employees/" +
@@ -129,24 +126,25 @@ class index extends Component {
         selectedcode,
       token,
       ""
-    ).then((res) => {});
+    ).then((res) => this.setState({ historydata: res.data }));
   }
   async gethistoryidentites(selecteduserid, selectedcode, objId) {
-    // this.setState({ viewdetailsdilog: true });
+    this.setState({ historydetailsdilog: true });
     console.log(selecteduserid, selectedcode, objId);
     await get(
       "http://3.22.17.212:8000/api/v1/employees/" +
         selecteduserid +
         "/" +
         "identities-by/" +
-        selecteduserid +"/"+
+        selecteduserid +
+        "/" +
         "idSources/" +
         objId +
         "/history?votcode=" +
         selectedcode,
       token,
       ""
-    ).then((res) => {});
+    ).then((res) => this.setState({ historydata: res.data }));
   }
   isloading() {
     return (
@@ -296,6 +294,54 @@ class index extends Component {
                             size="small"
                             color="primary"
                             variant="outlined"
+                            onClick={() => {
+                              this.setState({
+                                selectedtype: row.verType,
+                              });
+                              row.verType === "Profile"
+                                ? this.gethistory(
+                                    row.vot_employee,
+                                    row.codeString,
+                                    "profiles-by",
+                                    row.objId
+                                  )
+                                : row.verType === "Address"
+                                ? this.gethistory(
+                                    row.vot_employee,
+                                    row.codeString,
+                                    "addresses",
+                                    row.objId
+                                  )
+                                : row.verType === "Identity"
+                                ? this.gethistoryidentites(
+                                    row.vot_employee,
+                                    row.codeString,
+
+                                    row.objId
+                                  )
+                                : row.verType === "Academic"
+                                ? this.gethistory(
+                                    row.vot_employee,
+                                    row.codeString,
+                                    "academics",
+                                    row.objId
+                                  )
+                                : row.verType === "Phone"
+                                ? this.gethistory(
+                                    row.vot_employee,
+                                    row.codeString,
+                                    "phones",
+                                    row.objId
+                                  )
+                                : row.verType === "Job"
+                                ? this.gethistory(
+                                    row.vot_employee,
+                                    row.codeString,
+                                    "jobs",
+                                    row.objId
+                                  )
+                                : this.setState({});
+                            }}
                           >
                             History
                           </Button>
@@ -377,6 +423,9 @@ class index extends Component {
                             color="primary"
                             variant="outlined"
                             onClick={() => {
+                              this.setState({
+                                selectedtype: row.verType,
+                              });
                               row.verType === "Profile"
                                 ? this.gethistory(
                                     row.vot_employee,
@@ -395,7 +444,7 @@ class index extends Component {
                                 ? this.gethistoryidentites(
                                     row.vot_employee,
                                     row.codeString,
-                                   
+
                                     row.objId
                                   )
                                 : row.verType === "Academic"
@@ -1230,6 +1279,387 @@ class index extends Component {
                       selectedIndex: -1,
                     });
                     this.closecode();
+                  }}
+                >
+                  close
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
+        }
+        {
+          <div>
+            <Dialog
+              fullWidth={"md"}
+              maxWidth={"md"}
+              open={this.state.historydetailsdilog}
+              onClose={() => this.setState({ historydetailsdilog: false })}
+            >
+              <DialogTitle id="codegenerator" align="center">
+                History
+              </DialogTitle>
+              <DialogContent>
+                {this.state.selectedtype === "Profile" ? (
+                  this.state.historydata.length === 0 ? (
+                    this.isloading()
+                  ) : (
+                    <Grid
+                      container
+                      justify="flex-start"
+                      direction="row"
+                      alignItems="center"
+                      spacing={2}
+                    >
+                      <DialogTitle id="form-dialog-title" align="center">
+                        Profile History
+                      </DialogTitle>
+                      <TableContainer p={3}>
+                        <Table stickyHeader>
+                          <TableHead>
+                            <TableRow style={{ backgroundColor: "black" }}>
+                              {[
+                                "Picture",
+                                "Fullname",
+                                "Middlename",
+                                "Surname",
+                                "Date of birth",
+                                "Sex",
+                                "Records updated date",
+                                "Updated reason",
+                              ].map((text, index) => (
+                                <TableCell
+                                  style={{ fontWeight: "bolder" }}
+                                  align="left"
+                                >
+                                  {text}
+                                </TableCell>
+                              ))}
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {this.state.historydata.map((row, index) => (
+                              <TableRow key={row.id}>
+                                <TableCell align="left">
+                                  <Avatar src={row.picture}>Picture</Avatar>
+                                </TableCell>
+                                <TableCell align="left">
+                                  {row.firstname}
+                                </TableCell>
+                                <TableCell align="left">
+                                  {row.middlename}
+                                </TableCell>
+                                <TableCell align="left">
+                                  {row.surname}
+                                </TableCell>
+                                <TableCell align="left">
+                                  {new Date(row.dob).toDateString()}
+                                </TableCell>
+                                {/* <TableCell align="center">{row.source_name_field}</TableCell> */}
+                                <TableCell align="left">{row.sex}</TableCell>{" "}
+                                <TableCell component="th" align="left">
+                                  {new Date(row.created_on).toDateString()}
+                                </TableCell>
+                                <TableCell align="left">
+                                  {row.update_reason}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Grid>
+                  )
+                ) : this.state.selectedtype === "Address" ? (
+                  this.state.historydata.length === 0 ? (
+                    this.isloading()
+                  ) : (
+                    <Grid
+                      container
+                      justify="flex-start"
+                      direction="row"
+                      alignItems="center"
+                      spacing={2}
+                    >
+                      <TableContainer p={3}>
+                        <Table stickyHeader>
+                          <TableHead>
+                            <TableRow style={{ backgroundColor: "black" }}>
+                              {[
+                                "State/Lga/City",
+                                "House Number,Street Name,Address Hint 1",
+                                "Google Link",
+                                "Address Reason",
+                                "Address Type",
+                                "Records Updated Date",
+                                "Update Reason",
+                              ].map((text, index) => (
+                                <TableCell
+                                  align="center"
+                                  style={{ fontWeight: "bolder" }}
+                                >
+                                  {text}
+                                </TableCell>
+                              ))}
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {this.state.historydata.map((row, index) => (
+                              <TableRow key={row.id}>
+                                <TableCell align="center">
+                                  {row.state_name_field},{row.lga_name_field},
+                                  {row.city_name_field}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row.house_number},{row.street_name},
+                                  {row.address_hint1}
+                                </TableCell>
+                                {/* <TableCell align="center">
+                        <Avatar src={row.address_hint1}>Picture</Avatar>
+                      </TableCell> */}
+                                <TableCell align="center">
+                                  <a
+                                    href={`http://www.google.com/maps/place/${row.google_coordinate1}+,+${row.google_coordinate2}`}
+                                    target="_blank"
+                                  >
+                                    Location
+                                  </a>
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row.address_reason_name_field}
+                                </TableCell>{" "}
+                                <TableCell align="center">
+                                  {row.address_type_name_field}
+                                </TableCell>{" "}
+                                <TableCell component="th" align="center">
+                                  {new Date(row.created_on).toDateString()}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row.update_reason}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Grid>
+                  )
+                ) : this.state.selectedtype === "Identity" ? (
+                  this.state.historydata.length === 0 ? (
+                    this.isloading()
+                  ) : (
+                    <Grid
+                      container
+                      justify="flex-start"
+                      direction="row"
+                      alignItems="center"
+                      spacing={2}
+                    >
+                      <TableContainer p={3}>
+                        <Table stickyHeader>
+                          <TableHead>
+                            <TableRow style={{ backgroundColor: "black" }}>
+                              {[
+                                "Full Name",
+                                "Date of birth",
+                                "Sex",
+                                "Id Source",
+                                "Id Number",
+                                "Records Updated Date",
+                                "Update Reason",
+                              ].map((text, index) => (
+                                <TableCell
+                                  style={{ fontWeight: "bolder" }}
+                                  align="center"
+                                >
+                                  {text}
+                                </TableCell>
+                              ))}
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {this.state.historydata.map((row, index) => (
+                              <TableRow key={row.id}>
+                                <TableCell align="center">
+                                  {row.fullname}
+                                </TableCell>
+                                <TableCell align="center">{row.dob}</TableCell>
+                                <TableCell align="center">{row.sex}</TableCell>
+                                <TableCell align="center">
+                                  {row.idSource_name_field}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row.idNumber}
+                                </TableCell>{" "}
+                                <TableCell component="th" align="center">
+                                  {new Date(row.created_on).toDateString()}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row.update_reason}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Grid>
+                  )
+                ) : this.state.selectedtype === "Academic" ? (
+                  this.state.historydata.length === 0 ? (
+                    this.isloading()
+                  ) : (
+                    <Grid
+                      container
+                      justify="flex-start"
+                      direction="row"
+                      alignItems="center"
+                      spacing={2}
+                    ></Grid>
+                  )
+                ) : this.state.selectedtype === "Phone" ? (
+                  this.state.historydata.length === 0 ? (
+                    this.isloading()
+                  ) : (
+                    <Grid
+                      container
+                      justify="flex-start"
+                      direction="row"
+                      alignItems="center"
+                      spacing={2}
+                    >
+                      <TableContainer p={3}>
+                        <Table stickyHeader>
+                          <TableHead>
+                            <TableRow style={{ backgroundColor: "black" }}>
+                              <TableCell
+                                style={{ fontWeight: "bolder" }}
+                                align="center"
+                              >
+                                phonenumber
+                              </TableCell>
+                              <TableCell
+                                style={{ fontWeight: "bolder" }}
+                                align="center"
+                              >
+                                phoneReason
+                              </TableCell>
+                              <TableCell
+                                style={{ fontWeight: "bolder" }}
+                                align="center"
+                              >
+                                phoneType
+                              </TableCell>
+                              <TableCell
+                                style={{ fontWeight: "bolder" }}
+                                align="center"
+                              >
+                                DefaultPhone
+                              </TableCell>
+
+                              <TableCell
+                                style={{ fontWeight: "bolder" }}
+                                align="center"
+                              >
+                                imeinumber
+                              </TableCell>
+
+                              <TableCell
+                                style={{ fontWeight: "bolder" }}
+                                align="center"
+                              >
+                                records updated date
+                              </TableCell>
+                              <TableCell
+                                style={{ fontWeight: "bolder" }}
+                                align="center"
+                              >
+                                Update reason
+                              </TableCell>
+                            </TableRow>
+                          </TableHead>
+
+                          <TableBody>
+                            {this.state.historydata.map((row, index) => (
+                              <TableRow key={row.id}>
+                                <TableCell align="center">
+                                  {row.phoneNumber}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row.phone_reason_name_field}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row.phone_type_name_field}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row.default_phone}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row.imeiNumber}
+                                </TableCell>
+                                <TableCell component="th" align="center">
+                                  {row.created_on}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row.update_reason}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Grid>
+                  )
+                ) : this.state.selectedtype === "Job" ? (
+                  this.state.historydata.length === 0 ? (
+                    this.isloading()
+                  ) : (
+                    <Grid
+                      container
+                      justify="flex-start"
+                      direction="row"
+                      alignItems="center"
+                      spacing={2}
+                    >
+                      <Table stickyHeader>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell align="left">Created on</TableCell>
+                            <TableCell align="left">Update Reason</TableCell>
+                            <TableCell align="left">Job Description</TableCell>
+                            <TableCell align="left">Job Category</TableCell>
+                          </TableRow>
+                        </TableHead>
+
+                        <TableBody>
+                          {this.state.historydata.map((row, index) => (
+                            <TableRow key={row.id}>
+                              <TableCell align="left">
+                                {new Date(row.created_on).toDateString()}
+                              </TableCell>
+                              <TableCell align="left">
+                                {row.update_reason}
+                              </TableCell>
+                              <TableCell align="left">
+                                {row.jobDescription}
+                              </TableCell>
+                              <TableCell align="left">
+                                {row.job_category_field}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </Grid>
+                  )
+                ) : null}
+              </DialogContent>
+              <DialogActions style={{ padding: 15 }}>
+                <Button
+                  color="secondary"
+                  variant="contained"
+                  onClick={() => {
+                    this.setState({
+                      historydetailsdilog: false,
+                    });
                   }}
                 >
                   close

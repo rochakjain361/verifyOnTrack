@@ -826,7 +826,7 @@ class Phones extends Component {
           onClose={() => this.setState({ historyDialougeOpen: false })}
           aria-labelledby="responsive-dialog-title"
         >
-          {" "}
+         
           <DialogTitle id="form-dialog-title" align="center">
             Phone History
           </DialogTitle>
