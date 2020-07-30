@@ -306,7 +306,7 @@ class index extends Component {
 
                                                         <Grid item xs={3}>
                                                             <Typography variant='subtitle1' color="textSecondary">
-                                                                {emp.jobDetails.ontrac_id}
+                                                                {emp.status}
                                                             </Typography>
                                                         </Grid>
                                                     </Grid>
@@ -405,7 +405,7 @@ class index extends Component {
                                                                     <Grid item xs={3}>
                                                                         <Typography variant='subtitle1' color="textSecondary">
                                                                             Status
-                                         </Typography>
+                                                                        </Typography>
                                                                     </Grid>
 
                                                                     <Grid item xs={9}>
@@ -530,7 +530,7 @@ class index extends Component {
 
                                                         <Grid item xs={3}>
                                                             <Typography variant='subtitle1' color="textSecondary">
-                                                                {emp.jobDetails.ontrac_id}
+                                                                {emp.offboard.offbStatus}
                                                             </Typography>
                                                         </Grid>
                                                     </Grid>

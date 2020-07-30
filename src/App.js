@@ -109,6 +109,11 @@ class App extends React.PureComponent {
                 />
                 <Route
                   exact
+                  path="/employerEmployees"
+                  component={EmployerDash}
+                />
+                <Route
+                  exact
                   path="/employerAccessCodes"
                   component={EmployerDash}
                 />
