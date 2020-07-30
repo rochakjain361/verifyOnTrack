@@ -51,6 +51,7 @@ class index extends Component {
       viewdetailsdilog: false,
       historydata: [],
       historydetailsdilog: false,
+      selectedmarkid:"",
     };
   }
 
@@ -270,6 +271,7 @@ class index extends Component {
                                 selectedCloseBtn: row.showMarkCloseBtn,
                                 selectedcode: row.codeString,
                                 selecteduserid: row.vot_employee,
+                                selectedmarkid:row.id,
                               });
                               row.verType === "Profile"
                                 ? this.viewdetailsprofile(
@@ -394,6 +396,7 @@ class index extends Component {
                                 selectedCloseBtn: row.showMarkCloseBtn,
                                 selectedcode: row.codeString,
                                 selecteduserid: row.vot_employee,
+                                selectedmarkid: row.id,
                               });
                               row.verType === "Profile"
                                 ? this.viewdetailsprofile(
@@ -1766,29 +1769,31 @@ class index extends Component {
   async markverifed() {
     await put(
       "http://3.22.17.212:8000/api/v1/codes/evaluation/codes/" +
-        this.state.selectedid +
+        this.state.selectedmarkid +
         "/verify?pass=true",
       token,
       ""
-    );
+    ).then((res)=>{this.getcodes()})
   }
   async markverifiedfailed() {
     await put(
       "http://3.22.17.212:8000/api/v1/codes/evaluation/codes/" +
-        this.state.selectedid +
+        this.state.selectedmarkid +
         "/verify?pass=false",
       token,
       ""
-    );
+    ).then((res) => {
+      this.getcodes()
+    });
   }
   async closecode() {
     await put(
       "http://3.22.17.212:8000/api/v1/codes/evaluation/codes/" +
-        this.state.selectedid +
+        this.state.selectedmarkid +
         "/close",
       token,
       ""
-    );
+    ).then((res)=>{this.getcodes()})
   }
 }
 
