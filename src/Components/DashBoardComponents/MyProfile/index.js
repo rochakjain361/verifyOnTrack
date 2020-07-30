@@ -605,31 +605,31 @@ class MyProfile extends Component {
                   <TableCell component="th" align="center">
                     {new Date(row.created_on).toDateString()}
                   </TableCell>
-                 
-                    <TableCell align="center">
-                      <Button
-                        color="primary"
-                        variant="outlined"
-                        disabled={row.status === "Audit In Progress"}
-                        onClick={() =>
-                          this.setState({
-                            updateDialogOpen: true,
-                            selectedIndex: index,
-                            updatedlastname: result[index].surname,
-                            updatedfirstname: result[index].firstname,
-                            updatedMiddlename: result[index].middlename,
-                            updatedDob: result[index].dob,
-                            updateresponse: "",
-                            file: "",
 
-                            // add the updatedstate elements here after passing the token and adding data
-                          })
-                        }
-                      >
-                        Update
-                      </Button>
-                    </TableCell>
-                  
+                  <TableCell align="center">
+                    <Button
+                      color="primary"
+                      variant="outlined"
+                      disabled={row.status === "Audit In Progress"}
+                      onClick={() =>
+                        this.setState({
+                          updateDialogOpen: true,
+                          selectedIndex: index,
+                          updatedlastname: result[index].surname,
+                          updatedfirstname: result[index].firstname,
+                          updatedMiddlename: result[index].middlename,
+                          updatedDob: result[index].dob,
+                          updateresponse: "",
+                          file: "",
+
+                          // add the updatedstate elements here after passing the token and adding data
+                        })
+                      }
+                    >
+                      Update
+                    </Button>
+                  </TableCell>
+
                   <TableCell align="center">
                     <Button
                       variant="outlined"
@@ -857,6 +857,7 @@ class MyProfile extends Component {
                       <TableCell align="left">{row.surname}</TableCell>
                       <TableCell align="left">
                         {new Date(row.dob).toDateString()}
+                       
                       </TableCell>
                       {/* <TableCell align="center">{row.source_name_field}</TableCell> */}
                       <TableCell align="left">{row.sex}</TableCell>{" "}
