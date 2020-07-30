@@ -128,6 +128,20 @@ class index extends Component {
       ""
     ).then((res) => this.setState({ historydata: res.data }));
   }
+  async gethistoryacademics(selecteduserid, selectedcode, type, objId) {
+    this.setState({ historydetailsdilog: true });
+    console.log(selecteduserid, selectedcode, type, objId);
+    await get(
+      "http://3.22.17.212:8000/api/v1/employees/" +
+        selecteduserid +
+        "/" +
+        type +
+        "?votcode=" +
+        selectedcode,
+      token,
+      ""
+    ).then((res) => this.setState({ historydata: res.data }));
+  }
   async gethistoryprofile(selecteduserid, selectedcode, type, objId) {
     this.setState({ historydetailsdilog: true });
     console.log(selecteduserid, selectedcode, type, objId);
@@ -146,7 +160,7 @@ class index extends Component {
   }
   async gethistoryidentites(selecteduserid, selectedcode, objId) {
     this.setState({ historydetailsdilog: true });
-    console.log(selecteduserid, selectedcode, objId);
+    console.log(objId);
     await get(
       "http://3.22.17.212:8000/api/v1/employees/" +
         selecteduserid +
@@ -328,13 +342,6 @@ class index extends Component {
                                     "addresses",
                                     row.objId
                                   )
-                                : row.verType === "Identity"
-                                ? this.gethistoryidentites(
-                                    row.vot_employee,
-                                    row.codeString,
-
-                                    row.objId
-                                  )
                                 : row.verType === "Academic"
                                 ? this.gethistory(
                                     row.vot_employee,
@@ -433,63 +440,58 @@ class index extends Component {
                             View Details
                           </Button>
                         </TableCell>
-                        <TableCell align="center">
-                          <Button
-                            size="small"
-                            color="primary"
-                            variant="outlined"
-                            onClick={() => {
-                              this.setState({
-                                selectedtype: row.verType,
-                              });
-                              row.verType === "Profile"
-                                ? this.gethistoryprofile(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "profiles-by",
-                                    row.objId
-                                  )
-                                : row.verType === "Address"
-                                ? this.gethistory(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "addresses",
-                                    row.objId
-                                  )
-                                : row.verType === "Identity"
-                                ? this.gethistoryidentites(
-                                    row.vot_employee,
-                                    row.codeString,
-
-                                    row.objId
-                                  )
-                                : row.verType === "Academic"
-                                ? this.gethistory(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "academics",
-                                    row.objId
-                                  )
-                                : row.verType === "Phone"
-                                ? this.gethistory(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "phones",
-                                    row.objId
-                                  )
-                                : row.verType === "Job"
-                                ? this.gethistory(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "jobs",
-                                    row.objId
-                                  )
-                                : this.setState({});
-                            }}
-                          >
-                            History
-                          </Button>
-                        </TableCell>
+                        {row.verType !== "Identity" ? (
+                          <TableCell align="center">
+                            <Button
+                              size="small"
+                              color="primary"
+                              variant="outlined"
+                              onClick={() => {
+                                this.setState({
+                                  selectedtype: row.verType,
+                                });
+                                row.verType === "Profile"
+                                  ? this.gethistoryprofile(
+                                      row.vot_employee,
+                                      row.codeString,
+                                      "profiles-by",
+                                      row.objId
+                                    )
+                                  : row.verType === "Address"
+                                  ? this.gethistory(
+                                      row.vot_employee,
+                                      row.codeString,
+                                      "addresses",
+                                      row.objId
+                                    )
+                                  : row.verType === "Academic"
+                                  ? this.gethistoryacademics(
+                                      row.vot_employee,
+                                      row.codeString,
+                                      "academics",
+                                      row.objId
+                                    )
+                                  : row.verType === "Phone"
+                                  ? this.gethistory(
+                                      row.vot_employee,
+                                      row.codeString,
+                                      "phones",
+                                      row.objId
+                                    )
+                                  : row.verType === "Job"
+                                  ? this.gethistory(
+                                      row.vot_employee,
+                                      row.codeString,
+                                      "jobs",
+                                      row.objId
+                                    )
+                                  : this.setState({});
+                              }}
+                            >
+                              History
+                            </Button>
+                          </TableCell>
+                        ) : null}
                       </TableRow>
                     ))}
               </TableBody>
@@ -785,7 +787,23 @@ class index extends Component {
                       spacing={2}
                     >
                       <Grid item xs={12} align="center">
-                        <h3>Identity</h3>
+                        <Grid container justify="space-between">
+                          <h3>Identity</h3>
+                          <Button
+                            color="primary"
+                            size="small"
+                            variant="outlined"
+                            onClick={() =>
+                              this.gethistoryidentites(
+                                this.state.selecteduserid,
+                                this.state.selectedcode,
+                                this.state.viewdetailsdata.idSource
+                              )
+                            }
+                          >
+                            History
+                          </Button>
+                        </Grid>
                       </Grid>
                       <Grid item xs={12}>
                         <TextField
@@ -1529,7 +1547,55 @@ class index extends Component {
                       direction="row"
                       alignItems="center"
                       spacing={2}
-                    ></Grid>
+                    >
+                      <TableContainer p={3}>
+                        <Table stickyHeader>
+                          <TableHead>
+                            <TableRow style={{ backgroundColor: "black" }}>
+                              {[
+                                "Start Date",
+                                "End Date",
+                                "School",
+                                "Degree",
+                                "Update Reason",
+                                "Created On",
+                              ].map((text, index) => (
+                                <TableCell
+                                  style={{ fontWeight: "bolder" }}
+                                  align="center"
+                                >
+                                  {text}
+                                </TableCell>
+                              ))}
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {this.state.historydata.map((row, index) => (
+                              <TableRow key={row.id}>
+                                <TableCell align="center">
+                                  {row.startDate}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row.endDate}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row.school}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row.degree}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row.update_reason}
+                                </TableCell>
+                                <TableCell component="th" align="center">
+                                  {new Date(row.created_on).toDateString()}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Grid>
                   )
                 ) : this.state.selectedtype === "Phone" ? (
                   this.state.historydata.length === 0 ? (
