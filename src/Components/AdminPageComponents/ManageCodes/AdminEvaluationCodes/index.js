@@ -128,6 +128,22 @@ class index extends Component {
       ""
     ).then((res) => this.setState({ historydata: res.data }));
   }
+  async gethistoryprofile(selecteduserid, selectedcode, type, objId) {
+    this.setState({ historydetailsdilog: true });
+    console.log(selecteduserid, selectedcode, type, objId);
+    await get(
+      "http://3.22.17.212:8000/api/v1/employees/" +
+        selecteduserid +
+        "/" +
+        type +
+        "/" +
+        selecteduserid +
+        "/history?votcode=" +
+        selectedcode,
+      token,
+      ""
+    ).then((res) => this.setState({ historydata: res.data }));
+  }
   async gethistoryidentites(selecteduserid, selectedcode, objId) {
     this.setState({ historydetailsdilog: true });
     console.log(selecteduserid, selectedcode, objId);
@@ -427,7 +443,7 @@ class index extends Component {
                                 selectedtype: row.verType,
                               });
                               row.verType === "Profile"
-                                ? this.gethistory(
+                                ? this.gethistoryprofile(
                                     row.vot_employee,
                                     row.codeString,
                                     "profiles-by",
