@@ -19,7 +19,10 @@ const styles = theme => ({
 class index extends React.Component {
 
     state = {
-        academics: []
+        academics: [],
+        academicsBody: '',
+        academicsId: '',
+        academicsPics: ''
     }
 
     // constructor(props) {
@@ -38,13 +41,32 @@ class index extends React.Component {
         response = await response.json();
         console.log('academicsSuccess:', response)
         this.setState({ academics: response });
+        this.setState({ academicsBody: this.state.academics[0]})
+        console.log('academicsBody:', this.state.academicsBody)
+        this.setState({ academicsId: this.state.academicsBody['id']})
+        console.log('academicsId:', this.state.academicsId)
     }
 
-    componentDidMount() {
+    async fetchacademicsPics() {
+        const userId = this.props.userId;
+      const code = this.props.code;
+        let response = await fetch(api + "/api/v1/employees/" + userId + "/idSources/"+ this.state.academicsId + "/pics?code=" + code,
+            {
+                headers: {
+                    'Authorization': token
+                }
+            });
+        response = await response.json();
+        console.log('academicsPicsSuccess:', response)
+        this.setState({ academicsPics: response });
+    }
+
+    async componentDidMount() {
         token = localStorage.getItem("Token");
         id = localStorage.getItem("id");
 
         this.fetchacademics()
+        await this.fetchacademicsPics()
     }
 
     render() {
@@ -81,6 +103,20 @@ class index extends React.Component {
                                 id="school"
                                 label="School"
                                 defaultValue={id.school}
+                                type="text"
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                fullWidth
+                                size='small'
+                            />
+                        </Grid>
+
+                        <Grid item fullWidth xs={12}>
+                            <TextField
+                                id="school"
+                                label="Academic Type"
+                                defaultValue={id.academicType_name_field}
                                 type="text"
                                 InputProps={{
                                     readOnly: true,

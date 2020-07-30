@@ -1,7 +1,20 @@
 import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles';
-import { TextField, CircularProgress, Paper, Grid, Typography, Button, TableContainer, FormControlLabel, Checkbox, FormControl, Select, InputLabel, MenuItem, Divider } from '@material-ui/core/';
-
+import { 
+    TextField,
+    CircularProgress, 
+    Paper, 
+    Grid, 
+    Typography, 
+    Button, 
+    TableContainer, 
+    FormControlLabel, 
+    Checkbox, 
+    FormControl, 
+    Select, 
+    InputLabel, 
+    MenuItem 
+} from '@material-ui/core/';
 import {
     Table,
     TableBody,
@@ -19,7 +32,6 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-
 import PersonIcon from '@material-ui/icons/Person';
 import HomeIcon from '@material-ui/icons/Home';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -27,12 +39,12 @@ import PaymentIcon from '@material-ui/icons/Payment';
 import PhoneIcon from '@material-ui/icons/Phone';
 import WorkIcon from '@material-ui/icons/Work';
 import StarsIcon from '@material-ui/icons/Stars';
+import SchoolIcon from '@material-ui/icons/School';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
 import Profile from '../Pages/Profile'
 import Address from '../Pages/Address'
 import Identity from '../Pages/Identity'
@@ -40,7 +52,6 @@ import Phone from '../Pages/Phone'
 import Job from '../Pages/Job'
 import Ratings from '../Pages/Ratings';
 import Academics from '../Pages/Academics';
-
 import axios from 'axios'
 
 let token1 = "";
@@ -785,6 +796,22 @@ class index extends Component {
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
 
+                                <ExpansionPanel disabled={!this.state.employeeDetailsData['canAccessAcademics']}>
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                    >
+                                        <ListItemIcon>
+                                            <SchoolIcon />
+                                        </ListItemIcon>
+                                        <Typography variant='subtitle2'>Academics</Typography>
+                                    </ExpansionPanelSummary>
+                                    <ExpansionPanelDetails>
+                                        <Academics userId={this.state.employeeDetailsData['employee']} code={this.state.employeeDetailsData['codeString']} />
+                                    </ExpansionPanelDetails>
+                                </ExpansionPanel>
+
                                 <ExpansionPanel disabled={!this.state.employeeDetailsData['canAccessJobHistory']}>
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon />}
@@ -816,23 +843,6 @@ class index extends Component {
                                         <Ratings userId={this.state.employeeDetailsData['employee']} code={this.state.employeeDetailsData['codeString']} />
                                     </ExpansionPanelDetails>
                                 </ExpansionPanel>
-
-                                <ExpansionPanel disabled={!this.state.employeeDetailsData['canAccessAcademics']}>
-                                    <ExpansionPanelSummary
-                                        expandIcon={<ExpandMoreIcon />}
-                                        aria-controls="panel1a-content"
-                                        id="panel1a-header"
-                                    >
-                                        <ListItemIcon>
-                                            <StarsIcon />
-                                        </ListItemIcon>
-                                        <Typography variant='subtitle2'>Academics</Typography>
-                                    </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails>
-                                        <Academics userId={this.state.employeeDetailsData['employee']} code={this.state.employeeDetailsData['codeString']} />
-                                    </ExpansionPanelDetails>
-                                </ExpansionPanel>
-
 
                             </Grid>
 

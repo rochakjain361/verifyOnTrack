@@ -2,13 +2,13 @@ import React, { Component } from 'react'
 import {
     Grid,
     Typography,
-    Paper,
-    ButtonGroup,
-    Button,
+    
+    
+    
     CircularProgress
 } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
-import Rating from '@material-ui/lab/Rating';
+
 import Chart from "react-apexcharts";
 import axios from "axios";
 const styles = theme => ({

@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core/';
 import axios from "axios";
 import { withStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
+
 import Rating from '@material-ui/lab/Rating';
 
 let token1 = "";

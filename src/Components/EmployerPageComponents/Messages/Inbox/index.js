@@ -76,22 +76,14 @@ export default function Index() {
         // this.setState({ companies: tempArr });
         // console.log(tempArr)
       
-
-    
-
-   
-
-        
-       
-
         return (
             <div style={{ marginTop: 20 }}>
                 {/* <Paper style={{ padding: 20, height: '100vh' }}> */}
                 <Grid container justify='space-between' alignItems='center' spacing={4}>
 
                     <Grid item xs={12}>
-                        <Typography variant='h4' align="center">
-                            Inbox
+                        <Typography variant='h4'>
+                            Messages
                                 </Typography>
                     </Grid>
 
@@ -103,8 +95,15 @@ export default function Index() {
         alignItems="center"
         justify="center"
         display="flex"
-        style={{ minHeight: "100vh" }}>
-       <CircularProgress /></Grid>:Response.length===0?<Grid container align="center" justify="center"><h1>No Messages</h1></Grid>
+        style={{ minHeight: "0vh" }}>
+       <CircularProgress /></Grid>:Response.length===0?
+       <Grid 
+       container 
+       align="center" 
+       justify="center"
+       >
+           <h1>No Messages</h1>
+        </Grid>
        
       :
                 <Tabs data={Response} refresh={fetchInboxMessages}/>}

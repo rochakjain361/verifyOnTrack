@@ -9,7 +9,7 @@ import {
   Typography,
   Button,
   TableContainer,
-} from "@material-ui/core/";
+} from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -29,10 +29,10 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import {get,post,del}from '../../../../../API'
+import {get,post,del}from '../../../../../../API'
 let token=""
 let id=""
-export default class choicequstions extends Component {
+export default class ratingquestions extends Component {
     constructor(props) {
         super(props)
     
@@ -49,7 +49,7 @@ export default class choicequstions extends Component {
     
         await 
           post(
-            "http://3.22.17.212:8000/api/v1/resManager/job/surveyq/employee/choice/",token,
+            "http://3.22.17.212:8000/api/v1/resManager/job/surveyq/employer/rating/",token,
             bodyFormData,
             
           )
@@ -62,7 +62,7 @@ export default class choicequstions extends Component {
       }
       async deleteid(id) {
         await del(
-          "http://3.22.17.212:8000/api/v1/resManager/job/surveyq/employee/choice/" + id + "/",
+          "http://3.22.17.212:8000/api/v1/resManager/job/surveyq/employer/rating/" + id + "/",
           token,""
         );
         this.getid();
@@ -84,7 +84,7 @@ export default class choicequstions extends Component {
       }
       async getid() {
 
-        await get("http://3.22.17.212:8000/api/v1/resManager/job/surveyq/employee/choice/",token,"")
+        await get("http://3.22.17.212:8000/api/v1/resManager/job/surveyq/employer/rating/",token,"")
       .then((res) => {
         this.setState({ result: res.data });
         console.log(this.state.result);
@@ -116,7 +116,7 @@ export default class choicequstions extends Component {
                     spacing={4}
                   >
                     <Grid item>
-                      <Typography variant="h4">Choice Questions</Typography>
+                      <Typography variant="h4">Rating Questions</Typography>
                     </Grid>
     
                     {/* <Grid item xs={4}>

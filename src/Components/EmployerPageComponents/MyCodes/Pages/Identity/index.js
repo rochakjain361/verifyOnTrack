@@ -40,6 +40,20 @@ class index extends React.Component {
     this.setState({ identities: response });
   }
 
+  async fetchIdentitiesPics() {
+    const userId = this.props.userId;
+      const code = this.props.code;
+    let response = await fetch(api + "/api/v1/employees/" + userId + "/identities?code=" + code,
+      {
+        headers: {
+          'Authorization': token
+        }
+      });
+    response = await response.json();
+    console.log('IdentitiesSuccess:', response, 'UserId', userId, 'accessCode', code)
+    this.setState({ identities: response });
+  }
+
   componentDidMount() {
     token = localStorage.getItem("Token");
         id = localStorage.getItem("id");

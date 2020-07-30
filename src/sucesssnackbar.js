@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import Snackbar from "@material-ui/core/Snackbar";
-import IconButton from "@material-ui/core/IconButton";
-import { Icon } from "@material-ui/core";
+
+
 import { clearSnackbar } from "../src/actions/snackbaractions";
 import React from 'react'
 import MuiAlert from '@material-ui/lab/Alert';

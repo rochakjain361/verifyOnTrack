@@ -21,7 +21,9 @@ const styles = theme => ({
 class index extends React.Component {
 
   state = {
-    result: []
+    result: [],
+    choiceFromEmployers: [],
+    ratingsFromEmployers: []
   }
 
   // constructor(props) {
@@ -39,7 +41,11 @@ class index extends React.Component {
       });
     response = await response.json();
     console.log('ratingsSuccess:', response)
-    this.setState({ result: response });
+    this.setState({ result: response });    
+    this.setState({ choiceFromEmployers: [this.state.result['choiceFromEmployers']],
+                    ratingsFromEmployers: [this.state.result['ratingsFromEmployers']] });    
+    console.log('choiceFromEmployers:', this.state.choiceFromEmployers)
+    console.log('ratingsFromEmployers:', this.state.ratingsFromEmployers)
   }
 
   componentDidMount() {
@@ -153,6 +159,21 @@ class index extends React.Component {
             />
           )}
         </Grid>
+        
+          
+          <Typography>Employer Rating:</Typography>
+
+          {/* <Grid container>
+          
+            {this.state.choiceFromEmployers.map((choice)=> (
+                <Grid item>
+                    <Typography>
+                      {choice}
+                    </Typography>
+                </Grid>
+            ))}
+          
+        </Grid> */}
       </div>
     );
   }

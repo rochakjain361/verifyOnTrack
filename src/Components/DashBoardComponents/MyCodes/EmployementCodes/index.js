@@ -1,44 +1,23 @@
-import React, { Component, useEffect, useState } from "react";
-import { withStyles } from "@material-ui/core/styles";
+import React, { useEffect,  } from "react";
+
 import {
-  TextField,
-  Paper,
+ 
   Grid,
   Typography,
-  Button,
-  TableContainer,
-  FormControlLabel,
-  Checkbox,
-  FormControl,
-  Select,
-  InputLabel,
-  MenuItem,
+ 
 } from "@material-ui/core/";
 
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
+ 
   CircularProgress,
   Box,
 } from "@material-ui/core/";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormLabel from "@material-ui/core/FormLabel";
-import FormGroup from "@material-ui/core/FormGroup";
 import TabsEmployment from "../EmployementCodes/tabsEmployment";
 // import Onboarding from "../../../EmployerPageComponents/MyCodes/EmployementCodes/Onboarding";
 import Axios from "axios";
-import employerList from "./employerList";
+
 import {get} from '../../../../API'
-const styles = (theme) => ({});
+
 
 export default function Indexemployment() {
   const [Token] = React.useState(localStorage.getItem("Token"));

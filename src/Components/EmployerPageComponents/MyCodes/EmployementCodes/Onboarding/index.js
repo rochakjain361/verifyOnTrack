@@ -782,35 +782,6 @@ class index extends Component {
                                                             </Grid>
 
                                                             <Grid item xs={12}>
-                                                                {/* <Autocomplete
-                                    // options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
-                                    // getOptionLabel={(option) => option.email}
-                                    // groupBy={(option) => option.firstLetter}
-                                    id="adminEmail"
-                                    Username
-                                    size='small'
-                                    fullWidth
-                                    value={this.state.selectedstate}
-                                    onChange={(event, value) => {
-                                        this.setState({ selectedstate: value });
-                                        this.setState({ assignAdminId: value['id'] })
-                                        console.log("selectedstate", value);
-                                        console.log("assignAdminID", this.state.assignAdminId);
-                                    }}
-                                    inputValue={this.state.enteredUsername}
-                                    onInputChange={(event, newInputValue) => {
-                                        this.setState({ enteredUsername: newInputValue });
-                                        // console.log(newInputValue);
-                                    }}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label="Job Type"
-                                            margin="normal"
-                                            variant="outlined"
-                                        />
-                                    )}
-                                /> */}
                                                                 <FormControl variant="outlined" fullWidth size='small'>
                                                                     <InputLabel id="demo-simple-select-outlined-label">Job Type</InputLabel>
                                                                     <Select
@@ -1489,7 +1460,7 @@ class index extends Component {
         let bodyData = {}
 
         try {
-            let response = await fetch(api + '/api/v1/employers/oboffers/' + this.state.employeeId + '/cancel',
+            let response = await fetch(api + '/api/v1/employers/oboffers/' + this.state.newOfferId + '/cancel',
                 {
                     method: 'PUT',
                     headers: {
@@ -1502,7 +1473,7 @@ class index extends Component {
             response = await response.json();
             console.log('cancelJob:', response);
 
-            this.setState({ cancelOfferButton: false, cancelOfferButton: false })
+            this.setState({ cancelOfferButton: false, cancelOfferButton: false, viewOfferButton: false, modifyOfferButton: false })
             this.fetchOnboardOffers();
 
 

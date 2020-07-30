@@ -12,6 +12,7 @@ import Onboarding from '../Onboarding'
 import Comments from '../Comments'
 import EmployeesList from '../EmployeesList'
 import UpdationRequests from '../UpdationRequests'
+import AccessCodes from '../AccessCodes'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -78,9 +79,9 @@ export default function FullWidthTabs() {
           variant="fullWidth"
           aria-label="full width tabs example"
         >
-          <Tab label="Onboarding Requests" {...a11yProps(0)} />
-          <Tab label="Verification Requests" {...a11yProps(1)} />
-          <Tab label="Employees List" {...a11yProps(2)} />
+          <Tab label="Access Requests" {...a11yProps(0)} />
+          <Tab label="Onboarding Requests" {...a11yProps(1)} />
+          <Tab label="Verification Requests" {...a11yProps(2)} />
           <Tab label="Update Requests" {...a11yProps(3)} />
           <Tab label="Comments" {...a11yProps(4)} />
         </Tabs>
@@ -91,13 +92,13 @@ export default function FullWidthTabs() {
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <Onboarding/>
+          <AccessCodes />
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-        <EmploymentVerification/>
+        <Onboarding/>
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
-          <EmployeesList/>
+        <EmploymentVerification/>
         </TabPanel>
         <TabPanel value={value} index={3} dir={theme.direction}>
           <UpdationRequests/>

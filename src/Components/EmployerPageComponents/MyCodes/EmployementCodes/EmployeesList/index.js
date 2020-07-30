@@ -7,7 +7,6 @@ import {
     Typography,
     ListItemAvatar,
     Avatar,
-    Paper,
     List,
     ListItem,
     Divider,
@@ -24,7 +23,6 @@ import {
     Checkbox
 } from '@material-ui/core/';
 
-import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -41,23 +39,6 @@ let token1 = "";
 let token = "";
 let id = "";
 const api = "http://3.22.17.212:8000"
-
-const rows = [
-    {
-        "createdOn": "09/12/2020",
-        "codeString": "testCodeString1",
-        "employerCompanyField": "testEmployerCompanyField1",
-        "codeStatus": "testCodeStatu1s",
-        "statusChangeDate": "09/12/2020",
-    },
-    {
-        "createdOn": "09/12/2020",
-        "codeString": "testCodeString1",
-        "employerCompanyField": "testEmployerCompanyField1",
-        "codeStatus": "testCodeStatus2",
-        "statusChangeDate": "09/12/2020",
-    }
-];
 
 const styles = theme => ({
 
@@ -88,8 +69,6 @@ class index extends Component {
 
         selectedJobType: '',
         selectedLeaving: '',
-        lastDate: '',
-        terminationDescription: '',
 
         jobId: '',
         jobCategory: '',
@@ -261,7 +240,7 @@ class index extends Component {
 
     render() {
 
-        const { classes } = this.props;
+        // const { classes } = this.props;
 
         return (
             this.state.isLoading ? this.isloading() : (
@@ -934,7 +913,8 @@ class index extends Component {
                                                     console.log("newvalue", newValue);
                                                     // console.log("question.id",{question.id)
                                                     console.log("typeof", typeof question.id);
-                                                    this.setState({ ratingSurvey: { ...this.state.ratingSurvey, [event.currentTarget.name]: newValue } }, () => console.log('surveyRating:', this.state.ratingSurvey, typeof (event.currentTarget.name.toString())));
+                                                    this.setState({ ratingSurvey: { ...this.state.ratingSurvey, [event.currentTarget.name]: newValue } }, 
+                                                        () => console.log('surveyRating:', this.state.ratingSurvey, typeof (event.currentTarget.name.toString())));
                                                 }}
                                                 max={10}
                                             />
