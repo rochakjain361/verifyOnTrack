@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
 import {
   TextField,
   Paper,
@@ -319,56 +318,58 @@ class index extends Component {
                             View Details
                           </Button>
                         </TableCell>
-                        <TableCell align="center">
-                          <Button
-                            size="small"
-                            color="primary"
-                            variant="outlined"
-                            onClick={() => {
-                              this.setState({
-                                selectedtype: row.verType,
-                              });
-                              row.verType === "Profile"
-                                ? this.gethistory(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "profiles-by",
-                                    row.objId
-                                  )
-                                : row.verType === "Address"
-                                ? this.gethistory(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "addresses",
-                                    row.objId
-                                  )
-                                : row.verType === "Academic"
-                                ? this.gethistory(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "academics",
-                                    row.objId
-                                  )
-                                : row.verType === "Phone"
-                                ? this.gethistory(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "phones",
-                                    row.objId
-                                  )
-                                : row.verType === "Job"
-                                ? this.gethistory(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "jobs",
-                                    row.objId
-                                  )
-                                : this.setState({});
-                            }}
-                          >
-                            History
-                          </Button>
-                        </TableCell>
+                        {row.verType !== "Identity" ? (
+                          <TableCell align="center">
+                            <Button
+                              size="small"
+                              color="primary"
+                              variant="outlined"
+                              onClick={() => {
+                                this.setState({
+                                  selectedtype: row.verType,
+                                });
+                                row.verType === "Profile"
+                                  ? this.gethistoryprofile(
+                                      row.vot_employee,
+                                      row.codeString,
+                                      "profiles-by",
+                                      row.objId
+                                    )
+                                  : row.verType === "Address"
+                                  ? this.gethistory(
+                                      row.vot_employee,
+                                      row.codeString,
+                                      "addresses",
+                                      row.objId
+                                    )
+                                  : row.verType === "Academic"
+                                  ? this.gethistoryacademics(
+                                      row.vot_employee,
+                                      row.codeString,
+                                      "academics",
+                                      row.objId
+                                    )
+                                  : row.verType === "Phone"
+                                  ? this.gethistory(
+                                      row.vot_employee,
+                                      row.codeString,
+                                      "phones",
+                                      row.objId
+                                    )
+                                  : row.verType === "Job"
+                                  ? this.gethistory(
+                                      row.vot_employee,
+                                      row.codeString,
+                                      "jobs",
+                                      row.objId
+                                    )
+                                  : this.setState({});
+                              }}
+                            >
+                              History
+                            </Button>
+                          </TableCell>
+                        ) : null}
                       </TableRow>
                     ))
                   : this.state.codes.map((row, index) => (
@@ -382,6 +383,7 @@ class index extends Component {
                         </TableCell>
                         <TableCell align="center">
                           <Button
+                            disabled={row.codeStatus === "Closed"}
                             size="small"
                             color="primary"
                             variant="outlined"
@@ -443,6 +445,7 @@ class index extends Component {
                         {row.verType !== "Identity" ? (
                           <TableCell align="center">
                             <Button
+                              disabled={row.codeStatus === "Closed"}
                               size="small"
                               color="primary"
                               variant="outlined"
@@ -502,7 +505,9 @@ class index extends Component {
           <div>
             <Dialog
               open={this.state.viewdetailsdilog}
-              onClose={() => this.setState({ viewdetailsdilog: false })}
+              onClose={() =>
+                this.setState({ viewdetailsdilog: false, viewdetailsdata: [] })
+              }
             >
               <DialogTitle id="codegenerator" align="center">
                 View Details
@@ -1282,6 +1287,7 @@ class index extends Component {
                   onClick={() => {
                     this.setState({
                       viewdetailsdilog: false,
+                      viewdetailsdata: [],
                       selectedIndex: -1,
                     });
                     this.markverifed();
@@ -1296,6 +1302,7 @@ class index extends Component {
                   onClick={() => {
                     this.setState({
                       viewdetailsdilog: false,
+                      viewdetailsdata: [],
                     });
 
                     this.markverifiedfailed();
@@ -1310,7 +1317,7 @@ class index extends Component {
                   onClick={() => {
                     this.setState({
                       viewdetailsdilog: false,
-                      selectedIndex: -1,
+                      viewdetailsdata: [],
                     });
                     this.closecode();
                   }}
@@ -1327,7 +1334,9 @@ class index extends Component {
               fullWidth={"md"}
               maxWidth={"md"}
               open={this.state.historydetailsdilog}
-              onClose={() => this.setState({ historydetailsdilog: false })}
+              onClose={() =>
+                this.setState({ historydetailsdilog: false, historydata: [] })
+              }
             >
               <DialogTitle id="codegenerator" align="center">
                 History
@@ -1741,6 +1750,7 @@ class index extends Component {
                   onClick={() => {
                     this.setState({
                       historydetailsdilog: false,
+                      historydata: [],
                     });
                   }}
                 >
