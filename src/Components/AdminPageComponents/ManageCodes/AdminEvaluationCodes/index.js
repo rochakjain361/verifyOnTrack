@@ -115,6 +115,39 @@ class index extends Component {
       });
     });
   }
+  async gethistory(selecteduserid, selectedcode, type, objId) {
+    // this.setState({ viewdetailsdilog: true });
+    console.log(selecteduserid, selectedcode, type, objId);
+    await get(
+      "http://3.22.17.212:8000/api/v1/employees/" +
+        selecteduserid +
+        "/" +
+        type +
+        "/" +
+        objId +
+        "/history?votcode=" +
+        selectedcode,
+      token,
+      ""
+    ).then((res) => {});
+  }
+  async gethistoryidentites(selecteduserid, selectedcode, objId) {
+    // this.setState({ viewdetailsdilog: true });
+    console.log(selecteduserid, selectedcode, objId);
+    await get(
+      "http://3.22.17.212:8000/api/v1/employees/" +
+        selecteduserid +
+        "/" +
+        "identities-by/" +
+        selecteduserid +"/"+
+        "idSources/" +
+        objId +
+        "/history?votcode=" +
+        selectedcode,
+      token,
+      ""
+    ).then((res) => {});
+  }
   isloading() {
     return (
       <Grid
@@ -343,6 +376,51 @@ class index extends Component {
                             size="small"
                             color="primary"
                             variant="outlined"
+                            onClick={() => {
+                              row.verType === "Profile"
+                                ? this.gethistory(
+                                    row.vot_employee,
+                                    row.codeString,
+                                    "profiles-by",
+                                    row.objId
+                                  )
+                                : row.verType === "Address"
+                                ? this.gethistory(
+                                    row.vot_employee,
+                                    row.codeString,
+                                    "addresses",
+                                    row.objId
+                                  )
+                                : row.verType === "Identity"
+                                ? this.gethistoryidentites(
+                                    row.vot_employee,
+                                    row.codeString,
+                                   
+                                    row.objId
+                                  )
+                                : row.verType === "Academic"
+                                ? this.gethistory(
+                                    row.vot_employee,
+                                    row.codeString,
+                                    "academics",
+                                    row.objId
+                                  )
+                                : row.verType === "Phone"
+                                ? this.gethistory(
+                                    row.vot_employee,
+                                    row.codeString,
+                                    "phones",
+                                    row.objId
+                                  )
+                                : row.verType === "Job"
+                                ? this.gethistory(
+                                    row.vot_employee,
+                                    row.codeString,
+                                    "jobs",
+                                    row.objId
+                                  )
+                                : this.setState({});
+                            }}
                           >
                             History
                           </Button>
@@ -1185,7 +1263,8 @@ class index extends Component {
     await put(
       "http://3.22.17.212:8000/api/v1/codes/evaluation/codes/" +
         this.state.selectedid +
-        "/close",token,
+        "/close",
+      token,
       ""
     );
   }
