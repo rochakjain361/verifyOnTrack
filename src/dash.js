@@ -20,7 +20,7 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import StarBorder from "@material-ui/icons/StarBorder";
 import Collapse from "@material-ui/core/Collapse";
-import { Container, Button, Grid,Box } from "@material-ui/core";
+import { Container, Button, Grid, Box } from "@material-ui/core";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import axios from "axios";
@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
   // grow: {
   //   flexGrow: 1,
   // },
-  
+
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["width", "margin"], {
@@ -202,25 +202,24 @@ export default function MiniDrawer(props) {
     setOpen2(false);
     setOpen3(false);
   };
-const getBalance = async () => {
-  const Token = await localStorage.getItem("Token");
-  console.log("Token", Token);
-  const Id = localStorage.getItem("id");
-  await axios
-    .get("http://3.22.17.212:9000/wallet/getBalance", {
-      headers: {
-        Authorization: Token
-,
-      },
-    })
-    .then((response) => {
-      setBalance(response)
-      console.log("messages", response);
-    });
-};
-useEffect(() => {
-  getBalance();
-}, []);
+  const getBalance = async () => {
+    const Token = await localStorage.getItem("Token");
+    console.log("Token", Token);
+    const Id = localStorage.getItem("id");
+    await axios
+      .get("http://3.22.17.212:9000/wallet/getBalance", {
+        headers: {
+          Authorization: Token,
+        },
+      })
+      .then((response) => {
+        setBalance(response);
+        console.log("messages", response);
+      });
+  };
+  useEffect(() => {
+    getBalance();
+  }, []);
   const logout = async () => {
     props.history.push("/signin");
     console.log(token);
