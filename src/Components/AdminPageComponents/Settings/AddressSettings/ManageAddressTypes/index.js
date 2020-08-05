@@ -32,7 +32,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 let token1 = "";
 let token = "";
 let id = "";
-const api = "http://3.22.17.212:8000"
+const api = "http://3.22.17.212:9000"
 const cors = "https://cors-anywhere.herokuapp.com/"
 
 const styles = theme => ({
@@ -273,7 +273,7 @@ class index extends Component {
         this.setState({ deleteDialogBox: false })
         try {
             let response = await axios.delete(
-                "http://3.22.17.212:8000/api/v1/resManager/address/types/" +
+                "http://3.22.17.212:9000/api/v1/resManager/address/types/" +
                 index +
                 "/",
                 {

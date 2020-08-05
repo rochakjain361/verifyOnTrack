@@ -33,7 +33,7 @@ class index extends Component {
     token = localStorage.getItem("Token");
     id = localStorage.getItem("id");
     await axios
-      .get("http://3.22.17.212:8000/api/v1/codes/access/pending-codes", {
+      .get("http://3.22.17.212:9000/api/v1/codes/access/pending-codes", {
         headers: {
           Authorization: token,
         },
@@ -46,7 +46,7 @@ class index extends Component {
       });
 
     await axios
-      .get("http://3.22.17.212:8000/api/v1/employers/oboffers", {
+      .get("http://3.22.17.212:9000/api/v1/employers/oboffers", {
         headers: {
           Authorization: token,
         },

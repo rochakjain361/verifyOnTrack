@@ -57,12 +57,12 @@ class index extends Component {
 
   async getcodes() {
     await get(
-      "http://3.22.17.212:8000/api/v1/codes/evaluation/codes",
+      "http://3.22.17.212:9000/api/v1/codes/evaluation/codes",
       token,
       ""
     ).then((res) => this.setState({ codes: res.data }));
     await get(
-      "http://3.22.17.212:8000/api/v1/codes/evaluation/pending-codes",
+      "http://3.22.17.212:9000/api/v1/codes/evaluation/pending-codes",
       token,
       ""
     ).then((res) => this.setState({ pendingcodes: res.data }));
@@ -75,7 +75,7 @@ class index extends Component {
     this.setState({ viewdetailsdilog: true });
     console.log(selecteduserid, selectedcode, type);
     await get(
-      "http://3.22.17.212:8000/api/v1/employees/" +
+      "http://3.22.17.212:9000/api/v1/employees/" +
         selecteduserid +
         "/" +
         type +
@@ -96,7 +96,7 @@ class index extends Component {
     this.setState({ viewdetailsdilog: true });
     console.log(selecteduserid, selectedcode, type, objId);
     await get(
-      "http://3.22.17.212:8000/api/v1/employees/" +
+      "http://3.22.17.212:9000/api/v1/employees/" +
         selecteduserid +
         "/" +
         type +
@@ -116,7 +116,7 @@ class index extends Component {
     this.setState({ historydetailsdilog: true });
     console.log(selecteduserid, selectedcode, type, objId);
     await get(
-      "http://3.22.17.212:8000/api/v1/employees/" +
+      "http://3.22.17.212:9000/api/v1/employees/" +
         selecteduserid +
         "/" +
         type +
@@ -132,7 +132,7 @@ class index extends Component {
     this.setState({ historydetailsdilog: true });
     console.log(selecteduserid, selectedcode, type, objId);
     await get(
-      "http://3.22.17.212:8000/api/v1/employees/" +
+      "http://3.22.17.212:9000/api/v1/employees/" +
         selecteduserid +
         "/" +
         type +
@@ -146,7 +146,7 @@ class index extends Component {
     this.setState({ historydetailsdilog: true });
     console.log(selecteduserid, selectedcode, type, objId);
     await get(
-      "http://3.22.17.212:8000/api/v1/employees/" +
+      "http://3.22.17.212:9000/api/v1/employees/" +
         selecteduserid +
         "/" +
         type +
@@ -162,7 +162,7 @@ class index extends Component {
     this.setState({ historydetailsdilog: true });
     console.log(objId);
     await get(
-      "http://3.22.17.212:8000/api/v1/employees/" +
+      "http://3.22.17.212:9000/api/v1/employees/" +
         selecteduserid +
         "/" +
         "identities-by/" +
@@ -1768,7 +1768,7 @@ class index extends Component {
   }
   async markverifed() {
     await put(
-      "http://3.22.17.212:8000/api/v1/codes/evaluation/codes/" +
+      "http://3.22.17.212:9000/api/v1/codes/evaluation/codes/" +
         this.state.selectedmarkid +
         "/verify?pass=true",
       token,
@@ -1777,7 +1777,7 @@ class index extends Component {
   }
   async markverifiedfailed() {
     await put(
-      "http://3.22.17.212:8000/api/v1/codes/evaluation/codes/" +
+      "http://3.22.17.212:9000/api/v1/codes/evaluation/codes/" +
         this.state.selectedmarkid +
         "/verify?pass=false",
       token,
@@ -1788,7 +1788,7 @@ class index extends Component {
   }
   async closecode() {
     await put(
-      "http://3.22.17.212:8000/api/v1/codes/evaluation/codes/" +
+      "http://3.22.17.212:9000/api/v1/codes/evaluation/codes/" +
         this.state.selectedmarkid +
         "/close",
       token,

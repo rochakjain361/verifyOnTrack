@@ -25,7 +25,7 @@ class index extends Component {
   };
 async getevaldata(){
   await axios
-    .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/needsEval", {
+    .get("http://3.22.17.212:9000/api/v1/employees/" + id + "/needsEval", {
       headers: {
         Authorization: token,
       },
@@ -56,7 +56,7 @@ async getevaldata(){
     //  let bodyFormData = new FormData();
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/codes/evaluation/new-code",
+        "http://3.22.17.212:9000/api/v1/codes/evaluation/new-code",
         "",
 
         headers
@@ -78,7 +78,7 @@ async getevaldata(){
     //  let bodyFormData = new FormData();
     await axios
       .put(
-        "http://3.22.17.212:8000/api/v1/codes/evaluation/cancel",
+        "http://3.22.17.212:9000/api/v1/codes/evaluation/cancel",
         "",
 
         headers

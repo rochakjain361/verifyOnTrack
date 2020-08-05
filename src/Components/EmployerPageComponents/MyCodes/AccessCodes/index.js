@@ -57,7 +57,7 @@ import axios from 'axios'
 let token1 = "";
 let token = "";
 let id = "";
-const api = "http://3.22.17.212:8000"
+const api = "http://3.22.17.212:9000"
 
 const styles = theme => ({
     demo: {
@@ -1176,7 +1176,7 @@ class index extends Component {
 
         await axios
             .put(
-                "http://3.22.17.212:8000/api/v1/codes/access/update-code/" + this.state.currentid,
+                "http://3.22.17.212:9000/api/v1/codes/access/update-code/" + this.state.currentid,
                 bodyFormData,
                 headers
             )

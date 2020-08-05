@@ -51,7 +51,7 @@ export default function Index() {
         const Token=await localStorage.getItem("Token");
         console.log("Token",Token)
         const Id=localStorage.getItem("id")
-        await Axios.get('http://3.22.17.212:8000/api/v1/messages/',
+        await Axios.get('http://3.22.17.212:9000/api/v1/messages/',
              {
                  headers: {
                      'Authorization': Token

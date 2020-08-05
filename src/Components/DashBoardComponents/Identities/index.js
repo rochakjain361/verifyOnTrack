@@ -169,7 +169,7 @@ class Identities extends Component {
   async getidentites() {
     await axios
       .get(
-        "http://3.22.17.212:8000/api/v1/employees/" +
+        "http://3.22.17.212:9000/api/v1/employees/" +
           id +
           "/identities-by/" +
           id,
@@ -190,7 +190,7 @@ class Identities extends Component {
     id = localStorage.getItem("id");
     await this.getidentites();
     let idSource = await axios.get(
-      "http://3.22.17.212:8000/api/v1/resManager/id/sources/?excludeSystem=true",
+      "http://3.22.17.212:9000/api/v1/resManager/id/sources/?excludeSystem=true",
       {
         headers: {
           Authorization: token,
@@ -225,7 +225,7 @@ class Identities extends Component {
     });
     await axios
       .get(
-        "http://3.22.17.212:8000/api/v1/employees/" +
+        "http://3.22.17.212:9000/api/v1/employees/" +
           id +
           "/identities-by/" +
           id +
@@ -261,7 +261,7 @@ class Identities extends Component {
 
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/employees/post-identity",
+        "http://3.22.17.212:9000/api/v1/employees/post-identity",
         bodyFormData,
         headers
       )
@@ -291,7 +291,7 @@ class Identities extends Component {
 
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/employees/update-identity",
+        "http://3.22.17.212:9000/api/v1/employees/update-identity",
         bodyFormData,
         headers
       )
@@ -570,7 +570,7 @@ class Identities extends Component {
     this.setState({ pictureloading: true });
     await axios
       .get(
-        "http://3.22.17.212:8000/api/v1/employees/" +
+        "http://3.22.17.212:9000/api/v1/employees/" +
           id +
           "/idSources/" +
           idsource +
@@ -601,7 +601,7 @@ class Identities extends Component {
 
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/employees/post-identitiy-pic",
+        "http://3.22.17.212:9000/api/v1/employees/post-identitiy-pic",
         bodyFormData,
         headers
       )
@@ -622,7 +622,7 @@ class Identities extends Component {
     };
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/codes/evaluation/new-code",
+        "http://3.22.17.212:9000/api/v1/codes/evaluation/new-code",
         bodyFormData,
         headers
       )

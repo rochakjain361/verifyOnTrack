@@ -130,7 +130,7 @@ class index extends Component {
   async searchusername(username) {
     await axios
       .get(
-        `http://3.22.17.212:80008000/api/v1/accounts/employer?username=` +
+        `http://3.22.17.212:90008000/api/v1/accounts/employer?username=` +
         username,
 
         {
@@ -147,7 +147,7 @@ class index extends Component {
   async searchcompany(companyName) {
     await axios
       .get(
-        `http://3.22.17.212:8000/api/v1/employers/?company=` + companyName,
+        `http://3.22.17.212:9000/api/v1/employers/?company=` + companyName,
 
         {
           headers: {
@@ -289,7 +289,7 @@ class index extends Component {
   }
   async getcodes(){
     await axios
-    .get("http://3.22.17.212:8000/api/v1/codes/access/codes", {
+    .get("http://3.22.17.212:9000/api/v1/codes/access/codes", {
       headers: {
         Authorization: token,
       },
@@ -300,7 +300,7 @@ class index extends Component {
       console.log("codes", codes);
     });
   await axios
-    .get("http://3.22.17.212:8000/api/v1/codes/access/pending-codes", {
+    .get("http://3.22.17.212:9000/api/v1/codes/access/pending-codes", {
       headers: {
         Authorization: token,
       },
@@ -319,7 +319,7 @@ class index extends Component {
 
     await axios
       .get(
-        `http://3.22.17.212:8000/api/v1/accounts/employer?email=`,
+        `http://3.22.17.212:9000/api/v1/accounts/employer?email=`,
 
         {
           headers: {
@@ -333,7 +333,7 @@ class index extends Component {
       });
     await axios
       .get(
-        `http://3.22.17.212:8000/api/v1/accounts/employer?username=`,
+        `http://3.22.17.212:9000/api/v1/accounts/employer?username=`,
 
         {
           headers: {
@@ -348,7 +348,7 @@ class index extends Component {
 
     await axios
       .get(
-        `http://3.22.17.212:8000/api/v1/employers/`,
+        `http://3.22.17.212:9000/api/v1/employers/`,
 
         {
           headers: {
@@ -367,7 +367,7 @@ class index extends Component {
     this.setState({ viewDialog: true });
     await axios
       .get(
-        "http://3.22.17.212:8000/api/v1/codes/access/codes/" + codeid,
+        "http://3.22.17.212:9000/api/v1/codes/access/codes/" + codeid,
 
         {
           headers: {
@@ -413,7 +413,7 @@ class index extends Component {
 
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/codes/access/new-code",
+        "http://3.22.17.212:9000/api/v1/codes/access/new-code",
         bodyFormData,
         headers
       )
@@ -435,7 +435,7 @@ class index extends Component {
 
     await axios
       .put(
-        "http://3.22.17.212:8000/api/v1/codes/access/update-code/"+this.state.currentid,
+        "http://3.22.17.212:9000/api/v1/codes/access/update-code/"+this.state.currentid,
         bodyFormData,
         headers
       )

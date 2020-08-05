@@ -106,7 +106,7 @@ export class Employeelocation extends Component {
     // bodyFormData.append("google_coordinate2", this.state.location.longtitude);
 
     post(
-      "http://3.22.17.212:8000/api/v1/employers/post-location",
+      "http://3.22.17.212:9000/api/v1/employers/post-location",
       token,
       bodyFormData
     ).then(() => {
@@ -124,7 +124,7 @@ export class Employeelocation extends Component {
     // bodyFormData.append("google_coordinate2", this.state.location.longtitude);
 
     put(
-      "http://3.22.17.212:8000/api/v1/employers/update-location/"+this.state.updateid,
+      "http://3.22.17.212:9000/api/v1/employers/update-location/"+this.state.updateid,
       token,
       bodyFormData
     ).then(() => {
@@ -133,7 +133,7 @@ export class Employeelocation extends Component {
   }
   async getlocationdata() {
     await get(
-      "http://3.22.17.212:8000/api/v1/employers/" + id + "/locations",
+      "http://3.22.17.212:9000/api/v1/employers/" + id + "/locations",
       token,
       ""
     ).then((res) => {
@@ -143,7 +143,7 @@ export class Employeelocation extends Component {
   async lganames(stateid, val) {
     this.setState({ selectedState: stateid });
     // await get(
-    //   "http://3.22.17.212:8000/api/v1/resManager/address/lgas/stateId="+this.state.selectedState,
+    //   "http://3.22.17.212:9000/api/v1/resManager/address/lgas/stateId="+this.state.selectedState,
     //   token,
     //   ""
     // ).then((res) => {
@@ -153,7 +153,7 @@ export class Employeelocation extends Component {
     // });
     await axios
       .get(
-        "http://3.22.17.212:8000/api/v1/resManager/address/lgas/?stateId=" +
+        "http://3.22.17.212:9000/api/v1/resManager/address/lgas/?stateId=" +
           stateid,
         {
           headers: {
@@ -492,7 +492,7 @@ export class Employeelocation extends Component {
     id = localStorage.getItem("id");
     await this.getlocationdata();
     await get(
-      "http://3.22.17.212:8000/api/v1/resManager/address/states/",
+      "http://3.22.17.212:9000/api/v1/resManager/address/states/",
       token,
       ""
     ).then((res) => {

@@ -42,7 +42,7 @@ export default function Datatable(props) {
         Id = await localStorage.getItem("id")
         setviewDetailsButton(true)
         // setCurrentID(id);
-        await Axios.get('http://3.22.17.212:8000/api/v1/messages/' + id,
+        await Axios.get('http://3.22.17.212:9000/api/v1/messages/' + id,
             {
                 headers: {
                     'Authorization': Token
@@ -62,7 +62,7 @@ export default function Datatable(props) {
         console.log("newmessage", addMessage, id)
         let bodyFormData = new FormData();
         bodyFormData.append("message", addMessage);
-        await Axios.put('http://3.22.17.212:8000/api/v1/messages/' + id + '/add',
+        await Axios.put('http://3.22.17.212:9000/api/v1/messages/' + id + '/add',
             bodyFormData,
             {
                 headers: {

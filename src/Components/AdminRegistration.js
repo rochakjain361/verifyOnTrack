@@ -94,7 +94,7 @@ export class AdminRegistration extends Component {
 console.log(bodyFormData);
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/accounts/auth/admin/register",
+        "http://3.22.17.212:9000/api/v1/accounts/auth/admin/register",
         bodyFormData,
         headers
       )

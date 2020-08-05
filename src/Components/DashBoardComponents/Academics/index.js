@@ -84,7 +84,7 @@ export class index extends Component {
            id = localStorage.getItem("id");
            await this.getAcademics();
            await get(
-             "http://3.22.17.212:8000/api/v1/resManager/academic/types/",
+             "http://3.22.17.212:9000/api/v1/resManager/academic/types/",
              token,
              ""
            ).then((res) => this.setState({ types: res.data }));
@@ -92,7 +92,7 @@ export class index extends Component {
          }
          async getAcademics() {
            await get(
-             "http://3.22.17.212:8000/api/v1/employees/" + id + "/academics",
+             "http://3.22.17.212:9000/api/v1/employees/" + id + "/academics",
              token,
              ""
            ).then((response) => {
@@ -119,7 +119,7 @@ export class index extends Component {
            this.setState({ viewDialogeOpen: true });
            this.setState({ pictureloading: true });
            await get(
-             "http://3.22.17.212:8000/api/v1/employees/" +
+             "http://3.22.17.212:9000/api/v1/employees/" +
                id +
                "/academics/" +
                idsource +
@@ -140,7 +140,7 @@ export class index extends Component {
            bodyFormData.append("picture", this.state.uploadpictures);
 
            await post(
-             "http://3.22.17.212:8000/api/v1/employees/post-academic-pic",
+             "http://3.22.17.212:9000/api/v1/employees/post-academic-pic",
              token,
              bodyFormData
            ).then((response) => {
@@ -150,7 +150,7 @@ export class index extends Component {
          async fetchhistory(index) {
            this.setState({ historyDialogeOpen: true, historyloading: true });
            await get(
-             "http://3.22.17.212:8000/api/v1/employees/" +
+             "http://3.22.17.212:9000/api/v1/employees/" +
                id +
                "/academics/" +
                index,
@@ -166,7 +166,7 @@ export class index extends Component {
            });
 
            await update(
-             "http://3.22.17.212:8000/api/v1/employees/update-academics/" + id,
+             "http://3.22.17.212:9000/api/v1/employees/update-academics/" + id,
              token,
              this.state.updatedresult
            ).then((response) => {
@@ -177,7 +177,7 @@ export class index extends Component {
          async addacademics() {
            this.setState({ addnewdialog: false });
            await post(
-             "http://3.22.17.212:8000/api/v1/employees/post-academics",
+             "http://3.22.17.212:9000/api/v1/employees/post-academics",
              token,
              this.state.newAcademics
            ).then((response) => {
@@ -192,7 +192,7 @@ export class index extends Component {
              objId: id,
            };
            await post(
-               "http://3.22.17.212:8000/api/v1/codes/evaluation/new-code",
+               "http://3.22.17.212:9000/api/v1/codes/evaluation/new-code",
                token,
                bodyFormData,
              )

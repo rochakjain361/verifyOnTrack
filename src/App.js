@@ -32,7 +32,7 @@ import resetpassword from "./resetpassword";
 // const store = createStore(reducer);
 import Profile from "./Components/AdminPageComponents/ManageCodes/EmployerPages/Profile";
 import EmployerStepper from "./Components/Employerworkflow/EmployerStepper";
-
+import Createwallet from '../src/Components/DashBoardComponents/Wallet/Createwallet'
 class App extends React.PureComponent {
   render() {
     return (
@@ -87,6 +87,8 @@ class App extends React.PureComponent {
                 <Route exact path="/dashboard" component={dash} />
                 <Route exact path="/employeeAccessCodes" component={dash} />
                 <Route exact path="/employeeAccessCodes" component={dash} />
+                <Route exact path="/Createwallet" component={dash} />
+
                 <Route
                   exact
                   path="/employeeEmployementCodes"

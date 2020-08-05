@@ -83,7 +83,7 @@ export class index extends Component {
     async getReasons() {
         this.setState({ loading: true });
         await axios
-            .get("http://3.22.17.212:8000/api/v1/resManager/job/leaving-reasons/", {
+            .get("http://3.22.17.212:9000/api/v1/resManager/job/leaving-reasons/", {
                 headers: {
                     Authorization: token,
                 },
@@ -110,7 +110,7 @@ export class index extends Component {
         console.log('Body data:', bodyData)
 
         try {
-            let response = await fetch('http://3.22.17.212:8000/api/v1/resManager/job/leaving-reasons/',
+            let response = await fetch('http://3.22.17.212:9000/api/v1/resManager/job/leaving-reasons/',
                 {
                     method: 'POST',
                     headers: {
@@ -135,7 +135,7 @@ export class index extends Component {
         this.setState({ deleteDialogBox: false })
         try {
             let response = await axios.delete(
-                "http://3.22.17.212:8000/api/v1/resManager/job/leaving-reasons/" +
+                "http://3.22.17.212:9000/api/v1/resManager/job/leaving-reasons/" +
                 index +
                 "/",
                 {

@@ -80,7 +80,7 @@ export class index extends Component {
   async getstates() {
 
     await axios
-      .get("http://3.22.17.212:8000/api/v1/resManager/employer/categories/", {
+      .get("http://3.22.17.212:9000/api/v1/resManager/employer/categories/", {
         headers: {
           Authorization: token,
         },
@@ -115,7 +115,7 @@ export class index extends Component {
 
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/resManager/employer/categories/",
+        "http://3.22.17.212:9000/api/v1/resManager/employer/categories/",
         bodyFormData,
         headers
       )
@@ -198,7 +198,7 @@ export class index extends Component {
 
     // console.log("......",id)
      axios.delete(
-      "http://3.22.17.212:8000/api/v1/resManager/job/categories/" + id + "/",
+      "http://3.22.17.212:9000/api/v1/resManager/job/categories/" + id + "/",
       {
         headers: {
           Authorization: token,

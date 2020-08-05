@@ -58,7 +58,7 @@ const rows = [
 let token1 = "";
 let token = "";
 let id = "";
-const api = "http://3.22.17.212:8000"
+const api = "http://3.22.17.212:9000"
 
 let companyChoices = [];
 let positionCategories = [];
@@ -261,7 +261,7 @@ class myJobProfile extends Component {
     };
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/codes/evaluation/new-code",
+        "http://3.22.17.212:9000/api/v1/codes/evaluation/new-code",
         bodyFormData,
         headers
       )
@@ -279,7 +279,7 @@ class myJobProfile extends Component {
     await this.getJobProfiles();
 
     await axios
-      .get("http://3.22.17.212:8000/api/v1/employers/", {
+      .get("http://3.22.17.212:9000/api/v1/employers/", {
         headers: {
           Authorization: token,
         },
@@ -291,7 +291,7 @@ class myJobProfile extends Component {
       });
 
     await axios
-      .get("http://3.22.17.212:8000/api/v1/resManager/job/categories/", {
+      .get("http://3.22.17.212:9000/api/v1/resManager/job/categories/", {
         headers: {
           Authorization: token,
         },
@@ -305,7 +305,7 @@ class myJobProfile extends Component {
       });
 
     await axios
-      .get("http://3.22.17.212:8000/api/v1/resManager/job/leaving-reasons/", {
+      .get("http://3.22.17.212:9000/api/v1/resManager/job/leaving-reasons/", {
         headers: {
           Authorization: token,
         },
@@ -1208,7 +1208,7 @@ class myJobProfile extends Component {
 
     try {
       let response = await fetch(
-        "http://3.22.17.212:8000/api/v1/employees/post-job",
+        "http://3.22.17.212:9000/api/v1/employees/post-job",
         {
           method: "POST",
           headers: {
@@ -1259,7 +1259,7 @@ class myJobProfile extends Component {
 
     try {
       let response = await fetch(
-        "http://3.22.17.212:8000/api/v1/employees/post-job",
+        "http://3.22.17.212:9000/api/v1/employees/post-job",
         {
           method: "POST",
           headers: {
@@ -1309,7 +1309,7 @@ class myJobProfile extends Component {
     console.log("editbody:", bodyData);
 
     let response = await fetch(
-      "http://3.22.17.212:8000/api/v1/employees/update-job/" + id,
+      "http://3.22.17.212:9000/api/v1/employees/update-job/" + id,
       {
         method: "POST",
         headers: {
@@ -1345,7 +1345,7 @@ class myJobProfile extends Component {
     console.log("verificationBody:", bodyData);
 
     let response = await fetch(
-      "http://3.22.17.212:8000/api/v1/employers/newEmpVerification",
+      "http://3.22.17.212:9000/api/v1/employers/newEmpVerification",
       {
         method: "POST",
         headers: {

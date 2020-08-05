@@ -94,7 +94,7 @@ class EmployerLandingPage extends React.PureComponent {
     };
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/accounts/auth/logout",
+        "http://3.22.17.212:9000/api/v1/accounts/auth/logout",
         {},
 
         headers
