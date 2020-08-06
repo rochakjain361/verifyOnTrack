@@ -305,6 +305,14 @@ class signIn extends Component {
         // localStorage.setItem("Token", data.token);
         localStorage.setItem("Token","Token "+data.token);
         localStorage.setItem("id", data.user.id);
+        localStorage.setItem("ontrac_id", data.user.ontrac_id);
+        localStorage.setItem(
+          "name",
+          data.user.firstname,
+          data.user.middlename,
+          data.user.surname
+        );
+        localStorage.setItem("email", data.user.email);
 
         this.setState({ response: data });
         if (data.user.is_admin) {

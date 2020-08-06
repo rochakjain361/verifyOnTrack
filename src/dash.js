@@ -57,6 +57,8 @@ import Popper from "@material-ui/core/Popper";
 import Popover from "@material-ui/core/Popover";
 import Avatar from "@material-ui/core/Avatar";
 import Createwallet from "../src/Components/DashBoardComponents/Wallet/Createwallet";
+import Addmoney from "../src/Components/DashBoardComponents/Wallet/Addmoney";
+
 const drawerWidth = 240;
 let token = "";
 let id = "";
@@ -182,13 +184,12 @@ export default function MiniDrawer(props) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handlePopoverOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
+   const handleClose = () => {
+     setAnchorEl(null);
+   };
+   const handleClick = (event) => {
+     setAnchorEl(event.currentTarget);
+   };
 
   const open9 = Boolean(anchorEl);
 
@@ -271,29 +272,20 @@ export default function MiniDrawer(props) {
               Verify OnTrac
             </Typography>
 
-            <Typography
-              aria-owns={open9 ? "mouse-over-popover" : undefined}
-              aria-haspopup="true"
-              onMouseEnter={handlePopoverOpen}
-              onMouseLeave={handlePopoverClose}
+            <Button
+              style={{ backgroundColor: "transparent" }}
+              color="inherit"
+              size="medium"
+              onClick={handleClick}
             >
-              <Button
-                style={{ backgroundColor: "transparent" }}
-                color="inherit"
-                size="medium"
-              >
-                <AccountBalanceWalletIcon />
-              </Button>
-            </Typography>
+              <AccountBalanceWalletIcon color="white" />
+            </Button>
 
             <Popover
-              id="mouse-over-popover"
-              className={classes.popover}
-              classes={{
-                paper: classes.paper,
-              }}
+              id={id}
               open={open9}
               anchorEl={anchorEl}
+              onClose={handleClose}
               anchorOrigin={{
                 vertical: "bottom",
                 horizontal: "center",
@@ -302,10 +294,11 @@ export default function MiniDrawer(props) {
                 vertical: "top",
                 horizontal: "center",
               }}
-              onClose={handlePopoverClose}
-              disableRestoreFocus
             >
-              <Button>Add balance to wallet</Button>
+              <Link to="/Addmoney" className={classes.link}>
+                
+              <Button>Add money to your wallet</Button>
+              </Link>
             </Popover>
             <div>
               <Box p={2}>
@@ -467,61 +460,20 @@ export default function MiniDrawer(props) {
               <ListItemText primary="Messages" className={classes.textColor} />
             </ListItem>
           </Link>
-
           <Divider />
-
-          {/* <ListItem
-          button
-          onClick={() => setOpen3(!open3), ()=> setOpen(!open)}
-        >
-          <ListItemIcon>
-            <MessageIcon style={{ color: "white" }} />
-          </ListItemIcon>
-          <ListItemText
-            primary="Messages"
-            className={classes.textColor}
-          />
-          {open3 ? (
-            <ExpandLess style={{ color: "white" }} />
-          ) : (
-              <ExpandMore style={{ color: "white" }} />
-            )}
-        </ListItem>
-
-        <Collapse in={open3, open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <Link to="/employeeInbox" className={classes.link}>
-              <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
-                <ListItemText
-                  primary="Inbox"
-                  className={classes.textColor}
-                />
-              </ListItem>
-            </Link>
-
-            {/* <Link to="/employeeOutbox" className={classes.link}>
-              <ListItem button className={classes.nested}>
-                <ListItemText
-                  primary="Outbox"
-                  className={classes.textColor}
-                />
-              </ListItem>
-            </Link> */}
-          {/* </List>
-        </Collapse> */}
         </Drawer>
 
         <main className={classes.content}>
           <Toolbar />
           <Switch>
             <Route exact path="/dashboard">
-              <Container style={{ backgroundColor: "#eeeeee " }}>
+              <Container style={{ backgroundColor: "#eeeeee" }}>
                 <Dashboard />
               </Container>
             </Route>
 
             <Route exact path="/myInfo">
-              <Container style={{ backgroundColor: "#eeeeee " }}>
+              <Container style={{ backgroundColor: "#eeeeee" }}>
                 <MyInfoTabs />
               </Container>
             </Route>
@@ -552,6 +504,11 @@ export default function MiniDrawer(props) {
             <Route exact path="/Createwallet">
               <Container>
                 <Createwallet />
+              </Container>
+            </Route>
+            <Route exact path="/Addmoney">
+              <Container>
+                <Addmoney />
               </Container>
             </Route>
 

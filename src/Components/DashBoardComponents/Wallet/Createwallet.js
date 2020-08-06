@@ -18,6 +18,9 @@ export default class Createwallet extends Component {
     this.state = {
       ontracid: "",
       sucess:false,
+      email:"",
+      name:"",
+      phone:""
     };
   }
   async reset() {
@@ -40,6 +43,7 @@ export default class Createwallet extends Component {
   }
   componentDidMount(){
 token=localStorage.getItem("Token")
+this.setState({ ontracid: localStorage.getItem("ontrac_id") });
   }
 
   render() {
@@ -56,7 +60,8 @@ token=localStorage.getItem("Token")
               <Card
                 style={{ padding: 100 }}
                 raised={true}
-              >
+                >
+               
                 <Grid
                   container
                   justify="flex-start"
@@ -102,6 +107,7 @@ token=localStorage.getItem("Token")
                             })
                           }
                         ></TextField>
+                        
                       </Grid>
                     </Grid>
                   </Grid>
@@ -124,6 +130,7 @@ token=localStorage.getItem("Token")
                     </Grid>
                   </Grid>
                 </Grid>
+        
               </Card>
             </Grid>
           </Grid>
