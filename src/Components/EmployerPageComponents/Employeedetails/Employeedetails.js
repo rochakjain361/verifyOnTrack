@@ -64,7 +64,7 @@ export class Employeedetails extends Component {
     bodyFormData.append("regDate", this.state.regDate);
 
     put(
-      "http://3.22.17.212:8000/api/v1/employers/postdetails",
+      "http://3.22.17.212:9000/api/v1/employers/postdetails",
       token,
       bodyFormData
     ).then((res) => {
@@ -435,7 +435,7 @@ export class Employeedetails extends Component {
   }
   async getprofiledata() {
     await get(
-      "http://3.22.17.212:8000/api/v1/employers/" + id + "/getdetails",
+      "http://3.22.17.212:9000/api/v1/employers/" + id + "/getdetails",
       token,
       ""
     ).then((res) => {
@@ -450,7 +450,7 @@ export class Employeedetails extends Component {
     id = localStorage.getItem("id");
     await this.getprofiledata();
     await get(
-      "http://3.22.17.212:8000/api/v1/resManager/employer/categories/",
+      "http://3.22.17.212:9000/api/v1/resManager/employer/categories/",
       token,
       ""
     ).then((res) => this.setState({ categories: res.data, loading: false }));

@@ -92,7 +92,7 @@ function Onboarding(props) {
 
     console.log("modifyoboffer", modifyoboffer);
     await Axios.put(
-      "http://3.22.17.212:8000/api/v1/employers/oboffers/" + id + "/modify",
+      "http://3.22.17.212:9000/api/v1/employers/oboffers/" + id + "/modify",
       modifyoboffer,
       {
         headers: {
@@ -113,7 +113,7 @@ function Onboarding(props) {
     console.log("id", id);
 
     await Axios.put(
-      "http://3.22.17.212:8000/api/v1/employers/oboffers/" + id + "/accept",
+      "http://3.22.17.212:9000/api/v1/employers/oboffers/" + id + "/accept",
       "",
       {
         headers: {
@@ -133,7 +133,7 @@ function Onboarding(props) {
     console.log("id", id);
 
     await Axios.put(
-      "http://3.22.17.212:8000/api/v1/employers/oboffers/" + id + "/reject",
+      "http://3.22.17.212:9000/api/v1/employers/oboffers/" + id + "/reject",
       "",
       {
         headers: {
@@ -151,7 +151,7 @@ function Onboarding(props) {
   const handleopen = async (id) => {
     setviewOfferButton(true);
     setLoading(true);
-    await Axios.get("http://3.22.17.212:8000/api/v1/employers/oboffers/" + id, {
+    await Axios.get("http://3.22.17.212:9000/api/v1/employers/oboffers/" + id, {
       headers: {
         Authorization: Token,
       },
@@ -165,7 +165,7 @@ function Onboarding(props) {
       setModifyofferbuttonshow(response.data[0].showModify_field);
       setLoading(false);
     });
-    await Axios.get("http://3.22.17.212:8000/api/v1/resManager/job/categories/", {
+    await Axios.get("http://3.22.17.212:9000/api/v1/resManager/job/categories/", {
       headers: {
         Authorization: Token,
       },

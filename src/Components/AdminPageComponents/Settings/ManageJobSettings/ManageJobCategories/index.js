@@ -84,7 +84,7 @@ export class index extends Component {
     async getPositions() {
         this.setState({ loading: true });
         await axios
-            .get("http://3.22.17.212:8000/api/v1/resManager/job/categories/", {
+            .get("http://3.22.17.212:9000/api/v1/resManager/job/categories/", {
                 headers: {
                     Authorization: token,
                 },
@@ -112,7 +112,7 @@ export class index extends Component {
         console.log('Body data:', bodyData)
 
         try {
-            let response = await fetch('http://3.22.17.212:8000/api/v1/resManager/job/categories/',
+            let response = await fetch('http://3.22.17.212:9000/api/v1/resManager/job/categories/',
                 {
                     method: 'POST',
                     headers: {
@@ -137,7 +137,7 @@ export class index extends Component {
         this.setState({ deleteDialogBox: false })
         try {
             let response = await axios.delete(
-                "http://3.22.17.212:8000/api/v1/resManager/job/categories/" +
+                "http://3.22.17.212:9000/api/v1/resManager/job/categories/" +
                 index +
                 "/",
                 {

@@ -70,7 +70,7 @@ class MyProfile extends Component {
   };
   async getprofiledata() {
     await axios
-      .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/profiles", {
+      .get("http://3.22.17.212:9000/api/v1/employees/" + id + "/profiles", {
         headers: {
           Authorization: token,
         },
@@ -159,7 +159,7 @@ class MyProfile extends Component {
 
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/employees/update-profile",
+        "http://3.22.17.212:9000/api/v1/employees/update-profile",
         bodyFormData,
         headers
       )
@@ -187,7 +187,7 @@ class MyProfile extends Component {
     bodyFormData.append("surname", this.state.lastname);
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/employees/post-profile",
+        "http://3.22.17.212:9000/api/v1/employees/post-profile",
         bodyFormData,
         headers
       )
@@ -514,7 +514,7 @@ class MyProfile extends Component {
   async fetchhistory() {
     await axios
       .get(
-        "http://3.22.17.212:8000/api/v1/employees/" +
+        "http://3.22.17.212:9000/api/v1/employees/" +
         id +
         "/profiles-by/" +
         id +
@@ -544,7 +544,7 @@ class MyProfile extends Component {
      }
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/codes/evaluation/new-code",
+        "http://3.22.17.212:9000/api/v1/codes/evaluation/new-code",
         bodyFormData,
         headers
       )
@@ -605,31 +605,31 @@ class MyProfile extends Component {
                   <TableCell component="th" align="center">
                     {new Date(row.created_on).toDateString()}
                   </TableCell>
-                 
-                    <TableCell align="center">
-                      <Button
-                        color="primary"
-                        variant="outlined"
-                        disabled={row.status === "Audit In Progress"}
-                        onClick={() =>
-                          this.setState({
-                            updateDialogOpen: true,
-                            selectedIndex: index,
-                            updatedlastname: result[index].surname,
-                            updatedfirstname: result[index].firstname,
-                            updatedMiddlename: result[index].middlename,
-                            updatedDob: result[index].dob,
-                            updateresponse: "",
-                            file: "",
 
-                            // add the updatedstate elements here after passing the token and adding data
-                          })
-                        }
-                      >
-                        Update
-                      </Button>
-                    </TableCell>
-                  
+                  <TableCell align="center">
+                    <Button
+                      color="primary"
+                      variant="outlined"
+                      disabled={row.status === "Audit In Progress"}
+                      onClick={() =>
+                        this.setState({
+                          updateDialogOpen: true,
+                          selectedIndex: index,
+                          updatedlastname: result[index].surname,
+                          updatedfirstname: result[index].firstname,
+                          updatedMiddlename: result[index].middlename,
+                          updatedDob: result[index].dob,
+                          updateresponse: "",
+                          file: "",
+
+                          // add the updatedstate elements here after passing the token and adding data
+                        })
+                      }
+                    >
+                      Update
+                    </Button>
+                  </TableCell>
+
                   <TableCell align="center">
                     <Button
                       variant="outlined"
@@ -857,6 +857,7 @@ class MyProfile extends Component {
                       <TableCell align="left">{row.surname}</TableCell>
                       <TableCell align="left">
                         {new Date(row.dob).toDateString()}
+                       
                       </TableCell>
                       {/* <TableCell align="center">{row.source_name_field}</TableCell> */}
                       <TableCell align="left">{row.sex}</TableCell>{" "}

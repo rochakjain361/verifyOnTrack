@@ -25,7 +25,7 @@ class index extends Component {
     token = localStorage.getItem("Token");
     id = localStorage.getItem("id");
     await axios
-      .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/ratings", {
+      .get("http://3.22.17.212:9000/api/v1/employees/" + id + "/ratings", {
         headers: {
           Authorization: token,
         },

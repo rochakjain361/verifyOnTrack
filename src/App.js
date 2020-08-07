@@ -32,8 +32,7 @@ import resetpassword from "./resetpassword";
 // const store = createStore(reducer);
 import Profile from "./Components/AdminPageComponents/ManageCodes/EmployerPages/Profile";
 import EmployerStepper from "./Components/Employerworkflow/EmployerStepper";
-import newAPI from "./newAPI"
-
+import Createwallet from '../src/Components/DashBoardComponents/Wallet/Createwallet'
 class App extends React.PureComponent {
   render() {
     return (
@@ -76,7 +75,7 @@ class App extends React.PureComponent {
                 />
 
                 {/* Employee PAGE PATHS */}
-                <Route exact path="/newAPI" component={newAPI} />
+                {/* <Route exact path="/newAPI" component={newAPI} /> */}
                 <Route exact path="/Homepage" component={dash} />
                 <Route exact path="/myInfo" component={dash} />
                 <Route exact path="/addresses" component={dash} />
@@ -89,6 +88,9 @@ class App extends React.PureComponent {
                 <Route exact path="/dashboard" component={dash} />
                 <Route exact path="/employeeAccessCodes" component={dash} />
                 <Route exact path="/employeeAccessCodes" component={dash} />
+                <Route exact path="/Createwallet" component={dash} />
+                <Route exact path="/Addmoney" component={dash} />
+
                 <Route
                   exact
                   path="/employeeEmployementCodes"
@@ -163,6 +165,8 @@ class App extends React.PureComponent {
                 {/* ADMIN PAGE PATHS */}
                 {/* <Route exact path='/adminLanding' component={AdminDash} /> */}
                 <Route exact path="/admin" component={AdminDash} />
+                <Route exact path="/admindashboard" component={AdminDash} />
+
                 <Route exact path="/managestates" component={AdminDash} />
                 <Route exact path="/manageLGAs" component={AdminDash} />
                 <Route exact path="/manageCities" component={AdminDash} />

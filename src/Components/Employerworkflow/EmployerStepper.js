@@ -236,7 +236,7 @@ export default function EmployerStepper(props) {
     //  let bodyFormData = new FormData();
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/codes/approval/new-code",
+        "http://3.22.17.212:9000/api/v1/codes/approval/new-code",
         "",
 
         headers
@@ -257,7 +257,7 @@ export default function EmployerStepper(props) {
     };
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/accounts/auth/logout",
+        "http://3.22.17.212:9000/api/v1/accounts/auth/logout",
         {},
 
         headers

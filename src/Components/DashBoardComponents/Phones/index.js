@@ -82,7 +82,7 @@ class Phones extends Component {
   };
   async getphonedata() {
     await axios
-      .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/phones", {
+      .get("http://3.22.17.212:9000/api/v1/employees/" + id + "/phones", {
         headers: {
           Authorization: token,
         },
@@ -99,7 +99,7 @@ class Phones extends Component {
     id = localStorage.getItem("id");
     await this.getphonedata();
     await axios
-      .get("http://3.22.17.212:8000/api/v1/resManager/phone/reasons/", {
+      .get("http://3.22.17.212:9000/api/v1/resManager/phone/reasons/", {
         headers: {
           Authorization: token,
         },
@@ -109,7 +109,7 @@ class Phones extends Component {
         console.table("PhonesReason", this.state.phoneReasons);
       });
     await axios
-      .get("http://3.22.17.212:8000/api/v1/resManager/phone/types/", {
+      .get("http://3.22.17.212:9000/api/v1/resManager/phone/types/", {
         headers: {
           Authorization: token,
         },
@@ -216,7 +216,7 @@ class Phones extends Component {
 
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/employees/post-phone",
+        "http://3.22.17.212:9000/api/v1/employees/post-phone",
         bodyFormData,
         headers
       )
@@ -238,7 +238,7 @@ class Phones extends Component {
     };
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/codes/evaluation/new-code",
+        "http://3.22.17.212:9000/api/v1/codes/evaluation/new-code",
         bodyFormData,
         headers
       )
@@ -274,7 +274,7 @@ class Phones extends Component {
 
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/employees/update-phone/" + phoneid,
+        "http://3.22.17.212:9000/api/v1/employees/update-phone/" + phoneid,
         bodyFormData,
         headers
       )
@@ -293,7 +293,7 @@ class Phones extends Component {
     });
     await axios
       .get(
-        "http://3.22.17.212:8000/api/v1/employees/" +
+        "http://3.22.17.212:9000/api/v1/employees/" +
           id +
           "/phones/" +
           index +
@@ -826,7 +826,7 @@ class Phones extends Component {
           onClose={() => this.setState({ historyDialougeOpen: false })}
           aria-labelledby="responsive-dialog-title"
         >
-          {" "}
+         
           <DialogTitle id="form-dialog-title" align="center">
             Phone History
           </DialogTitle>
