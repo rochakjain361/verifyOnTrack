@@ -32,6 +32,7 @@ import resetpassword from "./resetpassword";
 // const store = createStore(reducer);
 import Profile from "./Components/AdminPageComponents/ManageCodes/EmployerPages/Profile";
 import EmployerStepper from "./Components/Employerworkflow/EmployerStepper";
+import newAPI from "./newAPI"
 
 class App extends React.PureComponent {
   render() {
@@ -75,6 +76,7 @@ class App extends React.PureComponent {
                 />
 
                 {/* Employee PAGE PATHS */}
+                <Route exact path="/newAPI" component={newAPI} />
                 <Route exact path="/Homepage" component={dash} />
                 <Route exact path="/myInfo" component={dash} />
                 <Route exact path="/addresses" component={dash} />
