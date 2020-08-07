@@ -140,7 +140,7 @@ class Addresses extends PureComponent {
   };
   async getaddressdata() {
     await axios
-      .get("http://3.22.17.212:8000/api/v1/employees/" + id + "/addresses", {
+      .get("http://3.22.17.212:9000/api/v1/employees/" + id + "/addresses", {
         headers: {
           Authorization: token,
         },
@@ -166,7 +166,7 @@ class Addresses extends PureComponent {
     //  bodyFormData.append("objId", id);
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/codes/evaluation/new-code",
+        "http://3.22.17.212:9000/api/v1/codes/evaluation/new-code",
         bodyFormData,
         headers
       )
@@ -181,7 +181,7 @@ class Addresses extends PureComponent {
     await this.getaddressdata();
 
     await axios
-      .get("http://3.22.17.212:8000/api/v1/resManager/address/states/", {
+      .get("http://3.22.17.212:9000/api/v1/resManager/address/states/", {
         headers: {
           Authorization: token,
         },
@@ -191,7 +191,7 @@ class Addresses extends PureComponent {
       });
 
     await axios
-      .get("http://3.22.17.212:8000/api/v1/resManager/address/types/", {
+      .get("http://3.22.17.212:9000/api/v1/resManager/address/types/", {
         headers: {
           Authorization: token,
         },
@@ -201,7 +201,7 @@ class Addresses extends PureComponent {
         console.table("addresstypes", this.state.addressTypes);
       });
     await axios
-      .get("http://3.22.17.212:8000/api/v1/resManager/address/reasons/", {
+      .get("http://3.22.17.212:9000/api/v1/resManager/address/reasons/", {
         headers: {
           Authorization: token,
         },
@@ -239,7 +239,7 @@ class Addresses extends PureComponent {
     });
     await axios
       .get(
-        "http://3.22.17.212:8000/api/v1/employees/" +
+        "http://3.22.17.212:9000/api/v1/employees/" +
           id +
           "/addresses/" +
           index +
@@ -296,7 +296,7 @@ class Addresses extends PureComponent {
 
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/employees/update-address/" + addressid,
+        "http://3.22.17.212:9000/api/v1/employees/update-address/" + addressid,
         bodyFormData,
         headers
       )
@@ -1372,7 +1372,7 @@ class Addresses extends PureComponent {
     this.setState({ selectedState: stateid });
     await axios
       .get(
-        "http://3.22.17.212:8000/api/v1/resManager/address/lgas/?stateId=" +
+        "http://3.22.17.212:9000/api/v1/resManager/address/lgas/?stateId=" +
           stateid,
         {
           headers: {
@@ -1392,7 +1392,7 @@ class Addresses extends PureComponent {
     console.log("selectedlga", this.state.selectedLga, lgaid);
     await axios
       .get(
-        "http://3.22.17.212:8000/api/v1/resManager/address/cities/?lgaId=" +
+        "http://3.22.17.212:9000/api/v1/resManager/address/cities/?lgaId=" +
           lgaid,
         {
           headers: {
@@ -1443,7 +1443,7 @@ class Addresses extends PureComponent {
 
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/employees/post-address",
+        "http://3.22.17.212:9000/api/v1/employees/post-address",
         bodyFormData,
         headers
       )

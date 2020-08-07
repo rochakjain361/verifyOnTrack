@@ -90,11 +90,11 @@ function EmployerList(props) {
     false
   );
   // const getcommentbyemployer=async(employerid)=>{
-  //   await get("http://3.22.17.212:8000/api/v1/employees/"+employerid+"/comments/mycomments",Token,"").then((res)=>{setcommentbyemployer(res.data)})
+  //   await get("http://3.22.17.212:9000/api/v1/employees/"+employerid+"/comments/mycomments",Token,"").then((res)=>{setcommentbyemployer(res.data)})
   //     }
   const confirmterminationapi = async () => {
     await put(
-      "http://3.22.17.212:8000/api/v1/employers/confirmTermination/" +
+      "http://3.22.17.212:9000/api/v1/employers/confirmTermination/" +
         offboardid,
       Token,
       { ratingSurvey, choiceSurvey }
@@ -556,7 +556,7 @@ function EmployerList(props) {
     // await setRatingsurvey({"ratingSurvey":ratingentry})
     // await setChoicesurvey({"choiceSurvey":choiceentry})
     setTermination(false);
-    await post("http://3.22.17.212:8000/api/v1/employers/newoffboard", Token, {
+    await post("http://3.22.17.212:9000/api/v1/employers/newoffboard", Token, {
       offboard,
       ratingSurvey,
       choiceSurvey,
@@ -568,7 +568,7 @@ function EmployerList(props) {
   const jobupdation = async () => {
     setUpdationdialog(false);
     await update(
-      "http://3.22.17.212:8000/api/v1/employers/newEmpUpdate",
+      "http://3.22.17.212:9000/api/v1/employers/newEmpUpdate",
       Token,
       employmentupdate
     ).then((response) => {
@@ -583,14 +583,14 @@ function EmployerList(props) {
   };
   const sendComment = async () => {
     await post(
-      "http://3.22.17.212:8000/api/v1/employers/post-comments",
+      "http://3.22.17.212:9000/api/v1/employers/post-comments",
       Token,
       comentdata
     ).then((response) => {});
   };
   const confirmupdates = async (updateid) => {
     await put(
-      "http://3.22.17.212:8000/api/v1/employers/confirmEmpUpdate/" + updateid,
+      "http://3.22.17.212:9000/api/v1/employers/confirmEmpUpdate/" + updateid,
       Token,
       ""
     ).then((response) => {
@@ -599,7 +599,7 @@ function EmployerList(props) {
   };
   const rejectupdates = async (updateid) => {
     await put(
-      "http://3.22.17.212:8000/api/v1/employers/rejectEmpUpdate/" + updateid,
+      "http://3.22.17.212:9000/api/v1/employers/rejectEmpUpdate/" + updateid,
       Token,
       ""
     ).then((response) => {
@@ -610,19 +610,19 @@ function EmployerList(props) {
     setLoading(true);
 
     await get(
-      "http://3.22.17.212:8000/api/v1/resManager/job/offboardTypes/",
+      "http://3.22.17.212:9000/api/v1/resManager/job/offboardTypes/",
       Token
     ).then((response) => {
       setOffboardTypes(response.data);
     });
     await get(
-      "http://3.22.17.212:8000/api/v1/resManager/job/leaving-reasons/",
+      "http://3.22.17.212:9000/api/v1/resManager/job/leaving-reasons/",
       Token
     ).then((response) => {
       setLeavingReasons(response.data);
     });
     await get(
-      "http://3.22.17.212:8000/api/v1/resManager/job/surveyq/employer/rating/",
+      "http://3.22.17.212:9000/api/v1/resManager/job/surveyq/employer/rating/",
       Token
     ).then((response) => {
       setRatingdata(response.data);
@@ -640,7 +640,7 @@ function EmployerList(props) {
       });
     });
     await get(
-      "http://3.22.17.212:8000/api/v1/resManager/job/surveyq/employer/choice/",
+      "http://3.22.17.212:9000/api/v1/resManager/job/surveyq/employer/choice/",
       Token
     ).then((response) => {
       setChoicedata(response.data);
@@ -655,7 +655,7 @@ function EmployerList(props) {
       });
     });
     await get(
-      "http://3.22.17.212:8000/api/v1/resManager/job/categories/",
+      "http://3.22.17.212:9000/api/v1/resManager/job/categories/",
       Token
     ).then((response) => {
       setJobcategory(response.data);

@@ -35,7 +35,7 @@ export default class forgotpassword extends Component {
     bodyFormData.append("email", this.state.email);
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/accounts/reset_password",
+        "http://3.22.17.212:9000/api/v1/accounts/reset_password",
         bodyFormData
       )
       .then((res) => 

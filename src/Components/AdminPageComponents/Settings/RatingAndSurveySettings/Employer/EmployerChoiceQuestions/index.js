@@ -49,7 +49,7 @@ export default class choicequstions extends Component {
     
         await 
           post(
-            "http://3.22.17.212:8000/api/v1/resManager/job/surveyq/employer/choice/",token,
+            "http://3.22.17.212:9000/api/v1/resManager/job/surveyq/employer/choice/",token,
             bodyFormData,
             
           )
@@ -62,7 +62,7 @@ export default class choicequstions extends Component {
       }
       async deleteid(id) {
         await del(
-          "http://3.22.17.212:8000/api/v1/resManager/job/surveyq/employer/choice/" + id + "/",
+          "http://3.22.17.212:9000/api/v1/resManager/job/surveyq/employer/choice/" + id + "/",
           token,""
         );
         this.getid();
@@ -84,7 +84,7 @@ export default class choicequstions extends Component {
       }
       async getid() {
 
-        await get("http://3.22.17.212:8000/api/v1/resManager/job/surveyq/employer/choice/",token,"")
+        await get("http://3.22.17.212:9000/api/v1/resManager/job/surveyq/employer/choice/",token,"")
       .then((res) => {
         this.setState({ result: res.data });
         console.log(this.state.result);

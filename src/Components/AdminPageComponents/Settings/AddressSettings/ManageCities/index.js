@@ -68,7 +68,7 @@ class index extends Component {
     this.setState({ filterstate: state });
     await axios
       .get(
-        "http://3.22.17.212:8000/api/v1/resManager/address/lgas/?stateId=" +
+        "http://3.22.17.212:9000/api/v1/resManager/address/lgas/?stateId=" +
         state,
         {
           headers: {
@@ -87,7 +87,7 @@ class index extends Component {
 
     this.setState({ filterlgavalue: lga })
     await axios.get(
-      "http://3.22.17.212:8000/api/v1/resManager/address/cities/?lgaId=" +
+      "http://3.22.17.212:9000/api/v1/resManager/address/cities/?lgaId=" +
       lga,
       {
         headers: {
@@ -107,7 +107,7 @@ class index extends Component {
   async getLga() {
    
     await axios
-    .get("http://3.22.17.212:8000/api/v1/resManager/address/cities/", {
+    .get("http://3.22.17.212:9000/api/v1/resManager/address/cities/", {
       headers: {
         Authorization: token,
       },
@@ -123,7 +123,7 @@ class index extends Component {
   async deletecities(id) {
     this.setState({ deleteDialogBox: false, selectedIndex: -1 });
     await axios.delete(
-      "http://3.22.17.212:8000/api/v1/resManager/address/cities/" + id + "/",
+      "http://3.22.17.212:9000/api/v1/resManager/address/cities/" + id + "/",
       {
         headers: {
           Authorization: token,
@@ -143,7 +143,7 @@ class index extends Component {
   }
   async getStateLga(){
     await axios
-    .get("http://3.22.17.212:8000/api/v1/resManager/address/states/", {
+    .get("http://3.22.17.212:9000/api/v1/resManager/address/states/", {
       headers: {
         Authorization: token,
       },
@@ -153,7 +153,7 @@ class index extends Component {
       console.log("states", states);
     });
     await axios
-    .get("http://3.22.17.212:8000/api/v1/resManager/address/lgas/", {
+    .get("http://3.22.17.212:9000/api/v1/resManager/address/lgas/", {
       headers: {
         Authorization: token,
       },
@@ -196,7 +196,7 @@ class index extends Component {
     console.log("state", state);
     await axios
       .get(
-        "http://3.22.17.212:8000/api/v1/resManager/address/lgas/?stateId=" +
+        "http://3.22.17.212:9000/api/v1/resManager/address/lgas/?stateId=" +
         state,
         {
           headers: {
@@ -225,7 +225,7 @@ class index extends Component {
 
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/resManager/address/cities/",
+        "http://3.22.17.212:9000/api/v1/resManager/address/cities/",
         bodyFormData,
         headers
       )

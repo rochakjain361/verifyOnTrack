@@ -281,7 +281,7 @@ class signIn extends Component {
 
  
     try {
-       let apiEndpoint = "http://"+window.$IP+":8000/api/v1/accounts/auth/login";
+       let apiEndpoint = "http://"+window.$IP+":9000/api/v1/accounts/auth/login";
 
       var requestBody = {
         username: this.state.username,
@@ -305,11 +305,19 @@ class signIn extends Component {
         // localStorage.setItem("Token", data.token);
         localStorage.setItem("Token","Token "+data.token);
         localStorage.setItem("id", data.user.id);
+        localStorage.setItem("ontrac_id", data.user.ontrac_id);
+        localStorage.setItem(
+          "name",
+          data.user.firstname,
+          data.user.middlename,
+          data.user.surname
+        );
+        localStorage.setItem("email", data.user.email);
 
         this.setState({ response: data });
         if (data.user.is_admin) {
           this.props.history.push({
-            pathname: "/manageStates",
+            pathname: "/admindashboard",
           });
         } else if (data.user.is_employer) {
           console.log("accountStatus", data.user.accountStatus)
