@@ -317,7 +317,7 @@ class signIn extends Component {
         this.setState({ response: data });
         if (data.user.is_admin) {
           this.props.history.push({
-            pathname: "/manageStates",
+            pathname: "/admindashboard",
           });
         } else if (data.user.is_employer) {
           console.log("accountStatus", data.user.accountStatus)

@@ -48,7 +48,7 @@ import JobTabs from './Components/AdminPageComponents/Settings/ManageJobSettings
 import RatingsTabs from './Components/AdminPageComponents/Settings/RatingAndSurveySettings/RatingsTabs'
 import CodeTabs from './Components/AdminPageComponents/ManageCodes/CodeTabs'
 import AcademicSettings from "./Components/AdminPageComponents/Settings/AcademicSettings";
-
+import Dashboard from './Components/AdminPageComponents/dashboard/admindashboard'
 const drawerWidth = 330;
 let token1 = "";
 let token = "";
@@ -268,8 +268,8 @@ export default function MiniDrawer(props) {
               {theme.direction === "rtl" ? (
                 <ChevronRightIcon style={{ color: "white" }} />
               ) : (
-                  <ArrowBackIcon style={{ color: "white" }} />
-                )}
+                <ArrowBackIcon style={{ color: "white" }} />
+              )}
             </IconButton>
           </div>
 
@@ -284,13 +284,17 @@ export default function MiniDrawer(props) {
             {open1 ? (
               <ExpandLess style={{ color: "white" }} />
             ) : (
-                <ExpandMore style={{ color: "white" }} />
-              )}
+              <ExpandMore style={{ color: "white" }} />
+            )}
           </ListItem>
 
           <Collapse in={(open1, open)} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <Link to="/addressSettings" className={classes.link} onClick={() => handleDrawerClose()}>
+              <Link
+                to="/addressSettings"
+                className={classes.link}
+                onClick={() => handleDrawerClose()}
+              >
                 <ListItem button className={classes.nested}>
                   <ListItemIcon>
                     <PinDropIcon style={{ color: "white" }} />
@@ -303,7 +307,11 @@ export default function MiniDrawer(props) {
               </Link>
               {/* <Divider /> */}
 
-              <Link to="/phoneSettings" className={classes.link} onClick={() => handleDrawerClose()}>
+              <Link
+                to="/phoneSettings"
+                className={classes.link}
+                onClick={() => handleDrawerClose()}
+              >
                 <ListItem button className={classes.nested}>
                   <ListItemIcon>
                     <PhoneIcon style={{ color: "white" }} />
@@ -316,7 +324,11 @@ export default function MiniDrawer(props) {
               </Link>
               {/* <Divider /> */}
 
-              <Link to="/manageIdSources" className={classes.link} onClick={() => handleDrawerClose()}>
+              <Link
+                to="/manageIdSources"
+                className={classes.link}
+                onClick={() => handleDrawerClose()}
+              >
                 <ListItem button className={classes.nested}>
                   <ListItemIcon>
                     <PermIdentityIcon style={{ color: "white" }} />
@@ -329,7 +341,11 @@ export default function MiniDrawer(props) {
               </Link>
               {/* <Divider /> */}
 
-              <Link to="/academicSettings" className={classes.link} onClick={() => handleDrawerClose()}>
+              <Link
+                to="/academicSettings"
+                className={classes.link}
+                onClick={() => handleDrawerClose()}
+              >
                 <ListItem button className={classes.nested}>
                   <ListItemIcon>
                     <SchoolIcon style={{ color: "white" }} />
@@ -342,7 +358,11 @@ export default function MiniDrawer(props) {
               </Link>
               {/* <Divider /> */}
 
-              <Link to="/jobSettings" className={classes.link} onClick={() => handleDrawerClose()}>
+              <Link
+                to="/jobSettings"
+                className={classes.link}
+                onClick={() => handleDrawerClose()}
+              >
                 <ListItem button className={classes.nested}>
                   <ListItemIcon>
                     <WorkIcon style={{ color: "white" }} />
@@ -355,7 +375,11 @@ export default function MiniDrawer(props) {
               </Link>
               {/* <Divider /> */}
 
-              <Link to="/ratingsSettings" className={classes.link} onClick={() => handleDrawerClose()}>
+              <Link
+                to="/ratingsSettings"
+                className={classes.link}
+                onClick={() => handleDrawerClose()}
+              >
                 <ListItem button className={classes.nested}>
                   <ListItemIcon>
                     <StarsIcon style={{ color: "white" }} />
@@ -367,7 +391,6 @@ export default function MiniDrawer(props) {
                 </ListItem>
               </Link>
               {/* <Divider /> */}
-
             </List>
           </Collapse>
 
@@ -387,8 +410,8 @@ export default function MiniDrawer(props) {
             {open2 ? (
               <ExpandLess style={{ color: "white" }} />
             ) : (
-                <ExpandMore style={{ color: "white" }} />
-              )}
+              <ExpandMore style={{ color: "white" }} />
+            )}
           </ListItem>
 
           <Collapse in={(open2, open)} timeout="auto" unmountOnExit>
@@ -410,25 +433,28 @@ export default function MiniDrawer(props) {
 
           <Divider />
 
-          <Link to="/adminCodes" className={classes.link} onClick={() => handleDrawerClose()}>
-                <ListItem button>
-                  <ListItemIcon>
-                    <CodeIcon style={{ color: "white" }} />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={"My Codes"}
-                    className={classes.textColor}
-                  />
-                </ListItem>
-              </Link>
-              {/* <Divider /> */}
+          <Link
+            to="/adminCodes"
+            className={classes.link}
+            onClick={() => handleDrawerClose()}
+          >
+            <ListItem button>
+              <ListItemIcon>
+                <CodeIcon style={{ color: "white" }} />
+              </ListItemIcon>
+              <ListItemText
+                primary={"My Codes"}
+                className={classes.textColor}
+              />
+            </ListItem>
+          </Link>
+          {/* <Divider /> */}
 
           <Divider />
         </Drawer>
         <main className={classes.content}>
           <Toolbar />
           <Switch>
-
             <Route exact path="/addressSettings">
               <Container>
                 <AddressTabs />
@@ -470,13 +496,17 @@ export default function MiniDrawer(props) {
                 <AddAdminUser />
               </Container>
             </Route>
-            
+            <Route exact path="/admindashboard">
+              <Container>
+                <Dashboard/>
+              </Container>
+            </Route>
+
             <Route exact path="/adminCodes">
               <Container>
                 <CodeTabs />
               </Container>
             </Route>
-
           </Switch>
         </main>
       </div>
