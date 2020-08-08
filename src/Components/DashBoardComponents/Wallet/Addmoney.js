@@ -6,11 +6,14 @@ import {
   Card,
   TextField,
   Button,
+  CircularProgress,
   Link,
 } from "@material-ui/core";
 import { PaystackButton } from "react-paystack";
+import axios from "axios";
 let token = "";
 let publicKey = "pk_test_7546b591c13199a3f624c0d46017a9c5cad9a1a6";
+
 export default function Addmoney() {
   const [amount, setAmount] = useState(0);
   const [amount1, setAmount1] = useState("");
@@ -19,6 +22,7 @@ export default function Addmoney() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [Token, setToken] = React.useState("");
+  const [Loading, setLoading] = React.useState(false);
 
   const [id, setid] = React.useState("");
 
@@ -31,9 +35,8 @@ export default function Addmoney() {
     },
     publicKey,
     text: "Add money",
-    onSuccess: () => {
-        setAmount1("")
-
+    onSuccess: (e) => {
+      setAmount1("");
     },
     onClose: () => alert("Are you sure you want to cancel this transaction,"),
   };
@@ -45,7 +48,24 @@ export default function Addmoney() {
     setName(localStorage.getItem("name"));
   });
 
-  return (
+  return Loading ? (
+    <Grid
+      container
+      justify="center"
+      align="center"
+      direction="column"
+      display="flex"
+      style={{ minHeight: "75vh" }}
+    >
+      <Grid item xs={12}>
+        <CircularProgress />
+        <Typography variant="body1" gutterBottom>
+          Please do not refresh the page
+        </Typography>
+        
+      </Grid>
+    </Grid>
+  ) : (
     <div>
       <Box m={2} p={2}>
         <Grid
@@ -87,20 +107,18 @@ export default function Addmoney() {
                         required
                         margin="dense"
                         label="amount"
-                        value={amount/100}
+                        value={amount / 100}
                         type="amount"
                         id="password"
                         autoComplete="current-password"
                         fullWidth
                         size="small"
                         helperText={"please enter your amount"}
-                        onChange={(event) =>{
-                          setAmount(event.target.value*100)
-                          
-                        //   setAmount1(event.target.value*100)
-                          
-                        }
-                        }
+                        onChange={(event) => {
+                          setAmount(event.target.value * 100);
+
+                          //   setAmount1(event.target.value*100)
+                        }}
                       ></TextField>
                     </Grid>
                     <Grid item xs={8}>
@@ -114,9 +132,7 @@ export default function Addmoney() {
                         fullWidth
                         size="small"
                         helperText={"please enter your email"}
-                        onChange={(event) =>
-                          setEmail(event.target.value)
-                        }
+                        onChange={(event) => setEmail(event.target.value)}
                       ></TextField>
                     </Grid>
                     <Grid item xs={8}>
@@ -131,9 +147,7 @@ export default function Addmoney() {
                         fullWidth
                         size="small"
                         helperText={"please enter your name"}
-                        onChange={(event) =>
-                          setName(event.target.value)
-                        }
+                        onChange={(event) => setName(event.target.value)}
                       ></TextField>
                     </Grid>
                     <Grid item xs={8}>
@@ -147,9 +161,7 @@ export default function Addmoney() {
                         fullWidth
                         size="small"
                         helperText={"please enter your phone number"}
-                        onChange={(event) =>
-                          setPhone(event.target.value)
-                        }
+                        onChange={(event) => setPhone(event.target.value)}
                       ></TextField>
                     </Grid>
                   </Grid>
@@ -164,7 +176,26 @@ export default function Addmoney() {
                     <PaystackButton
                       className="paystack-button"
                       {...componentProps}
-                      onSuccess={(e) => console.log(e)}
+                      onSuccess={(e) => {
+                        console.log("eeeeeeeeeeeeeeeeee", e);
+                        setLoading(true);
+                        axios
+                          .get(
+                            "http://3.22.17.212:9000/wallet/verifyTrx?TrxId=" +
+                              e.transaction,
+                            {
+                              headers: {
+                                Authorization: Token,
+                              },
+                            }
+                          )
+                          .then((res) => {
+                            console.log(res);
+
+                            setLoading(false);
+                            window.location.reload(false);
+                          });
+                      }}
                     />
                   </Grid>
                 </Grid>
