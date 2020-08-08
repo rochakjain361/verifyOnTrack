@@ -75,6 +75,7 @@ class App extends React.PureComponent {
                 />
 
                 {/* Employee PAGE PATHS */}
+                {/* <Route exact path="/newAPI" component={newAPI} /> */}
                 <Route exact path="/Homepage" component={dash} />
                 <Route exact path="/myInfo" component={dash} />
                 <Route exact path="/addresses" component={dash} />

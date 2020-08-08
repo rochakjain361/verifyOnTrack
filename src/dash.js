@@ -506,6 +506,7 @@ export default function MiniDrawer(props) {
                 <Createwallet />
               </Container>
             </Route>
+
             <Route exact path="/Addmoney">
               <Container>
                 <Addmoney />
