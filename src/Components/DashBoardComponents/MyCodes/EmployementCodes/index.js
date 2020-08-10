@@ -28,7 +28,7 @@ export default function Indexemployment() {
   const [comments,setcomments]=React.useState([])
 
   const Onboardingdata = async () => {
-    await Axios.get("http://3.22.17.212:8000/api/v1/employers/oboffers", {
+    await Axios.get("http://3.22.17.212:9000/api/v1/employers/oboffers", {
       headers: {
         Authorization: Token,
       },
@@ -40,14 +40,14 @@ export default function Indexemployment() {
     });
   };
   const employerList=async()=>{
-    await get("http://3.22.17.212:8000/api/v1/employees/employers",Token).then((response)=>{
+    await get("http://3.22.17.212:9000/api/v1/employees/employers",Token).then((response)=>{
       console.log("response from employee",response);
       setEmployerlist(response.data)
       
     })
   }
   const getcoments=async()=>{
-await get("http://3.22.17.212:8000/api/v1/employees/"+id+"/comments",Token).then((response)=>{
+await get("http://3.22.17.212:9000/api/v1/employees/"+id+"/comments",Token).then((response)=>{
 console.log("response for comments",response);  
 setcomments(response.data)
 setLoading(false);

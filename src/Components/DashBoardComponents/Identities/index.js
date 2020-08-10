@@ -26,12 +26,12 @@ import { MenuItem } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
 import { InputLabel } from "@material-ui/core";
-import FormControl from '@material-ui/core/FormControl';
+import FormControl from "@material-ui/core/FormControl";
 import Typography from "@material-ui/core/Typography";
-import GridListTile from '@material-ui/core/GridListTile';
-import GridList from '@material-ui/core/GridList';
-import {Snackbar} from '@material-ui/core'
-import MuiAlert from '@material-ui/lab/Alert';
+import GridListTile from "@material-ui/core/GridListTile";
+import GridList from "@material-ui/core/GridList";
+import { Snackbar } from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
 
 let token1 = "";
 
@@ -77,6 +77,9 @@ class Identities extends Component {
       addresponse: "",
       updateresponse: "",
       updatesnackbar: false,
+      amount: "",
+      debitresponse: "",
+      currentid: "",
     };
     // this.updateidentites= this.updateidentites.bind();
   }
@@ -169,7 +172,7 @@ class Identities extends Component {
   async getidentites() {
     await axios
       .get(
-        "http://3.22.17.212:8000/api/v1/employees/" +
+        "http://3.22.17.212:9000/api/v1/employees/" +
           id +
           "/identities-by/" +
           id,
@@ -190,7 +193,7 @@ class Identities extends Component {
     id = localStorage.getItem("id");
     await this.getidentites();
     let idSource = await axios.get(
-      "http://3.22.17.212:8000/api/v1/resManager/id/sources/?excludeSystem=true",
+      "http://3.22.17.212:9000/api/v1/resManager/id/sources/?excludeSystem=true",
       {
         headers: {
           Authorization: token,
@@ -225,7 +228,7 @@ class Identities extends Component {
     });
     await axios
       .get(
-        "http://3.22.17.212:8000/api/v1/employees/" +
+        "http://3.22.17.212:9000/api/v1/employees/" +
           id +
           "/identities-by/" +
           id +
@@ -261,7 +264,7 @@ class Identities extends Component {
 
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/employees/post-identity",
+        "http://3.22.17.212:9000/api/v1/employees/post-identity",
         bodyFormData,
         headers
       )
@@ -291,7 +294,7 @@ class Identities extends Component {
 
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/employees/update-identity",
+        "http://3.22.17.212:9000/api/v1/employees/update-identity",
         bodyFormData,
         headers
       )
@@ -393,7 +396,46 @@ class Identities extends Component {
           </DialogContent>
         </Dialog>
         {this.updatesnackbar()}
-
+        {
+          <Dialog
+            open={this.state.walletdialog}
+            onClose={() => this.setState({ walletdialog: false })}
+            aria-labelledby="form-dialog-title"
+          >
+            <DialogTitle id="form-dialog-title" align="center" justify="center">
+              You need to pay {this.state.amount} for this service from wallet
+            </DialogTitle>
+            <DialogContent></DialogContent>
+            <DialogActions>
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={() =>
+                  this.setState(
+                    {
+                      walletdialog: false,
+                    },
+                    this.pay
+                  )
+                }
+              >
+                Pay
+              </Button>
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={() =>
+                  this.setState({
+                    walletdialog: false,
+                    
+                  })
+                }
+              >
+                Cancel
+              </Button>
+            </DialogActions>
+          </Dialog>
+        }
         {
           <Dialog
             open={this.state.addDialogOpen}
@@ -570,7 +612,7 @@ class Identities extends Component {
     this.setState({ pictureloading: true });
     await axios
       .get(
-        "http://3.22.17.212:8000/api/v1/employees/" +
+        "http://3.22.17.212:9000/api/v1/employees/" +
           id +
           "/idSources/" +
           idsource +
@@ -601,7 +643,7 @@ class Identities extends Component {
 
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/employees/post-identitiy-pic",
+        "http://3.22.17.212:9000/api/v1/employees/post-identitiy-pic",
         bodyFormData,
         headers
       )
@@ -610,7 +652,40 @@ class Identities extends Component {
       });
     await this.getidentites();
   }
-  async verification(id) {
+  async getamount() {
+    await axios
+      .get(
+        "http://3.22.17.212:9000/api/v1/resManager/serviceAPI/?serviceName=identityverification"
+      )
+      .then((res) => this.setState({ amount: res.data[0].serviceCharge }));
+  }
+  async pay() {
+    let transactionid = Math.floor(
+      10000000000000000 + Math.random() * 9000000000000000
+    );
+    let headers1 = {
+      headers: {
+        Authorization: token,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    await axios
+      .post(
+        "http://3.22.17.212:9000/wallet/transaction?type=DEBIT&amount=" +
+          this.state.amount +
+          "&description=" +
+          transactionid,
+        "",
+        headers1
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          this.verification()
+        }
+      });
+  }
+  async verification() {
     let headers = {
       headers: {
         Authorization: token,
@@ -618,16 +693,18 @@ class Identities extends Component {
     };
     let bodyFormData = {
       verType: "Identity",
-      objId: id,
+      objId: this.state.currentid,
     };
+
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/codes/evaluation/new-code",
+        "http://3.22.17.212:9000/api/v1/codes/evaluation/new-code",
         bodyFormData,
         headers
       )
       .then((res) => {
-        this.getidentites();
+
+         window.location.reload(false);
       });
   }
 
@@ -674,7 +751,7 @@ class Identities extends Component {
                       "Verified by",
                       "Update",
                       "History",
-                      "Varification",
+                      "Verification",
                     ].map((text, index) => (
                       <TableCell
                         style={{ fontWeight: "bolder" }}
@@ -750,7 +827,7 @@ class Identities extends Component {
 
                       <TableCell align="center">
                         <Button
-                        size="small"
+                          size="small"
                           disabled={row.status === "Audit In Progress"}
                           color="primary"
                           variant="outlined"
@@ -786,7 +863,11 @@ class Identities extends Component {
                             variant="outlined"
                             color="default"
                             onClick={() => {
-                              this.verification(row.id);
+                              this.setState({
+                                walletdialog: true,
+                                currentid: row.id,
+                              });
+                              this.getamount();
                             }}
                           >
                             Request for verification

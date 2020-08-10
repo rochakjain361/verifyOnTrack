@@ -133,7 +133,7 @@ export default function HorizontalLinearStepper(props) {
     //  let bodyFormData = new FormData();
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/codes/approval/new-code",
+        "http://3.22.17.212:9000/api/v1/codes/approval/new-code",
         "",
 
         headers
@@ -243,7 +243,7 @@ export default function HorizontalLinearStepper(props) {
     setLoading(true);
     console.log("check suceeded");
     let profiledata = await axios.get(
-      "http://3.22.17.212:8000/api/v1/employees/" + id + "/profiles",
+      "http://3.22.17.212:9000/api/v1/employees/" + id + "/profiles",
       {
         headers: {
           Authorization: Token,
@@ -263,7 +263,7 @@ export default function HorizontalLinearStepper(props) {
     // }
 
     let addressdata = await axios.get(
-      "http://3.22.17.212:8000/api/v1/employees/" + id + "/addresses",
+      "http://3.22.17.212:9000/api/v1/employees/" + id + "/addresses",
       {
         headers: {
           Authorization: Token,
@@ -282,7 +282,7 @@ export default function HorizontalLinearStepper(props) {
 
     console.log("its continuing //////////////////////////////////");
     let identitesdata = await axios.get(
-      "http://3.22.17.212:8000/api/v1/employees/" + id + "/identities-by/" + id,
+      "http://3.22.17.212:9000/api/v1/employees/" + id + "/identities-by/" + id,
       {
         headers: {
           Authorization: Token,
@@ -298,7 +298,7 @@ export default function HorizontalLinearStepper(props) {
       return;
     }
     let Academicsdata = await axios.get(
-        "http://3.22.17.212:8000/api/v1/employees/" + id + "/academics",
+        "http://3.22.17.212:9000/api/v1/employees/" + id + "/academics",
         {
           headers: {
             Authorization: Token,
@@ -315,7 +315,7 @@ export default function HorizontalLinearStepper(props) {
       }
 
     let phonedata = await axios.get(
-      "http://3.22.17.212:8000/api/v1/employees/" + id + "/phones",
+      "http://3.22.17.212:9000/api/v1/employees/" + id + "/phones",
       {
         headers: {
           Authorization: Token,
@@ -336,7 +336,7 @@ export default function HorizontalLinearStepper(props) {
 
     // console.log(result[0].phone_reason);
 
-    // let response = await fetch("http://3.22.17.212:8000/api/v1/employees/" + id + "/jobs",
+    // let response = await fetch("http://3.22.17.212:9000/api/v1/employees/" + id + "/jobs",
     //     {
     //         headers: {
     //             'Authorization': Token
@@ -379,7 +379,7 @@ export default function HorizontalLinearStepper(props) {
     };
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/accounts/auth/logout",
+        "http://3.22.17.212:9000/api/v1/accounts/auth/logout",
         {},
 
         headers

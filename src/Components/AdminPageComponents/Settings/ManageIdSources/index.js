@@ -53,7 +53,7 @@ export class index extends Component {
   async getid() {
 
     await axios
-      .get("http://3.22.17.212:8000/api/v1/resManager/id/sources/", {
+      .get("http://3.22.17.212:9000/api/v1/resManager/id/sources/", {
         headers: {
           Authorization: token,
         },
@@ -86,7 +86,7 @@ export class index extends Component {
 
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/resManager/id/sources/",
+        "http://3.22.17.212:9000/api/v1/resManager/id/sources/",
         bodyFormData,
         headers
       )
@@ -99,7 +99,7 @@ export class index extends Component {
   }
   async deleteid(id) {
     await axios.delete(
-      "http://3.22.17.212:8000/api/v1/resManager/id/sources/" + id + "/",
+      "http://3.22.17.212:9000/api/v1/resManager/id/sources/" + id + "/",
       {
         headers: {
           Authorization: token,

@@ -62,7 +62,7 @@ class index extends Component {
   async getLga() {
 
     await axios
-      .get("http://3.22.17.212:8000/api/v1/resManager/address/states/", {
+      .get("http://3.22.17.212:9000/api/v1/resManager/address/states/", {
         headers: {
           Authorization: token,
         },
@@ -72,7 +72,7 @@ class index extends Component {
         console.log("states", states);
       });
     await axios
-      .get("http://3.22.17.212:8000/api/v1/resManager/address/lgas/", {
+      .get("http://3.22.17.212:9000/api/v1/resManager/address/lgas/", {
         headers: {
           Authorization: token,
         },
@@ -98,7 +98,7 @@ class index extends Component {
     if (state !== "none") {
       await axios
         .get(
-          "http://3.22.17.212:8000/api/v1/resManager/address/lgas/?stateId=" +
+          "http://3.22.17.212:9000/api/v1/resManager/address/lgas/?stateId=" +
           state,
           {
             headers: {
@@ -122,7 +122,7 @@ class index extends Component {
   async deleteLga(id) {
     this.setState({ deleteDialogBox: false, selectedIndex: -1 });
     axios.delete(
-      "http://3.22.17.212:8000/api/v1/resManager/address/lgas/" + id + "/",
+      "http://3.22.17.212:9000/api/v1/resManager/address/lgas/" + id + "/",
       {
         headers: {
           Authorization: token,
@@ -309,7 +309,7 @@ class index extends Component {
 
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/resManager/address/lgas/",
+        "http://3.22.17.212:9000/api/v1/resManager/address/lgas/",
         bodyFormData,
         headers
       )

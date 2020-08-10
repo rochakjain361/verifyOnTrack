@@ -1,73 +1,86 @@
-import React from 'react';
-import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import React from "react";
+import clsx from "clsx";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Drawer from "@material-ui/core/Drawer";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import List from "@material-ui/core/List";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import StarBorder from "@material-ui/icons/StarBorder";
 import Collapse from "@material-ui/core/Collapse";
-import { Container, Button, Grid } from "@material-ui/core";
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
+import { Container, Button, Grid, Box } from "@material-ui/core";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
 import axios from "axios";
-import InfoIcon from '@material-ui/icons/Info';
-import AccountCircle from '@material-ui/icons/AccountCircle';
+import InfoIcon from "@material-ui/icons/Info";
+import AccountCircle from "@material-ui/icons/AccountCircle";
 import PersonIcon from "@material-ui/icons/Person";
 import WorkIcon from "@material-ui/icons/Work";
 import MessageIcon from "@material-ui/icons/Message";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import CodeIcon from "@material-ui/icons/Code";
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import Dashboard from "./Components/DashBoardComponents/Dashboard";
 import Addresstitle from "./Components/DashBoardComponents/Addresses/title";
 import Identitiestitle from "./Components/DashBoardComponents/Identities/title";
 import PhoneTitle from "./Components/DashBoardComponents/Phones/title";
 import MyJobProfile from "./Components/DashBoardComponents/MyJobProfile";
 import Index from "./Components/DashBoardComponents/Messages/Inbox";
-import Indexemployment from './Components/DashBoardComponents/MyCodes/EmployementCodes/index'
+import Indexemployment from "./Components/DashBoardComponents/MyCodes/EmployementCodes/index";
 // import Outbox from "./Components/DashBoardComponents/Messages/Outbox";
 import Profiletitle from "./Components/DashBoardComponents/MyProfile/title";
 import AccessCodes from "./Components/DashBoardComponents/MyCodes/AccessCodes";
 // import EmployementCodes from "./Components/DashBoardComponents/MyCodes/EmployementCodes";s
-import HomeIcon from '@material-ui/icons/Home';
-import PaymentIcon from '@material-ui/icons/Payment';
-import PhoneIcon from '@material-ui/icons/Phone';
-import { useState, useEffect } from 'react';
-import { Title } from '@material-ui/icons';
-import Academicstitle from './Components/DashBoardComponents/Academics/title'
-import SchoolIcon from '@material-ui/icons/School';
-
-import MyInfoTabs from './Components/DashBoardComponents/MyInfoTabs'
+import HomeIcon from "@material-ui/icons/Home";
+import PaymentIcon from "@material-ui/icons/Payment";
+import PhoneIcon from "@material-ui/icons/Phone";
+import { useState, useEffect } from "react";
+import { Title } from "@material-ui/icons";
+import Academicstitle from "./Components/DashBoardComponents/Academics/title";
+import SchoolIcon from "@material-ui/icons/School";
+import AccountBalanceWalletIcon from "@material-ui/icons/AccountBalanceWallet";
+import MyInfoTabs from "./Components/DashBoardComponents/MyInfoTabs";
+import Popper from "@material-ui/core/Popper";
+import Popover from "@material-ui/core/Popover";
+import Avatar from "@material-ui/core/Avatar";
+import Createwallet from "../src/Components/DashBoardComponents/Wallet/Createwallet";
+import Addmoney from "../src/Components/DashBoardComponents/Wallet/Addmoney";
 
 const drawerWidth = 240;
-let token1 = "";
-
 let token = "";
 let id = "";
 
 const useStyles = makeStyles((theme) => ({
+  popover: {
+    pointerEvents: "none",
+  },
+  paper: {
+    padding: theme.spacing(1),
+  },
   root: {
-    display: 'flex',
+    display: "flex",
     flexGrow: 1,
   },
+  // grow: {
+  //   flexGrow: 1,
+  // },
+
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
+    transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
@@ -75,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
   appBarShift: {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
+    transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
@@ -84,31 +97,31 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 36,
   },
   hide: {
-    display: 'none',
+    display: "none",
   },
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
-    whiteSpace: 'nowrap',
+    whiteSpace: "nowrap",
     width: "inherit",
     background: "#424242",
   },
   drawerOpen: {
     width: drawerWidth,
-    transition: theme.transitions.create('width', {
+    transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
     background: "#424242",
   },
   drawerClose: {
-    transition: theme.transitions.create('width', {
+    transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    overflowX: 'hidden',
+    overflowX: "hidden",
     width: theme.spacing(7) + 1,
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up("sm")]: {
       width: theme.spacing(9) + 1,
     },
     background: "#424242",
@@ -121,9 +134,9 @@ const useStyles = makeStyles((theme) => ({
     background: "#424242",
   },
   toolbar: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
@@ -159,7 +172,6 @@ export default function MiniDrawer(props) {
   const [id, setid] = React.useState("");
   // const [anchorEl, setAnchorEl] = React.useState(false);
   useEffect(() => {
-
     setToken(localStorage.getItem("Token"));
     setid(localStorage.getItem("id"));
   });
@@ -168,6 +180,18 @@ export default function MiniDrawer(props) {
   const [open2, setOpen2] = React.useState(false);
   const [open3, setOpen3] = React.useState(false);
   const [open4, setOpen4] = React.useState(false);
+  const [balance, setBalance] = React.useState(false);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+   const handleClose = () => {
+     setAnchorEl(null);
+   };
+   const handleClick = (event) => {
+     setAnchorEl(event.currentTarget);
+   };
+
+  const open9 = Boolean(anchorEl);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -175,13 +199,30 @@ export default function MiniDrawer(props) {
 
   const handleDrawerClose = () => {
     setOpen(false);
-    setOpen1(false)
-    setOpen2(false)
-    setOpen3(false)
+    setOpen1(false);
+    setOpen2(false);
+    setOpen3(false);
   };
-
+  const getBalance = async () => {
+    const Token = await localStorage.getItem("Token");
+    console.log("Token", Token);
+    const Id = localStorage.getItem("id");
+    await axios
+      .get("http://3.22.17.212:9000/wallet/getBalance", {
+        headers: {
+          Authorization: Token,
+        },
+      })
+      .then((response) => {
+        setBalance(response);
+        console.log("messages", response);
+      });
+  };
+  useEffect(() => {
+    getBalance();
+  }, []);
   const logout = async () => {
-    props.history.push('/signin')
+    props.history.push("/signin");
     console.log(token);
     let headers = {
       headers: {
@@ -191,7 +232,7 @@ export default function MiniDrawer(props) {
     };
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/accounts/auth/logout",
+        "http://3.22.17.212:9000/api/v1/accounts/auth/logout",
         {},
 
         headers
@@ -202,8 +243,7 @@ export default function MiniDrawer(props) {
       });
 
     console.log("////////////////////////////////////////");
-
-  }
+  };
 
   return (
     <Router>
@@ -227,10 +267,76 @@ export default function MiniDrawer(props) {
             >
               <MenuIcon />
             </IconButton>
+
             <Typography variant="h6" className={classes.title}>
               Verify OnTrac
-          </Typography>
-            <Button onClick={logout} color="inherit" variant='outlined' size='medium'>Logout</Button>
+            </Typography>
+
+            <Button
+              style={{ backgroundColor: "transparent" }}
+              color="inherit"
+              size="medium"
+              onClick={handleClick}
+            >
+              <AccountBalanceWalletIcon color="white" />
+            </Button>
+
+            <Popover
+              id={id}
+              open={open9}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "center",
+              }}
+            >
+              <Link to="/Addmoney" className={classes.link}>
+                
+              <Button>Add money to your wallet</Button>
+              </Link>
+            </Popover>
+            <div>
+              <Box p={2}>
+                {balance.status === 200 ? (
+                  <>
+                    <Typography>Wallet Balance</Typography>
+                    <Typography align="center" justify="center">
+                      {balance.data[0].balance}
+                    </Typography>
+                  </>
+                ) : (
+                  // <Button
+                  //   style={{ backgroundColor: "transparent" }}
+                  //   color="inherit"
+                  //   onClick={() => {
+                  //     props.history.push("/Createwallet");
+                  //   }}
+                  // >
+                  //   Create Wallet
+                  // </Button>
+                  <Link to="/Createwallet" className={classes.link}>
+                    <ListItemText
+                      primary="Create wallet"
+                      className={classes.textColor}
+                    />
+                  </Link>
+                )}
+              </Box>
+            </div>
+
+            <Button
+              onClick={logout}
+              color="inherit"
+              variant="outlined"
+              size="medium"
+            >
+              Logout
+            </Button>
           </Toolbar>
         </AppBar>
         <Drawer
@@ -248,7 +354,11 @@ export default function MiniDrawer(props) {
         >
           <div className={classes.toolbar}>
             <IconButton onClick={handleDrawerClose}>
-              {theme.direction === 'rtl' ? <ChevronRightIcon style={{ color: "white" }} /> : <ArrowBackIcon style={{ color: "white" }} />}
+              {theme.direction === "rtl" ? (
+                <ChevronRightIcon style={{ color: "white" }} />
+              ) : (
+                <ArrowBackIcon style={{ color: "white" }} />
+              )}
             </IconButton>
           </div>
 
@@ -266,15 +376,16 @@ export default function MiniDrawer(props) {
 
           <Divider />
 
-          <Link to="/myInfo" className={classes.link} onClick={() => handleDrawerClose()}>
+          <Link
+            to="/myInfo"
+            className={classes.link}
+            onClick={() => handleDrawerClose()}
+          >
             <ListItem button>
               <ListItemIcon>
                 <InfoIcon style={{ color: "white" }} />
               </ListItemIcon>
-              <ListItemText
-                primary={"My Info"}
-                className={classes.textColor}
-              />
+              <ListItemText primary={"My Info"} className={classes.textColor} />
             </ListItem>
           </Link>
 
@@ -296,26 +407,27 @@ export default function MiniDrawer(props) {
 
           <ListItem
             button
-            onClick={() => setOpen2(!open2), () => setOpen(!open)}
+            onClick={(() => setOpen2(!open2), () => setOpen(!open))}
           >
             <ListItemIcon>
               <CodeIcon style={{ color: "white" }} />
             </ListItemIcon>
-            <ListItemText
-              primary="My Codes"
-              className={classes.textColor}
-            />
+            <ListItemText primary="My Codes" className={classes.textColor} />
             {open2 ? (
               <ExpandLess style={{ color: "white" }} />
             ) : (
-                <ExpandMore style={{ color: "white" }} />
-              )}
+              <ExpandMore style={{ color: "white" }} />
+            )}
           </ListItem>
 
-          <Collapse in={open2, open} timeout="auto" unmountOnExit>
+          <Collapse in={(open2, open)} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <Link to="/employeeAccessCodes" className={classes.link}>
-                <ListItem button className={classes.nested} onClick={() => handleDrawerClose()}>
+                <ListItem
+                  button
+                  className={classes.nested}
+                  onClick={() => handleDrawerClose()}
+                >
                   <ListItemText
                     primary="Access Codes"
                     className={classes.textColor}
@@ -324,7 +436,11 @@ export default function MiniDrawer(props) {
               </Link>
 
               <Link to="/employeeEmployementCodes" className={classes.link}>
-                <ListItem button className={classes.nested} onClick={() => handleDrawerClose()}>
+                <ListItem
+                  button
+                  className={classes.nested}
+                  onClick={() => handleDrawerClose()}
+                >
                   <ListItemText
                     primary="Employement Codes"
                     className={classes.textColor}
@@ -341,68 +457,23 @@ export default function MiniDrawer(props) {
               <ListItemIcon>
                 <MessageIcon style={{ color: "white" }} />
               </ListItemIcon>
-              <ListItemText
-                primary="Messages"
-                className={classes.textColor}
-              />
+              <ListItemText primary="Messages" className={classes.textColor} />
             </ListItem>
           </Link>
-
           <Divider />
-
-          {/* <ListItem
-          button
-          onClick={() => setOpen3(!open3), ()=> setOpen(!open)}
-        >
-          <ListItemIcon>
-            <MessageIcon style={{ color: "white" }} />
-          </ListItemIcon>
-          <ListItemText
-            primary="Messages"
-            className={classes.textColor}
-          />
-          {open3 ? (
-            <ExpandLess style={{ color: "white" }} />
-          ) : (
-              <ExpandMore style={{ color: "white" }} />
-            )}
-        </ListItem>
-
-        <Collapse in={open3, open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <Link to="/employeeInbox" className={classes.link}>
-              <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
-                <ListItemText
-                  primary="Inbox"
-                  className={classes.textColor}
-                />
-              </ListItem>
-            </Link>
-
-            {/* <Link to="/employeeOutbox" className={classes.link}>
-              <ListItem button className={classes.nested}>
-                <ListItemText
-                  primary="Outbox"
-                  className={classes.textColor}
-                />
-              </ListItem>
-            </Link> */}
-          {/* </List>
-        </Collapse> */}
-
         </Drawer>
 
         <main className={classes.content}>
           <Toolbar />
           <Switch>
             <Route exact path="/dashboard">
-              <Container style={{ backgroundColor: "#eeeeee " }}>
+              <Container style={{ backgroundColor: "#eeeeee" }}>
                 <Dashboard />
               </Container>
             </Route>
 
             <Route exact path="/myInfo">
-              <Container style={{ backgroundColor: "#eeeeee " }}>
+              <Container style={{ backgroundColor: "#eeeeee" }}>
                 <MyInfoTabs />
               </Container>
             </Route>
@@ -428,6 +499,17 @@ export default function MiniDrawer(props) {
             <Route exact path="/employeeAccessCodes">
               <Container>
                 <AccessCodes />
+              </Container>
+            </Route>
+            <Route exact path="/Createwallet">
+              <Container>
+                <Createwallet />
+              </Container>
+            </Route>
+
+            <Route exact path="/Addmoney">
+              <Container>
+                <Addmoney />
               </Container>
             </Route>
 

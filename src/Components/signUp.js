@@ -624,7 +624,7 @@ class signUp extends Component {
     try {
       console.log(this.state.designation)
       let apiEndpoint =
-        "http://3.22.17.212:8000/api/v1/accounts/auth";
+        "http://3.22.17.212:9000/api/v1/accounts/auth";
       var requestBody;
       if (this.state.designation === "Employee") {
         apiEndpoint += "/employee/register";

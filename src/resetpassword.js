@@ -45,7 +45,7 @@ export class resetpassword extends Component {
 
     await axios
       .put(
-        "http://3.22.17.212:8000/api/v1/accounts/" +
+        "http://3.22.17.212:9000/api/v1/accounts/" +
           this.state.result.user.id +
           "/resetPassword",
         bodyFormData,
@@ -120,7 +120,7 @@ export class resetpassword extends Component {
     this.setState({ param: params });
     await axios
       .get(
-        "http://3.22.17.212:8000/api/v1/accounts/verify_token?uid=" +
+        "http://3.22.17.212:9000/api/v1/accounts/verify_token?uid=" +
           params.uid,
         {
           headers: {

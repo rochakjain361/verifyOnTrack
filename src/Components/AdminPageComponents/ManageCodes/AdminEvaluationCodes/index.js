@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
 import {
   TextField,
   Paper,
@@ -52,17 +51,18 @@ class index extends Component {
       viewdetailsdilog: false,
       historydata: [],
       historydetailsdilog: false,
+      selectedmarkid:"",
     };
   }
 
   async getcodes() {
     await get(
-      "http://3.22.17.212:8000/api/v1/codes/evaluation/codes",
+      "http://3.22.17.212:9000/api/v1/codes/evaluation/codes",
       token,
       ""
     ).then((res) => this.setState({ codes: res.data }));
     await get(
-      "http://3.22.17.212:8000/api/v1/codes/evaluation/pending-codes",
+      "http://3.22.17.212:9000/api/v1/codes/evaluation/pending-codes",
       token,
       ""
     ).then((res) => this.setState({ pendingcodes: res.data }));
@@ -75,7 +75,7 @@ class index extends Component {
     this.setState({ viewdetailsdilog: true });
     console.log(selecteduserid, selectedcode, type);
     await get(
-      "http://3.22.17.212:8000/api/v1/employees/" +
+      "http://3.22.17.212:9000/api/v1/employees/" +
         selecteduserid +
         "/" +
         type +
@@ -96,7 +96,7 @@ class index extends Component {
     this.setState({ viewdetailsdilog: true });
     console.log(selecteduserid, selectedcode, type, objId);
     await get(
-      "http://3.22.17.212:8000/api/v1/employees/" +
+      "http://3.22.17.212:9000/api/v1/employees/" +
         selecteduserid +
         "/" +
         type +
@@ -116,7 +116,7 @@ class index extends Component {
     this.setState({ historydetailsdilog: true });
     console.log(selecteduserid, selectedcode, type, objId);
     await get(
-      "http://3.22.17.212:8000/api/v1/employees/" +
+      "http://3.22.17.212:9000/api/v1/employees/" +
         selecteduserid +
         "/" +
         type +
@@ -132,7 +132,7 @@ class index extends Component {
     this.setState({ historydetailsdilog: true });
     console.log(selecteduserid, selectedcode, type, objId);
     await get(
-      "http://3.22.17.212:8000/api/v1/employees/" +
+      "http://3.22.17.212:9000/api/v1/employees/" +
         selecteduserid +
         "/" +
         type +
@@ -146,7 +146,7 @@ class index extends Component {
     this.setState({ historydetailsdilog: true });
     console.log(selecteduserid, selectedcode, type, objId);
     await get(
-      "http://3.22.17.212:8000/api/v1/employees/" +
+      "http://3.22.17.212:9000/api/v1/employees/" +
         selecteduserid +
         "/" +
         type +
@@ -162,7 +162,7 @@ class index extends Component {
     this.setState({ historydetailsdilog: true });
     console.log(objId);
     await get(
-      "http://3.22.17.212:8000/api/v1/employees/" +
+      "http://3.22.17.212:9000/api/v1/employees/" +
         selecteduserid +
         "/" +
         "identities-by/" +
@@ -271,127 +271,7 @@ class index extends Component {
                                 selectedCloseBtn: row.showMarkCloseBtn,
                                 selectedcode: row.codeString,
                                 selecteduserid: row.vot_employee,
-                              });
-                              row.verType === "Profile"
-                                ? this.viewdetailsprofile(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "profiles-by"
-                                  )
-                                : row.verType === "Address"
-                                ? this.viewdetails(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "addresses",
-                                    row.objId
-                                  )
-                                : row.verType === "Identity"
-                                ? this.viewdetails(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "identities",
-                                    row.objId
-                                  )
-                                : row.verType === "Academic"
-                                ? this.viewdetails(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "academics",
-                                    row.objId
-                                  )
-                                : row.verType === "Phone"
-                                ? this.viewdetails(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "phones",
-                                    row.objId
-                                  )
-                                : row.verType === "Job"
-                                ? this.viewdetails(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "jobs",
-                                    row.objId
-                                  )
-                                : this.setState({});
-                            }}
-                          >
-                            View Details
-                          </Button>
-                        </TableCell>
-                        <TableCell align="center">
-                          <Button
-                            size="small"
-                            color="primary"
-                            variant="outlined"
-                            onClick={() => {
-                              this.setState({
-                                selectedtype: row.verType,
-                              });
-                              row.verType === "Profile"
-                                ? this.gethistory(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "profiles-by",
-                                    row.objId
-                                  )
-                                : row.verType === "Address"
-                                ? this.gethistory(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "addresses",
-                                    row.objId
-                                  )
-                                : row.verType === "Academic"
-                                ? this.gethistory(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "academics",
-                                    row.objId
-                                  )
-                                : row.verType === "Phone"
-                                ? this.gethistory(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "phones",
-                                    row.objId
-                                  )
-                                : row.verType === "Job"
-                                ? this.gethistory(
-                                    row.vot_employee,
-                                    row.codeString,
-                                    "jobs",
-                                    row.objId
-                                  )
-                                : this.setState({});
-                            }}
-                          >
-                            History
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  : this.state.codes.map((row, index) => (
-                      <TableRow key={row.id}>
-                        <TableCell align="center">{row.createdOn}</TableCell>
-                        <TableCell align="center">{row.codeString}</TableCell>
-                        <TableCell align="center">{row.verType}</TableCell>
-                        <TableCell align="center">{row.codeStatus}</TableCell>
-                        <TableCell align="center">
-                          {row.statusChangeDate}
-                        </TableCell>
-                        <TableCell align="center">
-                          <Button
-                            size="small"
-                            color="primary"
-                            variant="outlined"
-                            onClick={() => {
-                              this.setState({
-                                selectedtype: row.verType,
-                                selectedid: row.objId,
-                                selectedCloseBtn: row.showMarkCloseBtn,
-                                selectedcode: row.codeString,
-                                selecteduserid: row.vot_employee,
+                                selectedmarkid:row.id,
                               });
                               row.verType === "Profile"
                                 ? this.viewdetailsprofile(
@@ -493,6 +373,132 @@ class index extends Component {
                           </TableCell>
                         ) : null}
                       </TableRow>
+                    ))
+                  : this.state.codes.map((row, index) => (
+                      <TableRow key={row.id}>
+                        <TableCell align="center">{row.createdOn}</TableCell>
+                        <TableCell align="center">{row.codeString}</TableCell>
+                        <TableCell align="center">{row.verType}</TableCell>
+                        <TableCell align="center">{row.codeStatus}</TableCell>
+                        <TableCell align="center">
+                          {row.statusChangeDate}
+                        </TableCell>
+                        <TableCell align="center">
+                          <Button
+                            disabled={row.codeStatus === "Closed"}
+                            size="small"
+                            color="primary"
+                            variant="outlined"
+                            onClick={() => {
+                              this.setState({
+                                selectedtype: row.verType,
+                                selectedid: row.objId,
+                                selectedCloseBtn: row.showMarkCloseBtn,
+                                selectedcode: row.codeString,
+                                selecteduserid: row.vot_employee,
+                                selectedmarkid: row.id,
+                              });
+                              row.verType === "Profile"
+                                ? this.viewdetailsprofile(
+                                    row.vot_employee,
+                                    row.codeString,
+                                    "profiles-by"
+                                  )
+                                : row.verType === "Address"
+                                ? this.viewdetails(
+                                    row.vot_employee,
+                                    row.codeString,
+                                    "addresses",
+                                    row.objId
+                                  )
+                                : row.verType === "Identity"
+                                ? this.viewdetails(
+                                    row.vot_employee,
+                                    row.codeString,
+                                    "identities",
+                                    row.objId
+                                  )
+                                : row.verType === "Academic"
+                                ? this.viewdetails(
+                                    row.vot_employee,
+                                    row.codeString,
+                                    "academics",
+                                    row.objId
+                                  )
+                                : row.verType === "Phone"
+                                ? this.viewdetails(
+                                    row.vot_employee,
+                                    row.codeString,
+                                    "phones",
+                                    row.objId
+                                  )
+                                : row.verType === "Job"
+                                ? this.viewdetails(
+                                    row.vot_employee,
+                                    row.codeString,
+                                    "jobs",
+                                    row.objId
+                                  )
+                                : this.setState({});
+                            }}
+                          >
+                            View Details
+                          </Button>
+                        </TableCell>
+                        {row.verType !== "Identity" ? (
+                          <TableCell align="center">
+                            <Button
+                              disabled={row.codeStatus === "Closed"}
+                              size="small"
+                              color="primary"
+                              variant="outlined"
+                              onClick={() => {
+                                this.setState({
+                                  selectedtype: row.verType,
+                                });
+                                row.verType === "Profile"
+                                  ? this.gethistoryprofile(
+                                      row.vot_employee,
+                                      row.codeString,
+                                      "profiles-by",
+                                      row.objId
+                                    )
+                                  : row.verType === "Address"
+                                  ? this.gethistory(
+                                      row.vot_employee,
+                                      row.codeString,
+                                      "addresses",
+                                      row.objId
+                                    )
+                                  : row.verType === "Academic"
+                                  ? this.gethistoryacademics(
+                                      row.vot_employee,
+                                      row.codeString,
+                                      "academics",
+                                      row.objId
+                                    )
+                                  : row.verType === "Phone"
+                                  ? this.gethistory(
+                                      row.vot_employee,
+                                      row.codeString,
+                                      "phones",
+                                      row.objId
+                                    )
+                                  : row.verType === "Job"
+                                  ? this.gethistory(
+                                      row.vot_employee,
+                                      row.codeString,
+                                      "jobs",
+                                      row.objId
+                                    )
+                                  : this.setState({});
+                              }}
+                            >
+                              History
+                            </Button>
+                          </TableCell>
+                        ) : null}
+                      </TableRow>
                     ))}
               </TableBody>
             </Table>
@@ -502,7 +508,9 @@ class index extends Component {
           <div>
             <Dialog
               open={this.state.viewdetailsdilog}
-              onClose={() => this.setState({ viewdetailsdilog: false })}
+              onClose={() =>
+                this.setState({ viewdetailsdilog: false, viewdetailsdata: [] })
+              }
             >
               <DialogTitle id="codegenerator" align="center">
                 View Details
@@ -1282,6 +1290,7 @@ class index extends Component {
                   onClick={() => {
                     this.setState({
                       viewdetailsdilog: false,
+                      viewdetailsdata: [],
                       selectedIndex: -1,
                     });
                     this.markverifed();
@@ -1296,6 +1305,7 @@ class index extends Component {
                   onClick={() => {
                     this.setState({
                       viewdetailsdilog: false,
+                      viewdetailsdata: [],
                     });
 
                     this.markverifiedfailed();
@@ -1310,7 +1320,7 @@ class index extends Component {
                   onClick={() => {
                     this.setState({
                       viewdetailsdilog: false,
-                      selectedIndex: -1,
+                      viewdetailsdata: [],
                     });
                     this.closecode();
                   }}
@@ -1327,7 +1337,9 @@ class index extends Component {
               fullWidth={"md"}
               maxWidth={"md"}
               open={this.state.historydetailsdilog}
-              onClose={() => this.setState({ historydetailsdilog: false })}
+              onClose={() =>
+                this.setState({ historydetailsdilog: false, historydata: [] })
+              }
             >
               <DialogTitle id="codegenerator" align="center">
                 History
@@ -1741,6 +1753,7 @@ class index extends Component {
                   onClick={() => {
                     this.setState({
                       historydetailsdilog: false,
+                      historydata: [],
                     });
                   }}
                 >
@@ -1755,30 +1768,32 @@ class index extends Component {
   }
   async markverifed() {
     await put(
-      "http://3.22.17.212:8000/api/v1/codes/evaluation/codes/" +
-        this.state.selectedid +
+      "http://3.22.17.212:9000/api/v1/codes/evaluation/codes/" +
+        this.state.selectedmarkid +
         "/verify?pass=true",
       token,
       ""
-    );
+    ).then((res)=>{this.getcodes()})
   }
   async markverifiedfailed() {
     await put(
-      "http://3.22.17.212:8000/api/v1/codes/evaluation/codes/" +
-        this.state.selectedid +
+      "http://3.22.17.212:9000/api/v1/codes/evaluation/codes/" +
+        this.state.selectedmarkid +
         "/verify?pass=false",
       token,
       ""
-    );
+    ).then((res) => {
+      this.getcodes()
+    });
   }
   async closecode() {
     await put(
-      "http://3.22.17.212:8000/api/v1/codes/evaluation/codes/" +
-        this.state.selectedid +
+      "http://3.22.17.212:9000/api/v1/codes/evaluation/codes/" +
+        this.state.selectedmarkid +
         "/close",
       token,
       ""
-    );
+    ).then((res)=>{this.getcodes()})
   }
 }
 

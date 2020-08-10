@@ -80,7 +80,7 @@ export class index extends Component {
   async getstates() {
 
     await axios
-      .get("http://3.22.17.212:8000/api/v1/resManager/job/offboardTypes/", {
+      .get("http://3.22.17.212:9000/api/v1/resManager/job/offboardTypes/", {
         headers: {
           Authorization: token,
         },
@@ -115,7 +115,7 @@ export class index extends Component {
 
     await axios
       .post(
-        "http://3.22.17.212:8000/api/v1/resManager/job/offboardTypes/",
+        "http://3.22.17.212:9000/api/v1/resManager/job/offboardTypes/",
         bodyFormData,
         headers
       )
@@ -198,7 +198,7 @@ export class index extends Component {
 
     // console.log("......",id)
      axios.delete(
-      "http://3.22.17.212:8000/api/v1/resManager/job/offboardTypes/" + id + "/",
+      "http://3.22.17.212:9000/api/v1/resManager/job/offboardTypes/" + id + "/",
       {
         headers: {
           Authorization: token,
