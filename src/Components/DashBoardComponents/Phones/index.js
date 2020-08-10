@@ -229,7 +229,7 @@ class Phones extends Component {
   async getamount() {
     await axios
       .get(
-        "http://3.22.17.212:9000/api/v1/resManager/serviceAPI/?serviceName=AcademicVerification"
+        "http://3.22.17.212:9000/api/v1/resManager/serviceAPI/?serviceName=phoneVerification"
       )
       .then((res) => this.setState({ amount: res.data[0].serviceCharge }));
   }
