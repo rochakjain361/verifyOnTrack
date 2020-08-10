@@ -62,11 +62,11 @@ class MyProfile extends Component {
     file: null,
     gender: "",
     result: [],
-    addsnackbar:false,
-    addresponse:"",
-    updateresponse:"",
-    updatesnackbar:false,
-
+    addsnackbar: false,
+    addresponse: "",
+    updateresponse: "",
+    updatesnackbar: false,
+    walletdialog:false
   };
   async getprofiledata() {
     await axios
@@ -77,20 +77,18 @@ class MyProfile extends Component {
       })
       .then((res) => {
         result = res.data;
-        this.setState({ result: result })
+        this.setState({ result: result });
         console.log("Profile Data", result);
       });
   }
   async componentDidMount() {
     // console.log("props",this.props)
-    this.setState({ isloading: true })
-   
+    this.setState({ isloading: true });
+
     token = localStorage.getItem("Token");
     id = localStorage.getItem("id");
     await this.getprofiledata();
     this.setState({ isloading: false });
-
-
   }
 
   _handleChangeEvent(event) {
@@ -103,38 +101,29 @@ class MyProfile extends Component {
     if (event.target.value.length > 0) {
       //  console.log(event.target.value);
       this.setState({ buttondisabled: "" });
-    }
-    else if (event.target.value.length > 250) {
+    } else if (event.target.value.length > 250) {
       this.setState({ buttondisabled: "disabled" });
-
-    }
-    else {
+    } else {
       this.setState({ buttondisabled: "disabled" });
     }
-
-
-
   };
-  capitalizelastname(lastname1){
-    lastname1=lastname1.charAt(0).toUpperCase()+lastname1.slice(1)
-   
-    this.setState({ lastname: lastname1 })
-    console.log("lastname1",lastname1)
+  capitalizelastname(lastname1) {
+    lastname1 = lastname1.charAt(0).toUpperCase() + lastname1.slice(1);
 
+    this.setState({ lastname: lastname1 });
+    console.log("lastname1", lastname1);
   }
-  capitalizemiddlename(middlename1){
-    middlename1=middlename1.charAt(0).toUpperCase()+middlename1.slice(1)
-   
-    this.setState({ middlename: middlename1 })
-    console.log("middlename1",this.state.middlename)
+  capitalizemiddlename(middlename1) {
+    middlename1 = middlename1.charAt(0).toUpperCase() + middlename1.slice(1);
 
+    this.setState({ middlename: middlename1 });
+    console.log("middlename1", this.state.middlename);
   }
-  capitalizefirstname(firstname1){
-    firstname1=firstname1.charAt(0).toUpperCase()+firstname1.slice(1)
-   
-    this.setState({ firstname: firstname1 })
-    console.log("firstname1",this.state.firstname)
+  capitalizefirstname(firstname1) {
+    firstname1 = firstname1.charAt(0).toUpperCase() + firstname1.slice(1);
 
+    this.setState({ firstname: firstname1 });
+    console.log("firstname1", this.state.firstname);
   }
   async updatedetails() {
     this.setState({
@@ -149,8 +138,8 @@ class MyProfile extends Component {
     let bodyFormData = new FormData();
     bodyFormData.append("employee", id);
     bodyFormData.append("update_reason", this.state.updatedReasonforupdating);
-    if(this.state.file!==""){
-    bodyFormData.append("picture", this.state.file)
+    if (this.state.file !== "") {
+      bodyFormData.append("picture", this.state.file);
     }
     bodyFormData.append("dob", this.state.updatedDob);
     bodyFormData.append("firstname", this.state.updatedfirstname);
@@ -164,9 +153,11 @@ class MyProfile extends Component {
         headers
       )
       .then((response) => {
-        console.log("update response",response.status);
-        this.setState({updateresponse:response.status, updatesnackbar: true })
-        
+        console.log("update response", response.status);
+        this.setState({
+          updateresponse: response.status,
+          updatesnackbar: true,
+        });
       });
     await this.getprofiledata();
   }
@@ -193,62 +184,99 @@ class MyProfile extends Component {
       )
       .then((response) => {
         console.log(response);
-        this.setState({addresponse:response.status,addsnackbar: true})
-       
+        this.setState({ addresponse: response.status, addsnackbar: true });
       });
     await this.getprofiledata();
   }
   addsnackbar() {
-
-
-    return (
-      this.state.addresponse === 200 ?
-        (<div>
-
-          <Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ addsnackbar: false }) }>
-            <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addasnackbar }) }} severity="success">
-              Profile added sucessfully
-      </Alert>
-          </Snackbar>
-        </div>) : (<Snackbar open={this.state.addsnackbar} autoHideDuration={3000} onClick={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }}>
-          <Alert onClose={() => { this.setState({ addsnackbar: !this.state.addsnackbar }) }} severity="error">
-            Something went wrong please try again
-      </Alert>
-        </Snackbar>))
-
+    return this.state.addresponse === 200 ? (
+      <div>
+        <Snackbar
+          open={this.state.addsnackbar}
+          autoHideDuration={3000}
+          onClick={() => this.setState({ addsnackbar: false })}
+        >
+          <Alert
+            onClose={() => {
+              this.setState({ addsnackbar: !this.state.addasnackbar });
+            }}
+            severity="success"
+          >
+            Profile added sucessfully
+          </Alert>
+        </Snackbar>
+      </div>
+    ) : (
+      <Snackbar
+        open={this.state.addsnackbar}
+        autoHideDuration={3000}
+        onClick={() => {
+          this.setState({ addsnackbar: !this.state.addsnackbar });
+        }}
+      >
+        <Alert
+          onClose={() => {
+            this.setState({ addsnackbar: !this.state.addsnackbar });
+          }}
+          severity="error"
+        >
+          Something went wrong please try again
+        </Alert>
+      </Snackbar>
+    );
   }
   updatesnackbar() {
-
-
-    return (
-      this.state.updateresponse === 200 ?
-        (<div>
-          {console.log("//////////////////////////////////////")}
-
-          <Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ updatesnackbar: false }) }>
-            <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="success">
-              Profile updated sucessfully
-      </Alert>
-          </Snackbar>
-        </div>) : (<Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }}>
-          <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="error">
-            Something went wrong please try again
-      </Alert>
-        </Snackbar>))
-
+    return this.state.updateresponse === 200 ? (
+      <div>
+        <Snackbar
+          open={this.state.updatesnackbar}
+          autoHideDuration={3000}
+          onClick={() => this.setState({ updatesnackbar: false })}
+        >
+          <Alert
+            onClose={() => {
+              this.setState({ updatesnackbar: !this.state.updatesnackbar });
+            }}
+            severity="success"
+          >
+            Profile updated sucessfully
+          </Alert>
+        </Snackbar>
+      </div>
+    ) : (
+      <Snackbar
+        open={this.state.updatesnackbar}
+        autoHideDuration={3000}
+        onClick={() => {
+          this.setState({ updatesnackbar: !this.state.updatesnackbar });
+        }}
+      >
+        <Alert
+          onClose={() => {
+            this.setState({ updatesnackbar: !this.state.updatesnackbar });
+          }}
+          severity="error"
+        >
+          Something went wrong please try again
+        </Alert>
+      </Snackbar>
+    );
   }
   isloading() {
     return (
-      <Grid container justify='flex-end' alignItems='center'
+      <Grid
+        container
+        justify="flex-end"
+        alignItems="center"
         // container
         // spacing={0}
         direction="column"
-      // alignItems="center"
-      // justify="center"
-      // // display="flex"
-      // style={{ minHeight: "10vh" }}
+        // alignItems="center"
+        // justify="center"
+        // // display="flex"
+        // style={{ minHeight: "10vh" }}
       >
-        <Grid item xs={6} >
+        <Grid item xs={6}>
           <CircularProgress />
         </Grid>
       </Grid>
@@ -256,258 +284,265 @@ class MyProfile extends Component {
   }
 
   tabledata() {
-    
     return (
       <>
-        {
-          this.state.result.length === 0
+        {this.state.result.length === 0 ? (
+          <div>
+            <Grid
+              container
+              spacing={3}
+              direction="column"
+              justify="center"
+              align="center"
+            >
+              <Grid item xs={12}>
+                <Paper elevation={3} direction="column">
+                  <Box
+                    p={3}
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    style={{ height: "50vh" }}
+                  >
+                    <Typography
+                      variant="h4"
+                      gutterBottom
+                      align="center"
+                      justify="center"
+                    >
+                      Add profiles to improve ratings.
+                    </Typography>
 
-            ? (
-              <div>
-
-                <Grid container spacing={3} direction="column" justify='center' align="center">
-
-
-                  <Grid item xs={12}  >
-
-                    <Paper elevation={3} direction="column" >
-                      <Box p={3} display="flex" flexDirection="column" justifyContent='center' alignItems="center" style={{ height: '50vh', }} >
-
-                        <Typography variant="h4" gutterBottom align='center' justify="center">
-                          Add  profiles to improve ratings.
-                      </Typography>
-
-                        <Button color="primary" variant='contained' onClick={() => this.setState({ addDialogOpen: true })}>
-                          Add New Job Profile
-                        </Button>
-
-                      </Box>
-                    </Paper>
-
-                  </Grid>
-
-
-                </Grid>
-
-                {<Dialog
-                  open={this.state.addDialogOpen}
-                  onClose={() => this.setState({ addDialogOpen: false })}
-                  aria-labelledby="form-dialog-title"
-                >
-                  <DialogTitle id="form-dialog-title" justify="center">
-                    Add Profile
-              </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText>
-                      Enter the details of your profile to be added
-                </DialogContentText>
-
-                    <Grid container justify='flex-start' direction='row' alignItems='center' spacing={3}>
-                      <Grid item fullWidth xs={12}>
-                        <TextField
-                          id="firstName"
-                          label="First Name"
-                          value={this.state.firstname}
-                          // defaultValue={result[this.state.selectedIndex].firstname}
-                          onChange={(event) => {
-                            this.capitalizefirstname(event.target.value)
-                            // this.setState({ firstname: event.target.value });
-                            // console.log(this.state.firstname);
-                          }}
-                          type="text"
-                          fullWidth
-                        />
-                      </Grid>
-
-                      <Grid item fullWidth xs={12}>
-                        <TextField
-                          id="middleName"
-                          label="Middle Name"
-                          value={this.state.middlename}
-                          // defaultValue={result[this.state.selectedIndex].middlename}
-                          onChange={(event) => {
-                            this.capitalizemiddlename(event.target.value)
-                           
-                            // console.log(this.state.middlename);
-                          }}
-                          type="text"
-                          fullWidth
-                        />
-                      </Grid>
-
-                      <Grid item fullWidth xs={12}>
-                        <TextField
-                          id="surname"
-                          label="Surname"
-                          value={this.state.lastname}
-                          // defaultValue={result[this.state.selectedIndex].surname}
-                          onChange={(event) => {
-                            this.capitalizelastname(event.target.value)
-                            // console.log(this.state.lastname);
-                          }}
-                          type="text"
-                          fullWidth
-                        />
-                      </Grid>
-
-                      <Grid item fullWidth xs={12}>
-                        <TextField
-                          
-                          name="Date of birth"
-                           label="Date of birth"
-                           InputLabelProps={{ shrink: true, required: true }}
-                          // defaultValue={result[this.state.selectedIndex].dob}
-                          onChange={(event) => {
-                            this.setState({ Dob: event.target.value });
-                            console.log(this.state.Dob);
-                          }}
-                          type="date"
-                          fullWidth
-                        />
-                      </Grid>
-
-
-
-                      <Grid item fullWidth xs={12}>
-                        <TextField
-                          id="chooseFile"
-                          label="Choose File"
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                <CloudUploadIcon />
-                              </InputAdornment>
-                            ),
-                          }}
-                          onChange={(event) => {
-                            this.setState({ initialfile: event.target.files[0] });
-                            console.log(this.state.initialfile);
-                          }}
-                          type="file"
-                          fullWidth
-                        />
-                      </Grid>
-
-                      <Grid item fullWidth xs={12}>
-
-                        <FormControl fullWidth>
-                          <InputLabel id="gender">Gender</InputLabel>
-                          <Select
-                            label="gender"
-                            id="gender"
-                            // value={age}
-                            onChange={(event) => {
-                              this.setState({ gender: event.target.value });
-                              console.log(this.state.gender);
-                            }}
-                          >
-                            <MenuItem value={"Male"}>Male</MenuItem>
-                            <MenuItem value={"Female"}>Female</MenuItem>
-                          </Select>
-                        </FormControl>
-
-                      </Grid>
-                    </Grid>
-                  </DialogContent>
-                  <DialogActions>
                     <Button
                       color="primary"
                       variant="contained"
-                      onClick={() => {
-                        this.setState(
-                          {
-                            addDialogOpen: false,
-                          },
-                          this.postprofile
-                        );
-                      }}
+                      onClick={() => this.setState({ addDialogOpen: true })}
                     >
-                      Submit Profile
-                </Button>
-                    <Button
-                      color="secondary"
-                      variant="contained"
-                      onClick={() =>
-                        this.setState({
-                          addDialogOpen: false,
-                        })
-                      }
-                    >
-                      Cancel
-                </Button>
-                  </DialogActions>
-                </Dialog>
-                }
-                {this.addsnackbar()}
-               
-              </div>
-            ) : (
-              <div>
-                <Paper elevation={2} style={{ marginTop: 20 }}>
+                      Add New Job Profile
+                    </Button>
+                  </Box>
+                </Paper>
+              </Grid>
+            </Grid>
 
+            {
+              <Dialog
+                open={this.state.addDialogOpen}
+                onClose={() => this.setState({ addDialogOpen: false })}
+                aria-labelledby="form-dialog-title"
+              >
+                <DialogTitle id="form-dialog-title" justify="center">
+                  Add Profile
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Enter the details of your profile to be added
+                  </DialogContentText>
 
-
-                  <Grid container
-                    direction="row"
+                  <Grid
+                    container
                     justify="flex-start"
-                    style={{ padding: 20 }} spacing={3}
+                    direction="row"
+                    alignItems="center"
+                    spacing={3}
                   >
-                    <Grid container
-                      direction="row"
-                      justify="center"
-                      alignItems="center" xs={3}>
-                      <Avatar
-                        src={this.state.result[0].picture}
-                        style={{ height: "12rem", width: "12rem" }}
-                      >
-                        {/* <img src="/images/sampleuserphoto.jpg" width="185" height="185" alt="" /> */}
-                      </Avatar>
+                    <Grid item fullWidth xs={12}>
+                      <TextField
+                        id="firstName"
+                        label="First Name"
+                        value={this.state.firstname}
+                        // defaultValue={result[this.state.selectedIndex].firstname}
+                        onChange={(event) => {
+                          this.capitalizefirstname(event.target.value);
+                          // this.setState({ firstname: event.target.value });
+                          // console.log(this.state.firstname);
+                        }}
+                        type="text"
+                        fullWidth
+                      />
                     </Grid>
-                    <Grid container
-                      direction="column"
-                      justify="center"
-                      alignItems="center"
 
+                    <Grid item fullWidth xs={12}>
+                      <TextField
+                        id="middleName"
+                        label="Middle Name"
+                        value={this.state.middlename}
+                        // defaultValue={result[this.state.selectedIndex].middlename}
+                        onChange={(event) => {
+                          this.capitalizemiddlename(event.target.value);
 
-                      xs={6}>
+                          // console.log(this.state.middlename);
+                        }}
+                        type="text"
+                        fullWidth
+                      />
+                    </Grid>
 
-                      <Typography variant='h2'
-                      style={{textTransform: 'capitalize'}}
-                      >
-                        {this.state.result[0].firstname} {this.state.result[0].middlename} {this.state.result[0].surname}
-                      </Typography>
+                    <Grid item fullWidth xs={12}>
+                      <TextField
+                        id="surname"
+                        label="Surname"
+                        value={this.state.lastname}
+                        // defaultValue={result[this.state.selectedIndex].surname}
+                        onChange={(event) => {
+                          this.capitalizelastname(event.target.value);
+                          // console.log(this.state.lastname);
+                        }}
+                        type="text"
+                        fullWidth
+                      />
+                    </Grid>
 
-                      <Typography variant='h5'
-                      // style={{ fontFamily: "Montserrat" }}
-                      >
-                        {this.state.result[0].dob}
-                      </Typography>
+                    <Grid item fullWidth xs={12}>
+                      <TextField
+                        name="Date of birth"
+                        label="Date of birth"
+                        InputLabelProps={{ shrink: true, required: true }}
+                        // defaultValue={result[this.state.selectedIndex].dob}
+                        onChange={(event) => {
+                          this.setState({ Dob: event.target.value });
+                          console.log(this.state.Dob);
+                        }}
+                        type="date"
+                        fullWidth
+                      />
+                    </Grid>
 
-                      <Typography variant='h5'
-                      // style={{ fontFamily: "Montserrat" }}
-                      >
-                        {this.state.result[0].employee_email_field}
-                      </Typography>
-                      {/* <Typography variant='h5'
+                    <Grid item fullWidth xs={12}>
+                      <TextField
+                        id="chooseFile"
+                        label="Choose File"
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <CloudUploadIcon />
+                            </InputAdornment>
+                          ),
+                        }}
+                        onChange={(event) => {
+                          this.setState({ initialfile: event.target.files[0] });
+                          console.log(this.state.initialfile);
+                        }}
+                        type="file"
+                        fullWidth
+                      />
+                    </Grid>
+
+                    <Grid item fullWidth xs={12}>
+                      <FormControl fullWidth>
+                        <InputLabel id="gender">Gender</InputLabel>
+                        <Select
+                          label="gender"
+                          id="gender"
+                          // value={age}
+                          onChange={(event) => {
+                            this.setState({ gender: event.target.value });
+                            console.log(this.state.gender);
+                          }}
+                        >
+                          <MenuItem value={"Male"}>Male</MenuItem>
+                          <MenuItem value={"Female"}>Female</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    onClick={() => {
+                      this.setState(
+                        {
+                          addDialogOpen: false,
+                        },
+                        this.postprofile
+                      );
+                    }}
+                  >
+                    Submit Profile
+                  </Button>
+                  <Button
+                    color="secondary"
+                    variant="contained"
+                    onClick={() =>
+                      this.setState({
+                        addDialogOpen: false,
+                      })
+                    }
+                  >
+                    Cancel
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            }
+            {this.addsnackbar()}
+          </div>
+        ) : (
+          <div>
+            <Paper elevation={2} style={{ marginTop: 20 }}>
+              <Grid
+                container
+                direction="row"
+                justify="flex-start"
+                style={{ padding: 20 }}
+                spacing={3}
+              >
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                  xs={3}
+                >
+                  <Avatar
+                    src={this.state.result[0].picture}
+                    style={{ height: "12rem", width: "12rem" }}
+                  >
+                    {/* <img src="/images/sampleuserphoto.jpg" width="185" height="185" alt="" /> */}
+                  </Avatar>
+                </Grid>
+                <Grid
+                  container
+                  direction="column"
+                  justify="center"
+                  alignItems="center"
+                  xs={6}
+                >
+                  <Typography
+                    variant="h2"
+                    style={{ textTransform: "capitalize" }}
+                  >
+                    {this.state.result[0].firstname}{" "}
+                    {this.state.result[0].middlename}{" "}
+                    {this.state.result[0].surname}
+                  </Typography>
+
+                  <Typography
+                    variant="h5"
+                    // style={{ fontFamily: "Montserrat" }}
+                  >
+                    {this.state.result[0].dob}
+                  </Typography>
+
+                  <Typography
+                    variant="h5"
+                    // style={{ fontFamily: "Montserrat" }}
+                  >
+                    {this.state.result[0].employee_email_field}
+                  </Typography>
+                  {/* <Typography variant='h5'
                       
                       >
                         {this.state.result[0].ontrac_id}
                       </Typography> */}
-                    </Grid>
-                  </Grid>
-
-                </Paper>
-                <div style={{ marginTop: 50 }}>
-                  {this.getTableOfEmployees()}
-                </div>
-
-
-
-
-
-
-              </div>
-            )}
+                </Grid>
+              </Grid>
+            </Paper>
+            <div style={{ marginTop: 50 }}>{this.getTableOfEmployees()}</div>
+          </div>
+        )}
       </>
     );
   }
@@ -515,10 +550,10 @@ class MyProfile extends Component {
     await axios
       .get(
         "http://3.22.17.212:9000/api/v1/employees/" +
-        id +
-        "/profiles-by/" +
-        id +
-        "/history",
+          id +
+          "/profiles-by/" +
+          id +
+          "/history",
         {
           headers: {
             Authorization: token,
@@ -531,26 +566,59 @@ class MyProfile extends Component {
         this.setState({ historyloading: false });
       });
   }
-  async verification(id){
-     let headers = {
-       headers: {
-         Authorization: token
-        
-       },
-     };
-     let bodyFormData = {
-       "verType":"Profile",
-       "objId": id
-     }
+  async getamount() {
+    await axios
+      .get(
+        "http://3.22.17.212:9000/api/v1/resManager/serviceAPI/?serviceName=ProfileVerification"
+      )
+      .then((res) => this.setState({ amount: res.data[0].serviceCharge }));
+  }
+  async pay() {
+    let transactionid = Math.floor(
+      10000000000000000 + Math.random() * 9000000000000000
+    );
+    let headers1 = {
+      headers: {
+        Authorization: token,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    await axios
+      .post(
+        "http://3.22.17.212:9000/wallet/transaction?type=DEBIT&amount=" +
+          this.state.amount +
+          "&description=" +
+          transactionid,
+        "",
+        headers1
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          this.verification();
+        }
+      });
+  }
+  async verification() {
+    let headers = {
+      headers: {
+        Authorization: token,
+      },
+    };
+    let bodyFormData = {
+      verType: "Profile",
+      objId: this.state.currentid,
+    };
     await axios
       .post(
         "http://3.22.17.212:9000/api/v1/codes/evaluation/new-code",
         bodyFormData,
         headers
       )
-      .then((res) => {this.getprofiledata()});
+      .then((res) => {
+        window.location.reload(false);
+      });
   }
-
 
   getTableOfEmployees() {
     return (
@@ -650,7 +718,11 @@ class MyProfile extends Component {
                         variant="outlined"
                         color="default"
                         onClick={() => {
-                          this.verification(row.id);
+                          this.setState({
+                            currentid: row.id,
+                            walletdialog: true,
+                          });
+                          this.getamount();
                         }}
                       >
                         Request for verification
@@ -857,7 +929,6 @@ class MyProfile extends Component {
                       <TableCell align="left">{row.surname}</TableCell>
                       <TableCell align="left">
                         {new Date(row.dob).toDateString()}
-                       
                       </TableCell>
                       {/* <TableCell align="center">{row.source_name_field}</TableCell> */}
                       <TableCell align="left">{row.sex}</TableCell>{" "}
@@ -884,16 +955,53 @@ class MyProfile extends Component {
             </Button>
           </DialogActions>
         </Dialog>
+        {
+          <Dialog
+            open={this.state.walletdialog}
+            onClose={() => this.setState({ walletdialog: false })}
+            aria-labelledby="form-dialog-title"
+          >
+            <DialogTitle id="form-dialog-title" align="center" justify="center">
+              You need to pay {this.state.amount} for this service from wallet
+            </DialogTitle>
+            <DialogContent></DialogContent>
+            <DialogActions>
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={() =>
+                  this.setState(
+                    {
+                      walletdialog: false,
+                    },
+                    this.pay
+                  )
+                }
+              >
+                Pay
+              </Button>
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={() =>
+                  this.setState({
+                    walletdialog: false,
+                  })
+                }
+              >
+                Cancel
+              </Button>
+            </DialogActions>
+          </Dialog>
+        }
       </>
     );
   }
   render() {
-   
     return <>{this.state.isloading ? this.isloading() : this.tabledata()}</>;
-   
   }
 }
 
 
 
-export default NetworkDetector(MyProfile);
+export default (MyProfile);

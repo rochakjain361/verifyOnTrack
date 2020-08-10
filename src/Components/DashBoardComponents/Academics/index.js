@@ -25,6 +25,7 @@ import {
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import { get, update, post } from "../../../API";
+import axios from "axios";
 let id = "";
 let token="";
 let pictures=[];
@@ -185,20 +186,53 @@ export class index extends Component {
            });
            this.getAcademics();
          }
-         async verification(id) {
-          
+         async getamount() {
+           await axios
+             .get(
+               "http://3.22.17.212:9000/api/v1/resManager/serviceAPI/?serviceName=AcademicVerification"
+             )
+             .then((res) =>
+               this.setState({ amount: res.data[0].serviceCharge })
+             );
+         }
+         async pay() {
+           let transactionid = Math.floor(
+             10000000000000000 + Math.random() * 9000000000000000
+           );
+           let headers1 = {
+             headers: {
+               Authorization: token,
+               "Content-Type": "multipart/form-data",
+             },
+           };
+
+           await axios
+             .post(
+               "http://3.22.17.212:9000/wallet/transaction?type=DEBIT&amount=" +
+                 this.state.amount +
+                 "&description=" +
+                 transactionid,
+               "",
+               headers1
+             )
+             .then((response) => {
+               if (response.status === 200) {
+                 this.verification();
+               }
+             });
+         }
+         async verification() {
            let bodyFormData = {
              verType: "Academic",
-             objId: id,
+             objId: this.state.currentid,
            };
            await post(
-               "http://3.22.17.212:9000/api/v1/codes/evaluation/new-code",
-               token,
-               bodyFormData,
-             )
-             .then((res) => {
-               this.getAcademics();
-             });
+             "http://3.22.17.212:9000/api/v1/codes/evaluation/new-code",
+             token,
+             bodyFormData
+           ).then((res) => {
+          window.location.reload(false);
+           });
          }
          gettable() {
            return (
@@ -376,7 +410,11 @@ export class index extends Component {
                                    variant="outlined"
                                    color="default"
                                    onClick={() => {
-                                     this.verification(row.id);
+                                     this.setState({
+                                       currentid: row.id,
+                                       walletdialog: true,
+                                     });
+                                     this.getamount();
                                    }}
                                  >
                                    Request for verification
@@ -862,6 +900,50 @@ export class index extends Component {
                    </Box>
                  </DialogContent>
                </Dialog>
+               {
+                 <Dialog
+                   open={this.state.walletdialog}
+                   onClose={() => this.setState({ walletdialog: false })}
+                   aria-labelledby="form-dialog-title"
+                 >
+                   <DialogTitle
+                     id="form-dialog-title"
+                     align="center"
+                     justify="center"
+                   >
+                     You need to pay {this.state.amount} for this service from
+                     wallet
+                   </DialogTitle>
+                   <DialogContent></DialogContent>
+                   <DialogActions>
+                     <Button
+                       color="primary"
+                       variant="contained"
+                       onClick={() =>
+                         this.setState(
+                           {
+                             walletdialog: false,
+                           },
+                           this.pay
+                         )
+                       }
+                     >
+                       Pay
+                     </Button>
+                     <Button
+                       color="secondary"
+                       variant="contained"
+                       onClick={() =>
+                         this.setState({
+                           walletdialog: false,
+                         })
+                       }
+                     >
+                       Cancel
+                     </Button>
+                   </DialogActions>
+                 </Dialog>
+               }
              </div>
            );
          }

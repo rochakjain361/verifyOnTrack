@@ -226,7 +226,40 @@ class Phones extends Component {
       });
     await this.getphonedata();
   }
-  async verification(id) {
+  async getamount() {
+    await axios
+      .get(
+        "http://3.22.17.212:9000/api/v1/resManager/serviceAPI/?serviceName=phoneVerification"
+      )
+      .then((res) => this.setState({ amount: res.data[0].serviceCharge }));
+  }
+  async pay() {
+    let transactionid = Math.floor(
+      10000000000000000 + Math.random() * 9000000000000000
+    );
+    let headers1 = {
+      headers: {
+        Authorization: token,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    await axios
+      .post(
+        "http://3.22.17.212:9000/wallet/transaction?type=DEBIT&amount=" +
+          this.state.amount +
+          "&description=" +
+          transactionid,
+        "",
+        headers1
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          this.verification();
+        }
+      });
+  }
+  async verification() {
     let headers = {
       headers: {
         Authorization: token,
@@ -234,7 +267,7 @@ class Phones extends Component {
     };
     let bodyFormData = {
       verType: "Phone",
-      objId: id,
+      objId: this.state.currentid,
     };
     await axios
       .post(
@@ -243,7 +276,7 @@ class Phones extends Component {
         headers
       )
       .then((res) => {
-        this.getphonedata();
+         window.location.reload(false);
       });
   }
   async updatePhones(phoneid) {
@@ -469,13 +502,19 @@ class Phones extends Component {
                             variant="outlined"
                             color="default"
                             onClick={() => {
-                              this.verification(row.id);
+                              this.setState({
+                                currentid: row.id,
+                                walletdialog: true,
+                              });
+                              this.getamount();
                             }}
                           >
                             Request for verification
                           </Button>
                         </TableCell>
-                      ) : <></> }
+                      ) : (
+                        <></>
+                      )}
                     </TableRow>
                   ))}
                   {this.addsnackbar()}
@@ -676,6 +715,50 @@ class Phones extends Component {
               )}
               {this.updatesnackbar()}
             </TableContainer>
+            {
+              <Dialog
+                open={this.state.walletdialog}
+                onClose={() => this.setState({ walletdialog: false })}
+                aria-labelledby="form-dialog-title"
+              >
+                <DialogTitle
+                  id="form-dialog-title"
+                  align="center"
+                  justify="center"
+                >
+                  You need to pay {this.state.amount} for this service from
+                  wallet
+                </DialogTitle>
+                <DialogContent></DialogContent>
+                <DialogActions>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    onClick={() =>
+                      this.setState(
+                        {
+                          walletdialog: false,
+                        },
+                        this.pay
+                      )
+                    }
+                  >
+                    Pay
+                  </Button>
+                  <Button
+                    color="secondary"
+                    variant="contained"
+                    onClick={() =>
+                      this.setState({
+                        walletdialog: false,
+                      })
+                    }
+                  >
+                    Cancel
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            }
           </>
         )}
         <Dialog
@@ -826,7 +909,6 @@ class Phones extends Component {
           onClose={() => this.setState({ historyDialougeOpen: false })}
           aria-labelledby="responsive-dialog-title"
         >
-         
           <DialogTitle id="form-dialog-title" align="center">
             Phone History
           </DialogTitle>
