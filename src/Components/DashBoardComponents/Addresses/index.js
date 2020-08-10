@@ -3,7 +3,6 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 
-
 import { Button } from "@material-ui/core";
 
 import Box from "@material-ui/core/Box";
@@ -96,6 +95,8 @@ class Addresses extends PureComponent {
       addresponse: "",
       addsnackbar: false,
       updatesnackbar: false,
+      currentid:"",
+      walletdialog:false
     };
 
     this.onMarkerClick = this.onMarkerClick.bind(this);
@@ -151,7 +152,40 @@ class Addresses extends PureComponent {
         console.table("addresses", this.state.result);
       });
   }
-  async verification(id) {
+  async getamount() {
+    await axios
+      .get(
+        "http://3.22.17.212:9000/api/v1/resManager/serviceAPI/?serviceName=ProfileVerification"
+      )
+      .then((res) => this.setState({ amount: res.data[0].serviceCharge }));
+  }
+  async pay() {
+    let transactionid = Math.floor(
+      10000000000000000 + Math.random() * 9000000000000000
+    );
+    let headers1 = {
+      headers: {
+        Authorization: token,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    await axios
+      .post(
+        "http://3.22.17.212:9000/wallet/transaction?type=DEBIT&amount=" +
+          this.state.amount +
+          "&description=" +
+          transactionid,
+        "",
+        headers1
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          this.verification();
+        }
+      });
+  }
+  async verification() {
     let headers = {
       headers: {
         Authorization: token,
@@ -159,11 +193,8 @@ class Addresses extends PureComponent {
     };
     let bodyFormData = {
       verType: "Address",
-      objId: id,
+      objId: this.state.currentid,
     };
-
-    //  bodyFormData.append("verType","Profile");
-    //  bodyFormData.append("objId", id);
     await axios
       .post(
         "http://3.22.17.212:9000/api/v1/codes/evaluation/new-code",
@@ -171,7 +202,7 @@ class Addresses extends PureComponent {
         headers
       )
       .then((res) => {
-        this.getaddressdata();
+        window.location.reload(false);
       });
   }
 
@@ -219,13 +250,7 @@ class Addresses extends PureComponent {
         container
         justify="flex-end"
         alignItems="center"
-        // container
-        // spacing={0}
         direction="column"
-        // alignItems="center"
-        // justify="center"
-        // // display="flex"
-        // style={{ minHeight: "10vh" }}
       >
         <Grid item xs={6} style={{ marginTop: 100 }}>
           <CircularProgress />
@@ -544,7 +569,11 @@ class Addresses extends PureComponent {
                             variant="outlined"
                             color="default"
                             onClick={() => {
-                              this.verification(row.id);
+                              this.setState({
+                                currentid: row.id,
+                                walletdialog: true,
+                              });
+                              this.getamount()
                             }}
                           >
                             Request for verification
@@ -556,7 +585,50 @@ class Addresses extends PureComponent {
                 </TableBody>
               </Table>
             </TableContainer>
-
+            {
+              <Dialog
+                open={this.state.walletdialog}
+                onClose={() => this.setState({ walletdialog: false })}
+                aria-labelledby="form-dialog-title"
+              >
+                <DialogTitle
+                  id="form-dialog-title"
+                  align="center"
+                  justify="center"
+                >
+                  You need to pay {this.state.amount} for this service from
+                  wallet
+                </DialogTitle>
+                <DialogContent></DialogContent>
+                <DialogActions>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    onClick={() =>
+                      this.setState(
+                        {
+                          walletdialog: false,
+                        },
+                        this.pay
+                      )
+                    }
+                  >
+                    Pay
+                  </Button>
+                  <Button
+                    color="secondary"
+                    variant="contained"
+                    onClick={() =>
+                      this.setState({
+                        walletdialog: false,
+                      })
+                    }
+                  >
+                    Cancel
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            }
             {this.state.selectedIndex === -1 ? (
               <div />
             ) : (
@@ -1838,6 +1910,7 @@ class Addresses extends PureComponent {
         </Grid>
 
         {this.state.addDialogOpen ? this.addAddressForm() : null}
+       
       </>
     );
   }

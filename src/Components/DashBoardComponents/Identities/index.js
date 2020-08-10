@@ -655,7 +655,7 @@ class Identities extends Component {
   async getamount() {
     await axios
       .get(
-        "http://3.22.17.212:9000/api/v1/resManager/serviceAPI/?serviceName=ProfileVerification"
+        "http://3.22.17.212:9000/api/v1/resManager/serviceAPI/?serviceName=identityverification"
       )
       .then((res) => this.setState({ amount: res.data[0].serviceCharge }));
   }
