@@ -179,15 +179,18 @@ export default function Addmoney() {
                       onSuccess={(e) => {
                         console.log("eeeeeeeeeeeeeeeeee", e);
                         setLoading(true);
+                     let headers = {
+                       headers: {
+                         Authorization: Token,
+                       
+                       },
+                     };
+                        
                         axios
-                          .get(
-                            "http://3.22.17.212:9000/wallet/verifyTrx?TrxId=" +
-                              e.transaction,
-                            {
-                              headers: {
-                                Authorization: Token,
-                              },
-                            }
+                          .post(
+                            "http://3.22.17.212:9000/wallet/verifyTrx?TrxId="+e.transaction+"&uFlag=True","",
+                            headers
+                            
                           )
                           .then((res) => {
                             console.log(res);
