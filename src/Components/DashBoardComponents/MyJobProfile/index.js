@@ -1196,12 +1196,12 @@ class myJobProfile extends Component {
       company: this.state.addJobDialogCompany.id,
       // 'company_other': this.state.addJobDialogOtherCompany,
       startDate: this.state.addJobDialogStartDate,
-      endDate: this.state.addJobDialogEndDate,
+      // endDate: this.state.addJobDialogEndDate,
       jobCategory: this.state.addJobDialogPosition.id,
       jobTitle: this.state.addJobDialogJobTitle,
       jobDescription: this.state.addJobDialogJobDescription,
       leavingReason: this.state.addJobDialogReasonForLeaving.id,
-      companyRating: this.state.addJobDialogRating,
+      // companyRating: this.state.addJobDialogRating,
     };
 
     console.log("Body data:", bodyData);
@@ -1252,7 +1252,7 @@ class myJobProfile extends Component {
       jobTitle: this.state.addJobDialogJobTitle,
       jobDescription: this.state.addJobDialogJobDescription,
       leavingReason: this.state.addJobDialogReasonForLeaving.id,
-      companyRating: this.state.addJobDialogRating,
+      // companyRating: this.state.addJobDialogRating,
     };
 
     console.log("Body data:", bodyData);
