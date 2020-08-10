@@ -223,7 +223,7 @@ class MyProfile extends Component {
     return (
       this.state.updateresponse === 200 ?
         (<div>
-          {console.log("//////////////////////////////////////")}
+         
 
           <Snackbar open={this.state.updatesnackbar} autoHideDuration={3000} onClick={() =>  this.setState({ updatesnackbar: false }) }>
             <Alert onClose={() => { this.setState({ updatesnackbar: !this.state.updatesnackbar }) }} severity="success">
@@ -896,4 +896,4 @@ class MyProfile extends Component {
 
 
 
-export default NetworkDetector(MyProfile);
+export default (MyProfile);
