@@ -155,7 +155,7 @@ class Addresses extends PureComponent {
   async getamount() {
     await axios
       .get(
-        "http://3.22.17.212:9000/api/v1/resManager/serviceAPI/?serviceName=ProfileVerification"
+        "http://3.22.17.212:9000/api/v1/resManager/serviceAPI/?serviceName=addressVerification"
       )
       .then((res) => this.setState({ amount: res.data[0].serviceCharge }));
   }
