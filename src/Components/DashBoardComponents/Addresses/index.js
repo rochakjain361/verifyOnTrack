@@ -152,7 +152,7 @@ class Addresses extends PureComponent {
         console.table("addresses", this.state.result);
       });
   }
-  async getamount() {
+  async getamount(){
     await axios
       .get(
         "http://3.22.17.212:9000/api/v1/resManager/serviceAPI/?serviceName=addressVerification"
