@@ -240,6 +240,7 @@ class index extends Component {
                 <TableRow style={{ backgroundColor: "black" }}>
                   <TableCell align="center">Date</TableCell>
                   <TableCell align="center">CodeString</TableCell>
+                  <TableCell align="center">Name</TableCell>
                   <TableCell align="center">Verification Type</TableCell>
                   <TableCell align="center">Code Status</TableCell>
                   <TableCell align="center">Last Updated</TableCell>
@@ -254,6 +255,14 @@ class index extends Component {
                       <TableRow key={row.id}>
                         <TableCell align="center">{row.createdOn}</TableCell>
                         <TableCell align="center">{row.codeString}</TableCell>
+                        <TableCell align="center">
+                          {row.employee_name_field[0].firstname +
+                            " " +
+                            row.employee_name_field[0].middlename +
+                            " " +
+                            row.employee_name_field[0].surname}
+                        </TableCell>
+
                         <TableCell align="center">{row.verType}</TableCell>
                         <TableCell align="center">{row.codeStatus}</TableCell>
                         <TableCell align="center">
@@ -271,7 +280,7 @@ class index extends Component {
                                 selectedCloseBtn: row.showMarkCloseBtn,
                                 selectedcode: row.codeString,
                                 selecteduserid: row.vot_employee,
-                                selectedmarkid:row.id,
+                                selectedmarkid: row.id,
                               });
                               row.verType === "Profile"
                                 ? this.viewdetailsprofile(
@@ -378,6 +387,13 @@ class index extends Component {
                       <TableRow key={row.id}>
                         <TableCell align="center">{row.createdOn}</TableCell>
                         <TableCell align="center">{row.codeString}</TableCell>
+                        <TableCell align="center">
+                          {row.employee_name_field[0].firstname +
+                            " " +
+                            row.employee_name_field[0].middlename +
+                            " " +
+                            row.employee_name_field[0].surname}
+                        </TableCell>
                         <TableCell align="center">{row.verType}</TableCell>
                         <TableCell align="center">{row.codeStatus}</TableCell>
                         <TableCell align="center">
