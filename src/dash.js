@@ -223,7 +223,7 @@ export default function MiniDrawer(props) {
   }, []);
   const logout = async () => {
     props.history.push("/signin");
-    console.log(token);
+    
     let headers = {
       headers: {
         Authorization: Token,
@@ -242,7 +242,7 @@ export default function MiniDrawer(props) {
         console.log(response);
       });
 
-    console.log("////////////////////////////////////////");
+   
   };
 
   return (

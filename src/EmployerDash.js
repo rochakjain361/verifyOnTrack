@@ -142,14 +142,12 @@ export default function MiniDrawer(props) {
     const [open, setOpen] = React.useState(false);
     // const [auth, setAuth] = React.useState(true);
     const [Token, setToken] = React.useState("");
-    // const [Token1, setToken1] = React.useState("");
-    // const [id, setid] = React.useState("");
-    // // const [anchorEl, setAnchorEl] = React.useState(false);
-    // useEffect(() => {
+    
+    useEffect(() => {
       
-    //     setToken(localStorage.getItem("Token"));
-    //     setid(localStorage.getItem("id"));
-    // });
+        setToken(localStorage.getItem("Token"));
+       
+    });
 
     const [open1, setOpen1] = React.useState(false);
     const [open2, setOpen2] = React.useState(false);
@@ -177,27 +175,25 @@ export default function MiniDrawer(props) {
     };
 
     const logout = async () => {
-        console.log(token);
-        let headers = {
-            headers: {
-                Authorization: Token,
-                "Content-Type": "multipart/form-data",
-            },
-        };
-        await axios
-            .post(
-                "http://3.22.17.212:9000/api/v1/accounts/auth/logout",
-                {},
-
-                headers
-            )
-            .then((response) => {
-                localStorage.clear();
-                console.log(response);
-            });
-
-        console.log("////////////////////////////////////////");
         props.history.push('/signin')
+       let headers = {
+         headers: {
+           Authorization: Token,
+           "Content-Type": "multipart/form-data",
+         },
+       };
+       await axios
+         .post(
+           "http://3.22.17.212:9000/api/v1/accounts/auth/logout",
+           {},
+
+           headers
+         )
+         .then((response) => {
+           localStorage.clear();
+           console.log(response);
+         });
+
     }
 
     return (

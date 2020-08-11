@@ -13,6 +13,7 @@ import DashButtons from '../DashButtons'
 let token1 = "";
 let token = "";
 let id = "";
+let ontracid="";
 class index extends Component {
   constructor(props) {
     super(props)
@@ -29,6 +30,7 @@ class index extends Component {
 
     token = localStorage.getItem("Token");
     id = localStorage.getItem("id");
+    ontracid = localStorage.getItem("ontrac_id");
     await axios
       .get("http://3.22.17.212:9000/api/v1/employees/" + id + "/profiles-by/" + id, {
         headers: {
@@ -55,61 +57,63 @@ class index extends Component {
               <CircularProgress />
             </Grid>
           </Grid>
-        ) : this.state.result.length === 0 ? <Grid container
-          direction="row"
-          justify="center"
-          alignItems="center">
-          <Typography>Add your profile data</Typography>
-        </Grid> : (
-              this.state.result.map((profile, index) => (
-                <Grid
-                  container
-                  direction="column"
-                  justify="space-between"
-                  alignItems="center"
-                >
-                  <Grid
-                    container
-                    direction="column"
-                    justify="center"
-                    alignItems="center"
-                  >
-                    <Avatar
-                      src={profile.picture}
-                      style={{
-                        height: "10rem",
-                        width: "10rem",
-                      }}
-                    ></Avatar>
-                  </Grid>
+        ) : this.state.result.length === 0 ? (
+          <Grid container direction="row" justify="center" alignItems="center">
+            <Typography>Add your profile data</Typography>
+          </Grid>
+        ) : (
+          this.state.result.map((profile, index) => (
+            <Grid
+              container
+              direction="column"
+              justify="space-between"
+              alignItems="center"
+            >
+              <Grid
+                container
+                direction="column"
+                justify="center"
+                alignItems="center"
+              >
+                <Avatar
+                  src={profile.picture}
+                  style={{
+                    height: "10rem",
+                    width: "10rem",
+                  }}
+                ></Avatar>
+              </Grid>
 
-                  <Grid
-                    container
-                    direction="column"
-                    justify="center"
-                    alignItems="center"
-                  >
-                    <Typography
-                      variant="h6"
-                      display="block"
-                      style={{ marginTop: 10 }}
-                    //   align="center"
-                    >
-                      {profile.firstname + " "}
-                      {profile.middlename + " "}
-                      {profile.surname}
-                    </Typography>
-                    <Typography variant="body2">
-                      {new Date(profile.dob).toDateString()}
-                    </Typography>{" "}
-                    <Typography variant="body2">
-                      {profile.employee_email_field}
-                    </Typography>
-                  </Grid>
-                  {/* <DashButtons /> */}
-                </Grid>
-              )))
-        }
+              <Grid
+                container
+                direction="column"
+                justify="center"
+                alignItems="center"
+              >
+                <Typography
+                  variant="h6"
+                  display="block"
+                  style={{ marginTop: 10 }}
+                  //   align="center"
+                >
+                  {profile.firstname + " "}
+                  {profile.middlename + " "}
+                  {profile.surname}
+                </Typography>
+                <Typography variant="body2">
+                  {new Date(profile.dob).toDateString()}
+                </Typography>{" "}
+                <Typography variant="body2">
+                  {profile.employee_email_field}
+                </Typography>
+                <Typography variant="body2">
+                  {ontracid}
+                </Typography>
+              </Grid>
+              {/* <DashButtons /> */}
+            </Grid>
+          ))
+        )}
       </div>
     );
   }
