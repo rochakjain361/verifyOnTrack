@@ -550,7 +550,7 @@ class index extends Component {
                                         type='text'
                                         fullWidth
                                         error={this.state.votmatchError}
-                                        helperText={this.state.votmatchError ? "Not an existing OnTrac Id!" : (this.state.votIdMatchesLength === 1 ? "Match found!" : "")}
+                                        helperText={this.state.votmatchError ? "Not an existing OnTrac Id!" : (this.state.votIdMatchesLength === 1 ? ("Match found:", this.state.votIdAllMatches[0].firstname ) : "")}
                                         onChange={(event) => this.selectedEmployeeOntracId(event.target.value)}
                                     />
 
@@ -581,7 +581,7 @@ class index extends Component {
                                             type='number'
                                             fullWidth
                                             error={this.state.phonematchError}
-                                            helperText={this.state.phonematchError ? "Not an existing phone number!" : (this.state.phoneMatchesLength === 1 ? "Match found!" : "")}
+                                            helperText={this.state.phonematchError ? "Not an existing phone number!" : (this.state.phoneMatchesLength === 1 ? ("Match found:") : "")}
                                             onChange={(event)=> this.fetchEmployeePhones(event.target.value)}
                                         />
                                     </Grid>

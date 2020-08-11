@@ -25,7 +25,7 @@ import WorkOutlineIcon from '@material-ui/icons/WorkOutline';
 let token1 = "";
 let token = "";
 let id = "";
-const api = "http://3.22.17.212:9000"
+const api = "http://192.168.1.230:9000"
 
 const styles = theme => ({
 })
@@ -33,13 +33,33 @@ const styles = theme => ({
 class index extends React.Component {
 
     state = {
-
+        dateFilter: "",
     }
 
     // constructor(props) {
     //     super(props);
     //     this.generateNewEmployementCodeButton = this.generateNewEmployementCodeButton.bind(this);
     //   } 
+
+    async fetchDateFilter() {
+        const userId = this.props.userId;
+      const code = this.props.code;
+        let response = await fetch(api + "/api/v1/employees/getKPI?filter=today",
+            {
+                headers: {
+                    'Authorization': token
+                }
+            });
+        response = await response.json();
+        console.log('dateFilter:', response)
+        this.setState({ dateFilter: response });
+    }
+    async componentDidMount() {
+        token = localStorage.getItem("Token");
+        id = localStorage.getItem("id");
+
+        this.fetchDateFilter()
+    }
 
     render() {
 
