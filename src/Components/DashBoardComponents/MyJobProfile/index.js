@@ -1093,7 +1093,7 @@ class myJobProfile extends Component {
                     <TableCell>
                       <Grid container justify="column">
                         {row.show_update_field ? (
-                          <Grid item>
+                          <Grid item xs={12}>
                             <Button
                               disabled={row.vonStatus === "Audit In Progress"}
                               style={{ minWidth: 200 }}
@@ -1125,7 +1125,7 @@ class myJobProfile extends Component {
                           "NA"
                         )}
 
-                        <Grid item>
+                        <Grid item xs={12}>
                           {row.show_employer_ver_field === true ? (
                             <Button
                               style={{ marginTop: 5, minWidth: 200 }}
@@ -1340,7 +1340,7 @@ class myJobProfile extends Component {
       ee_employee: employeeId,
       category: "EmploymentVerification",
       requestJobProfile: true,
-      "job_profile:": rowId,
+      jobProfile: rowId,
     };
     console.log("verificationBody:", bodyData);
 
