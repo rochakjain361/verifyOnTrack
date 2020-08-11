@@ -210,16 +210,16 @@ export default function MiniDrawer(props) {
     const Token = await localStorage.getItem("Token");
     console.log("Token", Token);
     const Id = localStorage.getItem("id");
-    await axios
-      .get("http://3.22.17.212:9000/wallet/getBalance", {
-        headers: {
-          Authorization: Token,
-        },
-      })
-      .then((response) => {
-        setBalance(response);
-        console.log("messages", response);
-      });
+    // await axios
+    //   .get("http://3.22.17.212:9000/wallet/getBalance", {
+    //     headers: {
+    //       Authorization: Token,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     setBalance(response);
+    //     console.log("messages", response);
+    //   });
   };
   useEffect(() => {
     getBalance();
@@ -307,27 +307,20 @@ export default function MiniDrawer(props) {
               <Box p={2}>
                 {balance.status === 200 ? (
                   <>
-                    <Typography>Wallet Balance</Typography>
+                    {/* <Typography>Wallet Balance</Typography>
                     <Typography align="center" justify="center">
                       {balance.data[0].balance}
-                    </Typography>
+                    </Typography> */}
                   </>
                 ) : (
-                  // <Button
-                  //   style={{ backgroundColor: "transparent" }}
-                  //   color="inherit"
-                  //   onClick={() => {
-                  //     props.history.push("/Createwallet");
-                  //   }}
-                  // >
-                  //   Create Wallet
-                  // </Button>
-                  <Link to="/Createwallet" className={classes.link}>
+                  <>
+                  {/* <Link to="/Createwallet" className={classes.link}>
                     <ListItemText
                       primary="Create wallet"
                       className={classes.textColor}
                     />
-                  </Link>
+                  </Link> */}
+                  </>
                 )}
               </Box>
             </div>
