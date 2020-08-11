@@ -59,6 +59,9 @@ import Avatar from "@material-ui/core/Avatar";
 import Createwallet from "../src/Components/DashBoardComponents/Wallet/Createwallet";
 import Addmoney from "../src/Components/DashBoardComponents/Wallet/Addmoney";
 
+import EmployeePayments from "../src/Components/DashBoardComponents/MenuWallet/EmployeePayments"
+import EmployeeCards from "../src/Components/DashBoardComponents/MenuWallet/EmployeeCards"
+
 const drawerWidth = 240;
 let token = "";
 let id = "";
@@ -461,6 +464,54 @@ export default function MiniDrawer(props) {
             </ListItem>
           </Link>
           <Divider />
+
+          <ListItem
+            button
+            onClick={(() => setOpen3(!open3), () => setOpen(!open))}
+          >
+            <ListItemIcon>
+              <AccountBalanceWalletIcon style={{ color: "white" }} />
+            </ListItemIcon>
+            <ListItemText primary="Wallet" className={classes.textColor} />
+            {open2 ? (
+              <ExpandLess style={{ color: "white" }} />
+            ) : (
+              <ExpandMore style={{ color: "white" }} />
+            )}
+          </ListItem>
+
+          <Collapse in={(open2, open)} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <Link to="/employeePayments" className={classes.link}>
+                <ListItem
+                  button
+                  className={classes.nested}
+                  onClick={() => handleDrawerClose()}
+                >
+                  <ListItemText
+                    primary="Payments"
+                    className={classes.textColor}
+                  />
+                </ListItem>
+              </Link>
+
+              <Link to="/employeeCards" className={classes.link}>
+                <ListItem
+                  button
+                  className={classes.nested}
+                  onClick={() => handleDrawerClose()}
+                >
+                  <ListItemText
+                    primary="Cards"
+                    className={classes.textColor}
+                  />
+                </ListItem>
+              </Link>
+            </List>
+          </Collapse>
+
+          <Divider />
+
         </Drawer>
 
         <main className={classes.content}>
@@ -518,6 +569,19 @@ export default function MiniDrawer(props) {
                 <Indexemployment />
               </Container>
             </Route>
+
+            <Route exact path="/employeePayments">
+              <Container>
+                <EmployeePayments />
+              </Container>
+            </Route>
+
+            <Route exact path="/employeeCards">
+              <Container>
+                <EmployeeCards />
+              </Container>
+            </Route>
+
           </Switch>
         </main>
       </div>

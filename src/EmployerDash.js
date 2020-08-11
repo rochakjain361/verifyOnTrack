@@ -24,6 +24,7 @@ import MessageIcon from "@material-ui/icons/Message";
 import StarsIcon from "@material-ui/icons/Stars";
 import CodeIcon from "@material-ui/icons/Code";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import BusinessIcon from '@material-ui/icons/Business';
 import { useEffect } from 'react';
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import Dashboard from './Components/EmployerPageComponents/Dashboard'
@@ -36,6 +37,7 @@ import EmploymentTabs from './Components/EmployerPageComponents/MyCodes/Employem
 import Ratings from './Components/EmployerPageComponents/Ratings'
 import Employees from './Components/EmployerPageComponents/Employees'
 import GroupIcon from '@material-ui/icons/Group';
+import CompanyInfo from './Components/EmployerPageComponents/CompanyInfo'
 
 const drawerWidth = 240;
 let token1 = "";
@@ -254,6 +256,19 @@ export default function MiniDrawer(props) {
 
                     <Divider />
 
+                    <Link to="/companyInfo" className={classes.link}>
+                        <ListItem button>
+                            <ListItemIcon>
+                                <BusinessIcon style={{ color: "white" }} />
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={"Company Info"}
+                                className={classes.textColor}
+                            />
+                        </ListItem>
+                    </Link>
+                    <Divider />
+
                     <Link to="/employerEmployees" className={classes.link}>
                         <ListItem button onClick={()=> handleDrawerClose()}>
                             <ListItemIcon>
@@ -403,6 +418,12 @@ export default function MiniDrawer(props) {
               <Route exact path="/employerDashboard">
                 <Container >
                   <Dashboard />
+                </Container>
+              </Route>
+
+              <Route exact path="/companyInfo">
+                <Container >
+                  <CompanyInfo />
                 </Container>
               </Route>
 

@@ -90,6 +90,8 @@ class App extends React.PureComponent {
                 <Route exact path="/employeeAccessCodes" component={dash} />
                 <Route exact path="/Createwallet" component={dash} />
                 <Route exact path="/Addmoney" component={dash} />
+                <Route exact path="/employeePayments" component={dash} />
+                <Route exact path="/employeeCards" component={dash} />
 
                 <Route
                   exact
@@ -106,6 +108,7 @@ class App extends React.PureComponent {
                   path="/employerDashboard"
                   component={EmployerDash}
                 />
+                <Route exact path="/CompanyInfo" component={EmployerDash} />
                 <Route
                   exact
                   path="/employerMessages"
