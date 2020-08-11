@@ -144,9 +144,7 @@ export default function MiniDrawer(props) {
     const [Token, setToken] = React.useState("");
     
     useEffect(() => {
-      
         setToken(localStorage.getItem("Token"));
-       
     });
 
     const [open1, setOpen1] = React.useState(false);
