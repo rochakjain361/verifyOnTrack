@@ -31,7 +31,7 @@ import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import WorkOutlineIcon from "@material-ui/icons/WorkOutline";
 import PinDropIcon from "@material-ui/icons/PinDrop";
 let token = "";
-let result=""
+
 export default class employerlist extends Component {
   constructor(props) {
     super(props);
@@ -44,7 +44,8 @@ export default class employerlist extends Component {
       nextpagelink: "",
       previouspagelink: "",
       kpidata: "",
-      updateDialogOpen:false
+      updateDialogOpen:false,
+      result:[]
     };
   }
   async getemployerlist() {
@@ -109,9 +110,23 @@ export default class employerlist extends Component {
        
       });
   }
+  async searchcompany() {
+    await axios
+      .get("http://3.22.17.212:9000/getEmployerList?filter=", {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        this.setState({
+          result: res.data.results,
+        });
+      });
+  }
   async componentDidMount() {
     token = localStorage.getItem("Token");
     this.getemployerlist();
+    this.searchcompany();
   }
   nextpageclick = (event, newPage) => {
       console.log("typeof",typeof(newPage))
@@ -137,13 +152,13 @@ export default class employerlist extends Component {
             spacing={4}
           >
             <Grid item>
-              <Typography variant="h4">States</Typography>
+              <Typography variant="h4">Employer list</Typography>
             </Grid>
 
             <Grid item xs={6}>
               <Autocomplete
-                options={result}
-                getOptionLabel={(option) => option.stateName}
+                options={this.state.result}
+                getOptionLabel={(option) => option.companyName}
                 size="small"
                 id="states"
                 Username
@@ -151,6 +166,7 @@ export default class employerlist extends Component {
                 onChange={(event, value) => {
                   this.setState({ selectedstate: value });
                   console.log("selectedstate", value);
+                  
                 }}
                 inputValue={this.state.enteredtext}
                 onInputChange={(event, newInputValue) => {
@@ -160,7 +176,7 @@ export default class employerlist extends Component {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="States"
+                    label="Enter companyname"
                     margin="normal"
                     variant="outlined"
                     size="small"
