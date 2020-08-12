@@ -37,6 +37,8 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import StarsIcon from '@material-ui/icons/Stars';
 import SchoolIcon from '@material-ui/icons/School';
+import DashboardIcon from "@material-ui/icons/Dashboard";
+
 
 import ManageIdSources from "./Components/AdminPageComponents/Settings/ManageIdSources";
 
@@ -49,6 +51,7 @@ import RatingsTabs from './Components/AdminPageComponents/Settings/RatingAndSurv
 import CodeTabs from './Components/AdminPageComponents/ManageCodes/CodeTabs'
 import AcademicSettings from "./Components/AdminPageComponents/Settings/AcademicSettings";
 import Dashboard from './Components/AdminPageComponents/dashboard/admindashboard'
+
 const drawerWidth = 330;
 let token1 = "";
 let token = "";
@@ -273,6 +276,75 @@ export default function MiniDrawer(props) {
             </IconButton>
           </div>
 
+          <Link to="/admindashboard" className={classes.link}>
+                        <ListItem button>
+                            <ListItemIcon>
+                                <DashboardIcon style={{ color: "white" }} />
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={"Dashboard"}
+                                className={classes.textColor}
+                            />
+                        </ListItem>
+                    </Link>
+
+                    <Divider />
+
+                    <ListItem
+            button
+            onClick={(() => setOpen2(open2), () => setOpen(!open))}
+          >
+            <ListItemIcon>
+              <SupervisorAccountIcon style={{ color: "white" }} />
+            </ListItemIcon>
+            <ListItemText
+              primary="Administration"
+              className={classes.textColor}
+            />
+            {open2 ? (
+              <ExpandLess style={{ color: "white" }} />
+            ) : (
+              <ExpandMore style={{ color: "white" }} />
+            )}
+          </ListItem>
+
+          <Collapse in={(open2, open)} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <Link to="/addAdmin" className={classes.link}>
+                <ListItem
+                  button
+                  className={classes.nested2}
+                  onClick={() => handleDrawerClose()}
+                >
+                  <ListItemText
+                    className={classes.textColor}
+                    primary="Add Admin User"
+                  />
+                </ListItem>
+              </Link>
+            </List>
+          </Collapse>
+
+          <Divider />
+
+          <Link
+            to="/adminCodes"
+            className={classes.link}
+            onClick={() => handleDrawerClose()}
+          >
+            <ListItem button>
+              <ListItemIcon>
+                <CodeIcon style={{ color: "white" }} />
+              </ListItemIcon>
+              <ListItemText
+                primary={"My Codes"}
+                className={classes.textColor}
+              />
+            </ListItem>
+          </Link>
+
+          <Divider />
+
           <ListItem
             button
             onClick={(() => setOpen1(!open1), () => setOpen(!open))}
@@ -396,65 +468,16 @@ export default function MiniDrawer(props) {
 
           <Divider />
 
-          <ListItem
-            button
-            onClick={(() => setOpen2(open2), () => setOpen(!open))}
-          >
-            <ListItemIcon>
-              <SupervisorAccountIcon style={{ color: "white" }} />
-            </ListItemIcon>
-            <ListItemText
-              primary="Administration"
-              className={classes.textColor}
-            />
-            {open2 ? (
-              <ExpandLess style={{ color: "white" }} />
-            ) : (
-              <ExpandMore style={{ color: "white" }} />
-            )}
-          </ListItem>
-
-          <Collapse in={(open2, open)} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <Link to="/addAdmin" className={classes.link}>
-                <ListItem
-                  button
-                  className={classes.nested2}
-                  onClick={() => handleDrawerClose()}
-                >
-                  <ListItemText
-                    className={classes.textColor}
-                    primary="Add Admin User"
-                  />
-                </ListItem>
-              </Link>
-            </List>
-          </Collapse>
-
-          <Divider />
-
-          <Link
-            to="/adminCodes"
-            className={classes.link}
-            onClick={() => handleDrawerClose()}
-          >
-            <ListItem button>
-              <ListItemIcon>
-                <CodeIcon style={{ color: "white" }} />
-              </ListItemIcon>
-              <ListItemText
-                primary={"My Codes"}
-                className={classes.textColor}
-              />
-            </ListItem>
-          </Link>
-          {/* <Divider /> */}
-
-          <Divider />
         </Drawer>
         <main className={classes.content}>
           <Toolbar />
           <Switch>
+            <Route exact path="/admindashboard">
+              <Container>
+                <Dashboard />
+              </Container>
+            </Route>
+
             <Route exact path="/addressSettings">
               <Container>
                 <AddressTabs />
@@ -494,11 +517,6 @@ export default function MiniDrawer(props) {
             <Route exact path="/addAdmin">
               <Container>
                 <AddAdminUser />
-              </Container>
-            </Route>
-            <Route exact path="/admindashboard">
-              <Container>
-                <Dashboard/>
               </Container>
             </Route>
 

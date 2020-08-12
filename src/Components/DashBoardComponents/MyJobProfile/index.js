@@ -1213,7 +1213,7 @@ class myJobProfile extends Component {
                             this.getamount();
                           }}
                         >
-                          Request for verification
+                          Request for Verification
                         </Button>
                       </TableCell>
                     ) : null}
