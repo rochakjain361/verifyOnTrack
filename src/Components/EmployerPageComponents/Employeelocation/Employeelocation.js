@@ -99,12 +99,8 @@ export class Employeelocation extends Component {
     let bodyFormData = new FormData();
     bodyFormData.append("state", this.state.addstate);
     bodyFormData.append("lga", this.state.addlga);
-    // bodyFormData.append("city", this.state.addcity);
     bodyFormData.append("address", this.state.buildingno);
     bodyFormData.append("locationName", this.state.street);
-    // bodyFormData.append("google_coordinate1", this.state.location.latitude);
-    // bodyFormData.append("google_coordinate2", this.state.location.longtitude);
-
     post(
       "http://3.22.17.212:9000/api/v1/employers/post-location",
       token,

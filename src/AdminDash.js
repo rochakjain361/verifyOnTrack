@@ -51,6 +51,8 @@ import RatingsTabs from './Components/AdminPageComponents/Settings/RatingAndSurv
 import CodeTabs from './Components/AdminPageComponents/ManageCodes/CodeTabs'
 import AcademicSettings from "./Components/AdminPageComponents/Settings/AcademicSettings";
 import Dashboard from './Components/AdminPageComponents/dashboard/admindashboard'
+import Employeelist from './Components/AdminPageComponents/Administration/employeelist'
+import Employerlist from './Components/AdminPageComponents/Administration/employerlist'
 
 const drawerWidth = 330;
 let token1 = "";
@@ -277,20 +279,20 @@ export default function MiniDrawer(props) {
           </div>
 
           <Link to="/admindashboard" className={classes.link}>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <DashboardIcon style={{ color: "white" }} />
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={"Dashboard"}
-                                className={classes.textColor}
-                            />
-                        </ListItem>
-                    </Link>
+            <ListItem button>
+              <ListItemIcon>
+                <DashboardIcon style={{ color: "white" }} />
+              </ListItemIcon>
+              <ListItemText
+                primary={"Dashboard"}
+                className={classes.textColor}
+              />
+            </ListItem>
+          </Link>
 
-                    <Divider />
+          <Divider />
 
-                    <ListItem
+          <ListItem
             button
             onClick={(() => setOpen2(open2), () => setOpen(!open))}
           >
@@ -319,6 +321,34 @@ export default function MiniDrawer(props) {
                   <ListItemText
                     className={classes.textColor}
                     primary="Add Admin User"
+                  />
+                </ListItem>
+              </Link>
+            </List>
+            <List component="div" disablePadding>
+              <Link to="/employeelist" className={classes.link}>
+                <ListItem
+                  button
+                  className={classes.nested2}
+                  onClick={() => handleDrawerClose()}
+                >
+                  <ListItemText
+                    className={classes.textColor}
+                    primary="Employeelist"
+                  />
+                </ListItem>
+              </Link>
+            </List>
+            <List component="div" disablePadding>
+              <Link to="/employerlist" className={classes.link}>
+                <ListItem
+                  button
+                  className={classes.nested2}
+                  onClick={() => handleDrawerClose()}
+                >
+                  <ListItemText
+                    className={classes.textColor}
+                    primary="employerlist"
                   />
                 </ListItem>
               </Link>
@@ -467,7 +497,6 @@ export default function MiniDrawer(props) {
           </Collapse>
 
           <Divider />
-
         </Drawer>
         <main className={classes.content}>
           <Toolbar />
@@ -517,6 +546,21 @@ export default function MiniDrawer(props) {
             <Route exact path="/addAdmin">
               <Container>
                 <AddAdminUser />
+              </Container>
+            </Route>
+            <Route exact path="/addAdmin">
+              <Container>
+                <AddAdminUser />
+              </Container>
+            </Route>
+            <Route exact path="/employeelist">
+              <Container>
+                <Employeelist />
+              </Container>
+            </Route>
+            <Route exact path="/employerlist">
+              <Container>
+                <Employerlist />
               </Container>
             </Route>
 
