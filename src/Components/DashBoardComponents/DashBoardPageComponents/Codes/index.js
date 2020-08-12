@@ -233,80 +233,38 @@ class index extends Component {
             </Typography>
           </Grid>
         </Grid>
-        <Paper elevation={1} style={{ marginTop: 10 }}>
-          <Grid
-            container
-            style={{ padding: 10 }}
-            direction="row"
-            alignItems="center"
-          >
-            <Grid item xs={4}>
-              <Typography variant="body2" display="block">
-                {this.state.empresult[0].created_on}
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="body2" display="block">
-                {this.state.empresult[0].employer_ontracid}
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="body2" display="block">
-                {this.state.empresult[0].jobTitle}
-              </Typography>
-            </Grid>
-          </Grid>
-        </Paper>
-
-        <Paper elevation={1} style={{ marginTop: 10 }}>
-          <Grid
-            container
-            style={{ padding: 10 }}
-            direction="row"
-            alignItems="center"
-          >
-            <Grid item xs={4}>
-              <Typography variant="body2" display="block">
-                {this.state.empresult[1].created_on}
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="body2" display="block">
-                {this.state.empresult[1].employer_ontracid}
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="body2" display="block">
-                {this.state.empresult[1].jobTitle}
-              </Typography>
-            </Grid>
-          </Grid>
-        </Paper>
-
-        <Paper elevation={1} style={{ marginTop: 10 }}>
-          <Grid
-            container
-            style={{ padding: 10 }}
-            direction="row"
-            alignItems="center"
-          >
-            <Grid item xs={4}>
-              <Typography variant="body2" display="block">
-                {this.state.empresult[2].created_on}
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="body2" display="block">
-                {this.state.empresult[2].employer_ontracid}
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="body2" display="block">
-                {this.state.empresult[2].jobTitle}
-              </Typography>
-            </Grid>
-          </Grid>
-        </Paper>
+        {this.state.empresult.length === 0 ? (
+          <Typography variant="h6" display="block">
+            No employment codes
+          </Typography>
+        ) : (
+          this.state.empresult.map((row, index) => (
+            index<3?
+               <Paper elevation={1} style={{ marginTop: 10 }}>
+            <Grid
+              container
+              style={{ padding: 10 }}
+              direction="row"
+              alignItems="center"
+            >
+              <Grid item xs={4}>
+                <Typography variant="body2" display="block">
+                  {this.state.empresult[0].created_on}
+                </Typography>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography variant="body2" display="block">
+                  {this.state.empresult[0].employer_ontracid}
+                </Typography>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography variant="body2" display="block">
+                  {this.state.empresult[0].jobTitle}
+                </Typography>
+              </Grid>
+         </Grid></Paper>:null
+          ))
+        )}
       </div>
     );
   }

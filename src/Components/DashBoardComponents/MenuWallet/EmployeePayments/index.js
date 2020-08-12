@@ -12,7 +12,8 @@ import {
   TableHead,
   TableBody,
   Paper,
-  Box
+  Box,
+  Card
 } from "@material-ui/core";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Addmoney from "../../Wallet/Addmoney";
@@ -90,24 +91,29 @@ export class index extends Component {
       <>
         {this.state.walletstatus === 200 ? (
           <div>
-            <Grid container justify="space-between">
-              <Typography variant="h4">
-                wallet Balance {this.state.Balance}
-              </Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                // onClick={() => {
-                //   this.props.history.push({
-                //     pathname: "/Addmoney",
-                //   });
-                // }}
-              >
-                <Link to="/Addmoney" style={{ textDecoration: "none" }}>
-                  Recharge Wallet
-                </Link>
-              </Button>
-            </Grid>
+            <Paper elevation={2}>
+              <Box p={2} m={2}>
+                <Grid container justify="space-between">
+
+                    <Box p={1}>
+                  <Typography variant="h4">wallet Balance</Typography>
+                  
+                  <Typography variant="h5" align="center">{this.state.Balance}</Typography>
+                    </Box>
+                    <Box p={2}>
+
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    >
+                    <Link to="/Addmoney" style={{ textDecoration: "none" }}>
+                      Recharge Wallet
+                    </Link>
+                  </Button>
+                    </Box>
+                </Grid>
+              </Box>
+            </Paper>
             <Switch>
               <Route exact path="/Addmoney">
                 <Container>
@@ -140,33 +146,34 @@ export class index extends Component {
 
               <TableBody>
                 {this.state.Transaction
-                  ? this.state.Transaction.map((row, index) => (
-                      index<10?
-                      <TableRow key={row.id}>
-                        <TableCell
-                          align="center"
-                          style={{ textTransform: "capitalize" }}
-                        >
-                          {row.trxDate}
-                        </TableCell>
+                  ? this.state.Transaction.map((row, index) =>
+                      index < 10 ? (
+                        <TableRow key={row.id}>
+                          <TableCell
+                            align="center"
+                            style={{ textTransform: "capitalize" }}
+                          >
+                            {new Date(row.trxDate).toDateString()}
+                          </TableCell>
 
-                        <TableCell align="center">{row.trxType}</TableCell>
-                        <TableCell align="center">{row.trxAmount}</TableCell>
-                        <TableCell align="center">
-                          {row.balanceBeforeTrx}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.balanceAfterTrx}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.trxAmount_currency}
-                        </TableCell>
+                          <TableCell align="center">{row.trxType}</TableCell>
+                          <TableCell align="center">{row.trxAmount}</TableCell>
+                          <TableCell align="center">
+                            {row.balanceBeforeTrx}
+                          </TableCell>
+                          <TableCell align="center">
+                            {row.balanceAfterTrx}
+                          </TableCell>
+                          <TableCell align="center">
+                            {row.trxAmount_currency}
+                          </TableCell>
 
-                        <TableCell align="center">
-                          {row.trxdescription}{" "}
-                        </TableCell>
-                      </TableRow>:null
-                    ))
+                          <TableCell align="center">
+                            {row.trxdescription}{" "}
+                          </TableCell>
+                        </TableRow>
+                      ) : null
+                    )
                   : null}
               </TableBody>
             </Table>
