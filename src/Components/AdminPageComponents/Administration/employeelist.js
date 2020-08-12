@@ -18,7 +18,7 @@ export default class employeelist extends Component {
     this.state = {
       employerlist: [],
       page: 0,
-      rowsPerPage: 10,
+      rowsPerPage: 20,
       count: 0,
       nextpagelink: "",
       previouspagelink: "",
@@ -27,7 +27,7 @@ export default class employeelist extends Component {
 
   async getemployerlist() {
     await axios
-      .get("http://3.22.17.212:9000/getEmployerList", {
+      .get("http://3.22.17.212:9000/getEmployeeList?page=1&filter=all", {
         headers: {
           Authorization: token,
         },
@@ -99,13 +99,12 @@ export default class employeelist extends Component {
               <TableHead>
                 <TableRow style={{ backgroundColor: "black" }}>
                   {[
-                    "CompanyName",
-                    "Logo",
-                    "Phone",
-                    "Email",
-                    "RegNum",
-                    "Category",
-                    "Actions",
+                    "Name",
+                    "picture",
+                    "sex",
+                    "dob",
+                    "status",
+                    "action"
                   ].map((text, index) => (
                     <TableCell style={{ fontWeight: "bolder" }} align="center">
                       {text}
@@ -117,14 +116,17 @@ export default class employeelist extends Component {
               <TableBody>
                 {this.state.employerlist.map((row, index) => (
                   <TableRow key={row.id}>
-                    <TableCell align="center">{row.companyName}</TableCell>
                     <TableCell align="center">
-                      <Avatar src={row.logo}></Avatar>
+                      {row.firstname}
+                      {row.surname}
                     </TableCell>
-                    <TableCell align="center">{row.phone}</TableCell>
-                    <TableCell align="center">{row.email}</TableCell>
-                    <TableCell align="center">{row.regNum}</TableCell>
-                    <TableCell align="center">{row.category}</TableCell>
+                    <TableCell align="center">
+                      <Avatar src={row.picture}></Avatar>
+                    </TableCell>
+                    <TableCell align="center">{row.sex}</TableCell>
+                    {/* <TableCell align="center">{row.email}</TableCell> */}
+                    <TableCell align="center">{row.dob}</TableCell>
+                    <TableCell align="center">{row.status}</TableCell>
                     <TableCell align="center">
                       <Button
                         variant="outlined"
