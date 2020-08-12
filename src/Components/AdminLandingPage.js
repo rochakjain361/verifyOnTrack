@@ -123,7 +123,7 @@ class AdminLandingPage extends React.PureComponent {
         console.log(response);
       });
 
-    console.log("////////////////////////////////////////");
+    console.log("////////////////////////////////////////crosscheck");
     this.props.history.push({
       pathname: "/signin",
     });

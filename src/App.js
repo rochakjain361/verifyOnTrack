@@ -3,25 +3,13 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
 import signUp from "./Components/signUp";
 import signIn from "./Components/signIn";
-import LandingPage from "./Components/LandingPage";
-import Addresses from "./Components/DashBoardComponents/Addresses";
-import Identities from "./Components/DashBoardComponents/Identities";
-import Phones from "./Components/DashBoardComponents/Phones";
-import MyJobProfile from "./Components/DashBoardComponents/MyJobProfile";
-import Dashboard from "./Components/DashBoardComponents/Dashboard";
-import PreRegistration from "./Components/PreRegistration";
-import AdminLandingPage from "./Components/AdminLandingPage";
-import EmployerLandingPage from "./Components/EmployerLandingPage";
 import AdminRegistration from "./Components/AdminRegistration";
 import theme from "./theme";
 import dash from "./dash";
 import Stepper from "./Components/WorkFlow/Stepper";
-import ApprovalCodes from "./Components/AdminPageComponents/ManageCodes/ApprovalCodes";
 import Job from "./Components/AdminPageComponents/ManageCodes/Pages/Job";
 import AdminDash from "./AdminDash";
 import EmployerDash from "./EmployerDash";
-import EmloymentTabs from "./Components/EmployerPageComponents/MyCodes/EmployementCodes/EmploymentTabs";
-import Academics from "./Components/DashBoardComponents/Academics";
 import { CustomizedSnackbars } from "./Snackbarpage";
 import { SnackbarProvider } from "notistack";
 import SuccessSnackbar from "./sucesssnackbar";
@@ -32,7 +20,6 @@ import resetpassword from "./resetpassword";
 // const store = createStore(reducer);
 import Profile from "./Components/AdminPageComponents/ManageCodes/EmployerPages/Profile";
 import EmployerStepper from "./Components/Employerworkflow/EmployerStepper";
-import Createwallet from '../src/Components/DashBoardComponents/Wallet/Createwallet'
 class App extends React.PureComponent {
   render() {
     return (
@@ -165,6 +152,8 @@ class App extends React.PureComponent {
               <Route exact path='/adminManageOffboardTypes' component={AdminDash} />
               <Route exact path='/approvaljobs' component={Job} />
               <Route exact path='/employerProfile' component={Profile} />
+              <Route exact path='/employerlist' component={AdminDash} />
+              <Route exact path='/employeelist' component={AdminDash} />
                 {/* ADMIN PAGE PATHS */}
                 {/* <Route exact path='/adminLanding' component={AdminDash} /> */}
                 <Route exact path="/admin" component={AdminDash} />

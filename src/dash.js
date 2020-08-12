@@ -222,7 +222,7 @@ export default function MiniDrawer(props) {
       });
   };
   useEffect(() => {
-    getBalance();
+    getBalance(); 
   }, []);
   const logout = async () => {
     props.history.push("/signin");
