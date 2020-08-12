@@ -265,56 +265,6 @@ class index extends Component {
          </Grid></Paper>:null
           ))
         )}
-
-        {/* <Paper elevation={1} style={{ marginTop: 10 }}>
-          <Grid
-            container
-            style={{ padding: 10 }}
-            direction="row"
-            alignItems="center"
-          >
-            <Grid item xs={4}>
-              <Typography variant="body2" display="block">
-                {this.state.empresult[1].created_on}
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="body2" display="block">
-                {this.state.empresult[1].employer_ontracid}
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="body2" display="block">
-                {this.state.empresult[1].jobTitle}
-              </Typography>
-            </Grid>
-          </Grid>
-        </Paper>
-
-        <Paper elevation={1} style={{ marginTop: 10 }}>
-          <Grid
-            container
-            style={{ padding: 10 }}
-            direction="row"
-            alignItems="center"
-          >
-            <Grid item xs={4}>
-              <Typography variant="body2" display="block">
-                {this.state.empresult[2].created_on}
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="body2" display="block">
-                {this.state.empresult[2].employer_ontracid}
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="body2" display="block">
-                {this.state.empresult[2].jobTitle}
-              </Typography>
-            </Grid>
-          </Grid>
-        </Paper> */}
       </div>
     );
   }

@@ -210,16 +210,16 @@ export default function MiniDrawer(props) {
     const Token = await localStorage.getItem("Token");
     console.log("Token", Token);
     const Id = localStorage.getItem("id");
-    // await axios
-    //   .get("http://3.22.17.212:9000/wallet/getBalance", {
-    //     headers: {
-    //       Authorization: Token,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     setBalance(response);
-    //     console.log("messages", response);
-    //   });
+    await axios
+      .get("http://3.22.17.212:9000/wallet/getBalance", {
+        headers: {
+          Authorization: Token,
+        },
+      })
+      .then((response) => {
+        setBalance(response);
+        console.log("messages", response);
+      });
   };
   useEffect(() => {
     getBalance();
@@ -275,7 +275,7 @@ export default function MiniDrawer(props) {
               Verify OnTrac
             </Typography>
 
-            <Button
+            {/* <Button
               style={{ backgroundColor: "transparent" }}
               color="inherit"
               size="medium"
@@ -302,7 +302,7 @@ export default function MiniDrawer(props) {
                 
               <Button>Add money to your wallet</Button>
               </Link>
-            </Popover>
+            </Popover> */}
             <div>
               <Box p={2}>
                 {balance.status === 200 ? (
@@ -314,12 +314,12 @@ export default function MiniDrawer(props) {
                   </>
                 ) : (
                   <>
-                  {/* <Link to="/Createwallet" className={classes.link}>
+                  <Link to="/Createwallet" className={classes.link}>
                     <ListItemText
                       primary="Create wallet"
                       className={classes.textColor}
                     />
-                  </Link> */}
+                  </Link>
                   </>
                 )}
               </Box>
