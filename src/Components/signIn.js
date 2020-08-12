@@ -323,7 +323,7 @@ class signIn extends Component {
           console.log("accountStatus", data.user.accountStatus)
           if (data.user.accountStatus === "Approved") {
           this.props.history.push({
-            pathname: "/employer",
+            pathname: "/employerDashboard",
           });
         }else{
           this.props.history.push({
@@ -337,7 +337,6 @@ class signIn extends Component {
             console.log("accountStatus", data.user.accountStatus)
             this.props.history.push({
               pathname: "/dashboard",
-              // state: { detail: data },
             });
           } else {
             console.log("accountStatus", data.user.accountStatus)
