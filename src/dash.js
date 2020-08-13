@@ -307,7 +307,7 @@ export default function MiniDrawer(props) {
               <Box p={2}>
                 {balance.status === 200 ? (
                   <>
-                    <Typography>Wallet Balance</Typography>
+                    <Typography>E-Wallet Balance</Typography>
                     <Typography align="center" justify="center">
                       {balance.data[0].balance}
                     </Typography>

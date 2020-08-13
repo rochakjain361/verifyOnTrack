@@ -238,14 +238,11 @@ class signIn extends Component {
                         onClick={() => this.formvalid()}
                         title={"SignIn"}
                         center
-                        // disabled={this.state.submitDisabled}
+                       
                         style={{
                           marginTop: 16,
                           marginBottom: 16,
-                          // fontFamily: "Montserrat",
-                          // fontWeight: "bold",
-                          // fontSize: "18",
-                          // color:"white"
+                         
                         }}
                         fullWidth
                       />
@@ -305,7 +302,7 @@ class signIn extends Component {
         // localStorage.setItem("Token", data.token);
         localStorage.setItem("Token","Token "+data.token);
         localStorage.setItem("id", data.user.id);
-        localStorage.setItem("ontrac_id", data.user.ontrac_id);
+       
         localStorage.setItem(
           "name",
           data.user.firstname,
@@ -339,6 +336,7 @@ class signIn extends Component {
               pathname: "/dashboard",
             });
           } else {
+             localStorage.setItem("ontrac_id", data.user.ontrac_id);
             console.log("accountStatus", data.user.accountStatus)
             this.props.history.push({
               pathname: "/workflow",
