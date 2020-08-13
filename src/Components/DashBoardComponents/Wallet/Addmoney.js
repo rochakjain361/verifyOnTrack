@@ -15,7 +15,7 @@ let token = "";
 let publicKey = "pk_test_7546b591c13199a3f624c0d46017a9c5cad9a1a6";
 
 export default function Addmoney() {
-  const [amount, setAmount] = useState(100);
+  const [amount, setAmount] = useState(0);
   const [amount1, setAmount1] = useState("");
 
   const [email, setEmail] = useState("");

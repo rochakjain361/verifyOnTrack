@@ -96,7 +96,7 @@ export class index extends Component {
                 <Grid container justify="space-between">
 
                     <Box p={1}>
-                  <Typography variant="h4">wallet Balance</Typography>
+                  <Typography variant="h4">E-wallet Balance</Typography>
                   
                   <Typography variant="h5" align="center">{this.state.Balance}</Typography>
                     </Box>
