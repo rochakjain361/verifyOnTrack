@@ -141,7 +141,8 @@ export default function HorizontalLinearStepper(props) {
       .then((response) => {
         console.log(response);
         if (response.status === 200) {
-          setApproval(true);
+           reset();
+         
         }
       });
   };
@@ -157,6 +158,8 @@ export default function HorizontalLinearStepper(props) {
   const steps = getSteps();
   // const [Token1, setToken1] = React.useState();
   const [Token, setToken] = React.useState(localStorage.getItem("Token"));
+  const [ontracid] = React.useState(localStorage.getItem("ontrac_id"));
+
   const [id, setid] = React.useState(localStorage.getItem("id"));
   const [approvalButton, setApprovalButton] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
@@ -224,13 +227,25 @@ export default function HorizontalLinearStepper(props) {
         setActiveStep(5);
       }
     }
-    //    if(props.location.state.detail.user.info_provided_field.profile === true&&props.location.state.detail.user.info_provided_field.address === true&&Approval===false&&props.location.state.detail.user.info_provided_field.identity === true&&props.location.state.detail.user.info_provided_field.phone === true){
-    //     apiCheck()
-    //     console.log("apicheck")
-    //    }
-
-    // setActiveStep(2);
   }, []);
+   const reset=async()=> {
+    let bodyFormData = new FormData();
+    let headers = {
+      headers: {
+        Authorization: Token,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    bodyFormData.append("userid ", ontracid);
+    await axios
+      .post("http://3.22.17.212:9000/wallet/create", bodyFormData, headers)
+      .then((res) =>{ setApproval(true);})
+          
+      
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   const isStepOptional = (step) => {
     return step === 1;
@@ -304,9 +319,7 @@ export default function HorizontalLinearStepper(props) {
             Authorization: Token,
           },
         }
-      );
-  
-      //result = res.data;
+      );   
       console.table("Academics from stepper", Academicsdata.data);
       if (Academicsdata.data.length === 0) {
         setLoading(false);
@@ -322,8 +335,6 @@ export default function HorizontalLinearStepper(props) {
         },
       }
     );
-
-    //  result = res.data;
     console.table("Phones from stepper", phonedata.data);
     if (phonedata.data.length === 0) {
       setLoading(false);
@@ -333,28 +344,6 @@ export default function HorizontalLinearStepper(props) {
       setLoading(false);
       setallData(false);
     }
-
-    // console.log(result[0].phone_reason);
-
-    // let response = await fetch("http://3.22.17.212:9000/api/v1/employees/" + id + "/jobs",
-    //     {
-    //         headers: {
-    //             'Authorization': Token
-    //         }
-    //     });
-    // response = await response.json();
-    // console.log('allJobs from stepper', response)
-
-    // if (response.length > 0) {
-    //     setallData(false)
-    //     setLoading(false)
-
-    //     return;
-    // } else if(response.data.length===0){
-    //     setLoading(false)
-    //     setallData(true)
-    //     return;
-    // }
   };
 
   const handleNext = () => {
@@ -511,17 +500,19 @@ export default function HorizontalLinearStepper(props) {
                               can be verified by our team.
                             </Typography>
                             <br />
+                          </Grid>
                             <Button
                               disabled={allData}
                               variant="contained"
                               color="primary"
                               onClick={() => {
                                 requestconfirmation();
+                                
+                               
                               }}
                             >
                               Submit for approval
                             </Button>
-                          </Grid>
                         </Box>
                       </Paper>
                     </Grid>

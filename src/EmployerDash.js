@@ -18,7 +18,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 
 
-import { Container, Button } from "@material-ui/core";
+import { Container, Button, Box } from "@material-ui/core";
 import axios from "axios";
 import MessageIcon from "@material-ui/icons/Message";
 import StarsIcon from "@material-ui/icons/Stars";
@@ -30,15 +30,15 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 import Dashboard from './Components/EmployerPageComponents/Dashboard'
 import Index from './Components/EmployerPageComponents/Messages/Inbox/index'
 // import Outbox from './Components/EmployerPageComponents/Messages/Outbox'
-
+import EmployeePayments from './Components/DashBoardComponents/MenuWallet/EmployeePayments'
 
 import EmploymentTabs from './Components/EmployerPageComponents/MyCodes/EmployementCodes/EmploymentTabs'
-
+import AccountBalanceWalletIcon from "@material-ui/icons/AccountBalanceWallet";
 import Ratings from './Components/EmployerPageComponents/Ratings'
 import Employees from './Components/EmployerPageComponents/Employees'
 import GroupIcon from '@material-ui/icons/Group';
 import CompanyInfo from './Components/EmployerPageComponents/CompanyInfo'
-
+import Addmoney from './Components/DashBoardComponents/Wallet/Addmoney'
 const drawerWidth = 240;
 let token1 = "";
 let token = "";
@@ -157,6 +157,7 @@ export default function MiniDrawer(props) {
     const [open6, setOpen6] = React.useState(false);
     const [open7, setOpen7] = React.useState(false);
     const [open8, setOpen8] = React.useState(false);
+  const [balance, setBalance] = React.useState(false);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -173,7 +174,24 @@ export default function MiniDrawer(props) {
         setOpen7(false)
         setOpen8(false)
     };
-
+const getBalance = async () => {
+  const Token = await localStorage.getItem("Token");
+  console.log("Token", Token);
+  const Id = localStorage.getItem("id");
+  await axios
+    .get("http://3.22.17.212:9000/wallet/getBalance", {
+      headers: {
+        Authorization: Token,
+      },
+    })
+    .then((response) => {
+      setBalance(response);
+      console.log("messages", response);
+    });
+};
+useEffect(() => {
+  getBalance();
+}, []);
     const logout = async () => {
         props.history.push('/signin')
        let headers = {
@@ -197,232 +215,187 @@ export default function MiniDrawer(props) {
     }
 
     return (
-        <Router>
-            <div className={classes.root}>
-                <CssBaseline />
-                <AppBar
-                    position="fixed"
-                    className={clsx(classes.appBar, {
-                        [classes.appBarShift]: open,
-                    })}
-                >
-                    <Toolbar>
-                        <IconButton
-                            color="inherit"
-                            aria-label="open drawer"
-                            onClick={handleDrawerOpen}
-                            edge="start"
-                            className={clsx(classes.menuButton, {
-                                [classes.hide]: open,
-                            })}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography variant="h6" className={classes.title}>
-                            Verify OnTrac
-          </Typography>
-                        <Button onClick={logout} color="inherit" variant='outlined' size='medium'>Logout</Button>
-                    </Toolbar>
-                </AppBar>
-                <Drawer
-                    variant="permanent"
-                    className={clsx(classes.drawer, {
-                        [classes.drawerOpen]: open,
-                        [classes.drawerClose]: !open,
-                    })}
-                    classes={{
-                        paper: clsx({
-                            [classes.drawerOpen]: open,
-                            [classes.drawerClose]: !open,
-                        }),
-                    }}
-                >
-                    <div className={classes.toolbar}>
-                        <IconButton onClick={handleDrawerClose}>
-                            {theme.direction === 'rtl' ? <ChevronRightIcon style={{ color: "white" }} /> : <ArrowBackIcon style={{ color: "white" }} />}
-                        </IconButton>
-                    </div>
-                    <Link to="/employerDashboard" className={classes.link}>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <DashboardIcon style={{ color: "white" }} />
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={"Dashboard"}
-                                className={classes.textColor}
-                            />
-                        </ListItem>
-                    </Link>
+      <Router>
+        <div className={classes.root}>
+          <CssBaseline />
+          <AppBar
+            position="fixed"
+            className={clsx(classes.appBar, {
+              [classes.appBarShift]: open,
+            })}
+          >
+            <Toolbar>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+                className={clsx(classes.menuButton, {
+                  [classes.hide]: open,
+                })}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" className={classes.title}>
+                Verify OnTrac
+              </Typography>
+              <div>
+                <Box p={2}>
+                  {balance.status === 200 ? (
+                    <>
+                      <Typography>E-Wallet Balance</Typography>
+                      <Typography align="center" justify="center">
+                        {balance.data[0].balance}
+                      </Typography>
+                    </>
+                  ) : (
+                    <>
+                      {/* <Link to="/Createwallet" className={classes.link}>
+                    <ListItemText
+                      primary="Create wallet"
+                      className={classes.textColor}
+                    />
+                  </Link> */}
+                    </>
+                  )}
+                </Box>
+              </div>
+              <Button
+                onClick={logout}
+                color="inherit"
+                variant="outlined"
+                size="medium"
+              >
+                Logout
+              </Button>
+            </Toolbar>
+          </AppBar>
+          <Drawer
+            variant="permanent"
+            className={clsx(classes.drawer, {
+              [classes.drawerOpen]: open,
+              [classes.drawerClose]: !open,
+            })}
+            classes={{
+              paper: clsx({
+                [classes.drawerOpen]: open,
+                [classes.drawerClose]: !open,
+              }),
+            }}
+          >
+            <div className={classes.toolbar}>
+              <IconButton onClick={handleDrawerClose}>
+                {theme.direction === "rtl" ? (
+                  <ChevronRightIcon style={{ color: "white" }} />
+                ) : (
+                  <ArrowBackIcon style={{ color: "white" }} />
+                )}
+              </IconButton>
+            </div>
+            <Link to="/employerDashboard" className={classes.link}>
+              <ListItem button>
+                <ListItemIcon>
+                  <DashboardIcon style={{ color: "white" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Dashboard"}
+                  className={classes.textColor}
+                />
+              </ListItem>
+            </Link>
 
-                    <Divider />
+            <Divider />
 
-                    <Link to="/companyInfo" className={classes.link}>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <BusinessIcon style={{ color: "white" }} />
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={"Company Info"}
-                                className={classes.textColor}
-                            />
-                        </ListItem>
-                    </Link>
-                    <Divider />
+            <Link to="/companyInfo" className={classes.link}>
+              <ListItem button>
+                <ListItemIcon>
+                  <BusinessIcon style={{ color: "white" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Company Info"}
+                  className={classes.textColor}
+                />
+              </ListItem>
+            </Link>
+            <Divider />
 
-                    <Link to="/employerEmployees" className={classes.link}>
-                        <ListItem button onClick={()=> handleDrawerClose()}>
-                            <ListItemIcon>
-                                <GroupIcon style={{ color: "white" }} />
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={"Employees"}
-                                className={classes.textColor}
-                            />
-                        </ListItem>
-                    </Link>
+            <Link to="/employerEmployees" className={classes.link}>
+              <ListItem button onClick={() => handleDrawerClose()}>
+                <ListItemIcon>
+                  <GroupIcon style={{ color: "white" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Employees"}
+                  className={classes.textColor}
+                />
+              </ListItem>
+            </Link>
 
-                    <Divider />
+            <Divider />
 
-                    <Link to="/employerEmployment" className={classes.link}>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <CodeIcon style={{ color: "white" }} />
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={"Codes"}
-                                className={classes.textColor}
-                            />
-                        </ListItem>
-                    </Link>
+            <Link to="/employerEmployment" className={classes.link}>
+              <ListItem button>
+                <ListItemIcon>
+                  <CodeIcon style={{ color: "white" }} />
+                </ListItemIcon>
+                <ListItemText primary={"Codes"} className={classes.textColor} />
+              </ListItem>
+            </Link>
 
-                    <Divider />
+            <Divider />
 
-                    <Link to="/employerInbox" className={classes.link}>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <MessageIcon style={{ color: "white" }} />
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={"Messages"}
-                                className={classes.textColor}
-                            />
-                        </ListItem>
-                    </Link>
+            <Link to="/employerInbox" className={classes.link}>
+              <ListItem button>
+                <ListItemIcon>
+                  <MessageIcon style={{ color: "white" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Messages"}
+                  className={classes.textColor}
+                />
+              </ListItem>
+            </Link>
 
-                    <Divider />
+            <Divider />
 
-                    {/* <ListItem
-                        button
-                        onClick={() => setOpen3(!open3), ()=> setOpen(!open)}
-                    >
-                        <ListItemIcon>
-                            <CodeIcon style={{ color: "white" }} />
-                        </ListItemIcon>
-                        <ListItemText
-                            primary="My Codes"
-                            className={classes.textColor}
-                        />
-                        {open3 ? (
-                            <ExpandLess style={{ color: "white" }} />
-                        ) : (
-                                <ExpandMore style={{ color: "white" }} />
-                            )}
-                    </ListItem>
+            <Link to="/employerRatings" className={classes.link}>
+              <ListItem button onClick={() => handleDrawerClose()}>
+                <ListItemIcon>
+                  <StarsIcon style={{ color: "white" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Ratings"}
+                  className={classes.textColor}
+                />
+              </ListItem>
+            </Link>
 
-                    <Collapse in={open3, open} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding>
-                            <Link to="/employerAccessCodes" className={classes.link}>
-                                <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
-                                    <ListItemText
-                                        primary="Access Codes"
-                                        className={classes.textColor}
-                                    />
-                                </ListItem>
-                            </Link>
+            <Divider />
 
-                            <Link to="/employerEmployment" className={classes.link}>
-                                <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
-                                    <ListItemText
-                                        primary="Employement Codes"
-                                        className={classes.textColor}
-                                    />
-                                </ListItem>
-                            </Link>
+            <Link to="/employerPayments" className={classes.link}>
+              <ListItem button onClick={() => handleDrawerClose()}>
+                <ListItemIcon>
+                  <AccountBalanceWalletIcon style={{ color: "white" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Payments & cards"
+                  className={classes.textColor}
+                />
+              </ListItem>
+            </Link>
+          </Drawer>
 
-                        </List>
-                    </Collapse>
-
-                    <Divider /> */}
-
-                    {/* <ListItem
-                        button
-                        onClick={() => setOpen2(!open2), ()=> setOpen(!open)}
-                    >
-                        <ListItemIcon>
-                            <MessageIcon style={{ color: "white" }} />
-                        </ListItemIcon>
-                        <ListItemText
-                            primary="Messages"
-                            className={classes.textColor}
-                        />
-                        {open2 ? (
-                            <ExpandLess style={{ color: "white" }} />
-                        ) : (
-                                <ExpandMore style={{ color: "white" }} />
-                            )}
-                    </ListItem>
-
-                    <Collapse in={open2, open} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding>
-                            <Link to="/employerInbox" className={classes.link}>
-                                <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
-                                    <ListItemText
-                                        primary="Inbox"
-                                        className={classes.textColor}
-                                    />
-                                </ListItem>
-                            </Link>
-
-                            {/* <Link to="/employeeOutbox" className={classes.link}>
-                                <ListItem button className={classes.nested}>
-                                    <ListItemText
-                                        primary="Outbox"
-                                        className={classes.textColor}
-                                    />
-                                </ListItem>
-                            </Link> */}
-                        {/* </List>
-                    </Collapse> */}
-
-                    {/* <Divider /> */}
-
-                    <Link to="/employerRatings" className={classes.link}>
-                        <ListItem button onClick={()=> handleDrawerClose()}>
-                            <ListItemIcon>
-                                <StarsIcon style={{ color: "white" }} />
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={"Ratings"}
-                                className={classes.textColor}
-                            />
-                        </ListItem>
-                    </Link>
-
-                    <Divider />
-
-                </Drawer>
-
-                <main className={classes.content}>
-                    <Toolbar />
-                    <Switch>
+          <main className={classes.content}>
+            <Toolbar />
+            <Switch>
               <Route exact path="/employerDashboard">
-                <Container >
+                <Container>
                   <Dashboard />
                 </Container>
               </Route>
 
               <Route exact path="/companyInfo">
-                <Container >
+                <Container>
                   <CompanyInfo />
                 </Container>
               </Route>
@@ -444,7 +417,11 @@ export default function MiniDrawer(props) {
                   <AccessCodes />
                 </Container>
               </Route> */}
-
+              <Route exact path="/Addmoney">
+                <Container>
+                  <Addmoney />
+                </Container>
+              </Route>
               <Route exact path="/employerEmployment">
                 <Container>
                   <EmploymentTabs />
@@ -456,16 +433,19 @@ export default function MiniDrawer(props) {
                   <Ratings />
                 </Container>
               </Route>
-
+              <Route exact path="/employerPayments">
+                <Container>
+                  <EmployeePayments />
+                </Container>
+              </Route>
               <Route exact path="/employerEmployees">
                 <Container>
                   <Employees />
                 </Container>
               </Route>
-              
             </Switch>
-                </main>
-            </div>
-        </Router>
+          </main>
+        </div>
+      </Router>
     );
 }

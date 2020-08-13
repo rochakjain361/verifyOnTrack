@@ -207,6 +207,7 @@ export default function EmployerStepper(props) {
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
   const [Approval, setApproval] = React.useState(false);
+  const [ontracid] = React.useState(localStorage.getItem("ontrac_id"));
 
   useEffect(() => {
     if (
@@ -244,10 +245,31 @@ export default function EmployerStepper(props) {
       .then((response) => {
         console.log(response);
         if (response.status === 200) {
-          setApproval(true);
+          reset()
+         
         }
       });
   };
+   const reset = async () => {
+     let bodyFormData = new FormData();
+     let headers = {
+       headers: {
+         Authorization: Token,
+         "Content-Type": "multipart/form-data",
+       },
+     };
+     bodyFormData.append("userid ", ontracid);
+     await axios
+       .post("http://3.22.17.212:9000/wallet/create", bodyFormData, headers)
+       .then((res) => {
+         setApproval(true);
+       })
+
+       .catch((err) => {
+         console.log(err);
+       });
+   };
+
   const logout = async () => {
     let headers = {
       headers: {
@@ -369,6 +391,7 @@ export default function EmployerStepper(props) {
                                 fullWidth={false}
                                 onClick={() => {
                                   requestconfirmation();
+                                  
                                 }}
                               >
                                 Submit for approval
