@@ -18,7 +18,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 
 
-import { Container, Button } from "@material-ui/core";
+import { Container, Button, Box } from "@material-ui/core";
 import axios from "axios";
 import MessageIcon from "@material-ui/icons/Message";
 import StarsIcon from "@material-ui/icons/Stars";
@@ -157,6 +157,7 @@ export default function MiniDrawer(props) {
     const [open6, setOpen6] = React.useState(false);
     const [open7, setOpen7] = React.useState(false);
     const [open8, setOpen8] = React.useState(false);
+  const [balance, setBalance] = React.useState(false);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -173,7 +174,24 @@ export default function MiniDrawer(props) {
         setOpen7(false)
         setOpen8(false)
     };
-
+const getBalance = async () => {
+  const Token = await localStorage.getItem("Token");
+  console.log("Token", Token);
+  const Id = localStorage.getItem("id");
+  await axios
+    .get("http://3.22.17.212:9000/wallet/getBalance", {
+      headers: {
+        Authorization: Token,
+      },
+    })
+    .then((response) => {
+      setBalance(response);
+      console.log("messages", response);
+    });
+};
+useEffect(() => {
+  getBalance();
+}, []);
     const logout = async () => {
         props.history.push('/signin')
        let headers = {
@@ -221,6 +239,27 @@ export default function MiniDrawer(props) {
               <Typography variant="h6" className={classes.title}>
                 Verify OnTrac
               </Typography>
+              <div>
+                <Box p={2}>
+                  {balance.status === 200 ? (
+                    <>
+                      <Typography>E-Wallet Balance</Typography>
+                      <Typography align="center" justify="center">
+                        {balance.data[0].balance}
+                      </Typography>
+                    </>
+                  ) : (
+                    <>
+                      {/* <Link to="/Createwallet" className={classes.link}>
+                    <ListItemText
+                      primary="Create wallet"
+                      className={classes.textColor}
+                    />
+                  </Link> */}
+                    </>
+                  )}
+                </Box>
+              </div>
               <Button
                 onClick={logout}
                 color="inherit"
@@ -319,91 +358,6 @@ export default function MiniDrawer(props) {
 
             <Divider />
 
-            {/* <ListItem
-                        button
-                        onClick={() => setOpen3(!open3), ()=> setOpen(!open)}
-                    >
-                        <ListItemIcon>
-                            <CodeIcon style={{ color: "white" }} />
-                        </ListItemIcon>
-                        <ListItemText
-                            primary="My Codes"
-                            className={classes.textColor}
-                        />
-                        {open3 ? (
-                            <ExpandLess style={{ color: "white" }} />
-                        ) : (
-                                <ExpandMore style={{ color: "white" }} />
-                            )}
-                    </ListItem>
-
-                    <Collapse in={open3, open} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding>
-                            <Link to="/employerAccessCodes" className={classes.link}>
-                                <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
-                                    <ListItemText
-                                        primary="Access Codes"
-                                        className={classes.textColor}
-                                    />
-                                </ListItem>
-                            </Link>
-
-                            <Link to="/employerEmployment" className={classes.link}>
-                                <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
-                                    <ListItemText
-                                        primary="Employement Codes"
-                                        className={classes.textColor}
-                                    />
-                                </ListItem>
-                            </Link>
-
-                        </List>
-                    </Collapse>
-
-                    <Divider /> */}
-
-            {/* <ListItem
-                        button
-                        onClick={() => setOpen2(!open2), ()=> setOpen(!open)}
-                    >
-                        <ListItemIcon>
-                            <MessageIcon style={{ color: "white" }} />
-                        </ListItemIcon>
-                        <ListItemText
-                            primary="Messages"
-                            className={classes.textColor}
-                        />
-                        {open2 ? (
-                            <ExpandLess style={{ color: "white" }} />
-                        ) : (
-                                <ExpandMore style={{ color: "white" }} />
-                            )}
-                    </ListItem>
-
-                    <Collapse in={open2, open} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding>
-                            <Link to="/employerInbox" className={classes.link}>
-                                <ListItem button className={classes.nested} onClick={()=> handleDrawerClose()}>
-                                    <ListItemText
-                                        primary="Inbox"
-                                        className={classes.textColor}
-                                    />
-                                </ListItem>
-                            </Link>
-
-                            {/* <Link to="/employeeOutbox" className={classes.link}>
-                                <ListItem button className={classes.nested}>
-                                    <ListItemText
-                                        primary="Outbox"
-                                        className={classes.textColor}
-                                    />
-                                </ListItem>
-                            </Link> */}
-            {/* </List>
-                    </Collapse> */}
-
-            {/* <Divider /> */}
-
             <Link to="/employerRatings" className={classes.link}>
               <ListItem button onClick={() => handleDrawerClose()}>
                 <ListItemIcon>
@@ -419,11 +373,7 @@ export default function MiniDrawer(props) {
             <Divider />
 
             <Link to="/employerPayments" className={classes.link}>
-              <ListItem
-                button
-                
-                onClick={() => handleDrawerClose()}
-              >
+              <ListItem button onClick={() => handleDrawerClose()}>
                 <ListItemIcon>
                   <AccountBalanceWalletIcon style={{ color: "white" }} />
                 </ListItemIcon>
