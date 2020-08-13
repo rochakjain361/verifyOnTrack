@@ -15,7 +15,6 @@ import {
   TextField,
   Card,
   Box,
-  
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TablePagination from "@material-ui/core/TablePagination";
@@ -30,8 +29,49 @@ import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import WorkOutlineIcon from "@material-ui/icons/WorkOutline";
 import PinDropIcon from "@material-ui/icons/PinDrop";
-let token = "";
+import MaterialTable from "material-table";
+import Search from "@material-ui/icons/Search";
+import { forwardRef } from "react";
+import AddBox from "@material-ui/icons/AddBox";
+import ArrowDownward from "@material-ui/icons/ArrowDownward";
+import Check from "@material-ui/icons/Check";
+import ChevronLeft from "@material-ui/icons/ChevronLeft";
+import ChevronRight from "@material-ui/icons/ChevronRight";
+import Clear from "@material-ui/icons/Clear";
+import DeleteOutline from "@material-ui/icons/DeleteOutline";
+import Edit from "@material-ui/icons/Edit";
+import FilterList from "@material-ui/icons/FilterList";
+import FirstPage from "@material-ui/icons/FirstPage";
+import LastPage from "@material-ui/icons/LastPage";
+import Remove from "@material-ui/icons/Remove";
+import SaveAlt from "@material-ui/icons/SaveAlt";
+import SearchBar from "material-ui-search-bar";
+import ViewColumn from "@material-ui/icons/ViewColumn";
 
+let token = "";
+const tableIcons = {
+  Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
+  Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
+  Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+  Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
+  DetailPanel: forwardRef((props, ref) => (
+    <ChevronRight {...props} ref={ref} />
+  )),
+  Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
+  Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
+  Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+  FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+  LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+  NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+  PreviousPage: forwardRef((props, ref) => (
+    <ChevronLeft {...props} ref={ref} />
+  )),
+  ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+  Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+  SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
+  ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
+  ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
+};
 export default class employerlist extends Component {
   constructor(props) {
     super(props);
@@ -44,8 +84,9 @@ export default class employerlist extends Component {
       nextpagelink: "",
       previouspagelink: "",
       kpidata: "",
-      updateDialogOpen:false,
-      result:[]
+      updateDialogOpen: false,
+      result: [],
+      value:"",
     };
   }
   async getemployerlist() {
@@ -66,14 +107,14 @@ export default class employerlist extends Component {
   }
   async fetchkpidata(companyName) {
     await axios
-      .get("http://3.22.17.212:9000/getEmployerKpi?company="+companyName, {
+      .get("http://3.22.17.212:9000/getEmployerKpi?company=" + companyName, {
         headers: {
           Authorization: token,
         },
       })
       .then((res) => {
         this.setState({
-         kpidata:res.data
+          kpidata: res.data,
         });
       });
   }
@@ -107,34 +148,35 @@ export default class employerlist extends Component {
           nextpagelink: res.data.next,
           previouspagelink: res.data.previous,
         });
-       
       });
   }
-  async searchcompany() {
+  async searchcompany(companyName) {
     await axios
-      .get("http://3.22.17.212:9000/getEmployerList?filter=", {
+      .get("http://3.22.17.212:9000/getEmployerList?filter="+companyName, {
         headers: {
           Authorization: token,
         },
       })
       .then((res) => {
         this.setState({
-          result: res.data.results,
+          employerlist: res.data.results,
+          count: res.data.count,
+          nextpagelink: res.data.next,
+          previouspagelink: res.data.previous,
         });
       });
   }
   async componentDidMount() {
     token = localStorage.getItem("Token");
     this.getemployerlist();
-    this.searchcompany();
   }
   nextpageclick = (event, newPage) => {
-      console.log("typeof",typeof(newPage))
+    console.log("typeof", typeof newPage);
     if (newPage > this.state.page) {
-        console.log("nextpage")
-          this.nextpage();
+      console.log("nextpage");
+      this.nextpage();
     } else {
-        console.log("prevpage")
+      console.log("prevpage");
       this.previouspage();
     }
     this.setState({
@@ -145,6 +187,8 @@ export default class employerlist extends Component {
     return (
       <div>
         <>
+        <Box p={2}>
+
           <Grid
             container
             justify="space-between"
@@ -152,89 +196,67 @@ export default class employerlist extends Component {
             spacing={4}
           >
             <Grid item>
-              <Typography variant="h4">Employer list</Typography>
+              <Typography variant="h4" align="center" justify="center">
+                Employer list
+              </Typography>
             </Grid>
-
-            <Grid item xs={6}>
-              <Autocomplete
-                options={this.state.result}
-                getOptionLabel={(option) => option.companyName}
-                size="small"
-                id="states"
-                Username
-                value={this.state.selectedstate}
-                onChange={(event, value) => {
-                  this.setState({ selectedstate: value });
-                  console.log("selectedstate", value);
-                  
-                }}
-                inputValue={this.state.enteredtext}
-                onInputChange={(event, newInputValue) => {
-                  this.setState({ enteredtext: newInputValue });
-                  // console.log(newInputValue);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Enter companyname"
-                    margin="normal"
-                    variant="outlined"
-                    size="small"
-                  />
-                )}
-              />
+            <Grid item xs={5}>
+              <SearchBar
+                value={this.state.value}
+                onChange={(newValue) => this.setState({ value: newValue })}
+                onRequestSearch={() => this.searchcompany(this.state.value)}
+                cancelOnEscape={true}
+                onCancelSearch={() => this.getemployerlist()}
+                placeholder={"enter your companyname and press enter"}
+                />
             </Grid>
           </Grid>
-          <TableContainer component={Paper} elevation={16} p={3}>
-            <Table stickyHeader>
-              <TableHead>
-                <TableRow style={{ backgroundColor: "black" }}>
-                  {[
-                    "CompanyName",
-                    "Logo",
-                    "Phone",
-                    "Email",
-                    "RegNum",
-                    "Category",
-                    "Actions",
-                  ].map((text, index) => (
-                    <TableCell style={{ fontWeight: "bolder" }} align="center">
-                      {text}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
+                </Box>
+          {this.state.employerlist === "" ? null : (
+            <MaterialTable
+              icons={tableIcons}
+              title="Employer List"
+              columns={[
+                { title: "CompanyName", field: "companyName" },
 
-              <TableBody>
-                {this.state.employerlist.map((row, index) => (
-                  <TableRow key={row.id}>
-                    <TableCell align="center">{row.companyName}</TableCell>
-                    <TableCell align="center">
-                      <Avatar src={row.logo}></Avatar>
-                    </TableCell>
-                    <TableCell align="center">{row.phone}</TableCell>
-                    <TableCell align="center">{row.email}</TableCell>
-                    <TableCell align="center">{row.regNum}</TableCell>
-                    <TableCell align="center">{row.category}</TableCell>
-                    <TableCell align="center">
-                      <Button
-                        variant="outlined"
-                        color="secondary"
-                        onClick={() => {
-                          this.fetchkpidata(
-                            this.state.employerlist[index].companyName
-                          );
-                          this.setState({ updateDialogOpen: true });
-                        }}
-                      >
-                        View Details
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                {
+                  field: "logo",
+                  title: "Logo",
+                  render: (rowData) => <Avatar src={rowData.logo}/>,
+                },
+
+                { title: "Phone", field: "phone",  },
+                { title: "Category", field: "category" },
+                { title: "RegNum", field: "regNum" },
+                {
+                  title: "Email",
+                  field: "email",
+                },
+                {
+                  // field: "logo",
+                  title: "Action",
+                  render: (rowData) => (
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      onClick={() => {
+                        this.fetchkpidata(rowData.companyName);
+                        this.setState({ updateDialogOpen: true });
+                      }}
+                    >
+                      View Details
+                    </Button>
+                  ),
+                },
+              ]}
+              data={this.state.employerlist}
+              options={{
+                sorting: true,
+                paging: false,
+                // grouping: true,
+              }}
+            />
+          )}
           <TablePagination
             component="div"
             rowsPerPageOptions={[]}
@@ -459,5 +481,5 @@ export default class employerlist extends Component {
         </>
       </div>
     );
-    }
+  }
 }
