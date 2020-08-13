@@ -348,7 +348,7 @@ export default function MiniDrawer(props) {
                 >
                   <ListItemText
                     className={classes.textColor}
-                    primary="employerlist"
+                    primary="Employerlist"
                   />
                 </ListItem>
               </Link>

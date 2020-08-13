@@ -307,19 +307,19 @@ export default function MiniDrawer(props) {
               <Box p={2}>
                 {balance.status === 200 ? (
                   <>
-                    {/* <Typography>Wallet Balance</Typography>
+                    <Typography>Wallet Balance</Typography>
                     <Typography align="center" justify="center">
                       {balance.data[0].balance}
-                    </Typography> */}
+                    </Typography>
                   </>
                 ) : (
                   <>
-                  <Link to="/Createwallet" className={classes.link}>
+                  {/* <Link to="/Createwallet" className={classes.link}>
                     <ListItemText
                       primary="Create wallet"
                       className={classes.textColor}
                     />
-                  </Link>
+                  </Link> */}
                   </>
                 )}
               </Box>
@@ -482,20 +482,7 @@ export default function MiniDrawer(props) {
                   onClick={() => handleDrawerClose()}
                 >
                   <ListItemText
-                    primary="Payments"
-                    className={classes.textColor}
-                  />
-                </ListItem>
-              </Link>
-
-              <Link to="/employeeCards" className={classes.link}>
-                <ListItem
-                  button
-                  className={classes.nested}
-                  onClick={() => handleDrawerClose()}
-                >
-                  <ListItemText
-                    primary="Cards"
+                    primary="Payments & cards"
                     className={classes.textColor}
                   />
                 </ListItem>
@@ -545,11 +532,11 @@ export default function MiniDrawer(props) {
                 <AccessCodes />
               </Container>
             </Route>
-            <Route exact path="/Createwallet">
+            {/* <Route exact path="/Createwallet">
               <Container>
                 <Createwallet />
               </Container>
-            </Route>
+            </Route> */}
 
             <Route exact path="/Addmoney">
               <Container>
@@ -569,11 +556,7 @@ export default function MiniDrawer(props) {
               </Container>
             </Route>
 
-            <Route exact path="/employeeCards">
-              <Container>
-                <EmployeeCards />
-              </Container>
-            </Route>
+            
 
           </Switch>
         </main>
