@@ -56,7 +56,11 @@ import SearchBar from "material-ui-search-bar";
 import ViewColumn from "@material-ui/icons/ViewColumn";
 import ValidationMessage from "../../ValidationMessage";
 import GradientButton from "../../GradientButton";
+import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
+import NotInterestedOutlinedIcon from "@material-ui/icons/NotInterestedOutlined";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 let token = "";
+let categoriesdata = {};
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
   Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -124,14 +128,14 @@ export default class employerlist extends Component {
       signup: false,
       signupemail: false,
       signupusername: false,
+      categoriesdata: [],
     };
     this.addemployer = this.addemployer.bind(this);
   }
 
   validatefirstname = (firstname1) => {
     console.log(firstname1.length);
-    firstname1 =
-      firstname1.charAt(0).toUpperCase() + firstname1.slice(1);
+    firstname1 = firstname1.charAt(0).toUpperCase() + firstname1.slice(1);
 
     console.log("firstname", firstname1);
     this.setState({ firstname: firstname1 });
@@ -140,21 +144,16 @@ export default class employerlist extends Component {
       firstnameValid = false;
     }
     console.log("/////////////", firstnameValid);
-    this.setState(
-      { firstnamevalid: firstnameValid },
-      this.validateForm
-    );
+    this.setState({ firstnamevalid: firstnameValid }, this.validateForm);
   };
   Capitalizemiddlename = (middlename1) => {
-    middlename1 =
-      middlename1.charAt(0).toUpperCase() + middlename1.slice(1);
+    middlename1 = middlename1.charAt(0).toUpperCase() + middlename1.slice(1);
 
     console.log("middlename", middlename1);
     this.setState({ middlename: middlename1 });
   };
   capitalizelastname = (lastname1) => {
-    lastname1 =
-      lastname1.charAt(0).toUpperCase() + lastname1.slice(1);
+    lastname1 = lastname1.charAt(0).toUpperCase() + lastname1.slice(1);
 
     console.log("lastname1", lastname1);
     this.setState({ surname: lastname1 });
@@ -181,10 +180,7 @@ export default class employerlist extends Component {
       errorMsg.username = "Must be at least 5 characters long";
     }
 
-    this.setState(
-      { usernameValid, errorMsg },
-      this.validateForm
-    );
+    this.setState({ usernameValid, errorMsg }, this.validateForm);
   };
 
   updateEmail = (email) => {
@@ -220,28 +216,20 @@ export default class employerlist extends Component {
 
     if (password.length < 6) {
       passwordValid = false;
-      errorMsg.password =
-        "Password must be at least 6 characters long";
+      errorMsg.password = "Password must be at least 6 characters long";
     } else if (!/\d/.test(password)) {
       passwordValid = false;
       errorMsg.password = "Password must contain a digit";
     } else if (!/[!@#$%^&*]/.test(password)) {
       passwordValid = false;
-      errorMsg.password =
-        "Password must contain special character: !@#$%^&*";
+      errorMsg.password = "Password must contain special character: !@#$%^&*";
     }
 
-    this.setState(
-      { passwordValid, errorMsg },
-      this.validateForm
-    );
+    this.setState({ passwordValid, errorMsg }, this.validateForm);
   };
 
   updatePasswordConfirm = (passwordConfirm) => {
-    this.setState(
-      { passwordConfirm },
-      this.validatePasswordConfirm
-    );
+    this.setState({ passwordConfirm }, this.validatePasswordConfirm);
   };
   genderValidation = (data) => {
     if (data.target.value.length > 0) {
@@ -264,30 +252,21 @@ export default class employerlist extends Component {
       errorMsg.passwordConfirm = "Passwords do not match";
     }
 
-    this.setState(
-      { passwordConfirmValid, errorMsg },
-      this.validateForm
-    );
+    this.setState({ passwordConfirmValid, errorMsg }, this.validateForm);
   };
   handleChange = (value) => {
     console.log("Captcha value:", value);
-    this.setState(
-      { captha: value, capthavalid: true },
-      this.validateForm
-    );
+    this.setState({ captha: value, capthavalid: true }, this.validateForm);
 
     if (value === null) this.setState({ expired: "true" });
   };
   async getemployerlist() {
     await axios
-      .get(
-        "http://3.22.17.212:9000/getEmployerList?page=1&filter=all",
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
+      .get("http://3.22.17.212:9000/getEmployerList?page=1&filter=all", {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((res) => {
         this.setState({
           employerlist: res.data.results,
@@ -297,17 +276,42 @@ export default class employerlist extends Component {
         });
       });
   }
+  async updaterow(newData) {
+      var myHeaders = new Headers();
+      myHeaders.append("Authorization", token);
+
+      var formdata = new FormData();
+      formdata.append("phone", newData.phone);
+      formdata.append("email", newData.email);
+      formdata.append("fax", newData.fax);
+      formdata.append("logo", newData.logo);
+      formdata.append("category", newData.category);
+      formdata.append("regNum", newData.regNum);
+      formdata.append("regDate", newData.regDate);
+
+      var requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        body: formdata,
+        redirect: "follow",
+      };
+
+    fetch(
+        "http://3.22.17.212:9000/updateComapnyDetailsAdmin?ontracid=" +
+          newData.ontrac_id_field,
+        requestOptions
+      )
+        .then((response) => this.getemployerlist())
+        .then((result) => console.log("result", result))
+        .catch((error) => console.log("error", error));
+  }
   async fetchkpidata(companyName) {
     await axios
-      .get(
-        "http://3.22.17.212:9000/getEmployerKpi?company=" +
-        companyName,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
+      .get("http://3.22.17.212:9000/getEmployerKpi?company=" + companyName, {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((res) => {
         this.setState({
           kpidata: res.data,
@@ -348,15 +352,11 @@ export default class employerlist extends Component {
   }
   async searchcompany(companyName) {
     await axios
-      .get(
-        "http://3.22.17.212:9000/getEmployerList?filter=" +
-        companyName,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
+      .get("http://3.22.17.212:9000/getEmployerList?filter=" + companyName, {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((res) => {
         this.setState({
           employerlist: res.data.results,
@@ -368,8 +368,41 @@ export default class employerlist extends Component {
   }
   async componentDidMount() {
     token = localStorage.getItem("Token");
-    this.getemployerlist();
+    await this.categories();
+    await this.getemployerlist();
   }
+  categories = async () => {
+    await axios
+      .get("http://3.22.17.212:9000/api/v1/resManager/employer/categories/", {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((response) => {
+        response.data.map((index) => {
+          console.log("index", index);
+          // let newdata={"question":index.id,"answerRating":index.question}
+          categoriesdata[index.id] = index.category;
+          this.setState({ categoriesdata: categoriesdata });
+          this.setState((state) => ({
+            person: {
+              ...state.stateObj,
+              attr1: "value1",
+              attr2: "value2",
+            },
+          }));
+          // this.setState((prevvalue) => ({
+          //   categoriesdata:{
+          //     ...prevvalue,
+          //     {index.id:index.category}
+          //   }
+          // }));
+
+          //  this.setState({...categoriesdata,})
+        });
+      });
+  };
+
   nextpageclick = (event, newPage) => {
     console.log("typeof", typeof newPage);
     if (newPage > this.state.page) {
@@ -383,11 +416,45 @@ export default class employerlist extends Component {
       page: newPage,
     });
   };
+  Employeractive = async (ontracid) => {
+    await axios
+      .post(
+        "http://3.22.17.212:9000/changeAccountStatus?ontracId=" +
+          ontracid +
+          "&status=ACTIVATE",
+        "",
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        this.getemployerlist();
+      });
+  };
+  Employerdeactive = async (ontracid) => {
+    await axios
+      .post(
+        "http://3.22.17.212:9000/changeAccountStatus?ontracId=" +
+          ontracid +
+          "&status=DEACTIVATE",
+        "",
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        this.getemployerlist();
+      });
+  };
   render() {
     return (
       <div>
         <>
-          <Box p={2}>
+          <Box py={1}>
             <Grid
               container
               justify="space-between"
@@ -422,12 +489,16 @@ export default class employerlist extends Component {
               icons={tableIcons}
               title="Employer List"
               columns={[
-                { title: "CompanyName", field: "companyName" },
+                {
+                  title: "CompanyName",
+                  field: "companyName",
+                  cellStyle: { padding: "5px" },
+                },
 
                 {
                   field: "logo",
-                  title: "Logo",
-                 
+                  title: "Avatar",
+                  cellStyle: { padding: "5px" },
 
                   editComponent: (props) => (
                     <>
@@ -435,13 +506,10 @@ export default class employerlist extends Component {
                         type="file"
                         value={props.logo}
                         onChange={(e) => {
-                        //  props.onChange(e.target.value)
-                         var data = { ...props.rowData };
-                         data.logo = e.target.files[0];
-                       
-                         props.onRowDataChange(data);
-                     
-                         
+                          var data = { ...props.rowData };
+                          data.logo = e.target.files[0];
+
+                          props.onRowDataChange(data);
                         }}
                       ></TextField>
                     </>
@@ -453,24 +521,55 @@ export default class employerlist extends Component {
                 {
                   title: "Phone",
                   field: "phone",
-                  type: "numeric",
+                  cellStyle: { padding: "10px" },
+                  // type: "numeric",
+                },
+                {
+                  title: "Fax",
+                  field: "fax",
+                  cellStyle: { padding: "5px" },
+                  // type: "numeric",
+                },
+                {
+                  title: "RegDate",
+                  field: "regDate",
+                  cellStyle: { padding: "5px" },
+                  editComponent: (props) => (
+                    <>
+                      <TextField
+                        type="date"
+                        value={props.regDate}
+                        onChange={(e) => {
+                          var data = { ...props.rowData };
+                          data.regDate = e.target.value;
+
+                          props.onRowDataChange(data);
+                        }}
+                      ></TextField>
+                    </>
+                  ),
                 },
                 {
                   title: "Category",
                   field: "category",
-                  lookup: { 1: "İstanbul", 2: "Şanlıurfa" },
+                  cellStyle: { padding: "5px" },
+
+                  lookup: this.state.categoriesdata,
                 },
                 { title: "RegNum", field: "regNum" },
                 {
                   title: "Email",
                   field: "email",
+                  cellStyle: { padding: "5px" },
                 },
                 {
                   title: "View",
+                  editable: "never",
+                  cellStyle: { padding: "3px" },
+                  size: "small",
                   render: (rowData) => (
                     <Button
-                      variant="outlined"
-                      color="secondary"
+                      color="primary"
                       onClick={() => {
                         this.fetchkpidata(rowData.companyName);
                         this.setState({
@@ -478,9 +577,41 @@ export default class employerlist extends Component {
                         });
                       }}
                     >
-                      View Details
+                      <VisibilityOutlinedIcon color="white" />
                     </Button>
                   ),
+                },
+                {
+                  title: "Activate",
+                  editable: "never",
+                  size: "small",
+                  cellStyle: { padding: "3px" },
+                  field: "approvedFlag",
+                  render: (rowData) =>
+                    rowData.approvedFlag === "Account Deactivated" ? (
+                      <Button
+                        // variant="outlined"
+                        color="secondary"
+                        onClick={() => {
+                          this.Employeractive(rowData.ontrac_id_field);
+                        }}
+                      >
+                        <AddCircleOutlineIcon />
+                      </Button>
+                    ) : rowData.approvedFlag === "Approved" ||
+                      rowData.approvedFlag === "Account Reactivated" ? (
+                      <>
+                        <Button
+                          // variant="outlined"
+                          color="secondary"
+                          onClick={() => {
+                            this.Employerdeactive(rowData.ontrac_id_field);
+                          }}
+                        >
+                          <NotInterestedOutlinedIcon />
+                        </Button>
+                      </>
+                    ) : null,
                 },
               ]}
               data={this.state.employerlist}
@@ -488,15 +619,16 @@ export default class employerlist extends Component {
                 onRowUpdate: (newData, oldData) =>
                   new Promise((resolve, reject) => {
                     setTimeout(() => {
-                     
                       const dataUpdate = [...this.state.employerlist];
                       const index = oldData.tableData.id;
                       dataUpdate[index] = newData;
                       //  setData([...dataUpdate]);
+                      
+
+                    this.updaterow(newData)
                       this.setState({
                         employerlist: dataUpdate,
                       });
-
                       resolve();
                     }, 1000);
                   }),
@@ -1161,6 +1293,6 @@ export default class employerlist extends Component {
         Accept: "*/*",
       },
     });
-    this.setState({ addemployerdialog: false })
+    this.setState({ addemployerdialog: false });
   }
 }

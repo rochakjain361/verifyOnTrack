@@ -179,6 +179,34 @@ export default class employeelist extends Component {
                      page: newPage,
                    });
                  };
+                 Employeractive = async (ontracid) => {
+                   await axios
+                     .post(
+                       "http://3.22.17.212:9000/changeAccountStatus?ontracId=" +
+                         ontracid +
+                         "&status=ACTIVATE","",
+                       {
+                         headers: {
+                           Authorization: token,
+                         },
+                       }
+                     )
+                     .then((res) => {this.getemployerlist()});
+                 };
+                 Employerdeactive = async (ontracid) => {
+                   await axios
+                     .post(
+                       "http://3.22.17.212:9000/changeAccountStatus?ontracId=" +
+                         ontracid +
+                         "&status=DEACTIVATE","",
+                       {
+                         headers: {
+                           Authorization: token,
+                         },
+                       }
+                     )
+                     .then((res) => {this.getemployerlist();});
+                 };
                  render() {
                    return (
                      <div>
@@ -255,6 +283,41 @@ export default class employeelist extends Component {
                                      View Details
                                    </Button>
                                  ),
+                               },
+                               {
+                                 title: "Activate",
+                                 field: "approvedFlag",
+                                 render: (rowData) =>
+                                   rowData.approvedFlag ===
+                                   "Account Deactivated" ? (
+                                     <Button
+                                       variant="outlined"
+                                       color="secondary"
+                                       onClick={() => {
+                                         this.Employeractive(
+                                           rowData.ontrac_id_field
+                                         );
+                                       }}
+                                     >
+                                       Active
+                                     </Button>
+                                   ) : rowData.approvedFlag === "Approved" ||
+                                     rowData.approvedFlag ===
+                                       "Account Reactivated" ? (
+                                     <>
+                                       <Button
+                                         variant="outlined"
+                                         color="secondary"
+                                         onClick={() => {
+                                           this.Employerdeactive(
+                                             rowData.ontrac_id_field
+                                           );
+                                         }}
+                                       >
+                                         Deactivate
+                                       </Button>
+                                     </>
+                                   ) : null,
                                },
                              ]}
                              data={this.state.employerlist}
