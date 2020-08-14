@@ -391,14 +391,6 @@ export default class employerlist extends Component {
               attr2: "value2",
             },
           }));
-          // this.setState((prevvalue) => ({
-          //   categoriesdata:{
-          //     ...prevvalue,
-          //     {index.id:index.category}
-          //   }
-          // }));
-
-          //  this.setState({...categoriesdata,})
         });
       });
   };
@@ -492,13 +484,13 @@ export default class employerlist extends Component {
                 {
                   title: "CompanyName",
                   field: "companyName",
-                  cellStyle: { padding: "5px" },
+                  cellStyle: { padding: "3px" },
                 },
 
                 {
                   field: "logo",
                   title: "Avatar",
-                  cellStyle: { padding: "5px" },
+                  cellStyle: { padding: "3px" },
 
                   editComponent: (props) => (
                     <>
@@ -521,19 +513,19 @@ export default class employerlist extends Component {
                 {
                   title: "Phone",
                   field: "phone",
-                  cellStyle: { padding: "10px" },
+                  cellStyle: { padding: "3px" },
                   // type: "numeric",
                 },
                 {
                   title: "Fax",
                   field: "fax",
-                  cellStyle: { padding: "5px" },
+                  cellStyle: { padding: "3px" },
                   // type: "numeric",
                 },
                 {
                   title: "RegDate",
                   field: "regDate",
-                  cellStyle: { padding: "5px" },
+                  cellStyle: { padding: "3px" },
                   editComponent: (props) => (
                     <>
                       <TextField
@@ -552,15 +544,19 @@ export default class employerlist extends Component {
                 {
                   title: "Category",
                   field: "category",
-                  cellStyle: { padding: "5px" },
+                  cellStyle: { padding: "3px" },
 
                   lookup: this.state.categoriesdata,
                 },
-                { title: "RegNum", field: "regNum" },
+                {
+                  title: "RegNum",
+                  field: "regNum",
+                  cellStyle: { padding: "3px" },
+                },
                 {
                   title: "Email",
                   field: "email",
-                  cellStyle: { padding: "5px" },
+                  cellStyle: { padding: "3px" },
                 },
                 {
                   title: "View",
@@ -623,9 +619,8 @@ export default class employerlist extends Component {
                       const index = oldData.tableData.id;
                       dataUpdate[index] = newData;
                       //  setData([...dataUpdate]);
-                      
 
-                    this.updaterow(newData)
+                      this.updaterow(newData);
                       this.setState({
                         employerlist: dataUpdate,
                       });
@@ -637,6 +632,8 @@ export default class employerlist extends Component {
                 sorting: true,
                 paging: false,
                 search: false,
+                cellStyle: { padding: "0.3em" },
+                headerStyle: { padding: "0.3em" },
                 // grouping: true,
               }}
             />
