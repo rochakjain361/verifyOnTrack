@@ -26,6 +26,13 @@ import {
 import Button from "@material-ui/core/Button";
 import { get, update, post } from "../../../API";
 import axios from "axios";
+import csv from "../../../icons/csv.png";
+import docx from "../../../icons/docx.png";
+import pdf from "../../../icons/pdf.jpg";
+import ppt from "../../../icons/ppt.png";
+import xls from "../../../icons/xcel.png";
+import file from "../../../icons/file.png";
+
 let id = "";
 let token="";
 let pictures=[];
@@ -832,10 +839,52 @@ export class index extends Component {
                      >
                        {this.state.pictureloading
                          ? this.loading()
-                         : pictures.map((pic, index) => (
-                             <GridListTile key={pic.id} cols={1}>
-                               <img src={pic.picture} />
-                             </GridListTile>
+                         : pictures.map((pic, index) => {
+                           var ext = pic.picture.split('.').pop();  
+                           if(ext.indexOf("png") != -1 || ext.indexOf("jpeg") != -1 || ext.indexOf("jpg") != -1 || ext.indexOf("gif") != -1 || ext.indexOf("svg") != -1 || ext.indexOf("bmp") != -1){
+                            return(
+                              <GridListTile key={pic.id} cols={1}>
+                               <img src={pic.picture}/>
+                             </GridListTile>) 
+                           }
+                           else if(ext.indexOf("docx") != -1 ){
+                            return(
+                              <GridListTile key={pic.id} cols={1}>
+                               <img src={docx}/>
+                             </GridListTile>)
+                           }
+                           else if(ext.indexOf("pdf") != -1 ){
+                            return(
+                              <GridListTile key={pic.id} cols={1}>
+                               <img src={pdf}/>
+                             </GridListTile>)
+                           }
+                           else if(ext.indexOf("ppt") != -1 ){
+                            return(
+                              <GridListTile key={pic.id} cols={1}>
+                               <img src={ppt}/>
+                             </GridListTile>)
+                           }
+                           else if(ext.indexOf("xslx") != -1 ){
+                            return(
+                              <GridListTile key={pic.id} cols={1}>
+                               <img src={xls}/>
+                             </GridListTile>)
+                           }
+                           else if(ext.indexOf("csv") != -1 ){
+                            return(
+                              <GridListTile key={pic.id} cols={1}>
+                               <img src={csv}/>
+                             </GridListTile>)
+                           }
+                           else{
+                            return(
+                              <GridListTile key={pic.id} cols={1}>
+                               <img src={file}/>
+                             </GridListTile>)
+                           }
+                         }
+                             
 
                              // <Grid container>
                              //     <Grid item xs={12}>
@@ -843,7 +892,7 @@ export class index extends Component {
                              //       {/* {pic.picture} */}
                              //     </Grid>
                              //   </Grid>
-                           ))}{" "}
+                           )}{" "}
                      </GridList>
                    </Grid>
                  </DialogContent>
