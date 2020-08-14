@@ -190,11 +190,9 @@ export default function Addmoney() {
                           .post(
                             "http://3.22.17.212:9000/wallet/verifyTrx?TrxId="+e.transaction+"&uFlag=True","",
                             headers
-                            
                           )
                           .then((res) => {
                             console.log(res);
-
                             setLoading(false);
                             window.location.reload(false);
                           });
