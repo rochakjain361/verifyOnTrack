@@ -6,7 +6,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import { Typography, Button, Paper, Avatar,Grid,Box,Dialog,DialogTitle,DialogContent,Card,DialogContentText } from "@material-ui/core";
+import { Typography, Button, Paper, Avatar,Grid,Box,Dialog,DialogTitle,DialogContent,Card,DialogContentText,TextField,MenuItem,Select,FormControl,InputLabel } from "@material-ui/core";
 import TablePagination from "@material-ui/core/TablePagination";
 import MaterialTable from "material-table";
 import Search from "@material-ui/icons/Search";
@@ -34,6 +34,10 @@ import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import WorkOutlineIcon from "@material-ui/icons/WorkOutline";
 import PinDropIcon from "@material-ui/icons/PinDrop";
+import AccountBalanceWalletOutlinedIcon from "@material-ui/icons/AccountBalanceWalletOutlined";
+import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
+import NotInterestedOutlinedIcon from "@material-ui/icons/NotInterestedOutlined";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 let token = "";
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -71,9 +75,36 @@ export default class employeelist extends Component {
                      previouspagelink: "",
                      searchcompany: "",
                      kpidata: "",
+                     options: "",
+                     amount: "",
+                     currentid: "",
                    };
                  }
+                 transaction = () => {
+                   this.setState({walletdialog:false})
+                   var myHeaders = new Headers();
+                   myHeaders.append("Authorization", token);
 
+                   var requestOptions = {
+                     method: "POST",
+                     headers: myHeaders,
+                     redirect: "follow",
+                   };
+
+                   fetch(
+                     "http://3.22.17.212:9000/walletAdminTrx?ontracId=" +
+                       this.state.currentid +
+                       "&type=" +
+                       this.state.options +
+                       "&amount=" +
+                       this.state.amount +
+                       "&description=AdminTransaction",
+                     requestOptions
+                   )
+                     .then((response) => response.text())
+                     .then((result) => console.log(result))
+                     .catch((error) => console.log("error", error));
+                 };
                  async getemployerlist() {
                    await axios
                      .get(
@@ -184,28 +215,34 @@ export default class employeelist extends Component {
                      .post(
                        "http://3.22.17.212:9000/changeAccountStatus?ontracId=" +
                          ontracid +
-                         "&status=ACTIVATE","",
+                         "&status=ACTIVATE",
+                       "",
                        {
                          headers: {
                            Authorization: token,
                          },
                        }
                      )
-                     .then((res) => {this.getemployerlist()});
+                     .then((res) => {
+                       this.getemployerlist();
+                     });
                  };
                  Employerdeactive = async (ontracid) => {
                    await axios
                      .post(
                        "http://3.22.17.212:9000/changeAccountStatus?ontracId=" +
                          ontracid +
-                         "&status=DEACTIVATE","",
+                         "&status=DEACTIVATE",
+                       "",
                        {
                          headers: {
                            Authorization: token,
                          },
                        }
                      )
-                     .then((res) => {this.getemployerlist();});
+                     .then((res) => {
+                       this.getemployerlist();
+                     });
                  };
                  render() {
                    return (
@@ -280,7 +317,26 @@ export default class employeelist extends Component {
                                        });
                                      }}
                                    >
-                                     View Details
+                                     <VisibilityOutlinedIcon />
+                                   </Button>
+                                 ),
+                               },
+                               {
+                                 title: "Wallet",
+                                 editable: "never",
+                                 cellStyle: { padding: "3px" },
+                                 size: "small",
+                                 render: (rowData) => (
+                                   <Button
+                                     color="primary"
+                                     onClick={() => {
+                                       this.setState({
+                                         walletdialog: true,
+                                         currentid: rowData.ontrac_id_field,
+                                       });
+                                     }}
+                                   >
+                                     <AccountBalanceWalletOutlinedIcon />
                                    </Button>
                                  ),
                                },
@@ -299,7 +355,7 @@ export default class employeelist extends Component {
                                          );
                                        }}
                                      >
-                                       Active
+                                       <AddCircleOutlineIcon />
                                      </Button>
                                    ) : rowData.approvedFlag === "Approved" ||
                                      rowData.approvedFlag ===
@@ -314,7 +370,7 @@ export default class employeelist extends Component {
                                            );
                                          }}
                                        >
-                                         Deactivate
+                                         <NotInterestedOutlinedIcon />
                                        </Button>
                                      </>
                                    ) : null,
@@ -519,6 +575,84 @@ export default class employeelist extends Component {
                                      </Grid>
                                    </Grid>
                                  </Card>
+                               </Grid>
+                             </Grid>
+                           </Box>
+                         </Dialog>
+                       }
+                       {
+                         <Dialog
+                           open={this.state.walletdialog}
+                           fullWidth={"sm"}
+                           maxWidth={"sm"}
+                           onClose={() =>
+                             this.setState({
+                               walletdialog: false,
+                             })
+                           }
+                           aria-labelledby="form-dialog-title"
+                         >
+                           <DialogTitle id="form-dialog-title" align="center">
+                             Credit/Debit money to this wallet
+                           </DialogTitle>
+                           <DialogContent>
+                             <DialogContentText align="center">
+                               {/* Enter the details of your profile to be updated */}
+                             </DialogContentText>
+                           </DialogContent>
+                           <Box px={5} m={1}>
+                             <Grid
+                               container
+                               direction="row"
+                               justify="center"
+                               alignItems="center"
+                               spacing={3}
+                             >
+                               <Grid item fullWidth xs={8}>
+                                 <FormControl fullWidth>
+                                   <InputLabel htmlFor="age-native-simple">
+                                     Choose your action
+                                   </InputLabel>
+                                   <Select
+                                     labelId="demo-simple-select-label"
+                                     id="demo-simple-select"
+                                     value={this.state.options}
+                                     onChange={(e) =>
+                                       this.setState({
+                                         options: e.target.value,
+                                       })
+                                     }
+                                   >
+                                     <MenuItem value={"CREDIT"}>
+                                       Credit
+                                     </MenuItem>
+                                     <MenuItem value={"DEBIT"}>Debit</MenuItem>
+                                   </Select>
+                                 </FormControl>
+                               </Grid>
+                               <Grid item fullWidth xs={8}>
+                                 <FormControl fullWidth>
+                                   <TextField
+                                     id="standard-basic"
+                                     label="Add amount"
+                                     onChange={(e) => {
+                                       this.setState({
+                                         amount: e.target.value,
+                                       });
+                                     }}
+                                   ></TextField>
+                                 </FormControl>
+                               </Grid>
+                               <Grid item fullWidth xs={8} align="center">
+                                 <Button
+                                   variant="outlined"
+                                   color="primary"
+                                   onClick={() => {
+                                     this.transaction();
+                                   }}
+                                 >
+                                   Credit/Debit
+                                 </Button>
                                </Grid>
                              </Grid>
                            </Box>
