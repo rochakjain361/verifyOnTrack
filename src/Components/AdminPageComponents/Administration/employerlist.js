@@ -59,6 +59,7 @@ import GradientButton from "../../GradientButton";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import NotInterestedOutlinedIcon from "@material-ui/icons/NotInterestedOutlined";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import AccountBalanceWalletOutlinedIcon from "@material-ui/icons/AccountBalanceWalletOutlined";
 let token = "";
 let categoriesdata = {};
 const tableIcons = {
@@ -129,8 +130,34 @@ export default class employerlist extends Component {
       signupemail: false,
       signupusername: false,
       categoriesdata: [],
+      options: "",
+      amount:"",
+      currentid:""
     };
     this.addemployer = this.addemployer.bind(this);
+  }
+  transaction=()=>{
+    this.setState({ walletdialog: false });
+    var myHeaders = new Headers();
+    myHeaders.append(
+      "Authorization",
+      token
+    );
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(
+      "http://3.22.17.212:9000/walletAdminTrx?ontracId="+this.state.currentid+"&type="+this.state.options+"&amount="+this.state.amount+"&description=AdminTransaction",
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+
   }
 
   validatefirstname = (firstname1) => {
@@ -277,33 +304,33 @@ export default class employerlist extends Component {
       });
   }
   async updaterow(newData) {
-      var myHeaders = new Headers();
-      myHeaders.append("Authorization", token);
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", token);
 
-      var formdata = new FormData();
-      formdata.append("phone", newData.phone);
-      formdata.append("email", newData.email);
-      formdata.append("fax", newData.fax);
-      formdata.append("logo", newData.logo);
-      formdata.append("category", newData.category);
-      formdata.append("regNum", newData.regNum);
-      formdata.append("regDate", newData.regDate);
+    var formdata = new FormData();
+    formdata.append("phone", newData.phone);
+    formdata.append("email", newData.email);
+    formdata.append("fax", newData.fax);
+    formdata.append("logo", newData.logo);
+    formdata.append("category", newData.category);
+    formdata.append("regNum", newData.regNum);
+    formdata.append("regDate", newData.regDate);
 
-      var requestOptions = {
-        method: "PUT",
-        headers: myHeaders,
-        body: formdata,
-        redirect: "follow",
-      };
+    var requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
 
     fetch(
-        "http://3.22.17.212:9000/updateComapnyDetailsAdmin?ontracid=" +
-          newData.ontrac_id_field,
-        requestOptions
-      )
-        .then((response) => this.getemployerlist())
-        .then((result) => console.log("result", result))
-        .catch((error) => console.log("error", error));
+      "http://3.22.17.212:9000/updateComapnyDetailsAdmin?ontracid=" +
+        newData.ontrac_id_field,
+      requestOptions
+    )
+      .then((response) => this.getemployerlist())
+      .then((result) => console.log("result", result))
+      .catch((error) => console.log("error", error));
   }
   async fetchkpidata(companyName) {
     await axios
@@ -573,7 +600,26 @@ export default class employerlist extends Component {
                         });
                       }}
                     >
-                      <VisibilityOutlinedIcon color="white" />
+                      <VisibilityOutlinedIcon />
+                    </Button>
+                  ),
+                },
+                {
+                  title: "Wallet",
+                  editable: "never",
+                  cellStyle: { padding: "3px" },
+                  size: "small",
+                  render: (rowData) => (
+                    <Button
+                      color="primary"
+                      onClick={() => {
+                        this.setState({
+                          walletdialog: true,
+                          currentid: rowData.ontrac_id_field,
+                        });
+                      }}
+                    >
+                      <AccountBalanceWalletOutlinedIcon />
                     </Button>
                   ),
                 },
@@ -871,6 +917,80 @@ export default class employerlist extends Component {
               </Box>
             </Dialog>
           }
+
+          {
+            <Dialog
+              open={this.state.walletdialog}
+              fullWidth={"sm"}
+              maxWidth={"sm"}
+              onClose={() =>
+                this.setState({
+                  walletdialog: false,
+                })
+              }
+              aria-labelledby="form-dialog-title"
+            >
+              <DialogTitle id="form-dialog-title" align="center">
+                Credit/Debit money to this wallet
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText align="center">
+                  {/* Enter the details of your profile to be updated */}
+                </DialogContentText>
+              </DialogContent>
+              <Box px={5} m={1}>
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                  spacing={3}
+                >
+                  <Grid item fullWidth xs={8}>
+                    <FormControl fullWidth>
+                      <InputLabel htmlFor="age-native-simple">
+                        Choose your action
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={this.state.options}
+                        onChange={(e) =>
+                          this.setState({ options: e.target.value })
+                        }
+                      >
+                        <MenuItem value={"CREDIT"}>Credit</MenuItem>
+                        <MenuItem value={"DEBIT"}>Debit</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item fullWidth xs={8}>
+                    <FormControl fullWidth>
+                      <TextField
+                        id="standard-basic"
+                        label="Add amount"
+                        onChange={(e) => {
+                          this.setState({ amount: e.target.value });
+                        }}
+                      ></TextField>
+                    </FormControl>
+                  </Grid>
+                  <Grid item fullWidth xs={8} align="center">
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => {
+                        this.transaction();
+                      }}
+                    >
+                      Credit/Debit
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Dialog>
+          }
+
           {
             <Dialog
               open={this.state.addemployerdialog}

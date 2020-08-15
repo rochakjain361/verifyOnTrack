@@ -28,7 +28,7 @@ class signIn extends Component {
     this._reCaptchaRef = React.createRef();
     this.onSignInButtonPress = this.onSignInButtonPress.bind(this);
   }
-  
+
   state = {
     username: "",
     password: "",
@@ -36,71 +36,72 @@ class signIn extends Component {
     passwordvalid: false,
     submitDisabled: "disabled",
     warning: false,
+    accountdeactivated: false,
+
     response: "",
-    captha:"",
-    capthavalid:false,
+    captha: "",
+    capthavalid: false,
   };
   UserGreeting(props) {
     return <h1>Welcome back!</h1>;
   }
   usernamecheck = (event) => {
-    this.setState(
-      { username: event.target.value })
-    console.log(this.state.username)
+    this.setState({ username: event.target.value });
+    console.log(this.state.username);
     if (event.target.value.length === 0) {
       //  console.log(event.target.value);
-      this.setState({ usernamevalid: true },);
-
+      this.setState({ usernamevalid: true });
     } else {
-      this.setState({ usernamevalid: false },);
+      this.setState({ usernamevalid: false });
     }
-  }
+  };
   passwordcheck = (event) => {
     if (event.target.value.length === 0) {
       //  console.log(event.target.value);
-      this.setState({ passwordvalid: true },);
+      this.setState({ passwordvalid: true });
+    } else {
+      this.setState({ passwordvalid: false });
     }
-    else {
-      this.setState({ passwordvalid: false },);
-    }
-  }
+  };
 
   formvalid() {
-    console.log("username", this.state.username)
+    console.log("username", this.state.username);
     if (this.state.username.length > 0) {
       //  console.log(event.target.value);
-      this.setState({ usernamevalid: false },);
+      this.setState({ usernamevalid: false });
     } else {
-      this.setState({ usernamevalid: true },);
+      this.setState({ usernamevalid: true });
     }
     if (this.state.password.length > 0) {
       //  console.log(event.target.value);
-      this.setState({ passwordvalid: false },);
+      this.setState({ passwordvalid: false });
+    } else {
+      this.setState({ passwordvalid: true });
     }
-    else {
-      this.setState({ passwordvalid: true },);
+    if (this.state.captha === "") {
+      console.log("captha", this.state.captha);
+      this.setState({ capthavalid: false });
+    } else {
+      this.setState({ capthavalid: true });
     }
-    if(this.state.captha===""){
-      console.log("captha",this.state.captha)
-      this.setState({capthavalid:false})
-    }else{
-      this.setState({capthavalid:true})
+    if (
+      !this.state.usernamevalid &&
+      !this.state.passwordvalid &&
+      this.state.capthavalid
+    ) {
+      this.onSignInButtonPress();
     }
-    if (!this.state.usernamevalid && !this.state.passwordvalid&&this.state.capthavalid){
-      this.onSignInButtonPress()
-    }
-  };
-  handleChange = value => {
+  }
+  handleChange = (value) => {
     console.log("Captcha value:", value);
-    this.setState({captha:value,capthavalid:true})
+    this.setState({ captha: value, capthavalid: true });
 
     if (value === null) this.setState({ expired: "true" });
   };
 
   render() {
-    
     const { classes } = this.props;
-   
+
     return (
       <Grid container direction="row" className={classes.root} justify="center">
         <Grid container align="center" direction="row" justify="center">
@@ -149,6 +150,11 @@ class signIn extends Component {
                 >
                   {this.state.warning ? (
                     <Alert severity="error">Wrong username or password</Alert>
+                  ) : null}
+                  {this.state.accountdeactivated ? (
+                    <Alert severity="error">
+                      Your Account has been deactivated please contact the admin
+                    </Alert>
                   ) : null}
 
                   <Grid item xs={12} md={12}>
@@ -238,11 +244,9 @@ class signIn extends Component {
                         onClick={() => this.formvalid()}
                         title={"SignIn"}
                         center
-                       
                         style={{
                           marginTop: 16,
                           marginBottom: 16,
-                         
                         }}
                         fullWidth
                       />
@@ -275,10 +279,9 @@ class signIn extends Component {
   }
 
   async onSignInButtonPress() {
-
- 
     try {
-       let apiEndpoint = "http://"+window.$IP+":9000/api/v1/accounts/auth/login";
+      let apiEndpoint =
+        "http://" + window.$IP + ":9000/api/v1/accounts/auth/login";
 
       var requestBody = {
         username: this.state.username,
@@ -300,9 +303,9 @@ class signIn extends Component {
 
       if (data.token) {
         // localStorage.setItem("Token", data.token);
-        localStorage.setItem("Token","Token "+data.token);
+        localStorage.setItem("Token", "Token " + data.token);
         localStorage.setItem("id", data.user.id);
-       
+
         localStorage.setItem(
           "name",
           data.user.firstname,
@@ -317,32 +320,38 @@ class signIn extends Component {
             pathname: "/admindashboard",
           });
         } else if (data.user.is_employer) {
-          console.log("accountStatus", data.user.accountStatus)
-          if (data.user.accountStatus === "Approved") {
-          this.props.history.push({
-            pathname: "/employerDashboard",
-          });
-        }else{
-          this.props.history.push({
-            pathname: "/employerworkflow",
-            state: { detail: data }
-          });
-
-        }
+          console.log("accountStatus", data.user.accountStatus);
+          if (
+            data.user.accountStatus === "Approved" ||
+            data.user.accountStatus === "Account Reactivated"
+          ) {
+            this.props.history.push({
+              pathname: "/employerDashboard",
+            });
+          } else if (data.user.accountStatus === "Profile In Progress") {
+            this.props.history.push({
+              pathname: "/employerworkflow",
+              state: { detail: data },
+            });
+          }
         } else {
-          if (data.user.accountStatus === "Approved") {
-            console.log("accountStatus", data.user.accountStatus)
+          if (
+            data.user.accountStatus === "Approved" ||
+            data.user.accountStatus === "Account Reactivated"
+          ) {
+            console.log("accountStatus", data.user.accountStatus);
             this.props.history.push({
               pathname: "/dashboard",
             });
-          } else {
-             localStorage.setItem("ontrac_id", data.user.ontrac_id);
-            console.log("accountStatus", data.user.accountStatus)
+          } else if (data.user.accountStatus === "Profile In Progress") {
+            localStorage.setItem("ontrac_id", data.user.ontrac_id);
+            console.log("accountStatus", data.user.accountStatus);
             this.props.history.push({
               pathname: "/workflow",
-              state: { detail: data }
+              state: { detail: data },
             });
-
+          } else if (data.user.accountStatus === "Account Deactivated") {
+            this.setState({ accountdeactivated: true });
           }
         }
       } else {
