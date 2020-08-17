@@ -25,6 +25,11 @@ import {
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import { get, update, post } from "../../../API";
+import docx from "../../../icons/docx.png"
+import pdf from "../../../icons/pdf.jpg"
+import ppt from "../../../icons/ppt.png"
+import xcel from "../../../icons/xcel.png"
+import file from "../../../icons/file.png"
 import axios from "axios";
 let id = "";
 let token="";
@@ -832,18 +837,58 @@ export class index extends Component {
                      >
                        {this.state.pictureloading
                          ? this.loading()
-                         : pictures.map((pic, index) => (
-                             <GridListTile key={pic.id} cols={1}>
-                               <img src={pic.picture} />
+                         : pictures.map((pic, index) => {
+                          var ext = pic.picture.split('.').pop();
+                          if(ext.indexOf('jpg') != -1 || ext.indexOf('jpeg') != -1 || ext.indexOf('gif') != -1 || ext.indexOf('png') != -1 || ext.indexOf('apng') != -1 || ext.indexOf('svg') != -1 || ext.indexOf('bmp') != -1){
+                            return(
+                              <GridListTile key={pic.id} cols={1}>
+                               <img src={pic.picture} onClick={() => window.open(pic.picture, '_blank')}/>
                              </GridListTile>
-
+                            )
+                          }
+                          else if(ext.indexOf('docx') != -1 || ext.indexOf('doc') != -1|| ext.indexOf('docm') != -1 || ext.indexOf('dot') != -1 || ext.indexOf('dotm') != -1 || ext.indexOf('dotx') != -1 || ext.indexOf('odt') != -1 || ext.indexOf('.txt') != -1){
+                            return(
+                              <GridListTile key={pic.id} cols={1}>
+                               <img src={docx} onClick={() => window.open(pic.picture, '_blank')}/>
+                             </GridListTile>
+                             )
+                          }
+                          else if(ext.indexOf('pdf') != -1 || ext.indexOf('rtf') != -1 || ext.indexOf('xml') != -1 || ext.indexOf('wps') != -1 || ext.indexOf('xps') != -1){
+                            return(
+                              <GridListTile key={pic.id} cols={1}>
+                               <img src={pdf} onClick={() => window.open(pic.picture, '_blank')}/>
+                             </GridListTile>
+                             )
+                          }
+                          else if(ext.indexOf('csv') != -1 || ext.indexOf('xls') != -1 || ext.indexOf('xlsb') != -1 || ext.indexOf('xlsm') != -1 || ext.indexOf('xlsx') != -1 || ext.indexOf('xlt') != -1 || ext.indexOf('xltx') != -1){
+                            return(
+                              <GridListTile key={pic.id} cols={1}>
+                               <img src={xcel} onClick={() => window.open(pic.picture, '_blank')}/>
+                             </GridListTile>
+                             )
+                          }
+                          else if (ext.indexOf('ppt') != -1 || ext.indexOf('pptx') != -1 || ext.indexOf('ppsx') != -1){
+                            return(
+                              <GridListTile key={pic.id} cols={1}>
+                               <img src={ppt} onClick={() => window.open(pic.picture, '_blank')}/>
+                             </GridListTile>
+                             )
+                          }
+                          else{
+                            return(
+                              <GridListTile key={pic.id} cols={1}>
+                               <img src={file} onClick={() => window.open(pic.picture, '_blank')}/>
+                             </GridListTile>
+                             )
+                          }
+                          } 
                              // <Grid container>
                              //     <Grid item xs={12}>
                              // <image src={pic.picture}/>
                              //       {/* {pic.picture} */}
                              //     </Grid>
                              //   </Grid>
-                           ))}{" "}
+                           )}{" "}
                      </GridList>
                    </Grid>
                  </DialogContent>
