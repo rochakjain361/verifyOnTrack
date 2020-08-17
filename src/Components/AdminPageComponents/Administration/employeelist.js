@@ -392,7 +392,7 @@ export default class employeelist extends Component {
                                sorting: true,
                                paging: false,
                                search: false,
-                               // grouping: true,
+                               grouping: true,
                              }}
                            />
                          )}

@@ -686,7 +686,7 @@ export default class employerlist extends Component {
                 search: false,
                 cellStyle: { padding: "0.3em" },
                 headerStyle: { padding: "0.3em" },
-                // grouping: true,
+                grouping: true,
               }}
             />
           )}
