@@ -139,7 +139,7 @@ class index extends Component {
           </Grid>
           <Grid item xs={5}>
             <Typography variant="h6" display="block">
-              Employer ontrac id
+              Acess Code
             </Typography>
           </Grid>
         </Grid>

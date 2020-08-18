@@ -107,7 +107,7 @@ class index extends Component {
                   {profile.employee_email_field}
                 </Typography>
                 <Typography variant="body2">
-                  {ontracid}
+                  {profile.ontrac_id}
                 </Typography>
               </Grid>
               {/* <DashButtons /> */}

@@ -39,52 +39,56 @@ export class index extends Component {
   }
 
   async componentDidMount() {
-    Token = localStorage.getItem("Token");
+                              // window.location.reload(false);
+                              Token = localStorage.getItem("Token");
 
-    await axios
-      .get("http://3.22.17.212:9000/wallet/getBalance", {
-        headers: {
-          Authorization: Token,
-        },
-      })
-      .then((response) => {
-        this.setState({
-          Balance: response.data[0].balance,
-          walletstatus: response.status,
-        });
-      });
-    let today = new Date();
-    let dd = today.getDate();
+                              await axios
+                                .get(
+                                  "http://3.22.17.212:9000/wallet/getBalance",
+                                  {
+                                    headers: {
+                                      Authorization: Token,
+                                    },
+                                  }
+                                )
+                                .then((response) => {
+                                  this.setState({
+                                    Balance: response.data[0].balance,
+                                    walletstatus: response.status,
+                                  });
+                                });
+                              let today = new Date();
+                              let dd = today.getDate();
 
-    let mm = today.getMonth() + 1;
-    let yyyy = today.getFullYear();
-    if (dd < 10) {
-      dd = "0" + dd;
-    }
+                              let mm = today.getMonth() + 1;
+                              let yyyy = today.getFullYear();
+                              if (dd < 10) {
+                                dd = "0" + dd;
+                              }
 
-    if (mm < 10) {
-      mm = "0" + mm;
-    }
-    await axios
-      .get(
-        "http://3.22.17.212:9000/wallet/accTransactions?sdate=2020-01-01&edate=" +
-          yyyy +
-          "-" +
-          mm +
-          "-" +
-          dd,
-        {
-          headers: {
-            Authorization: Token,
-          },
-        }
-      )
-      .then((response) => {
-        this.setState({
-          Transaction:response.data
-        });
-      });
-  }
+                              if (mm < 10) {
+                                mm = "0" + mm;
+                              }
+                              await axios
+                                .get(
+                                  "http://3.22.17.212:9000/wallet/accTransactions?sdate=2020-01-01&edate=" +
+                                    yyyy +
+                                    "-" +
+                                    mm +
+                                    "-" +
+                                    dd,
+                                  {
+                                    headers: {
+                                      Authorization: Token,
+                                    },
+                                  }
+                                )
+                                .then((response) => {
+                                  this.setState({
+                                    Transaction: response.data,
+                                  });
+                                });
+                            }
 
   render() {
     return (

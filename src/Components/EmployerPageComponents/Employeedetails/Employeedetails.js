@@ -554,6 +554,9 @@ export class Employeedetails extends Component {
                   <Typography variant="h5">
                     {this.state.result.phone}
                   </Typography>
+                  <Typography variant="h5">
+                    {this.state.result.ontrac_id}
+                  </Typography>
                 </Grid>
               </Grid>
             </Paper>
@@ -608,11 +611,10 @@ export class Employeedetails extends Component {
                     <TableCell align="center">
                       {this.state.result.regNum}
                     </TableCell>
-                    
 
-                    <TableCell  align="center">
-                    {new Date(this.state.result.regDate).toDateString()}
-                  </TableCell>
+                    <TableCell align="center">
+                      {new Date(this.state.result.regDate).toDateString()}
+                    </TableCell>
                     <TableCell align="center">
                       <Button
                         color="primary"
