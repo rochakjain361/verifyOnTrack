@@ -106,7 +106,7 @@ class index extends Component {
         );
     }
 
-    async fetchAdminList() {
+     async fetchAdminList() {
         let response = await fetch(api + "/api/v1/accounts/admins",
             {
                 headers: {
@@ -783,27 +783,35 @@ class index extends Component {
 
     viewDialogBox() {
         return (
-            <Dialog
-                open={this.state.viewDialog}
-                onClose={() => this.setState({ viewDialog: false })}
-                aria-labelledby="form-dialog-title"
+          <Dialog
+            open={this.state.viewDialog}
+            onClose={() => this.setState({ viewDialog: false })}
+            aria-labelledby="form-dialog-title"
             // style={{ minWidth: 600 }}
-            >
-                <DialogTitle id="form-dialog-title" align='center'>
-                    View and approve
+          >
+            <DialogTitle id="form-dialog-title" align="center">
+              View and approve
             </DialogTitle>
-                <DialogContent>
-                    {this.state.isEmployerCondition? (
-                        <ViewEmployerPageComponents user={this.state.userID} approval={this.state.approvalCode} viewId={this.state.viewId} />
-                    ):(
-                        <ViewPagesComponent user={this.state.userID} approval={this.state.approvalCode} viewId={this.state.viewId} />
-                    )}
-                    
-                </DialogContent>
+            <DialogContent>
+              {this.state.isEmployerCondition ? (
+                <ViewEmployerPageComponents
+                  user={this.state.userID}
+                  approval={this.state.approvalCode}
+                  viewId={this.state.viewId}
+                  fetchapproval={this.fetchPendingApprovalRequests}
+                  />
+                  ) : (
+                      <ViewPagesComponent
+                      user={this.state.userID}
+                      approval={this.state.approvalCode}
+                      viewId={this.state.viewId}
+                      fetchapproval={this.fetchPendingApprovalRequests}
+                />
+              )}
+            </DialogContent>
 
-                <DialogActions style={{ padding: 15 }}>
-                </DialogActions>
-            </Dialog>
+            <DialogActions style={{ padding: 15 }}></DialogActions>
+          </Dialog>
         );
     }
 

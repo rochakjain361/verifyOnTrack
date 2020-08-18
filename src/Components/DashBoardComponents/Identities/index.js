@@ -80,8 +80,13 @@ class Identities extends Component {
       amount: "",
       debitresponse: "",
       currentid: "",
+<<<<<<< HEAD
       pictureSnackbarOpen: false,
       pictureSnackbarError: false,
+=======
+      uploadsnackbar: false,
+      uploadresponse: "",
+>>>>>>> origin/master
     };
     // this.updateidentites= this.updateidentites.bind();
   }
@@ -135,8 +140,6 @@ class Identities extends Component {
   updatesnackbar() {
     return this.state.updateresponse === 200 ? (
       <div>
-        {console.log("//////////////////////////////////////")}
-
         <Snackbar
           open={this.state.updatesnackbar}
           autoHideDuration={3000}
@@ -313,7 +316,6 @@ class Identities extends Component {
     return (
       <div>
         {this.state.loading ? this.isloading() : this.getTableOfEmployees()}
-
         <Dialog
           //  fullWidth={"sm"}
           //  maxWidth={"sm"}
@@ -367,6 +369,7 @@ class Identities extends Component {
             </Button>
           </DialogActions>
         </Dialog>
+<<<<<<< HEAD
         <Dialog
           open={this.state.uploadDialougeOpen}
           onClose={() =>{
@@ -386,6 +389,26 @@ class Identities extends Component {
             </Grid>
             <Box p={1}>
               <Grid container direction="column-reverse" alignItems="flex-end">
+=======
+        {
+          <Dialog
+            open={this.state.uploadDialougeOpen}
+            onClose={() => this.setState({ uploadDialougeOpen: false })}
+            aria-labelledby="form-dialog-title"
+          >
+            <DialogTitle id="form-dialog-title">choose your file</DialogTitle>
+            <DialogContent>
+              <Grid container p={1}>
+                <TextField
+                  type="file"
+                  onChange={(event) => {
+                    this.setState({ uploadpictures: event.target.files[0] });
+                  }}
+                ></TextField>
+              </Grid>
+
+              <DialogActions style={{ padding: 15 }}>
+>>>>>>> origin/master
                 <Button
                   color="primary"
                   variant="contained"
@@ -404,6 +427,7 @@ class Identities extends Component {
                 >
                   upload
                 </Button>
+<<<<<<< HEAD
                 <Snackbar open={this.state.pictureSnackbarOpen} autoHideDuration={2000} onClose={(event, reason) => {
                 if(reason === "clickaway"){
                   return;
@@ -448,6 +472,24 @@ class Identities extends Component {
             </Box>
           </DialogContent>
         </Dialog>
+=======
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() =>
+                    this.setState({
+                      uploadDialougeOpen: false,
+                      selectedIndex: -1,
+                    })
+                  }
+                >
+                  Close
+                </Button>
+              </DialogActions>
+            </DialogContent>
+          </Dialog>
+        }
+>>>>>>> origin/master
         {this.updatesnackbar()}
         {
           <Dialog
@@ -480,7 +522,6 @@ class Identities extends Component {
                 onClick={() =>
                   this.setState({
                     walletdialog: false,
-                    
                   })
                 }
               >
@@ -701,8 +742,13 @@ class Identities extends Component {
       )
       .then((response) => {
         console.log(response);
+        this.setState({
+          uploadresponse: response.status,
+          uploadsnackbar: true,
+        });
+        response.status===200?
+        alert("Your image has been uploaded succesfully"):alert("Something went wrong please try again")
       });
-    await this.getidentites();
   }
   async getamount() {
     await axios
@@ -733,7 +779,7 @@ class Identities extends Component {
       )
       .then((response) => {
         if (response.status === 200) {
-          this.verification()
+          this.verification();
         }
       });
   }
@@ -755,8 +801,7 @@ class Identities extends Component {
         headers
       )
       .then((res) => {
-
-         window.location.reload(false);
+        window.location.reload(false);
       });
   }
 
