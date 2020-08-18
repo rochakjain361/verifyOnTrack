@@ -82,6 +82,8 @@ class Identities extends Component {
       currentid: "",
       uploadsnackbar: false,
       uploadresponse: "",
+      pictureSnackbarOpen: false,
+      pictureSnackbarError: false,
     };
     // this.updateidentites= this.updateidentites.bind();
   }
@@ -400,6 +402,46 @@ class Identities extends Component {
                 >
                   upload
                 </Button>
+                <Snackbar open={this.state.pictureSnackbarOpen} autoHideDuration={2000} onClose={(event, reason) => {
+                if(reason === "clickaway"){
+                  return;
+                }
+                this.setState({
+                  pictureSnackbarOpen: false,
+                  uploadDialougeOpen: false
+                })
+              }}>
+                <Alert onClose={(event, reason) => {
+                if(reason === "clickaway"){
+                  return;
+                }
+                this.setState({
+                  pictureSnackbarOpen: false,
+                  uploadDialougeOpen: false
+                })
+              }} severity="success">
+                File Uploaded Successfully
+                </Alert>
+              </Snackbar>
+              <Snackbar open={this.state.pictureSnackbarError} autoHideDuration={1500} onClose={(event, reason) => {
+                if(reason === "clickaway"){
+                  return;
+                }
+                this.setState({
+                  pictureSnackbarError: false,
+                })
+              }}>
+                <Alert onClose={(event, reason) => {
+                if(reason === "clickaway"){
+                  return;
+                }
+                this.setState({
+                  pictureSnackbarError: false,
+                })
+              }} severity="warning">
+                Upload a File first
+                </Alert>
+              </Snackbar>
                 <Button
                   variant="contained"
                   color="secondary"
