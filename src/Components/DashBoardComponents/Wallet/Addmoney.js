@@ -11,10 +11,13 @@ import {
 } from "@material-ui/core";
 import { PaystackButton } from "react-paystack";
 import axios from "axios";
+import { Redirect, useHistory } from "react-router-dom";
+
 let token = "";
 let publicKey = "pk_test_7546b591c13199a3f624c0d46017a9c5cad9a1a6";
 
-export default function Addmoney() {
+export default function Addmoney(props) {
+   let history = useHistory();
   const [amount, setAmount] = useState(0);
   const [amount1, setAmount1] = useState("");
 
@@ -40,6 +43,11 @@ export default function Addmoney() {
     },
     onClose: () => alert("Are you sure you want to cancel this transaction,"),
   };
+   const route = async () => {
+    
+    history.push("/employeePayments");
+    
+   }
 
   useEffect(() => {
     setToken(localStorage.getItem("Token"));
@@ -194,7 +202,9 @@ export default function Addmoney() {
                           .then((res) => {
                             console.log(res);
                             setLoading(false);
+                            route();
                             window.location.reload(false);
+                           
                           });
                       }}
                     />
