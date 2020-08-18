@@ -80,13 +80,8 @@ class Identities extends Component {
       amount: "",
       debitresponse: "",
       currentid: "",
-<<<<<<< HEAD
-      pictureSnackbarOpen: false,
-      pictureSnackbarError: false,
-=======
       uploadsnackbar: false,
       uploadresponse: "",
->>>>>>> origin/master
     };
     // this.updateidentites= this.updateidentites.bind();
   }
@@ -369,27 +364,6 @@ class Identities extends Component {
             </Button>
           </DialogActions>
         </Dialog>
-<<<<<<< HEAD
-        <Dialog
-          open={this.state.uploadDialougeOpen}
-          onClose={() =>{
-            this.setState({ uploadDialougeOpen: false })
-          }}
-          aria-labelledby="form-dialog-title"
-        >
-          <DialogTitle id="form-dialog-title">choose your file</DialogTitle>
-          <DialogContent>
-            <Grid container p={1}>
-              <TextField
-                type="file"
-                onChange={(event) => {
-                  this.setState({ uploadpictures: event.target.files[0] });
-                }}
-              ></TextField>
-            </Grid>
-            <Box p={1}>
-              <Grid container direction="column-reverse" alignItems="flex-end">
-=======
         {
           <Dialog
             open={this.state.uploadDialougeOpen}
@@ -408,7 +382,6 @@ class Identities extends Component {
               </Grid>
 
               <DialogActions style={{ padding: 15 }}>
->>>>>>> origin/master
                 <Button
                   color="primary"
                   variant="contained"
@@ -427,52 +400,6 @@ class Identities extends Component {
                 >
                   upload
                 </Button>
-<<<<<<< HEAD
-                <Snackbar open={this.state.pictureSnackbarOpen} autoHideDuration={2000} onClose={(event, reason) => {
-                if(reason === "clickaway"){
-                  return;
-                }
-                this.setState({
-                  pictureSnackbarOpen: false,
-                  uploadDialougeOpen: false
-                })
-              }}>
-                <Alert onClose={(event, reason) => {
-                if(reason === "clickaway"){
-                  return;
-                }
-                this.setState({
-                  pictureSnackbarOpen: false,
-                  uploadDialougeOpen: false
-                })
-              }} severity="success">
-                File Uploaded Successfully
-                </Alert>
-              </Snackbar>
-              <Snackbar open={this.state.pictureSnackbarError} autoHideDuration={1500} onClose={(event, reason) => {
-                if(reason === "clickaway"){
-                  return;
-                }
-                this.setState({
-                  pictureSnackbarError: false,
-                })
-              }}>
-                <Alert onClose={(event, reason) => {
-                if(reason === "clickaway"){
-                  return;
-                }
-                this.setState({
-                  pictureSnackbarError: false,
-                })
-              }} severity="warning">
-                Upload a File first
-                </Alert>
-              </Snackbar>
-              </Grid>
-            </Box>
-          </DialogContent>
-        </Dialog>
-=======
                 <Button
                   variant="contained"
                   color="secondary"
@@ -489,7 +416,6 @@ class Identities extends Component {
             </DialogContent>
           </Dialog>
         }
->>>>>>> origin/master
         {this.updatesnackbar()}
         {
           <Dialog
