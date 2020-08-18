@@ -80,6 +80,8 @@ class Identities extends Component {
       amount: "",
       debitresponse: "",
       currentid: "",
+      pictureSnackbarOpen: false,
+      pictureSnackbarError: false,
     };
     // this.updateidentites= this.updateidentites.bind();
   }
@@ -367,7 +369,9 @@ class Identities extends Component {
         </Dialog>
         <Dialog
           open={this.state.uploadDialougeOpen}
-          onClose={() => this.setState({ uploadDialougeOpen: false })}
+          onClose={() =>{
+            this.setState({ uploadDialougeOpen: false })
+          }}
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle id="form-dialog-title">choose your file</DialogTitle>
@@ -386,11 +390,60 @@ class Identities extends Component {
                   color="primary"
                   variant="contained"
                   onClick={() => {
-                    this.postpictures(this.state.pictureid);
+                    if(this.state.uploadpictures == ""){
+                      this.setState({ pictureSnackbarError: true})
+                    }
+                    else{
+                      this.setState({ pictureSnackbarOpen: true})
+                      this.postpictures(this.state.pictureid);
+                    }
+                    this.setState({
+                      uploadpictures: ""
+                    })
                   }}
                 >
                   upload
                 </Button>
+                <Snackbar open={this.state.pictureSnackbarOpen} autoHideDuration={2000} onClose={(event, reason) => {
+                if(reason === "clickaway"){
+                  return;
+                }
+                this.setState({
+                  pictureSnackbarOpen: false,
+                  uploadDialougeOpen: false
+                })
+              }}>
+                <Alert onClose={(event, reason) => {
+                if(reason === "clickaway"){
+                  return;
+                }
+                this.setState({
+                  pictureSnackbarOpen: false,
+                  uploadDialougeOpen: false
+                })
+              }} severity="success">
+                File Uploaded Successfully
+                </Alert>
+              </Snackbar>
+              <Snackbar open={this.state.pictureSnackbarError} autoHideDuration={1500} onClose={(event, reason) => {
+                if(reason === "clickaway"){
+                  return;
+                }
+                this.setState({
+                  pictureSnackbarError: false,
+                })
+              }}>
+                <Alert onClose={(event, reason) => {
+                if(reason === "clickaway"){
+                  return;
+                }
+                this.setState({
+                  pictureSnackbarError: false,
+                })
+              }} severity="warning">
+                Upload a File first
+                </Alert>
+              </Snackbar>
               </Grid>
             </Box>
           </DialogContent>
@@ -435,7 +488,7 @@ class Identities extends Component {
               </Button>
             </DialogActions>
           </Dialog>
-        }
+          }
         {
           <Dialog
             open={this.state.addDialogOpen}
@@ -630,7 +683,6 @@ class Identities extends Component {
       });
   }
   async postpictures(id) {
-    this.setState({ uploadDialougeOpen: false });
     let headers = {
       headers: {
         Authorization: token,
