@@ -14,6 +14,8 @@
     "apexcharts": "^3.19.2",
     "axios": "^0.19.2",
     "date-fns": "^2.14.0",
+    "formik": "^2.1.5",
+    "formik-material-fields": "0.0.6",
     "google-map-react": "^1.1.7",
     "google-maps-react": "^2.0.6",
     "material-table": "^1.68.0",
@@ -30,10 +32,11 @@
     "react-recaptcha-google": "^1.1.1",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1",
+    "react-scripts": "^3.4.3",
     "react-swipeable-views": "^0.13.9",
     "redux": "^4.0.5",
-    "typeface-roboto": "0.0.75"
+    "typeface-roboto": "0.0.75",
+    "yup": "^0.29.3"
   },
   "scripts": {
     "start": "react-scripts start",
