@@ -341,7 +341,7 @@ class Identities extends Component {
   render() {
     var options = []; 
     this.state.idSource.map((source) => {
-      options.push({label: source.idSource, value: source.idSource})
+      options.push({label: source.idSource, value: source.id})
     })
     console.log(options)
     return (
