@@ -259,7 +259,7 @@ export class index extends Component {
          gettable() {
            var academicOptions = [];
            this.state.types.map((type) => {
-             academicOptions.push({label: type.academicType, value: type.academicType})
+             academicOptions.push({label: type.academicType, value: type.id})
            })
            return (
              <div>

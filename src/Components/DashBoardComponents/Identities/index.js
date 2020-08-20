@@ -1075,6 +1075,7 @@ class Identities extends Component {
                         <FormControl fullWidth>
                         <FormikSelectField
                           name="gender"
+                          labelId=""
                           label="Gender"
                           id="gender"
                           options={[
