@@ -609,6 +609,7 @@ class Identities extends Component {
                   fullWidth
                   onChange={(event) => {
                     this.setState({ dob: event.target.value });
+                    console.log(event.target.value)
                   }}
                   />
                 </Grid>
