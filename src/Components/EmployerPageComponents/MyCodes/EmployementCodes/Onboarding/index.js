@@ -463,248 +463,304 @@ class index extends Component {
         //     };
         // });
         return (
-            <div>
-                <Dialog
-                    open={this.state.generateNewEmployementCodeDialog}
-                    onClose={() => this.setState({
-                        generateNewEmployementCodeDialog: false,
-                        selectedVotId: "",
-                        selectedJobType: "",
-                        jobTitle: "",
-                        startDate: "",
-                        jobDescription: "",
-                        otherConditions: "",
-                        jobSalary: "",
-                        votmatchError: '',
-                        phonematchError: '',
-                        votIdMatchesLength: '',
-                        generateButton: true
-                    })} >
-                    <DialogTitle id="alert-dialog-title">{"New Request"}</DialogTitle>
-                    <DialogContent>
+          <div>
+            <Dialog
+              open={this.state.generateNewEmployementCodeDialog}
+              onClose={() =>
+                this.setState({
+                  generateNewEmployementCodeDialog: false,
+                  selectedVotId: "",
+                  selectedJobType: "",
+                  jobTitle: "",
+                  startDate: "",
+                  jobDescription: "",
+                  otherConditions: "",
+                  jobSalary: "",
+                  votmatchError: "",
+                  phonematchError: "",
+                  votIdMatchesLength: "",
+                  generateButton: true,
+                })
+              }
+            >
+              <DialogTitle id="alert-dialog-title">{"New Request"}</DialogTitle>
+              <DialogContent>
+                <Grid
+                  container
+                  justify="flex-start"
+                  direction="row"
+                  alignItems="center"
+                  spacing={2}
+                  // style={{ padding: 20 }}
+                >
+                  <Grid item xs={12}>
+                    <FormControl component="fieldset">
+                      <FormLabel component="legend">
+                        Search employee by:
+                      </FormLabel>
+                      <RadioGroup
+                        name="searchCategory"
+                        value={this.state.employeeByRadio}
+                        onChange={(event) => {
+                          this.setState({
+                            employeeByRadio: event.target.value,
+                          });
+                          // console.log('Radio:', this.state.employeeByRadio);
+                        }}
+                      >
                         <Grid
-                            container
-                            justify="flex-start"
-                            direction="row"
-                            alignItems="center"
-                            spacing={2}
-                        // style={{ padding: 20 }}
+                          container
+                          direction="row"
+                          style={{ marginTop: 10 }}
                         >
-
-                            <Grid item xs={12}>
-                                <FormControl component="fieldset">
-                                    <FormLabel component="legend">Search employee by:</FormLabel>
-                                    <RadioGroup
-                                        name="searchCategory"
-                                        value={this.state.employeeByRadio}
-                                        onChange={(event) => {
-                                            this.setState({ employeeByRadio: event.target.value });
-                                            // console.log('Radio:', this.state.employeeByRadio);
-                                        }}
-                                    >
-                                        <Grid container direction="row" style={{ marginTop: 10 }}>
-                                            <FormControlLabel
-                                                value="searchByPhone"
-                                                control={<Radio />}
-                                                label="OnTrac Id"
-                                            />
-                                            <FormControlLabel
-                                                value="searchByOntracId"
-                                                control={<Radio />}
-                                                label="Phone"
-
-                                            />
-                                        </Grid>
-                                    </RadioGroup>
-                                </FormControl>
-                            </Grid>
-
-
-                            {this.state.employeeByRadio !== 'searchByOntracId' ? (
-                                // <Grid item xs={12}>
-
-                                //     <FormControl variant="outlined" fullWidth>
-                                //         <InputLabel id="demo-simple-select-outlined-label">Verify Ontrac Id</InputLabel>
-                                //         <Select
-                                //             labelId="demo-simple-select-outlined-label"
-                                //             id="demo-simple-select-outlined"
-                                //             // value={age}
-                                //             onChange={(event) => this.setState({ selectedVotId: event.target.value }, (event) => console.log('VotId:', this.state.selectedVotId))}
-                                //             label="Verify Ontrac Id"
-                                //         >
-                                //             {this.state.getEmployeeByOntracId.map((row) => (
-                                //                 <MenuItem value={row.id}>{row.ontrac_id}</MenuItem>
-                                //             ))}
-
-                                //         </Select>
-                                //     </FormControl>
-
-                                // </Grid>
-
-                                <Grid item xs={12}>
-
-                                    <TextField
-                                        id="searchByOntracId"
-                                        label="Verify OnTrac Id"
-                                        variant="outlined"
-                                        type='text'
-                                        fullWidth
-                                        error={this.state.votmatchError}
-                                        helperText={this.state.votmatchError ? "Not an existing OnTrac Id!" : (this.state.votIdMatchesLength === 1 ? ("Match found:", this.state.votIdAllMatches[0].firstname ) : "")}
-                                        onChange={(event) => this.selectedEmployeeOntracId(event.target.value)}
-                                    />
-
-                                </Grid>
-                            ) : (
-                                    // <Grid item xs={12}>
-
-                                    //     <TextField
-                                    //         id="searchByphone"
-                                    //         label="Phone"
-                                    //         variant="outlined"
-                                    //         // error={this.state.getEmployeeByOntracId.length !== 1}
-                                    //         // helperText={this.state.getEmployeeByOntracId.length !== 1 ? ('Please enter the correct Id!'):('')}
-                                    //         fullWidth
-                                    //         // value={this.state.generateCodeData}
-                                    //         onChange={(event) => {
-                                    //             this.fetchAllEmployeesPhones(event.target.value)
-                                    //         }}
-                                    //     />
-
-                                    // </Grid>
-
-                                    <Grid item xs={12}>
-                                        <TextField
-                                            id="searchByPhone"
-                                            label="Phone"
-                                            variant="outlined"
-                                            type='number'
-                                            fullWidth
-                                            error={this.state.phonematchError}
-                                            helperText={this.state.phonematchError ? "Not an existing phone number!" : (this.state.phoneMatchesLength === 1 ? ("Match found:") : "")}
-                                            onChange={(event)=> this.fetchEmployeePhones(event.target.value)}
-                                        />
-                                    </Grid>
-                                    )}
-
-                            <Grid item xs={12}>
-                                <FormLabel component="legend">Enter Job Details:</FormLabel>
-                            </Grid>
-
-                            <Grid item xs={12}>
-
-                                <FormControl variant="outlined" fullWidth size='small'>
-                                    <InputLabel id="demo-simple-select-outlined-label">Job Type</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-outlined-label"
-                                        id="demo-simple-select-outlined"
-                                        // value={age}
-                                        onChange={(event) => this.setState({ selectedJobType: event.target.value },
-                                            (event) => console.log('jobId:', this.state.selectedJobType))}
-                                        label="Job Type"
-                                    >
-                                        {this.state.getAllJobTypes.map((row) => (
-                                            <MenuItem value={row.id}>{row.positionCategory}</MenuItem>
-                                        ))}
-
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <TextField
-                                    id="jobTitle"
-                                    label="Job Title"
-                                    variant="outlined"
-                                    value={this.state.jobTitle}
-                                    onChange={(event) => { this.setState({ jobTitle: event.target.value }) }}
-                                    type="text"
-                                    fullWidth
-                                    size='small'
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <TextField
-                                    id="startingSalary"
-                                    label="Starting Salary"
-                                    variant="outlined"
-                                    value={this.state.jobSalary}
-                                    onChange={(event) => { this.setState({ jobSalary: event.target.value }) }}
-                                    type="number"
-                                    fullWidth
-                                    size='small'
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <TextField
-                                    id="startingDate"
-                                    variant="outlined"
-                                    value={this.state.startDate}
-                                    onChange={(event) => { this.setState({ startDate: event.target.value }) }}
-                                    type="date"
-                                    helperText="Starting date"
-                                    fullWidth
-                                    size='small'
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <TextField
-                                    id="jobDescription"
-                                    label="Job Description"
-                                    variant="outlined"
-                                    value={this.state.jobDescription}
-                                    onChange={(event) => { this.setState({ jobDescription: event.target.value }) }}
-                                    type="text"
-                                    fullWidth
-                                    multiline
-                                    rows={3}
-                                    size='small'
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <TextField
-                                    id="otherConditions"
-                                    label="Other Conditions"
-                                    variant="outlined"
-                                    value={this.state.otherConditions}
-                                    onChange={(event) => { this.setState({ otherConditions: event.target.value }) }}
-                                    type="text"
-                                    fullWidth
-                                    multiline
-                                    rows={3}
-                                    size='small'
-                                />
-                            </Grid>
-
+                          <FormControlLabel
+                            value="searchByPhone"
+                            control={<Radio />}
+                            label="OnTrac Id"
+                          />
+                          <FormControlLabel
+                            value="searchByOntracId"
+                            control={<Radio />}
+                            label="Phone"
+                          />
                         </Grid>
+                      </RadioGroup>
+                    </FormControl>
+                  </Grid>
 
-                    </DialogContent>
-                    <DialogActions style={{ padding: 15 }}>
-                        <Button color="primary" variant="contained" disabled={this.state.generateButton} onClick={() => this.sendJobOffer()}>
-                            Send Job Request
-                            </Button>
-                        <Button
-                            color="secondary"
-                            variant="contained"
-                            onClick={() => this.setState({
-                                generateNewEmployementCodeDialog: false,
-                                selectedVotId: "",
-                                selectedJobType: "",
-                                jobTitle: "",
-                                startDate: "",
-                                jobDescription: "",
-                                otherConditions: "",
-                                jobSalary: ""
-                            })}>
-                            Cancel
-                            </Button>
-                    </DialogActions>
-                </Dialog>
-            </div>
+                  {this.state.employeeByRadio !== "searchByOntracId" ? (
+                    // <Grid item xs={12}>
+
+                    //     <FormControl variant="outlined" fullWidth>
+                    //         <InputLabel id="demo-simple-select-outlined-label">Verify Ontrac Id</InputLabel>
+                    //         <Select
+                    //             labelId="demo-simple-select-outlined-label"
+                    //             id="demo-simple-select-outlined"
+                    //             // value={age}
+                    //             onChange={(event) => this.setState({ selectedVotId: event.target.value }, (event) => console.log('VotId:', this.state.selectedVotId))}
+                    //             label="Verify Ontrac Id"
+                    //         >
+                    //             {this.state.getEmployeeByOntracId.map((row) => (
+                    //                 <MenuItem value={row.id}>{row.ontrac_id}</MenuItem>
+                    //             ))}
+
+                    //         </Select>
+                    //     </FormControl>
+
+                    // </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        id="searchByOntracId"
+                        label="Verify OnTrac Id"
+                        variant="outlined"
+                        type="text"
+                        fullWidth
+                        error={this.state.votmatchError}
+                        helperText={
+                          this.state.votmatchError
+                            ? "Not an existing OnTrac Id!"
+                            : this.state.votIdMatchesLength === 1
+                            ? ("Match found:",
+                              this.state.votIdAllMatches[0].firstname +
+                                " " +
+                                this.state.votIdAllMatches[0].middlename +
+                                "" +
+                                this.state.votIdAllMatches[0].surname)
+                            : ""
+                        }
+                        onChange={(event) =>
+                          this.selectedEmployeeOntracId(event.target.value)
+                        }
+                      />
+                    </Grid>
+                  ) : (
+                    // <Grid item xs={12}>
+
+                    //     <TextField
+                    //         id="searchByphone"
+                    //         label="Phone"
+                    //         variant="outlined"
+                    //         // error={this.state.getEmployeeByOntracId.length !== 1}
+                    //         // helperText={this.state.getEmployeeByOntracId.length !== 1 ? ('Please enter the correct Id!'):('')}
+                    //         fullWidth
+                    //         // value={this.state.generateCodeData}
+                    //         onChange={(event) => {
+                    //             this.fetchAllEmployeesPhones(event.target.value)
+                    //         }}
+                    //     />
+
+                    // </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        id="searchByPhone"
+                        label="Phone"
+                        variant="outlined"
+                        type="number"
+                        fullWidth
+                        error={this.state.phonematchError}
+                        helperText={
+                          this.state.phonematchError
+                            ? "Not an existing phone number!"
+                            : this.state.phoneMatchesLength === 1
+                            ? "Match found:" +
+                              this.state.phoneAllMatches[0].firstname +
+                              "" +
+                              this.state.phoneAllMatches[0].middlename +
+                              "" +
+                              this.state.phoneAllMatches[0].surname +
+                              ""
+                            : ""
+                        }
+                        onChange={(event) =>
+                          this.fetchEmployeePhones(event.target.value)
+                        }
+                      />
+                    </Grid>
+                  )}
+
+                  <Grid item xs={12}>
+                    <FormLabel component="legend">Enter Job Details:</FormLabel>
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <FormControl variant="outlined" fullWidth size="small">
+                      <InputLabel id="demo-simple-select-outlined-label">
+                        Job Type
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        // value={age}
+                        onChange={(event) =>
+                          this.setState(
+                            { selectedJobType: event.target.value },
+                            (event) =>
+                              console.log("jobId:", this.state.selectedJobType)
+                          )
+                        }
+                        label="Job Type"
+                      >
+                        {this.state.getAllJobTypes.map((row) => (
+                          <MenuItem value={row.id}>
+                            {row.positionCategory}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      id="jobTitle"
+                      label="Job Title"
+                      variant="outlined"
+                      value={this.state.jobTitle}
+                      onChange={(event) => {
+                        this.setState({ jobTitle: event.target.value });
+                      }}
+                      type="text"
+                      fullWidth
+                      size="small"
+                    />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      id="startingSalary"
+                      label="Starting Salary"
+                      variant="outlined"
+                      value={this.state.jobSalary}
+                      onChange={(event) => {
+                        this.setState({ jobSalary: event.target.value });
+                      }}
+                      type="number"
+                      fullWidth
+                      size="small"
+                    />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      id="startingDate"
+                      variant="outlined"
+                      value={this.state.startDate}
+                      onChange={(event) => {
+                        this.setState({ startDate: event.target.value });
+                      }}
+                      type="date"
+                      helperText="Starting date"
+                      fullWidth
+                      size="small"
+                    />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      id="jobDescription"
+                      label="Job Description"
+                      variant="outlined"
+                      value={this.state.jobDescription}
+                      onChange={(event) => {
+                        this.setState({ jobDescription: event.target.value });
+                      }}
+                      type="text"
+                      fullWidth
+                      multiline
+                      rows={3}
+                      size="small"
+                    />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      id="otherConditions"
+                      label="Other Conditions"
+                      variant="outlined"
+                      value={this.state.otherConditions}
+                      onChange={(event) => {
+                        this.setState({ otherConditions: event.target.value });
+                      }}
+                      type="text"
+                      fullWidth
+                      multiline
+                      rows={3}
+                      size="small"
+                    />
+                  </Grid>
+                </Grid>
+              </DialogContent>
+              <DialogActions style={{ padding: 15 }}>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  disabled={this.state.generateButton}
+                  onClick={() => this.sendJobOffer()}
+                >
+                  Send Job Request
+                </Button>
+                <Button
+                  color="secondary"
+                  variant="contained"
+                  onClick={() =>
+                    this.setState({
+                      generateNewEmployementCodeDialog: false,
+                      selectedVotId: "",
+                      selectedJobType: "",
+                      jobTitle: "",
+                      startDate: "",
+                      jobDescription: "",
+                      otherConditions: "",
+                      jobSalary: "",
+                    })
+                  }
+                >
+                  Cancel
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
         );
     }
 

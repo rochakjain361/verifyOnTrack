@@ -32,7 +32,9 @@ import GridListTile from "@material-ui/core/GridListTile";
 import GridList from "@material-ui/core/GridList";
 import { Snackbar } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
-
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import { FormikTextField } from 'formik-material-fields'; 
+import FormikSelectField from "formik-material-fields/lib/FormikSelectField";
 let token1 = "";
 
 let token = "";
@@ -309,7 +311,41 @@ class Identities extends Component {
       });
     await this.getidentites();
   }
+
+  handleSubmit = (values, { 
+    props = this.props, 
+    setSubmitting 
+  }) => {
+    this.setState(
+      {
+        addDialogOpen: false,
+        // selectedIndex: -1,
+      },
+      this.postidentites
+    )
+    setSubmitting(false);
+    return;
+  }
+  handleUpdateSubmit = (values, {
+    props = this.props, 
+    setSubmitting 
+  }) => {
+    this.setState({
+      updateDialogOpen: false,
+    })
+    this.updateidentites(
+      this.state.result[this.state.selectedIndex].idSource
+    );
+    setSubmitting(false);
+    return;
+  }
+
   render() {
+    var options = []; 
+    this.state.idSource.map((source) => {
+      options.push({label: source.idSource, value: source.id})
+    })
+    console.log(options)
     return (
       <div>
         {this.state.loading ? this.isloading() : this.getTableOfEmployees()}
@@ -504,93 +540,128 @@ class Identities extends Component {
             onClose={() => this.setState({ addDialogOpen: false })}
             aria-labelledby="form-dialog-title"
           >
-            <DialogTitle id="form-dialog-title" align="center" justify="center">
-              Add Identity
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText align="center">
-                Enter the details of your identity
-              </DialogContentText>
+            <Formik
+            initialValues={{
+              firstName: '',
+              gender: '',
+              idNumber: '',
+              idSource: '',
+              dob: ''
+            }}
+            validate={(values) => {
+              let errors = {};
+              if(!values.firstName){
+                errors.firstName = "First Name Required";
+              } else if(values.firstName.length > 15){
+                errors.firstName = "Must be 15 characters or less";
+              }
 
-              <Grid
-                container
-                justify="flex-start"
-                direction="row"
-                alignItems="center"
-                spacing={3}
-              >
+              if(!values.gender){
+                errors.gender = "Gender Required";
+              }
+
+              if(!values.idNumber){
+                errors.idNumber = "Id Number Required";
+              } else if(!/^[1-9]\d*$/i.test(values.idNumber)){
+                errors.idNumber = "Invalid Id Number";
+              }
+
+              if(!values.idSource){
+                errors.idSource = "Id Source Required";
+              }
+
+              if(!values.dob){
+                errors.dob = "Date of Birth Required";
+              } else if(!/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/i.test(values.dob)){
+                errors.dob = "Invalid Date of Birth";
+              }
+              return errors;
+            }}
+            onSubmit={this.handleSubmit}
+            render={(formprops) => {
+              return(
+              <Form>
+                <DialogTitle id="form-dialog-title" align="center" justify="center">
+                  Add Identity
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText align="center">
+                    Enter the details of your identity
+                  </DialogContentText>
+                <Grid
+                  container
+                  justify="flex-start"
+                  direction="row"
+                  alignItems="center"
+                  spacing={3}
+                >
                 <Grid item fullWidth xs={12}>
-                  <TextField
-                    id="firstName"
-                    label="First Name"
-                    onChange={(event) => {
-                      this.setState({ fullName: event.target.value });
-                    }}
-                    type="text"
+                  <FormikTextField
+                  id="firstName"
+                  name="firstName"
+                  label="First Name"
+                  fullWidth
+                  onChange={(event) => {
+                    this.setState({ fullName: event.target.value });
+                  }}
+                  />
+                </Grid>
+                <Grid item fullWidth xs={12}>
+                  <FormControl fullWidth>
+                    <FormikSelectField
+                    name="gender"
+                    label="Gender"
+                    id="gender"
+                    options={[
+                      {label: 'Male', value: 'Male'},
+                      {label: 'Female', value: 'Female'}
+                    ]}
                     fullWidth
+                    onChange={(event) => {
+                      this.setState({ sex: event.target.value });
+                    }}
+                    />
+                  </FormControl>
+                </Grid>
+
+                <Grid item fullWidth xs={12}>
+                  <FormikTextField
+                  id="idNumber"
+                  name="idNumber"
+                  label="Id Number"
+                  fullWidth
+                  onChange={(event) => {
+                    this.setState({ idNumber: event.target.value });
+                  }}
                   />
                 </Grid>
 
                 <Grid item fullWidth xs={12}>
                   <FormControl fullWidth>
-                    <InputLabel id="gender">Gender</InputLabel>
-                    <Select
-                      labelId="gender"
-                      id="gender"
-                      // value={age}
-                      onChange={(event) => {
-                        this.setState({ sex: event.target.value });
-                      }}
-                    >
-                      <MenuItem value={"Male"}>Male</MenuItem>
-                      <MenuItem value={"Female"}>Female</MenuItem>
-                    </Select>
+                    <FormikSelectField
+                    name="idSource"
+                    label="Id Source"
+                    id="Id Source"
+                    options={options}
+                    fullWidth
+                    onChange={(event) => {
+                      this.setState({ selectedidSource: event.target.value });
+                    }}
+                    />
                   </FormControl>
                 </Grid>
 
                 <Grid item fullWidth xs={12}>
-                  <TextField
-                    id="idNumber"
-                    label="Id Number"
-                    // defaultValue={result[this.state.selectedIndex].surname}
-                    onChange={(event) => {
-                      this.setState({ idNumber: event.target.value });
-                    }}
-                    type="text"
-                    fullWidth
-                  />
-                </Grid>
-
-                <Grid item fullWidth xs={12}>
-                  <FormControl fullWidth>
-                    <InputLabel id="idSource">Id Source</InputLabel>
-                    <Select
-                      labelId="idSource"
-                      id="idSource"
-                      // value={age}
-                      onChange={(event) => {
-                        this.setState({ selectedidSource: event.target.value });
-                      }}
-                    >
-                      {this.state.idSource.map((source) => (
-                        <MenuItem id={source.id} value={source.id}>
-                          {source.idSource}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item fullWidth xs={12}>
-                  <InputLabel id="dob">Date of birth</InputLabel>
-                  <TextField
-                    id="dob"
-                    // variant="outlined"
-                    // label="Date of birth"
-                    onChange={(event) => {
-                      this.setState({ dob: event.target.value });
-                    }}
-                    type="date"
-                    fullWidth
+                <InputLabel id="dob">Date of birth</InputLabel>
+                  <FormikTextField
+                  id="dob"
+                  name="dob"
+                  type="date"
+                  fullWidth
+                  onChange={(event) => {
+                    this.setState({ dob: event.target.value });
+                    console.log(event.target.value)
+                  }}
                   />
                 </Grid>
               </Grid>
@@ -599,15 +670,8 @@ class Identities extends Component {
               <Button
                 color="primary"
                 variant="contained"
-                onClick={() =>
-                  this.setState(
-                    {
-                      addDialogOpen: false,
-                      // selectedIndex: -1,
-                    },
-                    this.postidentites
-                  )
-                }
+                type="submit"
+                disabled={formprops.isSubmitting}
               >
                 Submit Identity
               </Button>
@@ -624,6 +688,8 @@ class Identities extends Component {
                 Cancel
               </Button>
             </DialogActions>
+              </Form>)}}
+            />
           </Dialog>
         }
         {this.addsnackbar()}
@@ -951,6 +1017,53 @@ class Identities extends Component {
                   onClose={() => this.setState({ updateDialogOpen: false })}
                   aria-labelledby="form-dialog-title"
                 >
+                  <Formik
+                  initialValues={{
+                    fullName: this.state.updateFullName,
+                    idNumber: this.state.updateidnumber,
+                    dob: this.state.updatedob,
+                    gender: this.state.updatesex,
+                    updatereason: '',
+                  }}
+                  validate={(values) => {
+                    let errors = {};
+
+                    if(!values.fullName){
+                      errors.fullName = "Full Name Required";
+                    }
+                    else if(values.fullName.length > 30){
+                      errors.fullName = "Must be 30 characters or less";
+                    }
+                    
+                    if(!values.idNumber){
+                      errors.idNumber = "Id Number Required";
+                    } else if(!/^[1-9]\d*$/i.test(values.idNumber)){
+                      errors.idNumber = "Invalid Id Number";
+                    }
+
+                    if(!values.dob){
+                      errors.dob = "Date of Birth Required";
+                    } else if(!/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/i.test(values.dob)){
+                      errors.dob = "Invalid Date of Birth";
+                    }
+
+                    if(!values.gender){
+                      errors.gender = "Gender Required";
+                    }
+
+                    if(!values.updatereason){
+                      errors.updatereason = "Reason for Update Required";
+                    } else if(values.updatereason.length > 250){
+                      errors.updatereason = "Character Limit Exceeded";
+                    }
+
+                    return errors;
+                    
+                  }}
+                  onSubmit={this.handleUpdateSubmit}
+                  render={(formprops) => {
+                    return(
+                      <Form>
                   <DialogTitle id="form-dialog-title" align="center">
                     Update Identity
                   </DialogTitle>
@@ -967,63 +1080,63 @@ class Identities extends Component {
                       spacing={3}
                     >
                       <Grid item fullWidth xs={12}>
-                        <TextField
-                          id="fullName"
-                          label="Full name"
-                          defaultValue={this.state.updateFullName}
-                          onChange={(event) => {
-                            this.setState({
-                              updateFullName: event.target.value,
-                            });
-                          }}
-                          type="text"
-                          fullWidth
+                        <FormikTextField
+                        id="fullName"
+                        name="fullName"
+                        label="Full Name"
+                        onChange={(event) => {
+                          this.setState({
+                            updateFullName: event.target.value,
+                          });
+                        }}
+                        type="text"
+                        fullWidth
                         />
                       </Grid>
                       <Grid item fullWidth xs={12}>
-                        <TextField
-                          id="fullName"
-                          label="IdNumber"
-                          defaultValue={this.state.updateidnumber}
-                          onChange={(event) => {
-                            this.setState({
-                              updateidnumber: event.target.value,
-                            });
-                          }}
-                          type="text"
-                          fullWidth
+                        <FormikTextField
+                        id="idNumber"
+                        name="idNumber"
+                        label="Id Number"
+                        onChange={(event) => {
+                          this.setState({
+                            updateidnumber: event.target.value,
+                          });
+                        }}
+                        type="text"
+                        fullWidth
                         />
                       </Grid>
 
                       <Grid item fullWidth xs={12}>
-                        {/* <InputLabel id="dob">Date of birth</InputLabel> */}
-                        <TextField
+                        <InputLabel id="dob">Date of birth</InputLabel>
+                        <FormikTextField
                           id="dob"
-                          label="Date of birth"
-                          defaultValue={this.state.updatedob}
-                          onChange={(event) => {
-                            this.setState({ updatedob: event.target.value });
-                          }}
+                          name="dob"
                           type="date"
                           fullWidth
+                          onChange={(event) => {
+                          this.setState({ updatedob: event.target.value });
+                          }}
                         />
                       </Grid>
 
                       <Grid item fullWidth xs={12}>
                         <FormControl fullWidth>
-                          <InputLabel id="gender">Gender</InputLabel>
-                          <Select
-                            labelId="gender"
-                            id="gender"
-                            // value={age}
-                            defaultValue={this.state.updatesex}
-                            onChange={(event) => {
-                              this.setState({ updatesex: event.target.value });
-                            }}
-                          >
-                            <MenuItem value={"Male"}>Male</MenuItem>
-                            <MenuItem value={"Female"}>Female</MenuItem>
-                          </Select>
+                        <FormikSelectField
+                          name="gender"
+                          labelId=""
+                          label="Gender"
+                          id="gender"
+                          options={[
+                          {label: 'Male', value: 'Male'},
+                          {label: 'Female', value: 'Female'}
+                          ]}
+                          fullWidth
+                          onChange={(event) => {
+                            this.setState({ updatesex: event.target.value });
+                          }}
+                        />
                         </FormControl>
                       </Grid>
 
@@ -1046,19 +1159,19 @@ class Identities extends Component {
                     </Grid> */}
 
                       <Grid item fullWidth xs={12}>
-                        <TextField
-                          id="updatereason"
-                          label="Update Reason"
-                          helperText="update reason should be less than 250 characters"
-                          // defaultValue={this.state.result[this.state.selectedIndex].idSource}
-                          onChange={(event) => {
-                            this.setState(
-                              { updatereason: event.target.value },
-                              this.reasonforupdatevalidcheck(event)
-                            );
-                          }}
-                          type="text"
-                          fullWidth
+                        <FormikTextField
+                        id="updatereason"
+                        label="Update Reason"
+                        name="updatereason"
+                        helperText="update reason should be less than 250 characters"
+                        onChange={(event) => {
+                          this.setState(
+                            { updatereason: event.target.value },
+                            this.reasonforupdatevalidcheck(event)
+                          );
+                        }}
+                        type="text"
+                        fullWidth
                         />
                       </Grid>
                     </Grid>
@@ -1066,15 +1179,10 @@ class Identities extends Component {
 
                   <DialogActions style={{ padding: 15 }}>
                     <Button
-                      disabled={this.state.buttondisabled}
                       color="primary"
                       variant="contained"
-                      disabled={this.state.buttondisabled}
-                      onClick={() => {
-                        this.updateidentites(
-                          this.state.result[this.state.selectedIndex].idSource
-                        );
-                      }}
+                      type="submit" 
+                      disabled={this.state.buttondisabled || formprops.isSubmitting}
                     >
                       Update
                     </Button>
@@ -1091,6 +1199,10 @@ class Identities extends Component {
                       Cancel
                     </Button>
                   </DialogActions>
+                      </Form>
+                    )
+                  }}
+                  />
                 </Dialog>
               )}
             </TableContainer>

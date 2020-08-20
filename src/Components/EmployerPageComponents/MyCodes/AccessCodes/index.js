@@ -53,6 +53,7 @@ import Job from '../Pages/Job'
 import Ratings from '../Pages/Ratings';
 import Academics from '../Pages/Academics';
 import axios from 'axios'
+import SearchBar from "material-ui-search-bar";
 
 let token1 = "";
 let token = "";
@@ -865,162 +866,242 @@ class index extends Component {
 
     generateAccessCode() {
         return (
-            <div>
-                <Dialog open={this.state.generateNewEmployementCodeDialog} onClose={() => this.setState({ generateNewEmployementCodeDialog: false, votmatchError: '',phonematchError: '', votIdMatchesLength: '', generateButton: true })} >
-                    <DialogTitle id="codegenerator">{"Code Generator"}</DialogTitle>
-                    <DialogContent>
-                        <Grid container justify='flex-start' direction='row' alignItems='center' spacing={2}>
-
-                            <Grid item xs={12}>
-                                <FormControl component="fieldset">
-                                    <FormLabel component="legend">Search employee by:</FormLabel>
-                                    <RadioGroup
-                                        name="searchCategory"
-                                        value={this.state.employeeByRadio}
-                                        onChange={(event) => {
-                                            this.setState({ employeeByRadio: event.target.value });
-                                            // console.log('Radio:', this.state.employeeByRadio);
-                                        }}
-                                    >
-                                        <Grid container direction="row" style={{ marginTop: 10 }}>
-                                            <FormControlLabel
-                                                value="searchByPhone"
-                                                control={<Radio />}
-                                                label="OnTrac Id"
-                                            />
-                                            <FormControlLabel
-                                                value="searchByOntracId"
-                                                control={<Radio />}
-                                                label="Phone"
-
-                                            />
-                                        </Grid>
-                                    </RadioGroup>
-                                </FormControl>
-                            </Grid>
-
-
-                            {this.state.employeeByRadio !== 'searchByOntracId' ? (
-                                <Grid item xs={12}>
-
-                                        <TextField
-                                            id="searchByOntracId"
-                                            label="Verify OnTrac Id"
-                                            variant="outlined"
-                                            type='text'
-                                            fullWidth
-                                            error={this.state.votmatchError}
-                                            helperText={this.state.votmatchError ? "Not an existing OnTrac Id!" : (this.state.votIdMatchesLength === 1 ? "Match found!" : "")}
-                                            onChange={(event)=> this.selectedEmployeeOntracId(event.target.value)}
-                                        />
-
-                                </Grid>
-                            ) : (
-                                    <Grid item xs={12}>
-                                        <TextField
-                                            id="searchByPhone"
-                                            label="Phone"
-                                            variant="outlined"
-                                            type='number'
-                                            fullWidth
-                                            error={this.state.phonematchError}
-                                            helperText={this.state.phonematchError ? "Not an existing phone number!" : (this.state.phoneMatchesLength === 1 ? "Match found!" : "")}
-                                            onChange={(event)=> this.fetchEmployeePhones(event.target.value)}
-                                        />
-                                    </Grid>)}
-
-
-                            <Grid item xs={12}>
-                                <FormControl component="fieldset">
-                                    <FormLabel component="legend">Provide access to:</FormLabel>
-                                    <FormGroup>
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={this.state.codeRatings}
-                                                    onChange={() => this.setState({ codeRatings: !this.state.codeRatings })}
-                                                    name="ratings" />}
-                                            label="Ratings"
-                                        />
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={this.state.codeAddress}
-                                                    onChange={() => this.setState({ codeAddress: !this.state.codeAddress })}
-                                                    name="address" />}
-                                            label="Address"
-                                        />
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={this.state.codeProfile}
-                                                    onChange={() => this.setState({ codeProfile: !this.state.codeProfile })}
-                                                    name="profile" />}
-                                            label="Profile"
-                                        />
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={this.state.codeIdentities}
-                                                    onChange={() => this.setState({ codeIdentities: !this.state.codeIdentities })}
-                                                    name="identites" />}
-                                            label="Identities"
-                                        />
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={this.state.codePhones}
-                                                    onChange={() => this.setState({ codePhones: !this.state.codePhones })}
-                                                    name="phones" />}
-                                            label="Phones"
-                                        />
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={this.state.codeJobHistory}
-                                                    onChange={() => this.setState({ codeJobHistory: !this.state.codeJobHistory })}
-                                                    name="jobHistory" />}
-                                            label="Job History"
-                                        />
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={this.state.codeAcademics}
-                                                    onChange={() => this.setState({ codeAcademics: !this.state.codeAcademics })}
-                                                    name="academics" />}
-                                            label="Academics"
-                                        />
-                                        
-                                    </FormGroup>
-                                </FormControl>
-                            </Grid>
-
+          <div>
+            <Dialog
+              open={this.state.generateNewEmployementCodeDialog}
+              onClose={() =>
+                this.setState({
+                  generateNewEmployementCodeDialog: false,
+                  votmatchError: "",
+                  phonematchError: "",
+                  votIdMatchesLength: "",
+                  generateButton: true,
+                })
+              }
+            >
+              <DialogTitle id="codegenerator">{"Code Generator"}</DialogTitle>
+              <DialogContent>
+                <Grid
+                  container
+                  justify="flex-start"
+                  direction="row"
+                  alignItems="center"
+                  spacing={2}
+                >
+                  <Grid item xs={12}>
+                    <FormControl component="fieldset">
+                      <FormLabel component="legend">
+                        Search employee by:
+                      </FormLabel>
+                      <RadioGroup
+                        name="searchCategory"
+                        value={this.state.employeeByRadio}
+                        onChange={(event) => {
+                          this.setState({
+                            employeeByRadio: event.target.value,
+                          });
+                          // console.log('Radio:', this.state.employeeByRadio);
+                        }}
+                      >
+                        <Grid
+                          container
+                          direction="row"
+                          style={{ marginTop: 10 }}
+                        >
+                          <FormControlLabel
+                            value="searchByPhone"
+                            control={<Radio />}
+                            label="OnTrac Id"
+                          />
+                          <FormControlLabel
+                            value="searchByOntracId"
+                            control={<Radio />}
+                            label="Phone"
+                          />
                         </Grid>
+                      </RadioGroup>
+                    </FormControl>
+                  </Grid>
 
-                    </DialogContent>
-                    {this.state.employeeByRadio !== 'searchByOntracId' ? (
-                        <DialogActions style={{ padding: 15 }}>
-                            <Button
-                                color="secondary"
-                                variant="contained"
-                                disabled={this.state.generateButton}
-                                onClick={() => this.postGenerateAccessCode()}
-                            >
-                                Generate One-time Code
-                                 </Button>
-                        </DialogActions>
-                    ) : (
-                            <DialogActions style={{ padding: 15 }}>
-                                <Button
-                                    color="secondary"
-                                    variant="contained"
-                                    disabled={this.state.generateButton}
-                                    onClick={() => this.postGenerateAccessCode()}
-                                >
-                                    Generate One-time Code
-                                 </Button>
-                            </DialogActions>)}
-                    {/* <DialogActions style={{ padding: 15 }}>
+                  {this.state.employeeByRadio !== "searchByOntracId" ? (
+                    <Grid item xs={12}>
+                      {/* <TextField
+                        id="searchByOntracId"
+                        label="Verify OnTrac Id"
+                        variant="outlined"
+                        type="text"
+                        fullWidth
+                        error={this.state.votmatchError}
+                        helperText={
+                          this.state.votmatchError
+                            ? "Not an existing OnTrac Id!"
+                            : this.state.votIdMatchesLength === 1
+                            ? "Match found!"
+                            : ""
+                        }
+                        onChange={(event) =>
+                          setTimeout(function () {
+                            this.selectedEmployeeOntracId(event.target.value);
+                          }, 2000)
+                        }
+                      /> */}
+                    </Grid>
+                  ) : (
+                    <Grid item xs={12}>
+                      <TextField
+                        id="searchByPhone"
+                        label="Phone"
+                        variant="outlined"
+                        type="number"
+                        fullWidth
+                        error={this.state.phonematchError}
+                        helperText={
+                          this.state.phonematchError
+                            ? "Not an existing phone number!"
+                            : this.state.phoneMatchesLength === 1
+                            ? "Match found!"
+                            : ""
+                        }
+                        onChange={(event) =>
+                          this.fetchEmployeePhones(event.target.value)
+                        }
+                      />
+                    </Grid>
+                  )}
+
+                  <Grid item xs={12}>
+                    <FormControl component="fieldset">
+                      <FormLabel component="legend">
+                        Provide access to:
+                      </FormLabel>
+                      <FormGroup>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={this.state.codeRatings}
+                              onChange={() =>
+                                this.setState({
+                                  codeRatings: !this.state.codeRatings,
+                                })
+                              }
+                              name="ratings"
+                            />
+                          }
+                          label="Ratings"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={this.state.codeAddress}
+                              onChange={() =>
+                                this.setState({
+                                  codeAddress: !this.state.codeAddress,
+                                })
+                              }
+                              name="address"
+                            />
+                          }
+                          label="Address"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={this.state.codeProfile}
+                              onChange={() =>
+                                this.setState({
+                                  codeProfile: !this.state.codeProfile,
+                                })
+                              }
+                              name="profile"
+                            />
+                          }
+                          label="Profile"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={this.state.codeIdentities}
+                              onChange={() =>
+                                this.setState({
+                                  codeIdentities: !this.state.codeIdentities,
+                                })
+                              }
+                              name="identites"
+                            />
+                          }
+                          label="Identities"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={this.state.codePhones}
+                              onChange={() =>
+                                this.setState({
+                                  codePhones: !this.state.codePhones,
+                                })
+                              }
+                              name="phones"
+                            />
+                          }
+                          label="Phones"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={this.state.codeJobHistory}
+                              onChange={() =>
+                                this.setState({
+                                  codeJobHistory: !this.state.codeJobHistory,
+                                })
+                              }
+                              name="jobHistory"
+                            />
+                          }
+                          label="Job History"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={this.state.codeAcademics}
+                              onChange={() =>
+                                this.setState({
+                                  codeAcademics: !this.state.codeAcademics,
+                                })
+                              }
+                              name="academics"
+                            />
+                          }
+                          label="Academics"
+                        />
+                      </FormGroup>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+              </DialogContent>
+              {this.state.employeeByRadio !== "searchByOntracId" ? (
+                <DialogActions style={{ padding: 15 }}>
+                  <Button
+                    color="secondary"
+                    variant="contained"
+                    disabled={this.state.generateButton}
+                    onClick={() => this.postGenerateAccessCode()}
+                  >
+                    Generate One-time Code
+                  </Button>
+                </DialogActions>
+              ) : (
+                <DialogActions style={{ padding: 15 }}>
+                  <Button
+                    color="secondary"
+                    variant="contained"
+                    disabled={this.state.generateButton}
+                    onClick={() => this.postGenerateAccessCode()}
+                  >
+                    Generate One-time Code
+                  </Button>
+                </DialogActions>
+              )}
+              {/* <DialogActions style={{ padding: 15 }}>
                         <Button 
                         color="secondary" 
                         variant="contained" 
@@ -1028,8 +1109,8 @@ class index extends Component {
                             Generate One-time Code
                          </Button>
                     </DialogActions> */}
-                </Dialog>
-            </div>
+            </Dialog>
+          </div>
         );
     }
 

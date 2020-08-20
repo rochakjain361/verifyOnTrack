@@ -93,7 +93,7 @@ class index extends React.Component {
                     <Grid item xs={3}>
 
                         <Card elevation={6} style={{ minHeight: 175, padding: 20, background: '#651fff' }}>
-                            <Grid item xs container direction="row"
+                            <Grid item xs container direction="column"
                                 justify="center"
                                 alignItems="center" spacing={2}>
                                 <Grid item xs>
@@ -102,7 +102,7 @@ class index extends React.Component {
                                 <Grid item xs>
                                     <PinDropIcon style={{ color: "white" }} />
                                 </Grid>
-                                <Grid item xs={6}>
+                                <Grid item >
                                     <Typography variant="h2" component="h2" style={{ fontWeight: "bold", color: "white" }}>{this.state.DashboardCounts.locationCnt}</Typography>
 
                                 </Grid>
@@ -113,7 +113,7 @@ class index extends React.Component {
 
                     <Grid item xs={3}>
                         <Card elevation={6} style={{ minHeight: 175, padding: 20, background: '#00b0ff' }}>
-                            <Grid item xs container direction="row"
+                            <Grid item xs container direction="column"
                                 justify="center"
                                 alignItems="center" spacing={2}>
                                 <Grid item xs>
@@ -122,7 +122,7 @@ class index extends React.Component {
                                 <Grid item xs>
                                     <SupervisorAccountIcon style={{ color: "white" }} />
                                 </Grid>
-                                <Grid item xs={6}>
+                                <Grid item >
                                     <Typography variant="h2" component="h2" style={{ fontWeight: "bold", color: "white" }}>{this.state.DashboardCounts.employeeCnt}</Typography>
 
                                 </Grid>
@@ -132,10 +132,10 @@ class index extends React.Component {
 
                     <Grid item xs={3}>
                         <Card elevation={6} style={{ minHeight: 175, padding: 20, background: '#1de9b6' }}>
-                            <Grid item xs container direction="row"
+                            <Grid item xs container direction="column"
                                 justify="center"
                                 alignItems="center" spacing={2}
-                                style={{ marginBottom: 10 }}
+                                // style={{ marginBottom: 10 }}
                             >
                                 <Grid item xs>
                                     <Typography variant="h5" component="h5" style={{ color: "white" }}>Access</Typography>
@@ -153,12 +153,12 @@ class index extends React.Component {
 
                     <Grid item xs={3}>
                         <Card elevation={6} style={{ minHeight: 175, padding: 20, background: '#ff9800' }}>
-                            <Grid item xs container direction="row"
+                            <Grid item xs container direction="column"
                                 justify="center"
                                 alignItems="center"
                                 spacing={2}>
                                 <Grid item xs>
-                                    <Typography variant="h6" component="h6" style={{ color: "white" }}>Employement</Typography>
+                                    <Typography variant="h5" component="h5" style={{ color: "white" }}>Employement</Typography>
                                 </Grid>
                                 <Grid item xs>
                                     <WorkOutlineIcon style={{ color: "white" }} />
