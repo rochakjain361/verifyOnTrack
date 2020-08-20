@@ -60,6 +60,8 @@ import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import NotInterestedOutlinedIcon from "@material-ui/icons/NotInterestedOutlined";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import AccountBalanceWalletOutlinedIcon from "@material-ui/icons/AccountBalanceWalletOutlined";
+import Tooltip from "@material-ui/core/Tooltip";
+
 let token = "";
 let categoriesdata = {};
 const tableIcons = {
@@ -630,28 +632,32 @@ export default class employerlist extends Component {
                   cellStyle: { padding: "3px" },
                   field: "approvedFlag",
                   render: (rowData) =>
-                    rowData.approvedFlag === "Account Deactivated" ? (
-                      <Button
-                        // variant="outlined"
-                        color="secondary"
-                        onClick={() => {
-                          this.Employeractive(rowData.ontrac_id_field);
-                        }}
-                      >
-                        <AddCircleOutlineIcon />
-                      </Button>
-                    ) : rowData.approvedFlag === "Approved" ||
-                      rowData.approvedFlag === "Account Reactivated" ? (
-                      <>
+                    rowData.approvedFlag === "Deactivated" ? (
+                      <Tooltip title="Activate" placement="right">
                         <Button
                           // variant="outlined"
                           color="secondary"
                           onClick={() => {
-                            this.Employerdeactive(rowData.ontrac_id_field);
+                            this.Employeractive(rowData.ontrac_id_field);
                           }}
                         >
-                          <NotInterestedOutlinedIcon />
+                          <AddCircleOutlineIcon />
                         </Button>
+                      </Tooltip>
+                    ) : rowData.approvedFlag === "Approved" ||
+                      rowData.approvedFlag === "Account Reactivated" ? (
+                      <>
+                        <Tooltip title="Deactivate" placement="right">
+                          <Button
+                            // variant="outlined"
+                            color="secondary"
+                            onClick={() => {
+                              this.Employerdeactive(rowData.ontrac_id_field);
+                            }}
+                          >
+                            <NotInterestedOutlinedIcon />
+                          </Button>
+                        </Tooltip>
                       </>
                     ) : null,
                 },
@@ -680,7 +686,7 @@ export default class employerlist extends Component {
                 search: false,
                 cellStyle: { padding: "0.3em" },
                 headerStyle: { padding: "0.3em" },
-                // grouping: true,
+                grouping: true,
               }}
             />
           )}

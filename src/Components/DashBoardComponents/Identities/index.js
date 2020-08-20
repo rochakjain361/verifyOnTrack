@@ -80,6 +80,10 @@ class Identities extends Component {
       amount: "",
       debitresponse: "",
       currentid: "",
+      uploadsnackbar: false,
+      uploadresponse: "",
+      pictureSnackbarOpen: false,	
+      pictureSnackbarError: false,
     };
     // this.updateidentites= this.updateidentites.bind();
   }
@@ -133,8 +137,6 @@ class Identities extends Component {
   updatesnackbar() {
     return this.state.updateresponse === 200 ? (
       <div>
-        {console.log("//////////////////////////////////////")}
-
         <Snackbar
           open={this.state.updatesnackbar}
           autoHideDuration={3000}
@@ -311,7 +313,6 @@ class Identities extends Component {
     return (
       <div>
         {this.state.loading ? this.isloading() : this.getTableOfEmployees()}
-
         <Dialog
           //  fullWidth={"sm"}
           //  maxWidth={"sm"}
@@ -365,36 +366,98 @@ class Identities extends Component {
             </Button>
           </DialogActions>
         </Dialog>
-        <Dialog
-          open={this.state.uploadDialougeOpen}
-          onClose={() => this.setState({ uploadDialougeOpen: false })}
-          aria-labelledby="form-dialog-title"
-        >
-          <DialogTitle id="form-dialog-title">choose your file</DialogTitle>
-          <DialogContent>
-            <Grid container p={1}>
-              <TextField
-                type="file"
-                onChange={(event) => {
-                  this.setState({ uploadpictures: event.target.files[0] });
-                }}
-              ></TextField>
-            </Grid>
-            <Box p={1}>
-              <Grid container direction="column-reverse" alignItems="flex-end">
+        {
+          <Dialog
+            open={this.state.uploadDialougeOpen}
+            onClose={() => this.setState({ uploadDialougeOpen: false })}
+            aria-labelledby="form-dialog-title"
+          >
+            <DialogTitle id="form-dialog-title">choose your file</DialogTitle>
+            <DialogContent>
+              <Grid container p={1}>
+                <TextField
+                  type="file"
+                  onChange={(event) => {
+                    this.setState({ uploadpictures: event.target.files[0] });
+                  }}
+                ></TextField>
+              </Grid>
+
+              <DialogActions style={{ padding: 15 }}>
                 <Button
                   color="primary"
                   variant="contained"
                   onClick={() => {
-                    this.postpictures(this.state.pictureid);
+                    if(this.state.uploadpictures == ""){
+                      this.setState({ pictureSnackbarError: true})
+                    }
+                    else{
+                      this.setState({ pictureSnackbarOpen: true})
+                      this.postpictures(this.state.pictureid);
+                    }
+                    this.setState({
+                      uploadpictures: ""
+                    })
                   }}
                 >
                   upload
                 </Button>
-              </Grid>
-            </Box>
-          </DialogContent>
-        </Dialog>
+                <Snackbar open={this.state.pictureSnackbarOpen} autoHideDuration={2000} onClose={(event, reason) => {	
+                if(reason === "clickaway"){	
+                  return;	
+                }	
+                this.setState({	
+                  pictureSnackbarOpen: false,	
+                  uploadDialougeOpen: false	
+                })	
+              }}>	
+                <Alert onClose={(event, reason) => {	
+                if(reason === "clickaway"){	
+                  return;	
+                }	
+                this.setState({	
+                  pictureSnackbarOpen: false,	
+                  uploadDialougeOpen: false	
+                })	
+              }} severity="success">	
+                File Uploaded Successfully	
+                </Alert>	
+              </Snackbar>	
+              <Snackbar open={this.state.pictureSnackbarError} autoHideDuration={1500} onClose={(event, reason) => {	
+                if(reason === "clickaway"){	
+                  return;	
+                }	
+                this.setState({	
+                  pictureSnackbarError: false,	
+                })	
+              }}>	
+                <Alert onClose={(event, reason) => {	
+                if(reason === "clickaway"){	
+                  return;	
+                }	
+                this.setState({	
+                  pictureSnackbarError: false,	
+                })	
+              }} severity="warning">	
+                Upload a File first	
+                </Alert>	
+              </Snackbar>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() =>
+                    this.setState({
+                      uploadDialougeOpen: false,
+                      selectedIndex: -1,
+                    })
+                  }
+                >
+                  Close
+                </Button>
+              </DialogActions>
+            </DialogContent>
+          </Dialog>
+        }
         {this.updatesnackbar()}
         {
           <Dialog
@@ -427,7 +490,6 @@ class Identities extends Component {
                 onClick={() =>
                   this.setState({
                     walletdialog: false,
-                    
                   })
                 }
               >
@@ -435,7 +497,7 @@ class Identities extends Component {
               </Button>
             </DialogActions>
           </Dialog>
-        }
+          }
         {
           <Dialog
             open={this.state.addDialogOpen}
@@ -630,7 +692,6 @@ class Identities extends Component {
       });
   }
   async postpictures(id) {
-    this.setState({ uploadDialougeOpen: false });
     let headers = {
       headers: {
         Authorization: token,
@@ -649,8 +710,13 @@ class Identities extends Component {
       )
       .then((response) => {
         console.log(response);
+        this.setState({
+          uploadresponse: response.status,
+          uploadsnackbar: true,
+        });
+        response.status===200?
+        alert("Your image has been uploaded succesfully"):alert("Something went wrong please try again")
       });
-    await this.getidentites();
   }
   async getamount() {
     await axios
@@ -681,7 +747,7 @@ class Identities extends Component {
       )
       .then((response) => {
         if (response.status === 200) {
-          this.verification()
+          this.verification();
         }
       });
   }
@@ -703,8 +769,7 @@ class Identities extends Component {
         headers
       )
       .then((res) => {
-
-         window.location.reload(false);
+        window.location.reload(false);
       });
   }
 

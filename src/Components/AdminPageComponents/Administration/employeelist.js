@@ -38,6 +38,8 @@ import AccountBalanceWalletOutlinedIcon from "@material-ui/icons/AccountBalanceW
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import NotInterestedOutlinedIcon from "@material-ui/icons/NotInterestedOutlined";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import Tooltip from "@material-ui/core/Tooltip";
+
 let token = "";
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -344,34 +346,43 @@ export default class employeelist extends Component {
                                  title: "Activate",
                                  field: "approvedFlag",
                                  render: (rowData) =>
-                                   rowData.approvedFlag ===
-                                   "Account Deactivated" ? (
-                                     <Button
-                                       variant="outlined"
-                                       color="secondary"
-                                       onClick={() => {
-                                         this.Employeractive(
-                                           rowData.ontrac_id_field
-                                         );
-                                       }}
+                                   rowData.approvedFlag === "Deactivated" ? (
+                                     <Tooltip
+                                       title="Activate"
+                                       placement="right"
                                      >
-                                       <AddCircleOutlineIcon />
-                                     </Button>
-                                   ) : rowData.approvedFlag === "Approved" ||
-                                     rowData.approvedFlag ===
-                                       "Account Reactivated" ? (
-                                     <>
                                        <Button
                                          variant="outlined"
                                          color="secondary"
                                          onClick={() => {
-                                           this.Employerdeactive(
+                                           this.Employeractive(
                                              rowData.ontrac_id_field
                                            );
                                          }}
                                        >
-                                         <NotInterestedOutlinedIcon />
+                                         <AddCircleOutlineIcon />
                                        </Button>
+                                     </Tooltip>
+                                   ) : rowData.approvedFlag === "Approved" ||
+                                     rowData.approvedFlag ===
+                                       "Account Reactivated" ? (
+                                     <>
+                                       <Tooltip
+                                         title="Deactivate"
+                                         placement="right"
+                                       >
+                                         <Button
+                                           variant="outlined"
+                                           color="secondary"
+                                           onClick={() => {
+                                             this.Employerdeactive(
+                                               rowData.ontrac_id_field
+                                             );
+                                           }}
+                                         >
+                                           <NotInterestedOutlinedIcon />
+                                         </Button>
+                                       </Tooltip>
                                      </>
                                    ) : null,
                                },
@@ -381,7 +392,7 @@ export default class employeelist extends Component {
                                sorting: true,
                                paging: false,
                                search: false,
-                               // grouping: true,
+                               grouping: true,
                              }}
                            />
                          )}
