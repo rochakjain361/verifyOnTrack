@@ -247,6 +247,14 @@ export class index extends Component {
           setSubmitting(false);
           return;
         }
+        handleAcadUpdateSubmit = (values, {
+          props = this.props,
+          setSubmitting
+        }) => {
+          this.updatedetails(this.state.updatedresult.id);
+          setSubmitting(false);
+          return;
+        }
 
          gettable() {
            var academicOptions = [];
@@ -456,7 +464,67 @@ export class index extends Component {
                  }
                  aria-labelledby="form-dialog-title"
                >
-                 <DialogTitle id="form-dialog-title" align="center">
+                 <Formik
+                 initialValues={{
+                   startDate: this.state.updatedresult.startDate,
+                   endDate: this.state.updatedresult.endDate,
+                   school: this.state.updatedresult.school,
+                   degree: this.state.updatedresult.degree,
+                   acadType: this.state.updatedresult.academicType,
+                   updateReason: ''
+                 }}
+                 validate={(values) => {
+                   let errors = {};
+
+                   if(!values.school){
+                    errors.school = "School Required";
+                  } else if(values.school.length > 35){
+                    errors.school = "Must be 35 Characters or less";
+                  }
+
+                  if(!values.startDate){
+                   errors.startDate = "Start Date Required";
+                 } else if(!/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/i.test(values.startDate)){
+                   errors.startDate = "Invalid Start Date";
+                 }
+
+                 if(!values.endDate){
+                   errors.endDate = "End Date Required";
+                 } else if(!/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/i.test(values.endDate)){
+                   errors.endDate = "Invalid End Date";
+                 }
+
+                 if(values.endDate && !values.startDate){
+                   errors.endDate = "Enter the start date first"
+                   errors.startDate = "Start Date Required"
+                 }
+                 if(Date.parse(values.endDate) <= Date.parse(values.startDate)){
+                   errors.endDate = "Invalid End Date can't be before Start Date"
+                   errors.startDate = "Invalid Start Date can't be after End date"
+                 }
+                 
+                 if(!values.acadType){
+                   errors.acadType = "Academic Type Required";
+                 }
+
+                 if(!values.degree){
+                   errors.degree = " Degree Required";
+                 } else if(values.degree.length > 35){
+                   errors.degree = "Must be 35 Characters or less"
+                 }
+
+                 if(!values.updateReason){
+                   errors.updateReason = "Reason Required";
+                 } else if(values.updateReason.length > 250){
+                   errors.updateReason = "250 Character Limit Exceeded"
+                 }
+
+                   return errors;
+                 }}
+                 onSubmit={this.handleAcadUpdateSubmit}
+                 render={(formprops) => {
+                   return(<Form>
+                     <DialogTitle id="form-dialog-title" align="center">
                    Update Academics
                  </DialogTitle>
                  <DialogContent>
@@ -472,103 +540,99 @@ export class index extends Component {
                      spacing={3}
                    >
                      <Grid item fullWidth xs={12}>
-                       <TextField
-                         name="Start date"
-                         label="Startdate"
-                         defaultValue={this.state.updatedresult.startDate}
-                         onChange={(event) => {
-                           this.setState({
-                             updatedresult: {
-                               ...this.state.updatedresult,
-                               startDate: event.target.value,
-                             },
-                           });
-                           console.log(event.target.value);
-                         }}
-                         type="date"
-                         fullWidth
+                     <InputLabel >Start Date</InputLabel>
+                       <FormikTextField
+                       id="startDate"
+                       name="startDate"
+                       onChange={(event) => {
+                        this.setState({
+                          updatedresult: {
+                            ...this.state.updatedresult,
+                            startDate: event.target.value,
+                          },
+                        });
+                        console.log(event.target.value);
+                      }}
+                        type="date"
+                        fullWidth
                        />
                      </Grid>
                      <Grid item fullWidth xs={12}>
-                       <TextField
-                         id="dob"
-                         label="Enddate"
-                         defaultValue={this.state.updatedresult.endDate}
-                         onChange={(event) => {
-                           this.setState({
-                             updatedresult: {
-                               ...this.state.updatedresult,
-                               endDate: event.target.value,
-                             },
-                           });
-                           console.log(event.target.value);
-                         }}
-                         type="date"
-                         fullWidth
+                       <FormikTextField
+                       id="endDate"
+                       name="endDate"
+                       label="End Date"
+                       onChange={(event) => {
+                        this.setState({
+                          updatedresult: {
+                            ...this.state.updatedresult,
+                            endDate: event.target.value,
+                          },
+                        });
+                        console.log(event.target.value);
+                      }}
+                      type="date"
+                      fullWidth
                        />
                      </Grid>
                      <Grid item fullWidth xs={12}>
-                       <TextField
-                         id="middleName"
+                     <FormikTextField
+                         id="School"
                          label="School"
-                         defaultValue={this.state.updatedresult.school}
+                         name="school"
                          onChange={(event) =>
-                           this.setState({
-                             updatedresult: {
-                               ...this.state.updatedresult,
-                               school: event.target.value,
-                             },
-                           })
-                         }
+                          this.setState({
+                            updatedresult: {
+                              ...this.state.updatedresult,
+                              school: event.target.value,
+                            },
+                          })
+                        }
                          type="text"
                          fullWidth
                        />
                      </Grid>
 
                      <Grid item fullWidth xs={12}>
-                       <TextField
-                         id="surname"
+                     <FormikTextField
+                         id="degree"
                          label="Degree"
-                         defaultValue={this.state.updatedresult.degree}
+                         name="degree"
                          onChange={(event) => {
-                           this.setState({
-                             updatedresult: {
-                               ...this.state.updatedresult,
-                               degree: event.target.value,
-                             },
-                           });
-                         }}
+                          this.setState({
+                            updatedresult: {
+                              ...this.state.updatedresult,
+                              degree: event.target.value,
+                            },
+                          });
+                        }}
                          type="text"
                          fullWidth
                        />
                      </Grid>
                      <Grid item fullWidth xs={12}>
-                       <InputLabel id="state">Academic type</InputLabel>
-                       <Select
-                         id="Academic type"
-                         onChange={(event) => {
-                           this.setState({
-                             updatedresult: {
-                               ...this.state.updatedresult,
-                               academicType: event.target.value,
-                             },
-                           });
-                         }}
-                         defaultValue={this.state.updatedresult.academicType}
-                         fullWidth
-                       >
-                         {this.state.types.map((type) => (
-                           <MenuItem id={type.id} value={type.id}>
-                             {type.academicType}
-                           </MenuItem>
-                         ))}
-                       </Select>
+                       <FormikSelectField 
+                       name="acadType"
+                       label="Academic Type"
+                       id="acadType"
+                       options={academicOptions}
+                       fullWidth
+                       onChange={(event) => {
+                        this.setState({
+                          updatedresult: {
+                            ...this.state.updatedresult,
+                            academicType: event.target.value,
+                          },
+                        });
+                      }}
+                       />
                      </Grid>
                      <Grid item fullWidth xs={12}>
-                       <TextField
-                         id="reasonForUpdating"
-                         label="Reason for updating:"
-                         helperText="update reason can be less than 250 characters"
+                       <FormikTextField
+                        id="reasonForUpdating"
+                        label="Reason for updating:"
+                        name="updateReason"
+                        helperText="update reason can be less than 250 characters"
                          onChange={(event) =>
                            this.setState({
                              updatedresult: {
@@ -588,9 +652,8 @@ export class index extends Component {
                      color="primary"
                      // disabled={this.state.updatedresult.update_reason.length === 0}
                      variant="contained"
-                     onClick={() => {
-                       this.updatedetails(this.state.updatedresult.id);
-                     }}
+                     type="submit"
+                     disabled={formprops.isSubmitting}
                    >
                      Update
                    </Button>
@@ -608,7 +671,11 @@ export class index extends Component {
                      Cancel
                    </Button>
                  </DialogActions>
-               </Dialog>
+               
+                   </Form>)
+                 }}
+                 />
+                 </Dialog>
                <Dialog
                  open={this.state.addnewdialog}
                  onClose={() =>
